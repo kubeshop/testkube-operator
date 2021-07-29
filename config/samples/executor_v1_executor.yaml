@@ -1,0 +1,7 @@
+apiVersion: executor.kubetest.io/v1
+kind: Executor
+metadata:
+  name: executor-sample
+spec:
+  name: test-executor
+  uri: http://localhost:8082
