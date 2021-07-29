@@ -3,16 +3,17 @@ package client
 import (
 	"log"
 
-	scriptsAPI "github.com/kubeshop/kubetest/internal/app/operator/api/v1"
-
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func GetClient() client.Client {
+// GetClient returns kubernetes CRD client with registered schemes
+func GetClient(crdClients ...CRDClient) client.Client {
 	scheme := runtime.NewScheme()
-	scriptsAPI.AddToScheme(scheme)
+	for _, client := range crdClients {
+		client.Register(scheme)
+	}
 	kubeconfig := ctrl.GetConfigOrDie()
 	controllerClient, err := client.New(kubeconfig, client.Options{Scheme: scheme})
 	if err != nil {
@@ -20,4 +21,8 @@ func GetClient() client.Client {
 		return nil
 	}
 	return controllerClient
+}
+
+type CRDClient interface {
+	Register(scheme *runtime.Scheme)
 }

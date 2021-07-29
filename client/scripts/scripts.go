@@ -3,7 +3,8 @@ package scripts
 import (
 	"context"
 
-	scriptsAPI "github.com/kubeshop/kubetest/internal/app/operator/api/v1"
+	scriptsAPI "github.com/kubeshop/kubetest-operator/apis/script/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -26,4 +27,8 @@ func (s ScriptsKubeAPI) List(namespace string) (*scriptsAPI.ScriptList, error) {
 func (s ScriptsKubeAPI) Create(scripts *scriptsAPI.Script) (*scriptsAPI.Script, error) {
 	err := s.Client.Create(context.Background(), scripts)
 	return scripts, err
+}
+
+func (s ScriptsKubeAPI) Register(scheme *runtime.Scheme) {
+	scriptsAPI.AddToScheme(scheme)
 }
