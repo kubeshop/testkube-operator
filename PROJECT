@@ -12,7 +12,7 @@ resources:
   domain: kubetest.io
   group: tests
   kind: Script
-  path: github.com/kubeshop/kubetest/apis/script/v1
+  path: github.com/kubeshop/kubetest=operator/apis/script/v1
   version: v1
 - api:
     crdVersion: v1
@@ -21,6 +21,6 @@ resources:
   domain: kubetest.io
   group: executor
   kind: Executor
-  path: github.com/kubeshop/kubetest/apis/executor/v1
+  path: github.com/kubeshop/kubetest-operator/apis/executor/v1
   version: v1
 version: "3"

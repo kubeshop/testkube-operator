@@ -24,7 +24,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	executorv1 "github.com/kubeshop/kubetest/apis/executor/v1"
+	executorv1 "github.com/kubeshop/kubetest-operator/apis/executor/v1"
 )
 
 // ExecutorReconciler reconciles a Executor object

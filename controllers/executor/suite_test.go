@@ -30,7 +30,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	executorv1 "github.com/kubeshop/kubetest/apis/executor/v1"
+	executorv1 "github.com/kubeshop/kubetest-operator/apis/executor/v1"
 	//+kubebuilder:scaffold:imports
 )
 

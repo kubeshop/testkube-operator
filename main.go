@@ -31,10 +31,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	executorv1 "github.com/kubeshop/kubetest/apis/executor/v1"
-	kubetestv1 "github.com/kubeshop/kubetest/apis/script/v1"
-	executorcontrollers "github.com/kubeshop/kubetest/controllers/executor"
-	scriptcontrollers "github.com/kubeshop/kubetest/controllers/script"
+	executorv1 "github.com/kubeshop/kubetest-operator/apis/executor/v1"
+	kubetestv1 "github.com/kubeshop/kubetest-operator/apis/script/v1"
+	executorcontrollers "github.com/kubeshop/kubetest-operator/controllers/executor"
+	scriptcontrollers "github.com/kubeshop/kubetest-operator/controllers/script"
 	//+kubebuilder:scaffold:imports
 )
 

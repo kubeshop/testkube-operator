@@ -24,7 +24,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	kubetestv1 "github.com/kubeshop/kubetest/apis/script/v1"
+	kubetestv1 "github.com/kubeshop/kubetest-operator/apis/script/v1"
 )
 
 // ScriptReconciler reconciles a Script object
