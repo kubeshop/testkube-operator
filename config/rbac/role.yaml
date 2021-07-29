@@ -7,6 +7,32 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
+  - executor.kubetest.io
+  resources:
+  - executors
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - executor.kubetest.io
+  resources:
+  - executors/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - executor.kubetest.io
+  resources:
+  - executors/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
   - tests.kubetest.io
   resources:
   - scripts

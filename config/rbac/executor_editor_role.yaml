@@ -1,0 +1,24 @@
+# permissions for end users to edit executors.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: executor-editor-role
+rules:
+- apiGroups:
+  - executor.kubetest.io
+  resources:
+  - executors
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - executor.kubetest.io
+  resources:
+  - executors/status
+  verbs:
+  - get

@@ -31,8 +31,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	kubetestv1 "github.com/kubeshop/kubetest/apis/script/v1"
-	"github.com/kubeshop/kubetest/controllers"
+	executorv1 "github.com/kubeshop/kubetest-operator/apis/executor/v1"
+	kubetestv1 "github.com/kubeshop/kubetest-operator/apis/script/v1"
+	executorcontrollers "github.com/kubeshop/kubetest-operator/controllers/executor"
+	scriptcontrollers "github.com/kubeshop/kubetest-operator/controllers/script"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -45,6 +47,7 @@ func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
 	utilruntime.Must(kubetestv1.AddToScheme(scheme))
+	utilruntime.Must(executorv1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -78,11 +81,18 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&controllers.ScriptReconciler{
+	if err = (&scriptcontrollers.ScriptReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Script")
+		os.Exit(1)
+	}
+	if err = (&executorcontrollers.ExecutorReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "Executor")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder
