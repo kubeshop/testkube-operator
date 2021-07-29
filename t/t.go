@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	scriptsAPI "github.com/kubeshop/kubetest/api/v1"
+	scriptsAPI "github.com/kubeshop/kubetest/apis/script/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"

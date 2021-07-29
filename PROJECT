@@ -1,6 +1,7 @@
 domain: kubetest.io
 layout:
 - go.kubebuilder.io/v3
+multigroup: true
 projectName: kubetest
 repo: github.com/kubeshop/kubetest
 resources:
@@ -11,6 +12,6 @@ resources:
   domain: kubetest.io
   group: tests
   kind: Script
-  path: github.com/kubeshop/kubetest/api/v1
+  path: github.com/kubeshop/kubetest/apis/script/v1
   version: v1
 version: "3"
