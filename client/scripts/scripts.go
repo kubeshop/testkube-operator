@@ -4,31 +4,32 @@ import (
 	"context"
 
 	scriptsAPI "github.com/kubeshop/kubetest-operator/apis/script/v1"
-	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func NewScriptsKubeAPI(client client.Client) ScriptsKubeAPI {
-	return ScriptsKubeAPI{
+func NewClient(client client.Client) ScriptsClient {
+	return ScriptsClient{
 		Client: client,
 	}
 }
 
-type ScriptsKubeAPI struct {
+type ScriptsClient struct {
 	Client client.Client
 }
 
-func (s ScriptsKubeAPI) List(namespace string) (*scriptsAPI.ScriptList, error) {
+func (s ScriptsClient) List(namespace string) (*scriptsAPI.ScriptList, error) {
 	list := &scriptsAPI.ScriptList{}
 	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: namespace})
 	return list, err
 }
 
-func (s ScriptsKubeAPI) Create(scripts *scriptsAPI.Script) (*scriptsAPI.Script, error) {
-	err := s.Client.Create(context.Background(), scripts)
-	return scripts, err
+func (s ScriptsClient) Get(namespace, name string) (*scriptsAPI.Script, error) {
+	script := &scriptsAPI.Script{}
+	err := s.Client.Get(context.Background(), client.ObjectKey{Namespace: namespace, Name: name}, script)
+	return script, err
 }
 
-func (s ScriptsKubeAPI) Register(scheme *runtime.Scheme) {
-	scriptsAPI.AddToScheme(scheme)
+func (s ScriptsClient) Create(scripts *scriptsAPI.Script) (*scriptsAPI.Script, error) {
+	err := s.Client.Create(context.Background(), scripts)
+	return scripts, err
 }
