@@ -23,3 +23,6 @@ testbin/*
 *.swp
 *.swo
 *~
+
+# Helm lock file for charts.
+Chart.lock
