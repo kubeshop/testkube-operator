@@ -17,10 +17,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Configure Git
+      # To be removed before going public.
+      - name: Configure git for private repos
+        env:
+          TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config --global url."https://fog1985:${TOKEN}@github.com".insteadOf "https://github.com"
+
+      # Uncomment before going public
+      # - name: Configure Git
+      #   run: |
+      #     git config user.name "$GITHUB_ACTOR"
+      #     git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.1.0
