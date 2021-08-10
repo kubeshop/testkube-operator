@@ -37,10 +37,9 @@ To uninstall the kubetest-operator chart:
 ```
 # For more configuration parameters of MongoDB chart please look here:
 # https://github.com/bitnami/charts/tree/master/bitnami/mongodb#parameters
-
 mongodb:
   nameOverride: "mongodb"
-  fullnameOverride: "mongodb-chart"
+  fullnameOverride: "mongodb-kubetest"
   architecture: "standalone"
   auth:
     enabled: false
@@ -52,6 +51,8 @@ mongodb:
     clusterIP: ""
 
 api-server:
+  nameOverride: "api-server"
+  fullnameOverride: "api-server-kubetest"
   image:
     repository: kubeshop/kubetest-api-server
     pullPolicy: Always
@@ -60,12 +61,12 @@ api-server:
   service:
     type: NodePort # for working with real k8s we should use "ClusterIP" type.
     port: 8080
-  nameOverride: "api-server"
-  fullnameOverride: "api-server-chart"
-  mongoDSN: "mongodb://mongodb-chart:27017"
-  postmanExecutorURI: "http://postman-executor-chart:8082"
+  mongoDSN: "mongodb://mongodb-kubetest:27017"
+  postmanExecutorURI: "http://postman-executor-kubetest:8082"
 
 postman-executor:
+  nameOverride: "postman-executor"
+  fullnameOverride: "postman-executor-kubetest"
   image:
     repository: kubeshop/kubetest-postman-executor
     pullPolicy: Always
@@ -74,8 +75,6 @@ postman-executor:
   service:
     type: NodePort # for working with real k8s we should use "ClusterIP" type.
     port: 8082
-  nameOverride: "postman-executor"
-  fullnameOverride: "postman-executor-chart"
-  mongoDSN: "mongodb://mongodb-chart:27017"
-  apiServerURI: "http://api-server-chart:8080"
+  mongoDSN: "mongodb://mongodb-kubetest:27017"
+  apiServerURI: "http://api-server-kubetest:8080"
   ```
