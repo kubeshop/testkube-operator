@@ -17,7 +17,7 @@ Helm's [documentation](https://helm.sh/docs) to get started.
 
 Once Helm has been set up correctly, add the repo as follows:
 
-  helm repo add kubetest https://kubeshop.github.io/kubetest-operator
+  helm repo add kubetest-operator https://kubeshop.github.io/kubetest-operator
 
 If you had already added this repo earlier, run `helm repo update` to retrieve
 the latest versions of the packages.  You can then run `helm search repo
@@ -25,11 +25,11 @@ kubetest-operator` to see the charts.
 
 To install the kubetest-operator chart:
 
-    helm install my-<chart-name> kubetest/kubetest-operator
+    helm install my-<chart-name> kubetest-operator/kubetest-operator
 
 To uninstall the kubetest-operator chart:
 
-    helm delete my-<chart-name> kubetest/kubetest-operator
+    helm delete my-<chart-name> kubetest-operator/kubetest-operator
 
 > Please note that this Helm chart will install both `api-server` and `postman-executor` charts as a dependencies within this chart. Dependencies' repository are to be found [here](https://github.com/kubeshop/kubetest)
 
