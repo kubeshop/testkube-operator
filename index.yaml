@@ -11,4 +11,14 @@ entries:
     urls:
     - https://github.com/kubeshop/kubetest-operator/releases/download/kubetest-operator-0.5.0/kubetest-operator-0.5.0.tgz
     version: 0.5.0
+  - apiVersion: v2
+    appVersion: 0.4.0
+    created: "2021-08-11T14:32:16.388567073Z"
+    description: A Helm chart for the kubetest-operator (installs needed CRDs only for now)
+    digest: 933fe3a70631f8f1fe93a5c5ec70c27c6a202ff1389b00ab87fdde721efa281d
+    name: kubetest-operator
+    type: application
+    urls:
+    - https://github.com/kubeshop/kubetest-operator/releases/download/kubetest-operator-0.4.0/kubetest-operator-0.4.0.tgz
+    version: 0.4.0
 generated: "2021-08-11T10:00:30.114521693Z"
