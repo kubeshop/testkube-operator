@@ -1,6 +1,6 @@
 apiVersion: v2
 name: kubetest-operator
-description: A Helm chart for the kubetest-operator (includes api-server and executor charts).
+description: A Helm chart for the kubetest-operator (installs needed CRDs only for now).
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -21,5 +21,5 @@ version: 0.5.0
 # incremented each time you make changes to the application. Versions are not expected to
 # follow Semantic Versioning. They should reflect the version the application is using.
 # It is recommended to use it with quotes.
-appVersion: "1.16.0"
+appVersion: "0.5.0"
 
