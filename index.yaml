@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  kubetest-operator:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2021-08-11T10:00:30.291000884Z"
+    description: A Helm chart for the kubetest-operator (includes api-server and executor charts).
+    digest: a9e4abb1ecba86636b68a41a8d5c7ecfc41de4d2eacad134cee50a86e648ed89
+    name: kubetest-operator
+    type: application
+    urls:
+    - https://github.com/kubeshop/kubetest-operator/releases/download/kubetest-operator-0.5.0/kubetest-operator-0.5.0.tgz
+    version: 0.5.0
+generated: "2021-08-11T10:00:30.114521693Z"
