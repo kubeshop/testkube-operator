@@ -1,5 +1,7 @@
 # TOC 
 
+![Known Vulnerabilities](https://snyk.io/test/github/kubeshop/kubtest-operator/badge.svg)
+
 - [kubtest-operator - your testing friend](#kubtest-operator---your-testing-friend)
 
 # kubtest-operator - your testing friend
