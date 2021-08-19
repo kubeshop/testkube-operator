@@ -3,8 +3,8 @@ package client
 import (
 	"log"
 
-	executorv1 "github.com/kubeshop/kubetest-operator/apis/executor/v1"
-	scriptv1 "github.com/kubeshop/kubetest-operator/apis/script/v1"
+	executorv1 "github.com/kubeshop/kubtest-operator/apis/executor/v1"
+	scriptv1 "github.com/kubeshop/kubtest-operator/apis/script/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"

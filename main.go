@@ -31,10 +31,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	executorv1 "github.com/kubeshop/kubetest-operator/apis/executor/v1"
-	kubetestv1 "github.com/kubeshop/kubetest-operator/apis/script/v1"
-	executorcontrollers "github.com/kubeshop/kubetest-operator/controllers/executor"
-	scriptcontrollers "github.com/kubeshop/kubetest-operator/controllers/script"
+	executorv1 "github.com/kubeshop/kubtest-operator/apis/executor/v1"
+	kubtestv1 "github.com/kubeshop/kubtest-operator/apis/script/v1"
+	executorcontrollers "github.com/kubeshop/kubtest-operator/controllers/executor"
+	scriptcontrollers "github.com/kubeshop/kubtest-operator/controllers/script"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -46,7 +46,7 @@ var (
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
-	utilruntime.Must(kubetestv1.AddToScheme(scheme))
+	utilruntime.Must(kubtestv1.AddToScheme(scheme))
 	utilruntime.Must(executorv1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
@@ -74,7 +74,7 @@ func main() {
 		Port:                   9443,
 		HealthProbeBindAddress: probeAddr,
 		LeaderElection:         enableLeaderElection,
-		LeaderElectionID:       "47f0dfc1.kubetest.io",
+		LeaderElectionID:       "47f0dfc1.kubtest.io",
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")

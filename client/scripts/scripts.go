@@ -3,7 +3,7 @@ package scripts
 import (
 	"context"
 
-	scriptsAPI "github.com/kubeshop/kubetest-operator/apis/script/v1"
+	scriptsAPI "github.com/kubeshop/kubtest-operator/apis/script/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 

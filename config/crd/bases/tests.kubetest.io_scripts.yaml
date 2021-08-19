@@ -6,9 +6,9 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: scripts.tests.kubetest.io
+  name: scripts.tests.kubtest.io
 spec:
-  group: tests.kubetest.io
+  group: tests.kubtest.io
   names:
     kind: Script
     listKind: ScriptList
