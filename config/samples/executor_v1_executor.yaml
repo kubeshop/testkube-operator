@@ -1,4 +1,4 @@
-apiVersion: executor.kubetest.io/v1
+apiVersion: executor.kubtest.io/v1
 kind: Executor
 metadata:
   name: executor-sample

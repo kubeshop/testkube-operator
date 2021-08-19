@@ -6,9 +6,9 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: executors.executor.kubetest.io
+  name: executors.executor.kubtest.io
 spec:
-  group: executor.kubetest.io
+  group: executor.kubtest.io
   names:
     kind: Executor
     listKind: ExecutorList

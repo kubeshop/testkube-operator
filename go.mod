@@ -1,4 +1,4 @@
-module github.com/kubeshop/kubetest-operator
+module github.com/kubeshop/kubtest-operator
 
 go 1.16
 

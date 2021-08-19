@@ -5,7 +5,7 @@ metadata:
   name: script-editor-role
 rules:
 - apiGroups:
-  - tests.kubetest.io
+  - tests.kubtest.io
   resources:
   - scripts
   verbs:
@@ -17,7 +17,7 @@ rules:
   - update
   - watch
 - apiGroups:
-  - tests.kubetest.io
+  - tests.kubtest.io
   resources:
   - scripts/status
   verbs:
