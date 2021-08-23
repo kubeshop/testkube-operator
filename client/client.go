@@ -6,6 +6,7 @@ import (
 	executorv1 "github.com/kubeshop/kubtest-operator/apis/executor/v1"
 	scriptv1 "github.com/kubeshop/kubtest-operator/apis/script/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	_ "k8s.io/client-go/plugin/pkg/client/auth"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
