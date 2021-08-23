@@ -1,7 +1,7 @@
 apiVersion: executor.kubtest.io/v1
 kind: Executor
 metadata:
-  name: executor-sample
+  name: local-postman
 spec:
-  name: test-executor
+  name: local-postman
   uri: http://localhost:8082
