@@ -26,9 +26,18 @@ import (
 // ScriptSpec defines the desired state of Script
 type ScriptSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
-	ID      string `json:"id,omitempty"`
-	Type    string `json:"type,omitempty"`
+	// script type - what executor type should be used during test execution
+	Type string `json:"type,omitempty"`
+	// script content - executor specific e.g. fo postman-collections executor
 	Content string `json:"content,omitempty"`
+	// script content type can be:  - direct content - created from file,  - git repo directory checkout in case when test is some kind of project or have more than one file,  - or file uri
+	InputType string `json:"input-type,omitempty"`
+	// uri of content file or git directory
+	Uri string `json:"uri,omitempty"`
+	// git branch/tag name for checkout
+	GitBranch string `json:"git-branch,omitempty"`
+	// if needed we can checkout particular directory in case of BIG/mono repositories
+	GitDirectory string `json:"git-directory,omitempty"`
 }
 
 // ScriptStatus defines the observed state of Script
