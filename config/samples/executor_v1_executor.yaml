@@ -3,5 +3,29 @@ kind: Executor
 metadata:
   name: local-postman
 spec:
-  name: local-postman
   uri: http://localhost:8082
+  types:
+  - postman/collection
+
+---
+
+apiVersion: executor.kubtest.io/v1
+kind: Executor
+metadata:
+  name: local-curl
+spec:
+  uri: http://localhost:8083
+  types:
+  - curl/command
+
+---
+
+apiVersion: executor.kubtest.io/v1
+kind: Executor
+metadata:
+  name: local-cypress
+spec:
+  uri: http://localhost:8084
+  types:
+  - cypress/project
+
