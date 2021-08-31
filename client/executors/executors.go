@@ -2,6 +2,7 @@ package scripts
 
 import (
 	"context"
+	"fmt"
 
 	executorsAPI "github.com/kubeshop/kubtest-operator/apis/executor/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -29,18 +30,24 @@ func (s ExecutorsClient) Get(namespace, name string) (*executorsAPI.Executor, er
 	return script, err
 }
 
-func (s ExecutorsClient) GetByType(scriptType string) (*executorsAPI.Executor, error) {
+func (s ExecutorsClient) GetByType(executorType string) (*executorsAPI.Executor, error) {
 	list := &executorsAPI.ExecutorList{}
 	err := s.Client.List(context.Background(), list, &client.ListOptions{})
-
-	for _, script := range list.Items {
-		if script.Spec.Type_ == scriptType {
-			return script, nil
-		}
-
+	if err != nil {
+		return nil, err
 	}
 
-	return script, err
+	names := []string{}
+	for _, exec := range list.Items {
+		names = append(names, fmt.Sprintf("%s/%s", exec.Namespace, exec.Name))
+		for _, t := range exec.Spec.Types {
+			if t == executorType {
+				return &exec, nil
+			}
+		}
+	}
+
+	return nil, fmt.Errorf("executor type '%s' is not handled by any of executors (%s)", executorType, names)
 }
 
 func (s ExecutorsClient) Create(scripts *executorsAPI.Executor) (*executorsAPI.Executor, error) {
