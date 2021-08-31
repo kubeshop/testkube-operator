@@ -25,19 +25,29 @@ import (
 
 // ScriptSpec defines the desired state of Script
 type ScriptSpec struct {
-	// Important: Run "make" to regenerate code after modifying this file
-	// script type - what executor type should be used during test execution
-	Type string `json:"type,omitempty"`
-	// script content - executor specific e.g. fo postman-collections executor
+	// script type
+	Type_ string `json:"type,omitempty"`
+	// script execution custom name
+	Name string `json:"name,omitempty"`
+	// execution params passed to executor
+	Params map[string]string `json:"params,omitempty"`
+	// script content as string (content depends from executor)
 	Content string `json:"content,omitempty"`
-	// script content type can be:  - direct content - created from file,  - git repo directory checkout in case when test is some kind of project or have more than one file,  - or file uri
-	InputType string `json:"input-type,omitempty"`
+	// script content type can be:  - direct content - created from file, - git repo directory checkout in case when test is some kind of project or have more than one file,
+	InputType  string      `json:"input-type,omitempty"`
+	Repository *Repository `json:"repository,omitempty"`
+}
+
+// Repository represents VCS repo, currently we're habdling Git only
+type Repository struct {
+	// VCS repository type
+	Type_ string `json:"type"`
 	// uri of content file or git directory
-	Uri string `json:"uri,omitempty"`
-	// git branch/tag name for checkout
-	GitBranch string `json:"git-branch,omitempty"`
+	Uri string `json:"uri"`
+	// branch/tag name for checkout
+	Branch string `json:"branch"`
 	// if needed we can checkout particular directory in case of BIG/mono repositories
-	GitDirectory string `json:"git-directory,omitempty"`
+	Directory string `json:"directory,omitempty"`
 }
 
 // ScriptStatus defines the observed state of Script
