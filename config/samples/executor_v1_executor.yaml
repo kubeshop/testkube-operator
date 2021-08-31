@@ -16,7 +16,7 @@ metadata:
 spec:
   uri: http://localhost:8083
   types:
-  - curl/command
+  - curl/test
 
 ---
 
