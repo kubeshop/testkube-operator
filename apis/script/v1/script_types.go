@@ -34,7 +34,8 @@ type ScriptSpec struct {
 	// script content as string (content depends from executor)
 	Content string `json:"content,omitempty"`
 	// script content type can be:  - direct content - created from file, - git repo directory checkout in case when test is some kind of project or have more than one file,
-	InputType  string      `json:"input-type,omitempty"`
+	InputType string `json:"input-type,omitempty"`
+	// repository details if exists
 	Repository *Repository `json:"repository,omitempty"`
 }
 
@@ -46,8 +47,8 @@ type Repository struct {
 	Uri string `json:"uri"`
 	// branch/tag name for checkout
 	Branch string `json:"branch"`
-	// if needed we can checkout particular directory in case of BIG/mono repositories
-	Directory string `json:"directory,omitempty"`
+	// if needed we can checkout particular path (dir or file) in case of BIG/mono repositories
+	Path string `json:"path,omitempty"`
 }
 
 // ScriptStatus defines the observed state of Script

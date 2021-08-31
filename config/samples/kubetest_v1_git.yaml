@@ -1,0 +1,11 @@
+apiVersion: tests.kubtest.io/v1
+kind: Scripts
+metadata:
+  name: test-git-1
+spec:
+  repository: 
+    uri: https://github.com/kubeshop/kubtest-executor-cypress.git
+    path: examples
+    branch: jacek/feature/git-checkout
+  type: cypress/project
+  content: djdj

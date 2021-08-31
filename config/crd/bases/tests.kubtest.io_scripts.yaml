@@ -53,15 +53,14 @@ spec:
                 description: execution params passed to executor
                 type: object
               repository:
-                description: Repository represents VCS repo, currently we're habdling
-                  Git only
+                description: repository details if exists
                 properties:
                   branch:
                     description: branch/tag name for checkout
                     type: string
-                  directory:
-                    description: if needed we can checkout particular directory in
-                      case of BIG/mono repositories
+                  path:
+                    description: if needed we can checkout particular path (dir or
+                      file) in case of BIG/mono repositories
                     type: string
                   type:
                     description: VCS repository type
