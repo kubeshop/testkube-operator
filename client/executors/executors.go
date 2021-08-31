@@ -29,6 +29,20 @@ func (s ExecutorsClient) Get(namespace, name string) (*executorsAPI.Executor, er
 	return script, err
 }
 
+func (s ExecutorsClient) GetByType(scriptType string) (*executorsAPI.Executor, error) {
+	list := &executorsAPI.ExecutorList{}
+	err := s.Client.List(context.Background(), list, &client.ListOptions{})
+
+	for _, script := range list.Items {
+		if script.Spec.Type_ == scriptType {
+			return script, nil
+		}
+
+	}
+
+	return script, err
+}
+
 func (s ExecutorsClient) Create(scripts *executorsAPI.Executor) (*executorsAPI.Executor, error) {
 	err := s.Client.Create(context.Background(), scripts)
 	return scripts, err

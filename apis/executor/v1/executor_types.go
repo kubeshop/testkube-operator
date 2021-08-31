@@ -25,11 +25,12 @@ import (
 
 // ExecutorSpec defines the desired state of Executor
 type ExecutorSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	Name string `json:"name,omitempty"`
-	URI  string `json:"uri,omitempty"`
+	// URI defines executor URI
+	URI string `json:"uri"`
+	// Types defines what types can be handled by executor e.g. "postman/collection", ":curl/command" etc
+	Types []string `json:"types"`
 }
 
 // ExecutorStatus defines the observed state of Executor
