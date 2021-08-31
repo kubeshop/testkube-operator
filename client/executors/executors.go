@@ -8,8 +8,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func NewClient(client client.Client) ExecutorsClient {
-	return ExecutorsClient{
+func NewClient(client client.Client) *ExecutorsClient {
+	return &ExecutorsClient{
 		Client: client,
 	}
 }

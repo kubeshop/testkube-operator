@@ -7,8 +7,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-func NewClient(client client.Client) ScriptsClient {
-	return ScriptsClient{
+func NewClient(client client.Client) *ScriptsClient {
+	return &ScriptsClient{
 		Client: client,
 	}
 }
