@@ -4,6 +4,7 @@ metadata:
   name: local-postman
 spec:
   uri: http://localhost:8082
+  runner_type: openapi
   types:
   - postman/collection
 
@@ -15,6 +16,7 @@ metadata:
   name: local-curl
 spec:
   uri: http://localhost:8083
+  runner_type: openapi
   types:
   - curl/test
 
@@ -26,6 +28,25 @@ metadata:
   name: local-cypress
 spec:
   uri: http://localhost:8084
+  runner_type: openapi
   types:
   - cypress/project
+
+--- 
+
+# you can create new script with type postman-job/collection to run it on top of this executor
+apiVersion: executor.kubtest.io/v1
+kind: Executor
+metadata:
+  name: postman-job
+spec:
+  uri: http://localhost:8084
+  image: jasmingacic/postman-agent 
+  runner_type: job
+  volume_mount_path: /mnt/artifacts-storage
+  volume_quantity: '10Gi'
+  types:
+  - postman-job/collection
+
+
 
