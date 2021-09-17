@@ -33,7 +33,7 @@ type ExecutorSpec struct {
 	// Runner one of "rest" for rest based executors or "kube-job" which will be default runners for kubtest soon
 	RunnerType string `json:"runner_type,omitempty"`
 	// URI for rest based executors
-	URI string `json:"uri"`
+	URI string `json:"uri,omitempty"`
 	// Image for kube-job
 	Image string `json:"image,omitempty"`
 	// VolumeQuantity for kube-job PersistentVolume

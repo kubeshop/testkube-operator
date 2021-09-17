@@ -61,7 +61,6 @@ spec:
                 type: string
             required:
             - types
-            - uri
             type: object
           status:
             description: ExecutorStatus defines the observed state of Executor

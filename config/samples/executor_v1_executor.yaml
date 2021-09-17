@@ -40,7 +40,6 @@ kind: Executor
 metadata:
   name: postman-job
 spec:
-  uri: http://localhost:8084
   image: jasmingacic/postman-agent 
   runner_type: job
   volume_mount_path: /mnt/artifacts-storage
