@@ -1,3 +1,4 @@
+## to use this executor use local-postman/collection script type when creating script CR
 apiVersion: executor.kubtest.io/v1
 kind: Executor
 metadata:
@@ -6,10 +7,11 @@ spec:
   uri: http://localhost:8082
   runner_type: openapi
   types:
-  - postman/collection
+  - local-postman/collection
 
 ---
 
+## to use this executor use local-curl/test script type when creating script CR
 apiVersion: executor.kubtest.io/v1
 kind: Executor
 metadata:
@@ -18,10 +20,11 @@ spec:
   uri: http://localhost:8083
   runner_type: openapi
   types:
-  - curl/test
+  - local-curl/test
 
 ---
 
+## to use this executor use local-cypress/project script type when creating script CR
 apiVersion: executor.kubtest.io/v1
 kind: Executor
 metadata:
@@ -30,7 +33,7 @@ spec:
   uri: http://localhost:8084
   runner_type: openapi
   types:
-  - cypress/project
+  - local-cypress/project
 
 --- 
 
