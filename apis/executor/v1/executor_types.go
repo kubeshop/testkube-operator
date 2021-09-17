@@ -27,10 +27,22 @@ import (
 type ExecutorSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// URI defines executor URI
-	URI string `json:"uri"`
 	// Types defines what types can be handled by executor e.g. "postman/collection", ":curl/command" etc
 	Types []string `json:"types"`
+
+	// Runner one of "rest" for rest based executors or "kube-job" which will be default runners for kubtest soon
+	RunnerType string `json:"runner_type,omitempty"`
+	// URI for rest based executors
+	URI string `json:"uri"`
+	// Image for kube-job
+	Image string `json:"image,omitempty"`
+	// VolumeQuantity for kube-job PersistentVolume
+	VolumeQuantity string `json:"volume_quantity,omitempty"`
+	// VolumeMountPath - where should PV be monted inside job pod for e.g. artifacts
+	VolumeMountPath string `json:"volume_mount_path,omitempty"`
+}
+
+type Runner struct {
 }
 
 // ExecutorStatus defines the observed state of Executor
