@@ -5,7 +5,7 @@ metadata:
   name: local-postman
 spec:
   uri: http://localhost:8082
-  executor_type: openapi
+  executor_type: rest
   types:
   - local-postman/collection
 
@@ -18,7 +18,7 @@ metadata:
   name: local-curl
 spec:
   uri: http://localhost:8083
-  executor_type: openapi
+  executor_type: rest
   types:
   - local-curl/test
 
@@ -31,7 +31,7 @@ metadata:
   name: local-cypress
 spec:
   uri: http://localhost:8084
-  executor_type: openapi
+  executor_type: rest
   types:
   - local-cypress/project
 

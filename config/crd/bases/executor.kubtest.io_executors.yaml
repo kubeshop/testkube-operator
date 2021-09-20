@@ -5,6 +5,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
+  creationTimestamp: null
   name: executors.executor.kubtest.io
 spec:
   group: executor.kubtest.io
@@ -36,7 +37,7 @@ spec:
             description: ExecutorSpec defines the desired state of Executor
             properties:
               executor_type:
-                description: ExecutorType one of "openapi" for rest based executors
+                description: ExecutorType one of "rest" for rest openapi based executors
                   or "job" which will be default runners for kubtest soon
                 type: string
               image:

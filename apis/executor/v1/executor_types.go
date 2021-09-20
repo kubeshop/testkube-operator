@@ -30,7 +30,7 @@ type ExecutorSpec struct {
 	// Types defines what types can be handled by executor e.g. "postman/collection", ":curl/command" etc
 	Types []string `json:"types"`
 
-	// ExecutorType one of "openapi" for rest based executors or "job" which will be default runners for kubtest soon
+	// ExecutorType one of "rest" for rest openapi based executors or "job" which will be default runners for kubtest soon
 	ExecutorType string `json:"executor_type,omitempty"`
 	// URI for rest based executors
 	URI string `json:"uri,omitempty"`
