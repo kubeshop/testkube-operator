@@ -36,12 +36,12 @@ spec:
           spec:
             description: ExecutorSpec defines the desired state of Executor
             properties:
+              executor_type:
+                description: ExecutorType one of "openapi" for rest based executors
+                  or "job" which will be default runners for kubtest soon
+                type: string
               image:
                 description: Image for kube-job
-                type: string
-              runner_type:
-                description: Runner one of "rest" for rest based executors or "kube-job"
-                  which will be default runners for kubtest soon
                 type: string
               types:
                 description: Types defines what types can be handled by executor e.g.

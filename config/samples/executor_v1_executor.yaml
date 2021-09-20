@@ -5,7 +5,7 @@ metadata:
   name: local-postman
 spec:
   uri: http://localhost:8082
-  runner_type: openapi
+  executor_type: openapi
   types:
   - local-postman/collection
 
@@ -18,7 +18,7 @@ metadata:
   name: local-curl
 spec:
   uri: http://localhost:8083
-  runner_type: openapi
+  executor_type: openapi
   types:
   - local-curl/test
 
@@ -31,7 +31,7 @@ metadata:
   name: local-cypress
 spec:
   uri: http://localhost:8084
-  runner_type: openapi
+  executor_type: openapi
   types:
   - local-cypress/project
 
@@ -44,7 +44,7 @@ metadata:
   name: postman-job
 spec:
   image: jasmingacic/postman-agent 
-  runner_type: job
+  executor_type: job
   volume_mount_path: /mnt/artifacts-storage
   volume_quantity: '10Gi'
   types:
