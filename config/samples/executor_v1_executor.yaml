@@ -2,6 +2,45 @@
 apiVersion: executor.kubtest.io/v1
 kind: Executor
 metadata:
+  name: postman
+spec:
+  uri: http://kubtest-postman-executor:8082
+  executor_type: rest
+  types:
+  - postman/collection
+
+---
+
+## to use this executor use local-curl/test script type when creating script CR
+apiVersion: executor.kubtest.io/v1
+kind: Executor
+metadata:
+  name: curl
+spec:
+  uri: http://kubtest-curl-executor:8083
+  executor_type: rest
+  types:
+  - curl/test
+
+---
+
+## to use this executor use local-cypress/project script type when creating script CR
+apiVersion: executor.kubtest.io/v1
+kind: Executor
+metadata:
+  name: cypress
+spec:
+  uri: http://kubtest-cypress-executor:8084
+  executor_type: rest
+  types:
+  - cypress/project
+
+--- 
+
+## to use this executor use local-postman/collection script type when creating script CR
+apiVersion: executor.kubtest.io/v1
+kind: Executor
+metadata:
   name: local-postman
 spec:
   uri: http://localhost:8082
@@ -49,6 +88,3 @@ spec:
   volume_quantity: '10Gi'
   types:
   - postman-job/collection
-
-
-
