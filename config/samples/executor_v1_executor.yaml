@@ -2,7 +2,7 @@
 apiVersion: executor.kubtest.io/v1
 kind: Executor
 metadata:
-  name: postman
+  name: postman-executor
 spec:
   uri: http://kubtest-postman-executor:8082
   executor_type: rest
@@ -15,7 +15,7 @@ spec:
 apiVersion: executor.kubtest.io/v1
 kind: Executor
 metadata:
-  name: curl
+  name: curl-executor
 spec:
   uri: http://kubtest-curl-executor:8083
   executor_type: rest
@@ -28,7 +28,7 @@ spec:
 apiVersion: executor.kubtest.io/v1
 kind: Executor
 metadata:
-  name: cypress
+  name: cypress-executor
 spec:
   uri: http://kubtest-cypress-executor:8084
   executor_type: rest
