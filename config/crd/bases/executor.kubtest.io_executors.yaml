@@ -6,9 +6,9 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: executors.executor.kubtest.io
+  name: executors.executor.testkube.io
 spec:
-  group: executor.kubtest.io
+  group: executor.testkube.io
   names:
     kind: Executor
     listKind: ExecutorList
@@ -38,7 +38,7 @@ spec:
             properties:
               executor_type:
                 description: ExecutorType one of "rest" for rest openapi based executors
-                  or "job" which will be default runners for kubtest soon
+                  or "job" which will be default runners for testkube soon
                 type: string
               image:
                 description: Image for kube-job

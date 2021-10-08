@@ -30,7 +30,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	kubtestv1 "github.com/kubeshop/kubtest-operator/apis/script/v1"
+	testkubev1 "github.com/kubeshop/testkube-operator/apis/script/v1"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -63,7 +63,7 @@ var _ = BeforeSuite(func() {
 	Expect(err).NotTo(HaveOccurred())
 	Expect(cfg).NotTo(BeNil())
 
-	err = kubtestv1.AddToScheme(scheme.Scheme)
+	err = testkubev1.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
 
 	//+kubebuilder:scaffold:scheme

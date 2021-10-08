@@ -1,4 +1,4 @@
-apiVersion: tests.kubtest.io/v1
+apiVersion: tests.testkube.io/v1
 kind: Script
 metadata:
   name: test-kubeshop-failed

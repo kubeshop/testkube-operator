@@ -8,4 +8,4 @@ webhook:
   port: 9443
 leaderElection:
   leaderElect: true
-  resourceName: 47f0dfc1.kubtest.io
+  resourceName: 47f0dfc1.testkube.io

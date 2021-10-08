@@ -5,7 +5,7 @@ metadata:
   name: executor-viewer-role
 rules:
 - apiGroups:
-  - executor.kubtest.io
+  - executor.testkube.io
   resources:
   - executors
   verbs:
@@ -13,7 +13,7 @@ rules:
   - list
   - watch
 - apiGroups:
-  - executor.kubtest.io
+  - executor.testkube.io
   resources:
   - executors/status
   verbs:
