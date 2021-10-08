@@ -1,10 +1,10 @@
 ## to use this executor use local-postman/collection script type when creating script CR
-apiVersion: executor.kubtest.io/v1
+apiVersion: executor.testkube.io/v1
 kind: Executor
 metadata:
   name: postman-executor
 spec:
-  uri: http://kubtest-postman-executor:8082
+  uri: http://testkube-postman-executor:8082
   executor_type: rest
   types:
   - postman/collection
@@ -12,12 +12,12 @@ spec:
 ---
 
 ## to use this executor use local-curl/test script type when creating script CR
-apiVersion: executor.kubtest.io/v1
+apiVersion: executor.testkube.io/v1
 kind: Executor
 metadata:
   name: curl-executor
 spec:
-  uri: http://kubtest-curl-executor:8083
+  uri: http://testkube-curl-executor:8083
   executor_type: rest
   types:
   - curl/test
@@ -25,12 +25,12 @@ spec:
 ---
 
 ## to use this executor use local-cypress/project script type when creating script CR
-apiVersion: executor.kubtest.io/v1
+apiVersion: executor.testkube.io/v1
 kind: Executor
 metadata:
   name: cypress-executor
 spec:
-  uri: http://kubtest-cypress-executor:8084
+  uri: http://testkube-cypress-executor:8084
   executor_type: rest
   types:
   - cypress/project
@@ -38,7 +38,7 @@ spec:
 --- 
 
 ## to use this executor use local-postman/collection script type when creating script CR
-apiVersion: executor.kubtest.io/v1
+apiVersion: executor.testkube.io/v1
 kind: Executor
 metadata:
   name: local-postman
@@ -51,7 +51,7 @@ spec:
 ---
 
 ## to use this executor use local-curl/test script type when creating script CR
-apiVersion: executor.kubtest.io/v1
+apiVersion: executor.testkube.io/v1
 kind: Executor
 metadata:
   name: local-curl
@@ -64,7 +64,7 @@ spec:
 ---
 
 ## to use this executor use local-cypress/project script type when creating script CR
-apiVersion: executor.kubtest.io/v1
+apiVersion: executor.testkube.io/v1
 kind: Executor
 metadata:
   name: local-cypress
@@ -77,7 +77,7 @@ spec:
 --- 
 
 # you can create new script with type postman-job/collection to run it on top of this executor
-apiVersion: executor.kubtest.io/v1
+apiVersion: executor.testkube.io/v1
 kind: Executor
 metadata:
   name: postman-job

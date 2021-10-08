@@ -24,7 +24,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	executorv1 "github.com/kubeshop/kubtest-operator/apis/executor/v1"
+	executorv1 "github.com/kubeshop/testkube-operator/apis/executor/v1"
 )
 
 // ExecutorReconciler reconciles a Executor object
@@ -33,9 +33,9 @@ type ExecutorReconciler struct {
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=executor.kubtest.io,resources=executors,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=executor.kubtest.io,resources=executors/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=executor.kubtest.io,resources=executors/finalizers,verbs=update
+//+kubebuilder:rbac:groups=executor.testkube.io,resources=executors,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=executor.testkube.io,resources=executors/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=executor.testkube.io,resources=executors/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.

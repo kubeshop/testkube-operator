@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	executorsAPI "github.com/kubeshop/kubtest-operator/apis/executor/v1"
+	executorsAPI "github.com/kubeshop/testkube-operator/apis/executor/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 

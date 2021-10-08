@@ -1,26 +1,26 @@
-domain: kubtest.io
+domain: testkube.io
 layout:
 - go.kubebuilder.io/v3
 multigroup: true
-projectName: kubtest
-repo: github.com/kubeshop/kubtest
+projectName: testkube
+repo: github.com/kubeshop/testkube
 resources:
 - api:
     crdVersion: v1
     namespaced: true
   controller: true
-  domain: kubtest.io
+  domain: testkube.io
   group: tests
   kind: Script
-  path: github.com/kubeshop/kubtest=operator/apis/script/v1
+  path: github.com/kubeshop/testkube=operator/apis/script/v1
   version: v1
 - api:
     crdVersion: v1
     namespaced: true
   controller: true
-  domain: kubtest.io
+  domain: testkube.io
   group: executor
   kind: Executor
-  path: github.com/kubeshop/kubtest-operator/apis/executor/v1
+  path: github.com/kubeshop/testkube-operator/apis/executor/v1
   version: v1
 version: "3"

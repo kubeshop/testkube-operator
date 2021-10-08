@@ -5,7 +5,7 @@ metadata:
   name: script-viewer-role
 rules:
 - apiGroups:
-  - tests.kubtest.io
+  - tests.testkube.io
   resources:
   - scripts
   verbs:
@@ -13,7 +13,7 @@ rules:
   - list
   - watch
 - apiGroups:
-  - tests.kubtest.io
+  - tests.testkube.io
   resources:
   - scripts/status
   verbs:
