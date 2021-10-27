@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	executorsAPI "github.com/kubeshop/testkube-operator/apis/executor/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -59,4 +60,16 @@ func (s ExecutorsClient) GetByType(executorType string) (*executorsAPI.Executor,
 func (s ExecutorsClient) Create(scripts *executorsAPI.Executor) (*executorsAPI.Executor, error) {
 	err := s.Client.Create(context.Background(), scripts)
 	return scripts, err
+}
+
+// Create creates new Executor CR
+func (s ExecutorsClient) Delete(name, ns string) error {
+	executor := &executorsAPI.Executor{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      name,
+			Namespace: ns,
+		},
+	}
+	err := s.Client.Delete(context.Background(), executor)
+	return err
 }
