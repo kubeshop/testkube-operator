@@ -4,7 +4,7 @@ import (
 	"context"
 
 	scriptsAPI "github.com/kubeshop/testkube-operator/apis/script/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -46,6 +46,10 @@ func (s ScriptsClient) Delete(namespace, name string) error {
 }
 
 func (s ScriptsClient) DeleteAll(namespace string) error {
-	err := s.Client.DeleteAllOf(context.Background(), &scriptsAPI.Script{ObjectMeta: metav1.ObjectMeta{Namespace: namespace}})
+
+	u := &unstructured.Unstructured{}
+	u.SetKind("script")
+	u.SetAPIVersion("tests.testkube.io/v1")
+	err := s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(namespace))
 	return err
 }
