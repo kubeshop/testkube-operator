@@ -4,6 +4,7 @@ import (
 	"context"
 
 	scriptsAPI "github.com/kubeshop/testkube-operator/apis/script/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -32,4 +33,23 @@ func (s ScriptsClient) Get(namespace, name string) (*scriptsAPI.Script, error) {
 func (s ScriptsClient) Create(scripts *scriptsAPI.Script) (*scriptsAPI.Script, error) {
 	err := s.Client.Create(context.Background(), scripts)
 	return scripts, err
+}
+
+func (s ScriptsClient) Delete(namespace, name string) error {
+	script, err := s.Get(namespace, name)
+	if err != nil {
+		return err
+	}
+
+	err = s.Client.Delete(context.Background(), script)
+	return err
+}
+
+func (s ScriptsClient) DeleteAll(namespace string) error {
+
+	u := &unstructured.Unstructured{}
+	u.SetKind("script")
+	u.SetAPIVersion("tests.testkube.io/v1")
+	err := s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(namespace))
+	return err
 }
