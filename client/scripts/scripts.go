@@ -35,6 +35,11 @@ func (s ScriptsClient) Create(scripts *scriptsAPI.Script) (*scriptsAPI.Script, e
 	return scripts, err
 }
 
+func (s ScriptsClient) Update(scripts *scriptsAPI.Script) (*scriptsAPI.Script, error) {
+	err := s.Client.Update(context.Background(), scripts)
+	return scripts, err
+}
+
 func (s ScriptsClient) Delete(namespace, name string) error {
 	script, err := s.Get(namespace, name)
 	if err != nil {
