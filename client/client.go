@@ -10,12 +10,17 @@ import (
 )
 
 // GetClient returns kubernetes CRD client with registered schemes
+// GetClient returns kubernetes CRD client with registered schemes
 func GetClient() (client.Client, error) {
 	scheme := runtime.NewScheme()
 
 	scriptv1.AddToScheme(scheme)
 	executorv1.AddToScheme(scheme)
 
-	kubeconfig := ctrl.GetConfigOrDie()
+	kubeconfig, err := ctrl.GetConfig()
+	if err != nil {
+		return nil, err
+	}
+
 	return client.New(kubeconfig, client.Options{Scheme: scheme})
 }
