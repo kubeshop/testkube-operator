@@ -23,13 +23,4 @@ resources:
   kind: Executor
   path: github.com/kubeshop/testkube-operator/apis/executor/v1
   version: v1
-- api:
-    crdVersion: v1
-    namespaced: true
-  controller: true
-  domain: testkube.io
-  group: tests
-  kind: Test
-  path: github.com/kubeshop/testkube-operator/apis/tests/v1
-  version: v1
 version: "3"
