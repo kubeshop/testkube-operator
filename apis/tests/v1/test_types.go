@@ -17,6 +17,8 @@ limitations under the License.
 package v1
 
 import (
+	"time"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -28,13 +30,31 @@ type TestSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Scripts is list of scripts which will be sequentially orchestrated
-	Scripts []TestScriptSpec `json:"scripts,omitempty"`
+	// Steps is list of scripts which will be sequentially orchestrated
+	Steps []TestStepSpec `json:"scripts,omitempty"`
 }
 
-type TestScriptSpec struct {
+// TestStepSpec will of particular type will have config for possible step types
+type TestStepSpec struct {
+	Type       string                `json:"type,omitempty"`
+	ScriptStep TestStepExecuteScript `json:"script,omitempty"`
+	DelayStep  TestStepDelay         `json:"delay_step,omitempty"`
+}
+
+type TestStepType string
+
+const (
+	TestStepTypeExecuteScript TestStepType = "executeScript"
+	TestStepTypeDelay         TestStepType = "delay"
+)
+
+type TestStepExecuteScript struct {
 	Namespace string `json:"namespace,omitempty"`
 	Name      string `json:"name,omitempty"`
+}
+
+type TestStepDelay struct {
+	Delay time.Duration `json:"delay,omitempty"`
 }
 
 // TestStatus defines the observed state of Test
