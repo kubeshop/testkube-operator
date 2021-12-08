@@ -33,8 +33,10 @@ import (
 
 	executorv1 "github.com/kubeshop/testkube-operator/apis/executor/v1"
 	testkubev1 "github.com/kubeshop/testkube-operator/apis/script/v1"
+	testsv1 "github.com/kubeshop/testkube-operator/apis/tests/v1"
 	executorcontrollers "github.com/kubeshop/testkube-operator/controllers/executor"
 	scriptcontrollers "github.com/kubeshop/testkube-operator/controllers/script"
+	testscontrollers "github.com/kubeshop/testkube-operator/controllers/tests"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -48,6 +50,7 @@ func init() {
 
 	utilruntime.Must(testkubev1.AddToScheme(scheme))
 	utilruntime.Must(executorv1.AddToScheme(scheme))
+	utilruntime.Must(testsv1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -93,6 +96,13 @@ func main() {
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Executor")
+		os.Exit(1)
+	}
+	if err = (&testscontrollers.TestReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "Test")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder
