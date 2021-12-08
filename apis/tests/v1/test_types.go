@@ -30,14 +30,21 @@ type TestSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
+	// Before steps is list of scripts which will be sequentially orchestrated
+	Before []TestStepSpec `json:"before,omitempty"`
 	// Steps is list of scripts which will be sequentially orchestrated
-	Steps []TestStepSpec `json:"scripts,omitempty"`
+	Steps []TestStepSpec `json:"steps,omitempty"`
+	// After steps is list of scripts which will be sequentially orchestrated
+	After []TestStepSpec `json:"after,omitempty"`
+
+	Repeats       int  `json:"repeats,omitempty"`
+	StopOnFailure bool `json:"stop_on_failure,omitempty"`
 }
 
 // TestStepSpec will of particular type will have config for possible step types
 type TestStepSpec struct {
 	Type       string                `json:"type,omitempty"`
-	ScriptStep TestStepExecuteScript `json:"script,omitempty"`
+	ScriptStep TestStepExecuteScript `json:"script_step,omitempty"`
 	DelayStep  TestStepDelay         `json:"delay_step,omitempty"`
 }
 

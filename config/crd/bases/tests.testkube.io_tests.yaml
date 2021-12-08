@@ -52,7 +52,7 @@ spec:
                           format: int64
                           type: integer
                       type: object
-                    script:
+                    script_step:
                       properties:
                         name:
                           type: string
@@ -63,6 +63,8 @@ spec:
                       type: string
                   type: object
                 type: array
+              stop_on_failure:
+                type: boolean
             type: object
           status:
             description: TestStatus defines the observed state of Test
