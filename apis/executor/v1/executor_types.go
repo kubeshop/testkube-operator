@@ -28,19 +28,27 @@ type ExecutorSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// Types defines what types can be handled by executor e.g. "postman/collection", ":curl/command" etc
-	Types []string `json:"types"`
+	Types []string `json:"types,omitempty"`
 
 	// ExecutorType one of "rest" for rest openapi based executors or "job" which will be default runners for testkube soon
 	ExecutorType string `json:"executor_type,omitempty"`
+
 	// URI for rest based executors
 	URI string `json:"uri,omitempty"`
+
 	// Image for kube-job
 	Image string `json:"image,omitempty"`
-	// VolumeQuantity for kube-job PersistentVolume
-	VolumeQuantity string `json:"volume_quantity,omitempty"`
-	// VolumeMountPath - where should PV be monted inside job pod for e.g. artifacts
-	VolumeMountPath string `json:"volume_mount_path,omitempty"`
+
+	// Features list of possible features which executor handles
+	Features []Feature `json:"features,omitempty"`
 }
+
+type Feature string
+
+const (
+	FeatureArtifacts   Feature = "artifacts"
+	FeatureJUnitReport Feature = "junit-report"
+)
 
 type Runner struct {
 }
