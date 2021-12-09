@@ -36,7 +36,65 @@ spec:
           spec:
             description: TestSpec defines the desired state of Test
             properties:
-              scripts:
+              after:
+                description: After steps is list of scripts which will be sequentially
+                  orchestrated
+                items:
+                  description: TestStepSpec will of particular type will have config
+                    for possible step types
+                  properties:
+                    delay_step:
+                      properties:
+                        delay:
+                          description: A Duration represents the elapsed time between
+                            two instants as an int64 nanosecond count. The representation
+                            limits the largest representable duration to approximately
+                            290 years.
+                          format: int64
+                          type: integer
+                      type: object
+                    script_step:
+                      properties:
+                        name:
+                          type: string
+                        namespace:
+                          type: string
+                      type: object
+                    type:
+                      type: string
+                  type: object
+                type: array
+              before:
+                description: Before steps is list of scripts which will be sequentially
+                  orchestrated
+                items:
+                  description: TestStepSpec will of particular type will have config
+                    for possible step types
+                  properties:
+                    delay_step:
+                      properties:
+                        delay:
+                          description: A Duration represents the elapsed time between
+                            two instants as an int64 nanosecond count. The representation
+                            limits the largest representable duration to approximately
+                            290 years.
+                          format: int64
+                          type: integer
+                      type: object
+                    script_step:
+                      properties:
+                        name:
+                          type: string
+                        namespace:
+                          type: string
+                      type: object
+                    type:
+                      type: string
+                  type: object
+                type: array
+              repeats:
+                type: integer
+              steps:
                 description: Steps is list of scripts which will be sequentially orchestrated
                 items:
                   description: TestStepSpec will of particular type will have config

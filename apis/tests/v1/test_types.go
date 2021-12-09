@@ -43,9 +43,9 @@ type TestSpec struct {
 
 // TestStepSpec will of particular type will have config for possible step types
 type TestStepSpec struct {
-	Type       string                `json:"type,omitempty"`
-	ScriptStep TestStepExecuteScript `json:"script_step,omitempty"`
-	DelayStep  TestStepDelay         `json:"delay_step,omitempty"`
+	Type       string                 `json:"type,omitempty"`
+	ScriptStep *TestStepExecuteScript `json:"script_step,omitempty"`
+	DelayStep  *TestStepDelay         `json:"delay_step,omitempty"`
 }
 
 type TestStepType string
