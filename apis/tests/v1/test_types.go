@@ -56,8 +56,9 @@ const (
 )
 
 type TestStepExecuteScript struct {
-	Namespace string `json:"namespace,omitempty"`
-	Name      string `json:"name,omitempty"`
+	Namespace     string `json:"namespace,omitempty"`
+	Name          string `json:"name,omitempty"`
+	StopOnFailure bool   `json:"stop_on_failure,omitempty"`
 }
 
 type TestStepDelay struct {

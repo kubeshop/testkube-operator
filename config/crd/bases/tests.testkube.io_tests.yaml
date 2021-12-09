@@ -59,6 +59,8 @@ spec:
                           type: string
                         namespace:
                           type: string
+                        stop_on_failure:
+                          type: boolean
                       type: object
                     type:
                       type: string
@@ -87,6 +89,8 @@ spec:
                           type: string
                         namespace:
                           type: string
+                        stop_on_failure:
+                          type: boolean
                       type: object
                     type:
                       type: string
@@ -116,6 +120,8 @@ spec:
                           type: string
                         namespace:
                           type: string
+                        stop_on_failure:
+                          type: boolean
                       type: object
                     type:
                       type: string

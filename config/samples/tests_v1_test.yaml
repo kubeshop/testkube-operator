@@ -3,4 +3,6 @@ kind: Test
 metadata:
   name: test-sample
 spec:
-  # TODO(user): Add fields here
+  steps: 
+    - namespace: testkube 
+      name: sanity
