@@ -96,6 +96,8 @@ spec:
                       type: string
                   type: object
                 type: array
+              description:
+                type: string
               repeats:
                 type: integer
               steps:
