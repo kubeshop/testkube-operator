@@ -39,6 +39,7 @@ type TestSpec struct {
 
 	Repeats       int  `json:"repeats,omitempty"`
 	StopOnFailure bool `json:"stop_on_failure,omitempty"`
+	Description   string
 }
 
 // TestStepSpec will of particular type will have config for possible step types
