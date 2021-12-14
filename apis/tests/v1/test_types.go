@@ -62,7 +62,7 @@ type TestStepExecuteScript struct {
 }
 
 type TestStepDelay struct {
-	Delay time.Duration `json:"delay,omitempty"`
+	Duration time.Duration `json:"delay,omitempty"`
 }
 
 // TestStatus defines the observed state of Test
