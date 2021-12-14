@@ -40,6 +40,11 @@ spec:
                 description: ExecutorType one of "rest" for rest openapi based executors
                   or "job" which will be default runners for testkube soon
                 type: string
+              features:
+                description: Features list of possible features which executor handles
+                items:
+                  type: string
+                type: array
               image:
                 description: Image for kube-job
                 type: string
@@ -52,15 +57,6 @@ spec:
               uri:
                 description: URI for rest based executors
                 type: string
-              volume_mount_path:
-                description: VolumeMountPath - where should PV be monted inside job
-                  pod for e.g. artifacts
-                type: string
-              volume_quantity:
-                description: VolumeQuantity for kube-job PersistentVolume
-                type: string
-            required:
-            - types
             type: object
           status:
             description: ExecutorStatus defines the observed state of Executor
