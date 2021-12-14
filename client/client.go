@@ -3,6 +3,7 @@ package client
 import (
 	executorv1 "github.com/kubeshop/testkube-operator/apis/executor/v1"
 	scriptv1 "github.com/kubeshop/testkube-operator/apis/script/v1"
+	testsv1 "github.com/kubeshop/testkube-operator/apis/tests/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -16,6 +17,7 @@ func GetClient() (client.Client, error) {
 
 	scriptv1.AddToScheme(scheme)
 	executorv1.AddToScheme(scheme)
+	testsv1.AddToScheme(scheme)
 
 	kubeconfig, err := ctrl.GetConfig()
 	if err != nil {
