@@ -37,33 +37,32 @@ type TestSpec struct {
 	// After steps is list of scripts which will be sequentially orchestrated
 	After []TestStepSpec `json:"after,omitempty"`
 
-	Repeats       int    `json:"repeats,omitempty"`
-	StopOnFailure bool   `json:"stop_on_failure,omitempty"`
-	Description   string `json:"description,omitempty"`
+	Repeats     int    `json:"repeats,omitempty"`
+	Description string `json:"description,omitempty"`
 }
 
 // TestStepSpec will of particular type will have config for possible step types
 type TestStepSpec struct {
-	Type       string                 `json:"type,omitempty"`
-	ScriptStep *TestStepExecuteScript `json:"script_step,omitempty"`
-	DelayStep  *TestStepDelay         `json:"delay_step,omitempty"`
+	Type    string           `json:"type,omitempty"`
+	Execute *TestStepExecute `json:"execute,omitempty"`
+	Delay   *TestStepDelay   `json:"delay,omitempty"`
 }
 
 type TestStepType string
 
 const (
-	TestStepTypeExecuteScript TestStepType = "executeScript"
-	TestStepTypeDelay         TestStepType = "delay"
+	TestStepTypeExecute TestStepType = "execute"
+	TestStepTypeDelay   TestStepType = "delay"
 )
 
-type TestStepExecuteScript struct {
+type TestStepExecute struct {
 	Namespace     string `json:"namespace,omitempty"`
 	Name          string `json:"name,omitempty"`
-	StopOnFailure bool   `json:"stop_on_failure,omitempty"`
+	StopOnFailure bool   `json:"stopOnFailure,omitempty"`
 }
 
 type TestStepDelay struct {
-	Duration time.Duration `json:"delay,omitempty"`
+	Duration time.Duration `json:"duration,omitempty"`
 }
 
 // TestStatus defines the observed state of Test

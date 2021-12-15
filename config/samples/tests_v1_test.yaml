@@ -4,5 +4,12 @@ metadata:
   name: test-sample
 spec:
   steps: 
-    - namespace: testkube 
-      name: sanity
+
+    - type: delay
+      delay: 
+        duration: 1000
+
+    - type: executeScript 
+      execute: 
+        namespace: testkube 
+        name: sanity

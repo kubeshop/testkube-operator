@@ -43,9 +43,9 @@ spec:
                   description: TestStepSpec will of particular type will have config
                     for possible step types
                   properties:
-                    delay_step:
+                    delay:
                       properties:
-                        delay:
+                        duration:
                           description: A Duration represents the elapsed time between
                             two instants as an int64 nanosecond count. The representation
                             limits the largest representable duration to approximately
@@ -53,13 +53,13 @@ spec:
                           format: int64
                           type: integer
                       type: object
-                    script_step:
+                    execute:
                       properties:
                         name:
                           type: string
                         namespace:
                           type: string
-                        stop_on_failure:
+                        stopOnFailure:
                           type: boolean
                       type: object
                     type:
@@ -73,9 +73,9 @@ spec:
                   description: TestStepSpec will of particular type will have config
                     for possible step types
                   properties:
-                    delay_step:
+                    delay:
                       properties:
-                        delay:
+                        duration:
                           description: A Duration represents the elapsed time between
                             two instants as an int64 nanosecond count. The representation
                             limits the largest representable duration to approximately
@@ -83,13 +83,13 @@ spec:
                           format: int64
                           type: integer
                       type: object
-                    script_step:
+                    execute:
                       properties:
                         name:
                           type: string
                         namespace:
                           type: string
-                        stop_on_failure:
+                        stopOnFailure:
                           type: boolean
                       type: object
                     type:
@@ -106,9 +106,9 @@ spec:
                   description: TestStepSpec will of particular type will have config
                     for possible step types
                   properties:
-                    delay_step:
+                    delay:
                       properties:
-                        delay:
+                        duration:
                           description: A Duration represents the elapsed time between
                             two instants as an int64 nanosecond count. The representation
                             limits the largest representable duration to approximately
@@ -116,21 +116,19 @@ spec:
                           format: int64
                           type: integer
                       type: object
-                    script_step:
+                    execute:
                       properties:
                         name:
                           type: string
                         namespace:
                           type: string
-                        stop_on_failure:
+                        stopOnFailure:
                           type: boolean
                       type: object
                     type:
                       type: string
                   type: object
                 type: array
-              stop_on_failure:
-                type: boolean
             type: object
           status:
             description: TestStatus defines the observed state of Test
