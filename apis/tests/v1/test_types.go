@@ -17,8 +17,6 @@ limitations under the License.
 package v1
 
 import (
-	"time"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -62,7 +60,8 @@ type TestStepExecute struct {
 }
 
 type TestStepDelay struct {
-	Duration time.Duration `json:"duration,omitempty"`
+	// Duration in ms
+	Duration int32 `json:"duration,omitempty"`
 }
 
 // TestStatus defines the observed state of Test
