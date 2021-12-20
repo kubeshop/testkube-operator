@@ -73,6 +73,10 @@ spec:
                 - type
                 - uri
                 type: object
+              tags:
+                items:
+                  type: string
+                type: array
               type:
                 description: script type
                 type: string

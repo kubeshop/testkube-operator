@@ -46,11 +46,8 @@ spec:
                     delay:
                       properties:
                         duration:
-                          description: A Duration represents the elapsed time between
-                            two instants as an int64 nanosecond count. The representation
-                            limits the largest representable duration to approximately
-                            290 years.
-                          format: int64
+                          description: Duration in ms
+                          format: int32
                           type: integer
                       type: object
                     execute:
@@ -76,11 +73,8 @@ spec:
                     delay:
                       properties:
                         duration:
-                          description: A Duration represents the elapsed time between
-                            two instants as an int64 nanosecond count. The representation
-                            limits the largest representable duration to approximately
-                            290 years.
-                          format: int64
+                          description: Duration in ms
+                          format: int32
                           type: integer
                       type: object
                     execute:
@@ -109,11 +103,8 @@ spec:
                     delay:
                       properties:
                         duration:
-                          description: A Duration represents the elapsed time between
-                            two instants as an int64 nanosecond count. The representation
-                            limits the largest representable duration to approximately
-                            290 years.
-                          format: int64
+                          description: Duration in ms
+                          format: int32
                           type: integer
                       type: object
                     execute:
@@ -128,6 +119,10 @@ spec:
                     type:
                       type: string
                   type: object
+                type: array
+              tags:
+                items:
+                  type: string
                 type: array
             type: object
           status:
