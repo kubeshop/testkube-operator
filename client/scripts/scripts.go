@@ -4,6 +4,7 @@ import (
 	"context"
 
 	scriptsAPI "github.com/kubeshop/testkube-operator/apis/script/v1"
+	"github.com/kubeshop/testkube-operator/utils"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -18,10 +19,31 @@ type ScriptsClient struct {
 	Client client.Client
 }
 
-func (s ScriptsClient) List(namespace string) (*scriptsAPI.ScriptList, error) {
+func (s ScriptsClient) List(namespace string, tags []string) (*scriptsAPI.ScriptList, error) {
 	list := &scriptsAPI.ScriptList{}
+
 	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: namespace})
-	return list, err
+	if tags == nil {
+		return list, err
+	}
+	toReturn := &scriptsAPI.ScriptList{}
+	for _, script := range list.Items {
+		hasTags := false
+		for _, tag := range tags {
+			if utils.ContainsTag(script.Spec.Tags, tag) {
+				hasTags = true
+			} else {
+				hasTags = false
+			}
+
+		}
+		if hasTags {
+			toReturn.Items = append(toReturn.Items, script)
+
+		}
+	}
+
+	return toReturn, nil
 }
 
 func (s ScriptsClient) Get(namespace, name string) (*scriptsAPI.Script, error) {

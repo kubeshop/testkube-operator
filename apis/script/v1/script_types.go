@@ -37,6 +37,7 @@ type ScriptSpec struct {
 	InputType string `json:"input-type,omitempty"`
 	// repository details if exists
 	Repository *Repository `json:"repository,omitempty"`
+	Tags       []string    `json:"tags,omitempty"`
 }
 
 // Repository represents VCS repo, currently we're habdling Git only
