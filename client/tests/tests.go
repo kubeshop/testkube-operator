@@ -4,6 +4,7 @@ import (
 	"context"
 
 	testsAPI "github.com/kubeshop/testkube-operator/apis/tests/v1"
+	"github.com/kubeshop/testkube-operator/utils"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -18,10 +19,29 @@ type TestsClient struct {
 	Client client.Client
 }
 
-func (s TestsClient) List(namespace string) (*testsAPI.TestList, error) {
+func (s TestsClient) List(namespace string, tags []string) (*testsAPI.TestList, error) {
 	list := &testsAPI.TestList{}
 	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: namespace})
-	return list, err
+	if tags == nil {
+		return list, err
+	}
+	toReturn := &testsAPI.TestList{}
+	for _, test := range list.Items {
+		hasTags := false
+		for _, tag := range tags {
+			if utils.ContainsTag(test.Spec.Tags, tag) {
+				hasTags = true
+			} else {
+				hasTags = false
+			}
+
+		}
+		if hasTags {
+			toReturn.Items = append(toReturn.Items, test)
+
+		}
+	}
+	return toReturn, nil
 }
 
 func (s TestsClient) Get(namespace, name string) (*testsAPI.Test, error) {
