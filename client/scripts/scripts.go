@@ -21,11 +21,11 @@ type ScriptsClient struct {
 
 func (s ScriptsClient) List(namespace string, tags []string) (*scriptsAPI.ScriptList, error) {
 	list := &scriptsAPI.ScriptList{}
-
 	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: namespace})
-	if tags == nil {
+	if len(tags) == 0 {
 		return list, err
 	}
+
 	toReturn := &scriptsAPI.ScriptList{}
 	for _, script := range list.Items {
 		hasTags := false
@@ -35,7 +35,6 @@ func (s ScriptsClient) List(namespace string, tags []string) (*scriptsAPI.Script
 			} else {
 				hasTags = false
 			}
-
 		}
 		if hasTags {
 			toReturn.Items = append(toReturn.Items, script)

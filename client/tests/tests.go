@@ -22,9 +22,10 @@ type TestsClient struct {
 func (s TestsClient) List(namespace string, tags []string) (*testsAPI.TestList, error) {
 	list := &testsAPI.TestList{}
 	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: namespace})
-	if tags == nil {
+	if len(tags) == 0 {
 		return list, err
 	}
+
 	toReturn := &testsAPI.TestList{}
 	for _, test := range list.Items {
 		hasTags := false
