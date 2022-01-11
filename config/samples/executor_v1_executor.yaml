@@ -7,10 +7,9 @@ spec:
   uri: http://testkube-postman-executor:8082
   executor_type: rest
   types:
-  - postman/collection
+    - postman/collection
 
 ---
-
 ## to use this executor use local-curl/test script type when creating script CR
 apiVersion: executor.testkube.io/v1
 kind: Executor
@@ -20,10 +19,9 @@ spec:
   uri: http://testkube-curl-executor:8083
   executor_type: rest
   types:
-  - curl/test
+    - curl/test
 
 ---
-
 ## to use this executor use local-cypress/project script type when creating script CR
 apiVersion: executor.testkube.io/v1
 kind: Executor
@@ -33,10 +31,9 @@ spec:
   uri: http://testkube-cypress-executor:8084
   executor_type: rest
   types:
-  - cypress/project
+    - cypress/project
 
---- 
-
+---
 ## to use this executor use local-postman/collection script type when creating script CR
 apiVersion: executor.testkube.io/v1
 kind: Executor
@@ -46,10 +43,9 @@ spec:
   uri: http://localhost:8082
   executor_type: rest
   types:
-  - local-postman/collection
+    - local-postman/collection
 
 ---
-
 ## to use this executor use local-curl/test script type when creating script CR
 apiVersion: executor.testkube.io/v1
 kind: Executor
@@ -59,10 +55,9 @@ spec:
   uri: http://localhost:8083
   executor_type: rest
   types:
-  - local-curl/test
+    - local-curl/test
 
 ---
-
 ## to use this executor use local-cypress/project script type when creating script CR
 apiVersion: executor.testkube.io/v1
 kind: Executor
@@ -72,19 +67,16 @@ spec:
   uri: http://localhost:8084
   executor_type: rest
   types:
-  - local-cypress/project
+    - local-cypress/project
 
---- 
-
+---
 # you can create new script with type postman-job/collection to run it on top of this executor
 apiVersion: executor.testkube.io/v1
 kind: Executor
 metadata:
   name: postman-job
 spec:
-  image: jasmingacic/postman-agent 
+  image: jasmingacic/postman-agent
   executor_type: job
-  volume_mount_path: /mnt/artifacts-storage
-  volume_quantity: '10Gi'
   types:
-  - postman-job/collection
+    - postman-job/collection
