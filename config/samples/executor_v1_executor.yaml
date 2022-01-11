@@ -76,7 +76,7 @@ kind: Executor
 metadata:
   name: postman-job
 spec:
-  image: jasmingacic/postman-agent
+  image: kubeshop/testkube-postman-executor
   executor_type: job
   types:
     - postman-job/collection
