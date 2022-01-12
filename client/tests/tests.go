@@ -3,10 +3,11 @@ package tests
 import (
 	"context"
 
-	testsAPI "github.com/kubeshop/testkube-operator/apis/tests/v1"
-	"github.com/kubeshop/testkube-operator/utils"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	testsAPI "github.com/kubeshop/testkube-operator/apis/tests/v1"
+	"github.com/kubeshop/testkube-operator/utils"
 )
 
 func NewClient(client client.Client) *TestsClient {
@@ -43,6 +44,21 @@ func (s TestsClient) List(namespace string, tags []string) (*testsAPI.TestList, 
 		}
 	}
 	return toReturn, nil
+}
+
+func (s TestsClient) ListTags(namespace string) ([]string, error) {
+	tags := []string{}
+	list := &testsAPI.TestList{}
+	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: namespace})
+	if err != nil {
+		return tags, err
+	}
+
+	for _, test := range list.Items {
+		tags = append(tags, test.Spec.Tags...)
+	}
+
+	return tags, nil
 }
 
 func (s TestsClient) Get(namespace, name string) (*testsAPI.Test, error) {
