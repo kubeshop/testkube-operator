@@ -58,6 +58,8 @@ func (s TestsClient) ListTags(namespace string) ([]string, error) {
 		tags = append(tags, test.Spec.Tags...)
 	}
 
+	tags = utils.RemoveDuplicates(tags)
+
 	return tags, nil
 }
 
