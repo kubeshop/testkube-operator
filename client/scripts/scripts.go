@@ -3,10 +3,11 @@ package scripts
 import (
 	"context"
 
-	scriptsAPI "github.com/kubeshop/testkube-operator/apis/script/v1"
-	"github.com/kubeshop/testkube-operator/utils"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	scriptsAPI "github.com/kubeshop/testkube-operator/apis/script/v1"
+	"github.com/kubeshop/testkube-operator/utils"
 )
 
 func NewClient(client client.Client) *ScriptsClient {
@@ -43,6 +44,23 @@ func (s ScriptsClient) List(namespace string, tags []string) (*scriptsAPI.Script
 	}
 
 	return toReturn, nil
+}
+
+func (s ScriptsClient) ListTags(namespace string) ([]string, error) {
+	tags := []string{}
+	list := &scriptsAPI.ScriptList{}
+	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: namespace})
+	if err != nil {
+		return tags, err
+	}
+
+	for _, test := range list.Items {
+		tags = append(tags, test.Spec.Tags...)
+	}
+
+	tags = utils.RemoveDuplicates(tags)
+
+	return tags, nil
 }
 
 func (s ScriptsClient) Get(namespace, name string) (*scriptsAPI.Script, error) {
