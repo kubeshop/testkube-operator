@@ -42,14 +42,18 @@ type ScriptSpec struct {
 
 // Repository represents VCS repo, currently we're habdling Git only
 type Repository struct {
-	// VCS repository type
+	// Type_ repository type
 	Type_ string `json:"type"`
-	// uri of content file or git directory
+	// Uri of content file or git directory
 	Uri string `json:"uri"`
 	// branch/tag name for checkout
 	Branch string `json:"branch"`
 	// if needed we can checkout particular path (dir or file) in case of BIG/mono repositories
 	Path string `json:"path,omitempty"`
+	// git auth username for private repositories
+	Username string `json:"username,omitempty"`
+	// git auth token for private repositories
+	Token string `json:"token,omitempty"`
 }
 
 // ScriptStatus defines the observed state of Script
