@@ -34,6 +34,7 @@ import (
 	executorv1 "github.com/kubeshop/testkube-operator/apis/executor/v1"
 	testkubev1 "github.com/kubeshop/testkube-operator/apis/script/v1"
 	testsv1 "github.com/kubeshop/testkube-operator/apis/tests/v1"
+	testsv2 "github.com/kubeshop/testkube-operator/apis/tests/v2"
 	executorcontrollers "github.com/kubeshop/testkube-operator/controllers/executor"
 	scriptcontrollers "github.com/kubeshop/testkube-operator/controllers/script"
 	testscontrollers "github.com/kubeshop/testkube-operator/controllers/tests"
@@ -51,6 +52,7 @@ func init() {
 	utilruntime.Must(testkubev1.AddToScheme(scheme))
 	utilruntime.Must(executorv1.AddToScheme(scheme))
 	utilruntime.Must(testsv1.AddToScheme(scheme))
+	utilruntime.Must(testsv2.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -105,6 +107,18 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "Test")
 		os.Exit(1)
 	}
+
+	if os.Getenv("ENABLE_WEBHOOKS") != "false" {
+		if err = (&testsv1.Test{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "CronJob")
+			os.Exit(1)
+		}
+		if err = (&testsv2.Test{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "CronJob")
+			os.Exit(1)
+		}
+	}
+
 	//+kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
