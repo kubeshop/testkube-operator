@@ -110,11 +110,11 @@ func main() {
 
 	if os.Getenv("ENABLE_WEBHOOKS") != "false" {
 		if err = (&testsv1.Test{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "CronJob")
+			setupLog.Error(err, "unable to create webhook", "webhook", "Test")
 			os.Exit(1)
 		}
 		if err = (&testsv2.Test{}).SetupWebhookWithManager(mgr); err != nil {
-			setupLog.Error(err, "unable to create webhook", "webhook", "CronJob")
+			setupLog.Error(err, "unable to create webhook", "webhook", "Test")
 			os.Exit(1)
 		}
 	}
