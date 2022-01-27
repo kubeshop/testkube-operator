@@ -3,4 +3,13 @@ kind: Test
 metadata:
   name: test-sample
 spec:
-  # TODO(user): Add fields here
+
+  - type: delay
+  delay: 
+    duration: 1000
+
+- type: executeScript 
+  execute: 
+    namespace: testkube 
+    name: sanity
+
