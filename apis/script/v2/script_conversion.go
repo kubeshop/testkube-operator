@@ -39,12 +39,10 @@ func (src *Script) ConvertTo(dstRaw conversion.Hub) error {
 
 	if src.Spec.Content != nil && src.Spec.Content.Repository != nil {
 		dst.Spec.Repository = &v1.Repository{
-			Type_:    src.Spec.Content.Repository.Type_,
-			Uri:      src.Spec.Content.Repository.Uri,
-			Branch:   src.Spec.Content.Repository.Branch,
-			Path:     src.Spec.Content.Repository.Path,
-			Username: src.Spec.Content.Repository.Username,
-			Token:    src.Spec.Content.Repository.Token,
+			Type_:  src.Spec.Content.Repository.Type_,
+			Uri:    src.Spec.Content.Repository.Uri,
+			Branch: src.Spec.Content.Repository.Branch,
+			Path:   src.Spec.Content.Repository.Path,
 		}
 	}
 
@@ -76,12 +74,10 @@ func (dst *Script) ConvertFrom(srcRaw conversion.Hub) error {
 		dst.Spec.Content = &ScriptContent{
 			Type_: "git-dir",
 			Repository: &Repository{
-				Type_:    src.Spec.Repository.Type_,
-				Uri:      src.Spec.Repository.Uri,
-				Branch:   src.Spec.Repository.Branch,
-				Path:     src.Spec.Repository.Path,
-				Username: src.Spec.Repository.Username,
-				Token:    src.Spec.Repository.Token,
+				Type_:  src.Spec.Repository.Type_,
+				Uri:    src.Spec.Repository.Uri,
+				Branch: src.Spec.Repository.Branch,
+				Path:   src.Spec.Repository.Path,
 			},
 		}
 	}
