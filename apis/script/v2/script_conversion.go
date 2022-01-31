@@ -19,6 +19,13 @@ import (
 	v1 "github.com/kubeshop/testkube-operator/apis/script/v1"
 )
 
+const (
+	// contentTypeFileString is file string content type
+	contentTypeFileString = "file-string"
+	// contentTypeGitDir is git dir content type
+	contentTypeGitDir = "git-dir"
+)
+
 // ConvertTo converts this Script to the Hub version (v1).
 func (src *Script) ConvertTo(dstRaw conversion.Hub) error {
 	dst := dstRaw.(*v1.Script)
@@ -66,13 +73,13 @@ func (dst *Script) ConvertFrom(srcRaw conversion.Hub) error {
 	dst.Spec.Tags = src.Spec.Tags
 
 	dst.Spec.Content = &ScriptContent{
-		Type_:   "file-string",
+		Type_:   contentTypeFileString,
 		Content: src.Spec.Content,
 	}
 
 	if src.Spec.Repository != nil {
 		dst.Spec.Content = &ScriptContent{
-			Type_: "git-dir",
+			Type_: contentTypeGitDir,
 			Repository: &Repository{
 				Type_:  src.Spec.Repository.Type_,
 				Uri:    src.Spec.Repository.Uri,
