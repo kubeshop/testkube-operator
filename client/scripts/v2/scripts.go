@@ -1,4 +1,3 @@
-// TODO move to v1 to make it consistent
 package scripts
 
 import (
@@ -7,7 +6,7 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	scriptsAPI "github.com/kubeshop/testkube-operator/apis/script/v1"
+	scriptsv2 "github.com/kubeshop/testkube-operator/apis/script/v2"
 	"github.com/kubeshop/testkube-operator/utils"
 )
 
@@ -21,14 +20,14 @@ type ScriptsClient struct {
 	Client client.Client
 }
 
-func (s ScriptsClient) List(namespace string, tags []string) (*scriptsAPI.ScriptList, error) {
-	list := &scriptsAPI.ScriptList{}
+func (s ScriptsClient) List(namespace string, tags []string) (*scriptsv2.ScriptList, error) {
+	list := &scriptsv2.ScriptList{}
 	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: namespace})
 	if len(tags) == 0 {
 		return list, err
 	}
 
-	toReturn := &scriptsAPI.ScriptList{}
+	toReturn := &scriptsv2.ScriptList{}
 	for _, script := range list.Items {
 		hasTags := false
 		for _, tag := range tags {
@@ -49,7 +48,7 @@ func (s ScriptsClient) List(namespace string, tags []string) (*scriptsAPI.Script
 
 func (s ScriptsClient) ListTags(namespace string) ([]string, error) {
 	tags := []string{}
-	list := &scriptsAPI.ScriptList{}
+	list := &scriptsv2.ScriptList{}
 	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: namespace})
 	if err != nil {
 		return tags, err
@@ -64,18 +63,18 @@ func (s ScriptsClient) ListTags(namespace string) ([]string, error) {
 	return tags, nil
 }
 
-func (s ScriptsClient) Get(namespace, name string) (*scriptsAPI.Script, error) {
-	script := &scriptsAPI.Script{}
+func (s ScriptsClient) Get(namespace, name string) (*scriptsv2.Script, error) {
+	script := &scriptsv2.Script{}
 	err := s.Client.Get(context.Background(), client.ObjectKey{Namespace: namespace, Name: name}, script)
 	return script, err
 }
 
-func (s ScriptsClient) Create(scripts *scriptsAPI.Script) (*scriptsAPI.Script, error) {
+func (s ScriptsClient) Create(scripts *scriptsv2.Script) (*scriptsv2.Script, error) {
 	err := s.Client.Create(context.Background(), scripts)
 	return scripts, err
 }
 
-func (s ScriptsClient) Update(scripts *scriptsAPI.Script) (*scriptsAPI.Script, error) {
+func (s ScriptsClient) Update(scripts *scriptsv2.Script) (*scriptsv2.Script, error) {
 	err := s.Client.Update(context.Background(), scripts)
 	return scripts, err
 }
@@ -94,7 +93,7 @@ func (s ScriptsClient) DeleteAll(namespace string) error {
 
 	u := &unstructured.Unstructured{}
 	u.SetKind("script")
-	u.SetAPIVersion("tests.testkube.io/v1")
+	u.SetAPIVersion("tests.testkube.io/v2")
 	err := s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(namespace))
 	return err
 }
