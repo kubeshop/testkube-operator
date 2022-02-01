@@ -33,7 +33,7 @@ func (src *Script) ConvertTo(dstRaw conversion.Hub) error {
 	dst.Spec.Params = src.Spec.Params
 	dst.Spec.Tags = src.Spec.Tags
 
-	if src.Spec. != nil {
+	if src.Spec.Content != nil {
 		dst.Spec.Content = src.Spec.Content.Data
 		dst.Spec.InputType = src.Spec.Content.Type_
 	}
