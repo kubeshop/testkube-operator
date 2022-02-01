@@ -7,7 +7,7 @@ spec:
   type: postman/collection
   content:
     type: file-string
-    content: >
+    data: >
         {
         "info": {
             "_postman_id": "fa1ce97f-ff5d-40ed-9c9c-e0a92063ce98",

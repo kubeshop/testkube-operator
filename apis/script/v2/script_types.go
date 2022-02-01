@@ -40,7 +40,7 @@ type ScriptContent struct {
 	// repository of script content
 	Repository *Repository `json:"repository,omitempty"`
 	// script content body
-	Data string `json:"content,omitempty"`
+	Data string `json:"data,omitempty"`
 	// uri of script content
 	Uri string `json:"uri,omitempty"`
 }

@@ -16,19 +16,13 @@ package v2
 import (
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 
-	v1 "github.com/kubeshop/testkube-operator/apis/script/v1"
-)
-
-const (
-	// contentTypeFileString is file string content type
-	contentTypeFileString = "file-string"
-	// contentTypeGitDir is git dir content type
-	contentTypeGitDir = "git-dir"
+	executorv1 "github.com/kubeshop/testkube-operator/apis/executor/v1"
+	testkubev1 "github.com/kubeshop/testkube-operator/apis/script/v1"
 )
 
 // ConvertTo converts this Script to the Hub version (v1).
 func (src *Script) ConvertTo(dstRaw conversion.Hub) error {
-	dst := dstRaw.(*v1.Script)
+	dst := dstRaw.(*testkubev1.Script)
 
 	// ObjectMeta
 	dst.ObjectMeta = src.ObjectMeta
@@ -39,13 +33,13 @@ func (src *Script) ConvertTo(dstRaw conversion.Hub) error {
 	dst.Spec.Params = src.Spec.Params
 	dst.Spec.Tags = src.Spec.Tags
 
-	if src.Spec.Content != nil {
+	if src.Spec. != nil {
 		dst.Spec.Content = src.Spec.Content.Data
 		dst.Spec.InputType = src.Spec.Content.Type_
 	}
 
 	if src.Spec.Content != nil && src.Spec.Content.Repository != nil {
-		dst.Spec.Repository = &v1.Repository{
+		dst.Spec.Repository = &testkubev1.Repository{
 			Type_:  src.Spec.Content.Repository.Type_,
 			Uri:    src.Spec.Content.Repository.Uri,
 			Branch: src.Spec.Content.Repository.Branch,
@@ -60,7 +54,7 @@ func (src *Script) ConvertTo(dstRaw conversion.Hub) error {
 
 // ConvertFrom converts Script from the Hub version (v1) to this version.
 func (dst *Script) ConvertFrom(srcRaw conversion.Hub) error {
-	src := srcRaw.(*v1.Script)
+	src := srcRaw.(*testkubev1.Script)
 
 	// ObjectMeta
 	dst.ObjectMeta = src.ObjectMeta
@@ -72,13 +66,13 @@ func (dst *Script) ConvertFrom(srcRaw conversion.Hub) error {
 	dst.Spec.Tags = src.Spec.Tags
 
 	dst.Spec.Content = &ScriptContent{
-		Type_: contentTypeFileString,
+		Type_: string(executorv1.ScriptContentTypeString),
 		Data:  src.Spec.Content,
 	}
 
 	if src.Spec.Repository != nil {
 		dst.Spec.Content = &ScriptContent{
-			Type_: contentTypeGitDir,
+			Type_: string(executorv1.ScriptContentTypeGitDir),
 			Repository: &Repository{
 				Type_:  src.Spec.Repository.Type_,
 				Uri:    src.Spec.Repository.Uri,

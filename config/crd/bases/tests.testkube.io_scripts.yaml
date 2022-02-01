@@ -124,7 +124,7 @@ spec:
               content:
                 description: script content object
                 properties:
-                  content:
+                  data:
                     description: script content body
                     type: string
                   repository:
