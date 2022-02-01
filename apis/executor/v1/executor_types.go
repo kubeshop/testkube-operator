@@ -41,6 +41,9 @@ type ExecutorSpec struct {
 
 	// Features list of possible features which executor handles
 	Features []Feature `json:"features,omitempty"`
+
+	// ContentTypes list of handled content types
+	ContentTypes []ScriptContentType `json:"content_types,omitempty"`
 }
 
 type Feature string
@@ -48,6 +51,15 @@ type Feature string
 const (
 	FeatureArtifacts   Feature = "artifacts"
 	FeatureJUnitReport Feature = "junit-report"
+)
+
+type ScriptContentType string
+
+const (
+	ScriptContentTypeString  ScriptContentType = "string"
+	ScriptContentTypeFileURI ScriptContentType = "file-uri"
+	ScriptContentTypeGitFile ScriptContentType = "git-file"
+	ScriptContentTypeGitDir  ScriptContentType = "git-dir"
 )
 
 type Runner struct {

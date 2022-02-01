@@ -37,11 +37,11 @@ func (src *Script) ConvertTo(dstRaw conversion.Hub) error {
 	dst.Spec.Type_ = src.Spec.Type_
 	dst.Spec.Name = src.Spec.Name
 	dst.Spec.Params = src.Spec.Params
-	dst.Spec.InputType = src.Spec.InputType
 	dst.Spec.Tags = src.Spec.Tags
 
 	if src.Spec.Content != nil {
-		dst.Spec.Content = src.Spec.Content.Content
+		dst.Spec.Content = src.Spec.Content.Data
+		dst.Spec.InputType = src.Spec.Content.Type_
 	}
 
 	if src.Spec.Content != nil && src.Spec.Content.Repository != nil {
@@ -69,12 +69,11 @@ func (dst *Script) ConvertFrom(srcRaw conversion.Hub) error {
 	dst.Spec.Type_ = src.Spec.Type_
 	dst.Spec.Name = src.Spec.Name
 	dst.Spec.Params = src.Spec.Params
-	dst.Spec.InputType = src.Spec.InputType
 	dst.Spec.Tags = src.Spec.Tags
 
 	dst.Spec.Content = &ScriptContent{
-		Type_:   contentTypeFileString,
-		Content: src.Spec.Content,
+		Type_: contentTypeFileString,
+		Data:  src.Spec.Content,
 	}
 
 	if src.Spec.Repository != nil {

@@ -1,3 +1,7 @@
+//+kubebuilder:object:root=true
+//+kubebuilder:subresource:status
+//+kubebuilder:storageversion
+
 /*
 Copyright 2021.
 

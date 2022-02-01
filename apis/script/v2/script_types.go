@@ -30,8 +30,6 @@ type ScriptSpec struct {
 	Params map[string]string `json:"params,omitempty"`
 	// script content object
 	Content *ScriptContent `json:"content,omitempty"`
-	// script content type can be:  - direct content - created from file, - git repo directory checkout in case when test is some kind of project or have more than one file,
-	InputType string `json:"input-type,omitempty"`
 	// script tags
 	Tags []string `json:"tags,omitempty"`
 }
@@ -42,7 +40,7 @@ type ScriptContent struct {
 	// repository of script content
 	Repository *Repository `json:"repository,omitempty"`
 	// script content body
-	Content string `json:"content,omitempty"`
+	Data string `json:"content,omitempty"`
 	// uri of script content
 	Uri string `json:"uri,omitempty"`
 }
@@ -71,6 +69,7 @@ type ScriptStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:storageversion
 
 // Script is the Schema for the scripts API
 type Script struct {

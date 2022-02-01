@@ -36,6 +36,11 @@ spec:
           spec:
             description: ExecutorSpec defines the desired state of Executor
             properties:
+              content_types:
+                description: ContentTypes list of handled content types
+                items:
+                  type: string
+                type: array
               executor_type:
                 description: ExecutorType one of "rest" for rest openapi based executors
                   or "job" which will be default runners for testkube soon
