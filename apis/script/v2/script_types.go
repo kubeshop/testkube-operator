@@ -47,9 +47,9 @@ type ScriptContent struct {
 
 // Repository represents VCS repo, currently we're habdling Git only
 type Repository struct {
-	// Type_ repository type
+	// VCS repository type
 	Type_ string `json:"type"`
-	// Uri of content file or git directory
+	// uri of content file or git directory
 	Uri string `json:"uri"`
 	// branch/tag name for checkout
 	Branch string `json:"branch"`
