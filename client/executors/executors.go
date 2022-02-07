@@ -73,3 +73,9 @@ func (s ExecutorsClient) Delete(name, namespace string) error {
 	err := s.Client.Delete(context.Background(), executor)
 	return err
 }
+
+// Update updates executor
+func (s ExecutorsClient) Update(executor *executorsAPI.Executor) (*executorsAPI.Executor, error) {
+	err := s.Client.Update(context.Background(), executor)
+	return executor, err
+}

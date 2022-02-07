@@ -62,13 +62,6 @@ const (
 	ScriptContentTypeGitDir  ScriptContentType = "git-dir"
 )
 
-// ExecutorDetails contains additonal executor details
-type ExecutorDetails struct {
-	// Executor name
-	Name string        `json:"name,omitempty"`
-	Spec *ExecutorSpec `json:"executor,omitempty"`
-}
-
 type Runner struct {
 }
 

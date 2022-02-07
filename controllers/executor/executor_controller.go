@@ -18,11 +18,7 @@ package executor
 
 import (
 	"context"
-	"encoding/base64"
-	"encoding/json"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -63,48 +59,4 @@ func (r *ExecutorReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&executorv1.Executor{}).
 		Complete(r)
-}
-
-// LoadDefaultExecutors loads default executors
-func (r *ExecutorReconciler) LoadDefaultExecutors(namespace, data string) error {
-	var executors []executorv1.ExecutorDetails
-
-	dataDecoded, err := base64.StdEncoding.DecodeString(data)
-	if err != nil {
-		return err
-	}
-
-	if err := json.Unmarshal([]byte(dataDecoded), &executors); err != nil {
-		return err
-	}
-
-	for _, executor := range executors {
-		if executor.Spec == nil {
-			continue
-		}
-
-		if err = r.Client.Create(context.Background(), &executorv1.Executor{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      executor.Name,
-				Namespace: namespace,
-			},
-			Spec: *executor.Spec,
-		}); err != nil && !errors.IsAlreadyExists(err) {
-			return err
-		}
-
-		if err != nil {
-			if err = r.Client.Update(context.Background(), &executorv1.Executor{
-				ObjectMeta: metav1.ObjectMeta{
-					Name:      executor.Name,
-					Namespace: namespace,
-				},
-				Spec: *executor.Spec,
-			}); err != nil {
-				return err
-			}
-		}
-	}
-
-	return nil
 }
