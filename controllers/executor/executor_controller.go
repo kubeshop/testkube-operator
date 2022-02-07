@@ -86,7 +86,7 @@ func (r *ExecutorReconciler) LoadDefaultExecutors(namespace, data string) error 
 
 		var obj executorv1.Executor
 		err := r.Client.Get(context.Background(), types.NamespacedName{Name: executor.Name, Namespace: namespace}, &obj)
-		if err != nil && errors.IsNotFound(err) {
+		if err != nil && !errors.IsNotFound(err) {
 			return err
 		}
 
