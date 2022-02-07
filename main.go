@@ -93,16 +93,13 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "Script")
 		os.Exit(1)
 	}
-
-	executorController := &executorcontrollers.ExecutorReconciler{
+	if err = (&executorcontrollers.ExecutorReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
-	}
-	if err = executorController.SetupWithManager(mgr); err != nil {
+	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Executor")
 		os.Exit(1)
 	}
-
 	if err = (&testscontrollers.TestReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
