@@ -93,13 +93,21 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "Script")
 		os.Exit(1)
 	}
-	if err = (&executorcontrollers.ExecutorReconciler{
+
+	executorController := &executorcontrollers.ExecutorReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
+	}
+	if err = executorController.SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Executor")
 		os.Exit(1)
 	}
+
+	if err = executorController.LoadDefaultExecutors(os.Getenv("TESTKUBE_OPERATOR_NAMESPACE"),
+		os.Getenv("TESTKUBE_OPERATOR_DEFAULT_EXECUTORS")); err != nil {
+		setupLog.Error(err, "unable to load default executors", "controller", "Executor")
+	}
+
 	if err = (&testscontrollers.TestReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),

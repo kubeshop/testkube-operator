@@ -70,14 +70,14 @@ func (s ScriptsClient) Get(namespace, name string) (*scriptsAPI.Script, error) {
 	return script, err
 }
 
-func (s ScriptsClient) Create(scripts *scriptsAPI.Script) (*scriptsAPI.Script, error) {
-	err := s.Client.Create(context.Background(), scripts)
-	return scripts, err
+func (s ScriptsClient) Create(script *scriptsAPI.Script) (*scriptsAPI.Script, error) {
+	err := s.Client.Create(context.Background(), script)
+	return script, err
 }
 
-func (s ScriptsClient) Update(scripts *scriptsAPI.Script) (*scriptsAPI.Script, error) {
-	err := s.Client.Update(context.Background(), scripts)
-	return scripts, err
+func (s ScriptsClient) Update(script *scriptsAPI.Script) (*scriptsAPI.Script, error) {
+	err := s.Client.Update(context.Background(), script)
+	return script, err
 }
 
 func (s ScriptsClient) Delete(namespace, name string) error {

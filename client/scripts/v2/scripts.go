@@ -69,14 +69,14 @@ func (s ScriptsClient) Get(namespace, name string) (*scriptsv2.Script, error) {
 	return script, err
 }
 
-func (s ScriptsClient) Create(scripts *scriptsv2.Script) (*scriptsv2.Script, error) {
-	err := s.Client.Create(context.Background(), scripts)
-	return scripts, err
+func (s ScriptsClient) Create(script *scriptsv2.Script) (*scriptsv2.Script, error) {
+	err := s.Client.Create(context.Background(), script)
+	return script, err
 }
 
-func (s ScriptsClient) Update(scripts *scriptsv2.Script) (*scriptsv2.Script, error) {
-	err := s.Client.Update(context.Background(), scripts)
-	return scripts, err
+func (s ScriptsClient) Update(script *scriptsv2.Script) (*scriptsv2.Script, error) {
+	err := s.Client.Update(context.Background(), script)
+	return script, err
 }
 
 func (s ScriptsClient) Delete(namespace, name string) error {
