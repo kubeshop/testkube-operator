@@ -24,7 +24,6 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
@@ -84,22 +83,14 @@ func (r *ExecutorReconciler) LoadDefaultExecutors(namespace, data string) error 
 			continue
 		}
 
-		var obj executorv1.Executor
-		err := r.Client.Get(context.Background(), types.NamespacedName{Name: executor.Name, Namespace: namespace}, &obj)
-		if err != nil && !errors.IsNotFound(err) {
+		if err = r.Client.Create(context.Background(), &executorv1.Executor{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      executor.Name,
+				Namespace: namespace,
+			},
+			Spec: *executor.Spec,
+		}); err != nil && !errors.IsAlreadyExists(err) {
 			return err
-		}
-
-		if err != nil {
-			if err = r.Client.Create(context.Background(), &executorv1.Executor{
-				ObjectMeta: metav1.ObjectMeta{
-					Name:      executor.Name,
-					Namespace: namespace,
-				},
-				Spec: *executor.Spec,
-			}); err != nil {
-				return err
-			}
 		}
 	}
 
