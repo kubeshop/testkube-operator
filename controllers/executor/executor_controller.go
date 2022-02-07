@@ -92,6 +92,18 @@ func (r *ExecutorReconciler) LoadDefaultExecutors(namespace, data string) error 
 		}); err != nil && !errors.IsAlreadyExists(err) {
 			return err
 		}
+
+		if err != nil {
+			if err = r.Client.Update(context.Background(), &executorv1.Executor{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      executor.Name,
+					Namespace: namespace,
+				},
+				Spec: *executor.Spec,
+			}); err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil
