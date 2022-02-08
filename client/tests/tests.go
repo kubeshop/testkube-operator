@@ -64,19 +64,19 @@ func (s TestsClient) ListTags(namespace string) ([]string, error) {
 }
 
 func (s TestsClient) Get(namespace, name string) (*testsAPI.Test, error) {
-	Test := &testsAPI.Test{}
-	err := s.Client.Get(context.Background(), client.ObjectKey{Namespace: namespace, Name: name}, Test)
-	return Test, err
+	test := &testsAPI.Test{}
+	err := s.Client.Get(context.Background(), client.ObjectKey{Namespace: namespace, Name: name}, test)
+	return test, err
 }
 
-func (s TestsClient) Create(Tests *testsAPI.Test) (*testsAPI.Test, error) {
-	err := s.Client.Create(context.Background(), Tests)
-	return Tests, err
+func (s TestsClient) Create(test *testsAPI.Test) (*testsAPI.Test, error) {
+	err := s.Client.Create(context.Background(), test)
+	return test, err
 }
 
-func (s TestsClient) Update(Tests *testsAPI.Test) (*testsAPI.Test, error) {
-	err := s.Client.Update(context.Background(), Tests)
-	return Tests, err
+func (s TestsClient) Update(test *testsAPI.Test) (*testsAPI.Test, error) {
+	err := s.Client.Update(context.Background(), test)
+	return test, err
 }
 
 func (s TestsClient) Delete(namespace, name string) error {

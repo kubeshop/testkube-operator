@@ -4,7 +4,6 @@ metadata:
   name: test-postman-script
 spec:
   # Add fields here
-  id: Some internal ID 
   type: postman/collection
   content: >
     {

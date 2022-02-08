@@ -1,16 +1,9 @@
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-//+kubebuilder:storageversion
-
 /*
 Copyright 2021.
-
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,7 +11,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1
+package v2
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -35,20 +28,28 @@ type ScriptSpec struct {
 	Name string `json:"name,omitempty"`
 	// execution params passed to executor
 	Params map[string]string `json:"params,omitempty"`
-	// script content as string (content depends from executor)
-	Content string `json:"content,omitempty"`
-	// script content type can be:  - direct content - created from file, - git repo directory checkout in case when test is some kind of project or have more than one file,
-	InputType string `json:"input-type,omitempty"`
-	// repository details if exists
+	// script content object
+	Content *ScriptContent `json:"content,omitempty"`
+	// script tags
+	Tags []string `json:"tags,omitempty"`
+}
+
+type ScriptContent struct {
+	// script type
+	Type_ string `json:"type,omitempty"`
+	// repository of script content
 	Repository *Repository `json:"repository,omitempty"`
-	Tags       []string    `json:"tags,omitempty"`
+	// script content body
+	Data string `json:"data,omitempty"`
+	// uri of script content
+	Uri string `json:"uri,omitempty"`
 }
 
 // Repository represents VCS repo, currently we're habdling Git only
 type Repository struct {
-	// Type_ repository type
+	// VCS repository type
 	Type_ string `json:"type"`
-	// Uri of content file or git directory
+	// uri of content file or git directory
 	Uri string `json:"uri"`
 	// branch/tag name for checkout
 	Branch string `json:"branch"`
@@ -68,6 +69,7 @@ type ScriptStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:storageversion
 
 // Script is the Schema for the scripts API
 type Script struct {
