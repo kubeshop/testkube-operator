@@ -15,15 +15,6 @@ resources:
   path: github.com/kubeshop/testkube-operator/apis/script/v1
   version: v1
 - api:
-    crdVersion: v2
-    namespaced: true
-  controller: false
-  domain: testkube.io
-  group: tests
-  kind: Script
-  path: github.com/kubeshop/testkube-operator/apis/script/v2
-  version: v2
-- api:
     crdVersion: v1
     namespaced: true
   controller: true
