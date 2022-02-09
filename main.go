@@ -35,9 +35,11 @@ import (
 	testkubev1 "github.com/kubeshop/testkube-operator/apis/script/v1"
 	testkubev2 "github.com/kubeshop/testkube-operator/apis/script/v2"
 	testsv1 "github.com/kubeshop/testkube-operator/apis/tests/v1"
+	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
 	executorcontrollers "github.com/kubeshop/testkube-operator/controllers/executor"
 	scriptcontrollers "github.com/kubeshop/testkube-operator/controllers/script"
 	testscontrollers "github.com/kubeshop/testkube-operator/controllers/tests"
+	testsuitecontrollers "github.com/kubeshop/testkube-operator/controllers/testsuite"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -53,6 +55,7 @@ func init() {
 	utilruntime.Must(executorv1.AddToScheme(scheme))
 	utilruntime.Must(testsv1.AddToScheme(scheme))
 	utilruntime.Must(testkubev2.AddToScheme(scheme))
+	utilruntime.Must(testsuitev1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -108,6 +111,15 @@ func main() {
 		os.Exit(1)
 	}
 
+	if err = (&testsuitecontrollers.TestSuiteReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "TestSuite")
+		os.Exit(1)
+	}
+	//+kubebuilder:scaffold:builder
+
 	if os.Getenv("ENABLE_WEBHOOKS") != "false" {
 		if err = (&testkubev1.Script{}).SetupWebhookWithManager(mgr); err != nil {
 			setupLog.Error(err, "unable to create webhook", "webhook", "Script")
@@ -118,8 +130,6 @@ func main() {
 			os.Exit(1)
 		}
 	}
-
-	//+kubebuilder:scaffold:builder
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
 		setupLog.Error(err, "unable to set up health check")

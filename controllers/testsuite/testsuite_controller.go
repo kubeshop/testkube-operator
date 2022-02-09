@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package script
+package testsuite
 
 import (
 	"context"
@@ -24,39 +24,39 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	testkubev1 "github.com/kubeshop/testkube-operator/apis/script/v1"
+	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
 )
 
-// ScriptReconciler reconciles a Script object
-type ScriptReconciler struct {
+// TestSuiteReconciler reconciles a TestSuite object
+type TestSuiteReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=tests.testkube.io,resources=scripts,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=tests.testkube.io,resources=scripts/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=tests.testkube.io,resources=scripts/finalizers,verbs=update
+//+kubebuilder:rbac:groups=tests.testkube.io,resources=testsuites,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=tests.testkube.io,resources=testsuites/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=tests.testkube.io,resources=testsuites/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 // TODO(user): Modify the Reconcile function to compare the state specified by
-// the Script object against the actual cluster state, and then
+// the TestSuite object against the actual cluster state, and then
 // perform operations to make the cluster state reflect the state specified by
 // the user.
 //
 // For more details, check Reconcile and its Result here:
-// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.8.3/pkg/reconcile
-func (r *ScriptReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.11.0/pkg/reconcile
+func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
-	// your logic here
+	// TODO(user): your logic here
 
 	return ctrl.Result{}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *ScriptReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *TestSuiteReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&testkubev1.Script{}).
+		For(&testsuitev1.TestSuite{}).
 		Complete(r)
 }

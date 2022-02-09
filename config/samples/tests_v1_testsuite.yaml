@@ -1,0 +1,6 @@
+apiVersion: tests.testkube.io/v1
+kind: TestSuite
+metadata:
+  name: testsuite-sample
+spec:
+  # TODO(user): Add fields here
