@@ -37,7 +37,7 @@ spec:
             description: TestSuiteSpec defines the desired state of TestSuite
             properties:
               after:
-                description: After steps is list of scripts which will be sequentially
+                description: After steps is list of tests which will be sequentially
                   orchestrated
                 items:
                   description: TestSuiteStepSpec will of particular type will have
@@ -66,7 +66,7 @@ spec:
                   type: object
                 type: array
               before:
-                description: Before steps is list of scripts which will be sequentially
+                description: Before steps is list of tests which will be sequentially
                   orchestrated
                 items:
                   description: TestSuiteStepSpec will of particular type will have
@@ -99,7 +99,7 @@ spec:
               repeats:
                 type: integer
               steps:
-                description: Steps is list of scripts which will be sequentially orchestrated
+                description: Steps is list of tests which will be sequentially orchestrated
                 items:
                   description: TestSuiteStepSpec will of particular type will have
                     config for possible step types

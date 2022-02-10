@@ -28,11 +28,11 @@ type TestSuiteSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Before steps is list of scripts which will be sequentially orchestrated
+	// Before steps is list of tests which will be sequentially orchestrated
 	Before []TestSuiteStepSpec `json:"before,omitempty"`
-	// Steps is list of scripts which will be sequentially orchestrated
+	// Steps is list of tests which will be sequentially orchestrated
 	Steps []TestSuiteStepSpec `json:"steps,omitempty"`
-	// After steps is list of scripts which will be sequentially orchestrated
+	// After steps is list of tests which will be sequentially orchestrated
 	After []TestSuiteStepSpec `json:"after,omitempty"`
 
 	Repeats     int      `json:"repeats,omitempty"`
