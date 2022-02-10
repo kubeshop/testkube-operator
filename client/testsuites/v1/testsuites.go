@@ -6,7 +6,7 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	testsuitesAPI "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
+	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
 	"github.com/kubeshop/testkube-operator/utils"
 )
 
@@ -23,14 +23,14 @@ type TestSuitesClient struct {
 }
 
 // List lists TestSuites
-func (s TestSuitesClient) List(namespace string, tags []string) (*testsuitesAPI.TestSuiteList, error) {
-	list := &testsuitesAPI.TestSuiteList{}
+func (s TestSuitesClient) List(namespace string, tags []string) (*testsuitev1.TestSuiteList, error) {
+	list := &testsuitev1.TestSuiteList{}
 	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: namespace})
 	if len(tags) == 0 {
 		return list, err
 	}
 
-	toReturn := &testsuitesAPI.TestSuiteList{}
+	toReturn := &testsuitev1.TestSuiteList{}
 	for _, test := range list.Items {
 		hasTags := false
 		for _, tag := range tags {
@@ -52,7 +52,7 @@ func (s TestSuitesClient) List(namespace string, tags []string) (*testsuitesAPI.
 // ListTags lists tags for TestSuites
 func (s TestSuitesClient) ListTags(namespace string) ([]string, error) {
 	tags := []string{}
-	list := &testsuitesAPI.TestSuiteList{}
+	list := &testsuitev1.TestSuiteList{}
 	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: namespace})
 	if err != nil {
 		return tags, err
@@ -68,20 +68,20 @@ func (s TestSuitesClient) ListTags(namespace string) ([]string, error) {
 }
 
 // Get returns TestSuite
-func (s TestSuitesClient) Get(namespace, name string) (*testsuitesAPI.TestSuite, error) {
-	test := &testsuitesAPI.TestSuite{}
+func (s TestSuitesClient) Get(namespace, name string) (*testsuitev1.TestSuite, error) {
+	test := &testsuitev1.TestSuite{}
 	err := s.Client.Get(context.Background(), client.ObjectKey{Namespace: namespace, Name: name}, test)
 	return test, err
 }
 
 // Create creates new TestSuite
-func (s TestSuitesClient) Create(test *testsuitesAPI.TestSuite) (*testsuitesAPI.TestSuite, error) {
+func (s TestSuitesClient) Create(test *testsuitev1.TestSuite) (*testsuitev1.TestSuite, error) {
 	err := s.Client.Create(context.Background(), test)
 	return test, err
 }
 
 // Update updates existing TestSuite
-func (s TestSuitesClient) Update(test *testsuitesAPI.TestSuite) (*testsuitesAPI.TestSuite, error) {
+func (s TestSuitesClient) Update(test *testsuitev1.TestSuite) (*testsuitev1.TestSuite, error) {
 	err := s.Client.Update(context.Background(), test)
 	return test, err
 }
