@@ -3,4 +3,14 @@ kind: TestSuite
 metadata:
   name: testsuite-sample
 spec:
-  # TODO(user): Add fields here
+  steps: 
+
+    - type: delay
+      delay: 
+        duration: 1000
+
+    - type: executeTest 
+      execute: 
+        namespace: testkube 
+        name: sanity
+
