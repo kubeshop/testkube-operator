@@ -12,7 +12,7 @@ resources:
   domain: testkube.io
   group: tests
   kind: Script
-  path: github.com/kubeshop/testkube=operator/apis/script/v1
+  path: github.com/kubeshop/testkube-operator/apis/script/v1
   version: v1
 - api:
     crdVersion: v1
@@ -31,5 +31,14 @@ resources:
   group: tests
   kind: Test
   path: github.com/kubeshop/testkube-operator/apis/tests/v1
+  version: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: testkube.io
+  group: tests
+  kind: TestSuite
+  path: github.com/kubeshop/testkube-operator/apis/testsuite/v1
   version: v1
 version: "3"

@@ -1,0 +1,16 @@
+apiVersion: tests.testkube.io/v1
+kind: TestSuite
+metadata:
+  name: testsuite-sample
+spec:
+  steps: 
+
+    - type: delay
+      delay: 
+        duration: 1000
+
+    - type: executeTest 
+      execute: 
+        namespace: testkube 
+        name: sanity
+

@@ -5,13 +5,14 @@ import (
 	scriptv1 "github.com/kubeshop/testkube-operator/apis/script/v1"
 	scriptv2 "github.com/kubeshop/testkube-operator/apis/script/v2"
 	testsv1 "github.com/kubeshop/testkube-operator/apis/tests/v1"
+	testsv2 "github.com/kubeshop/testkube-operator/apis/tests/v2"
+	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-// GetClient returns kubernetes CRD client with registered schemes
 // GetClient returns kubernetes CRD client with registered schemes
 func GetClient() (client.Client, error) {
 	scheme := runtime.NewScheme()
@@ -20,6 +21,8 @@ func GetClient() (client.Client, error) {
 	scriptv2.AddToScheme(scheme)
 	executorv1.AddToScheme(scheme)
 	testsv1.AddToScheme(scheme)
+	testsv2.AddToScheme(scheme)
+	testsuitev1.AddToScheme(scheme)
 
 	kubeconfig, err := ctrl.GetConfig()
 	if err != nil {
