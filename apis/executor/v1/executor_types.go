@@ -44,6 +44,9 @@ type ExecutorSpec struct {
 
 	// ContentTypes list of handled content types
 	ContentTypes []ScriptContentType `json:"content_types,omitempty"`
+
+	// Job template to launch executor
+	JobTemplate string `json:"job_template,omitempty"`
 }
 
 type Feature string
