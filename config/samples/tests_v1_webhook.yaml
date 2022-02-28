@@ -3,4 +3,7 @@ kind: Webhook
 metadata:
   name: webhook-sample
 spec:
-  # TODO(user): Add fields here
+  uri: http://localhost:8080/events
+  events:
+    - test-start
+    - test-end
