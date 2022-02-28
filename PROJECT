@@ -41,4 +41,13 @@ resources:
   kind: TestSuite
   path: github.com/kubeshop/testkube-operator/apis/testsuite/v1
   version: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: testkube.io
+  group: executor
+  kind: Webhook
+  path: github.com/kubeshop/testkube/apis/executor/v1
+  version: v1
 version: "3"
