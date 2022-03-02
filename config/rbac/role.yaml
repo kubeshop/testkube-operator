@@ -33,6 +33,32 @@ rules:
   - patch
   - update
 - apiGroups:
+  - executor.testkube.io
+  resources:
+  - webhooks
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - executor.testkube.io
+  resources:
+  - webhooks/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - executor.testkube.io
+  resources:
+  - webhooks/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
   - tests.testkube.io
   resources:
   - scripts

@@ -6,20 +6,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: executors.executor.testkube.io
+  name: webhooks.executor.testkube.io
 spec:
   group: executor.testkube.io
   names:
-    kind: Executor
-    listKind: ExecutorList
-    plural: executors
-    singular: executor
+    kind: Webhook
+    listKind: WebhookList
+    plural: webhooks
+    singular: webhook
   scope: Namespaced
   versions:
   - name: v1
     schema:
       openAPIV3Schema:
-        description: Executor is the Schema for the executors API
+        description: Webhook is the Schema for the webhooks API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -34,40 +34,20 @@ spec:
           metadata:
             type: object
           spec:
-            description: ExecutorSpec defines the desired state of Executor
+            description: WebhookSpec defines the desired state of Webhook
             properties:
-              content_types:
-                description: ContentTypes list of handled content types
-                items:
-                  type: string
-                type: array
-              executor_type:
-                description: ExecutorType one of "rest" for rest openapi based executors
-                  or "job" which will be default runners for testkube soon
-                type: string
-              features:
-                description: Features list of possible features which executor handles
-                items:
-                  type: string
-                type: array
-              image:
-                description: Image for kube-job
-                type: string
-              job_template:
-                description: Job template to launch executor
-                type: string
-              types:
-                description: Types defines what types can be handled by executor e.g.
-                  "postman/collection", ":curl/command" etc
+              events:
+                description: Events declare list if events on which webhook should
+                  be called
                 items:
                   type: string
                 type: array
               uri:
-                description: URI for rest based executors
+                description: Uri is address where webhook should be made
                 type: string
             type: object
           status:
-            description: ExecutorStatus defines the observed state of Executor
+            description: WebhookStatus defines the observed state of Webhook
             type: object
         type: object
     served: true
