@@ -7,7 +7,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
-	"github.com/kubeshop/testkube-operator/utils"
+	"k8s.io/apimachinery/pkg/labels"
 )
 
 // NewClient creates new TestSuite client
@@ -23,48 +23,50 @@ type TestSuitesClient struct {
 }
 
 // List lists TestSuites
-func (s TestSuitesClient) List(namespace string, tags []string) (*testsuitev1.TestSuiteList, error) {
+func (s TestSuitesClient) List(namespace string, selector string) (*testsuitev1.TestSuiteList, error) {
 	list := &testsuitev1.TestSuiteList{}
-	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: namespace})
-	if len(tags) == 0 {
+	reqs, err := labels.ParseToRequirements(selector)
+	if err != nil {
 		return list, err
 	}
 
-	toReturn := &testsuitev1.TestSuiteList{}
-	for _, test := range list.Items {
-		hasTags := false
-		for _, tag := range tags {
-			if utils.ContainsTag(test.Spec.Tags, tag) {
-				hasTags = true
-			} else {
-				hasTags = false
-			}
-
-		}
-		if hasTags {
-			toReturn.Items = append(toReturn.Items, test)
-
-		}
+	options := &client.ListOptions{
+		Namespace:     namespace,
+		LabelSelector: labels.NewSelector().Add(reqs...),
 	}
-	return toReturn, nil
+
+	if err = s.Client.List(context.Background(), list, options); err != nil {
+		return list, err
+	}
+
+	return list, nil
 }
 
-// ListTags lists tags for TestSuites
-func (s TestSuitesClient) ListTags(namespace string) ([]string, error) {
-	tags := []string{}
+// ListLabelslists labels for TestSuites
+func (s TestSuitesClient) ListLabels(namespace string) (map[string][]string, error) {
+	labels := map[string][]string{}
 	list := &testsuitev1.TestSuiteList{}
 	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: namespace})
 	if err != nil {
-		return tags, err
+		return labels, err
 	}
 
 	for _, test := range list.Items {
-		tags = append(tags, test.Spec.Tags...)
+		for key, value := range test.Labels {
+			if values, ok := labels[key]; !ok {
+				labels[key] = []string{value}
+			} else {
+				for _, v := range values {
+					if v == value {
+						continue
+					}
+				}
+				labels[key] = append(labels[key], value)
+			}
+		}
 	}
 
-	tags = utils.RemoveDuplicates(tags)
-
-	return tags, nil
+	return labels, nil
 }
 
 // Get returns TestSuite

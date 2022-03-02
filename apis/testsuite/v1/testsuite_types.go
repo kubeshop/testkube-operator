@@ -35,9 +35,8 @@ type TestSuiteSpec struct {
 	// After steps is list of tests which will be sequentially orchestrated
 	After []TestSuiteStepSpec `json:"after,omitempty"`
 
-	Repeats     int      `json:"repeats,omitempty"`
-	Description string   `json:"description,omitempty"`
-	Tags        []string `json:"tags,omitempty"`
+	Repeats     int    `json:"repeats,omitempty"`
+	Description string `json:"description,omitempty"`
 }
 
 // TestSuiteStepSpec will of particular type will have config for possible step types
