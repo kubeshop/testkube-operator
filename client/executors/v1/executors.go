@@ -1,4 +1,3 @@
-// TODO DEPRECATED migrated to executors/v1 package
 package executors
 
 import (
