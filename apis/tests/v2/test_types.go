@@ -36,8 +36,6 @@ type TestSpec struct {
 	Params map[string]string `json:"params,omitempty"`
 	// test content object
 	Content *TestContent `json:"content,omitempty"`
-	// test tags
-	Tags []string `json:"tags,omitempty"`
 }
 
 // TestContent defines test content
