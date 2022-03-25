@@ -36,6 +36,8 @@ type TestSpec struct {
 	Params map[string]string `json:"params,omitempty"`
 	// test content object
 	Content *TestContent `json:"content,omitempty"`
+	// schedule in cron job format for scheduled test execution
+	Schedule string `json:"schedule,omitempty"`
 }
 
 // TestContent defines test content

@@ -37,6 +37,8 @@ type TestSuiteSpec struct {
 
 	Repeats     int    `json:"repeats,omitempty"`
 	Description string `json:"description,omitempty"`
+	// schedule in cron job format for scheduled test execution
+	Schedule string `json:"schedule,omitempty"`
 }
 
 // TestSuiteStepSpec will of particular type will have config for possible step types
