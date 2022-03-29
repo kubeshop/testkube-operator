@@ -11,19 +11,21 @@ import (
 )
 
 // NewClient creates new TestSuite client
-func NewClient(client client.Client) *TestSuitesClient {
+func NewClient(client client.Client, namespace string) *TestSuitesClient {
 	return &TestSuitesClient{
-		Client: client,
+		Client:    client,
+		Namespace: namespace,
 	}
 }
 
 // TestSuitesClient implements methods to work with TestSuites
 type TestSuitesClient struct {
-	Client client.Client
+	Client    client.Client
+	Namespace string
 }
 
 // List lists TestSuites
-func (s TestSuitesClient) List(namespace string, selector string) (*testsuitev1.TestSuiteList, error) {
+func (s TestSuitesClient) List(selector string) (*testsuitev1.TestSuiteList, error) {
 	list := &testsuitev1.TestSuiteList{}
 	reqs, err := labels.ParseToRequirements(selector)
 	if err != nil {
@@ -31,7 +33,7 @@ func (s TestSuitesClient) List(namespace string, selector string) (*testsuitev1.
 	}
 
 	options := &client.ListOptions{
-		Namespace:     namespace,
+		Namespace:     s.Namespace,
 		LabelSelector: labels.NewSelector().Add(reqs...),
 	}
 
@@ -43,10 +45,10 @@ func (s TestSuitesClient) List(namespace string, selector string) (*testsuitev1.
 }
 
 // ListLabelslists labels for TestSuites
-func (s TestSuitesClient) ListLabels(namespace string) (map[string][]string, error) {
+func (s TestSuitesClient) ListLabels() (map[string][]string, error) {
 	labels := map[string][]string{}
 	list := &testsuitev1.TestSuiteList{}
-	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: namespace})
+	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: s.Namespace})
 	if err != nil {
 		return labels, err
 	}
@@ -70,9 +72,9 @@ func (s TestSuitesClient) ListLabels(namespace string) (map[string][]string, err
 }
 
 // Get returns TestSuite
-func (s TestSuitesClient) Get(namespace, name string) (*testsuitev1.TestSuite, error) {
+func (s TestSuitesClient) Get(name string) (*testsuitev1.TestSuite, error) {
 	test := &testsuitev1.TestSuite{}
-	err := s.Client.Get(context.Background(), client.ObjectKey{Namespace: namespace, Name: name}, test)
+	err := s.Client.Get(context.Background(), client.ObjectKey{Namespace: s.Namespace, Name: name}, test)
 	return test, err
 }
 
@@ -89,8 +91,8 @@ func (s TestSuitesClient) Update(test *testsuitev1.TestSuite) (*testsuitev1.Test
 }
 
 // Delete deletes existing TestSuite
-func (s TestSuitesClient) Delete(namespace, name string) error {
-	testSuite, err := s.Get(namespace, name)
+func (s TestSuitesClient) Delete(name string) error {
+	testSuite, err := s.Get(name)
 	if err != nil {
 		return err
 	}
@@ -100,10 +102,10 @@ func (s TestSuitesClient) Delete(namespace, name string) error {
 }
 
 // DeleteAll delete all TestSuites
-func (s TestSuitesClient) DeleteAll(namespace string) error {
+func (s TestSuitesClient) DeleteAll() error {
 	u := &unstructured.Unstructured{}
 	u.SetKind("TestSuite")
 	u.SetAPIVersion("tests.testkube.io/v1")
-	err := s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(namespace))
+	err := s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace))
 	return err
 }
