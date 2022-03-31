@@ -9,35 +9,37 @@ import (
 )
 
 // NewWebhooksClient returns new client instance, needs kubernetes client to be passed as dependecy
-func NewWebhooksClient(client client.Client) *WebhooksClient {
+func NewWebhooksClient(client client.Client, namespace string) *WebhooksClient {
 	return &WebhooksClient{
-		Client: client,
+		Client:    client,
+		Namespace: namespace,
 	}
 }
 
 // WebhooksClient client for getting webhooks CRs
 type WebhooksClient struct {
-	Client client.Client
+	Client    client.Client
+	Namespace string
 }
 
 // List shows list of available webhooks
-func (s WebhooksClient) List(namespace string) (*executorsv1.WebhookList, error) {
+func (s WebhooksClient) List() (*executorsv1.WebhookList, error) {
 	list := &executorsv1.WebhookList{}
-	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: namespace})
+	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: s.Namespace})
 	return list, err
 }
 
 // Get gets webhook by name in given namespace
-func (s WebhooksClient) Get(namespace, name string) (*executorsv1.Webhook, error) {
+func (s WebhooksClient) Get(name string) (*executorsv1.Webhook, error) {
 	item := &executorsv1.Webhook{}
-	err := s.Client.Get(context.Background(), client.ObjectKey{Namespace: namespace, Name: name}, item)
+	err := s.Client.Get(context.Background(), client.ObjectKey{Namespace: s.Namespace, Name: name}, item)
 	return item, err
 }
 
 // GetByEvent gets all webhooks with given event
 func (s WebhooksClient) GetByEvent(event string) (*executorsv1.WebhookList, error) {
 	list := &executorsv1.WebhookList{}
-	err := s.Client.List(context.Background(), list, &client.ListOptions{})
+	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: s.Namespace})
 	if err != nil {
 		return nil, err
 	}
@@ -65,11 +67,11 @@ func (s WebhooksClient) Create(webhook *executorsv1.Webhook) (*executorsv1.Webho
 }
 
 // Delete deletes Webhook by name
-func (s WebhooksClient) Delete(name, namespace string) error {
+func (s WebhooksClient) Delete(name string) error {
 	webhook := &executorsv1.Webhook{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name,
-			Namespace: namespace,
+			Namespace: s.Namespace,
 		},
 	}
 	err := s.Client.Delete(context.Background(), webhook)
