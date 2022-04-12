@@ -39,6 +39,9 @@ type TestSuiteSpec struct {
 	Description string `json:"description,omitempty"`
 	// schedule in cron job format for scheduled test execution
 	Schedule string `json:"schedule,omitempty"`
+
+	// execution params passed to executor
+	Params map[string]string `json:"params,omitempty"`
 }
 
 // TestSuiteStepSpec will of particular type will have config for possible step types
