@@ -96,6 +96,11 @@ spec:
                 type: array
               description:
                 type: string
+              params:
+                additionalProperties:
+                  type: string
+                description: execution params passed to executor
+                type: object
               repeats:
                 type: integer
               schedule:
