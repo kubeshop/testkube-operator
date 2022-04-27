@@ -6,6 +6,8 @@ import (
 
 	executorv1 "github.com/kubeshop/testkube-operator/apis/executor/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/labels"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -24,9 +26,19 @@ type ExecutorsClient struct {
 }
 
 // List shows list of available executors
-func (s ExecutorsClient) List() (*executorv1.ExecutorList, error) {
+func (s ExecutorsClient) List(selector string) (*executorv1.ExecutorList, error) {
 	list := &executorv1.ExecutorList{}
-	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: s.Namespace})
+	reqs, err := labels.ParseToRequirements(selector)
+	if err != nil {
+		return list, err
+	}
+
+	options := &client.ListOptions{
+		Namespace:     s.Namespace,
+		LabelSelector: labels.NewSelector().Add(reqs...),
+	}
+
+	err = s.Client.List(context.Background(), list, options)
 	return list, err
 }
 
@@ -80,4 +92,19 @@ func (s ExecutorsClient) Delete(name string) error {
 func (s ExecutorsClient) Update(executor *executorv1.Executor) (*executorv1.Executor, error) {
 	err := s.Client.Update(context.Background(), executor)
 	return executor, err
+}
+
+// DeleteByLabels deletes executors by labels
+func (s ExecutorsClient) DeleteByLabels(selector string) error {
+	reqs, err := labels.ParseToRequirements(selector)
+	if err != nil {
+		return err
+	}
+
+	u := &unstructured.Unstructured{}
+	u.SetKind("Executor")
+	u.SetAPIVersion("executor.testkube.io/v1")
+	err = s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace),
+		client.MatchingLabelsSelector{Selector: labels.NewSelector().Add(reqs...)})
+	return err
 }
