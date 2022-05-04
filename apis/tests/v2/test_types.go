@@ -32,12 +32,22 @@ type TestSpec struct {
 	Type_ string `json:"type,omitempty"`
 	// test execution custom name
 	Name string `json:"name,omitempty"`
-	// execution params passed to executor
+	// DEPRECATED execution params passed to executor
 	Params map[string]string `json:"params,omitempty"`
+	// Variabled are new params but with secrets attached
+	Variables []Variable `json:"variables,omitempty"`
 	// test content object
 	Content *TestContent `json:"content,omitempty"`
 	// schedule in cron job format for scheduled test execution
 	Schedule string `json:"schedule,omitempty"`
+}
+
+type Variable struct {
+	Name            string `json:"name,omitempty"`
+	Value           string `json:"value,omitempty"`
+	Type_           string `json:"type,omitempty"`
+	SecretName      string `json:"secretName,omitempty"`
+	SecretNamespace string `json:"secretNamespace,omitempty"`
 }
 
 // TestContent defines test content
