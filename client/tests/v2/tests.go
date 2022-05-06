@@ -108,3 +108,18 @@ func (s TestsClient) DeleteAll() error {
 	err := s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace))
 	return err
 }
+
+// DeleteByLabels deletes tests by labels
+func (s TestsClient) DeleteByLabels(selector string) error {
+	reqs, err := labels.ParseToRequirements(selector)
+	if err != nil {
+		return err
+	}
+
+	u := &unstructured.Unstructured{}
+	u.SetKind("Test")
+	u.SetAPIVersion("tests.testkube.io/v2")
+	err = s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace),
+		client.MatchingLabelsSelector{Selector: labels.NewSelector().Add(reqs...)})
+	return err
+}
