@@ -134,12 +134,7 @@ func (s TestsClient) Delete(name string) error {
 		return err
 	}
 
-	err = s.Client.Delete(context.Background(), secret)
-	if err != nil {
-		return err
-	}
-
-	return err
+	return s.Client.Delete(context.Background(), secret)
 }
 
 // DeleteAll deletes all Tests
@@ -158,12 +153,7 @@ func (s TestsClient) DeleteAll() error {
 	u.SetAPIVersion("v1")
 	u.SetLabels(testSecretDefaultLabels)
 
-	err = s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace))
-	if err != nil {
-		return err
-	}
-
-	return err
+	return s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace))
 }
 
 // CreateTestSecrets creates corresponding test vars secrets
@@ -255,5 +245,5 @@ func secretToTestVars(secret *corev1.Secret, test *testsv2.Test) {
 }
 
 func secretName(testName string) string {
-	return fmt.Sprintf("%s-vars", testName)
+	return fmt.Sprintf("%s-testvars", testName)
 }

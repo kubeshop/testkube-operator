@@ -17,6 +17,7 @@ limitations under the License.
 package v1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -40,8 +41,26 @@ type TestSuiteSpec struct {
 	// schedule in cron job format for scheduled test execution
 	Schedule string `json:"schedule,omitempty"`
 
-	// execution params passed to executor
+	// DEPRECATED execution params passed to executor
 	Params map[string]string `json:"params,omitempty"`
+	// Variables are new params with secrets attached
+	Variables map[string]Variable `json:"variables,omitempty"`
+}
+
+const (
+	VariableTypeBasic  = "basic"
+	VariableTypeSecret = "secret"
+)
+
+type Variable struct {
+	// variable type
+	Type_ string `json:"type,omitempty"`
+	// variable name
+	Name string `json:"name,omitempty"`
+	// variable string value
+	Value string `json:"value,omitempty"`
+	// or load it from var source
+	ValueFrom corev1.EnvVarSource `json:"valueFrom,omitempty"`
 }
 
 // TestSuiteStepSpec will of particular type will have config for possible step types
