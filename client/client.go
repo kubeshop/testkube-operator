@@ -7,6 +7,7 @@ import (
 	testsv1 "github.com/kubeshop/testkube-operator/apis/tests/v1"
 	testsv2 "github.com/kubeshop/testkube-operator/apis/tests/v2"
 	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -23,6 +24,7 @@ func GetClient() (client.Client, error) {
 	testsv1.AddToScheme(scheme)
 	testsv2.AddToScheme(scheme)
 	testsuitev1.AddToScheme(scheme)
+	corev1.AddToScheme(scheme)
 
 	kubeconfig, err := ctrl.GetConfig()
 	if err != nil {

@@ -51,7 +51,7 @@ type Variable struct {
 	// variable string value
 	Value string `json:"value,omitempty"`
 	// or load it from var source
-	ValueFrom corev1.EnvVarSource
+	ValueFrom corev1.EnvVarSource `json:"valueFrom,omitempty"`
 }
 
 const (
