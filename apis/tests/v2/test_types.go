@@ -17,6 +17,7 @@ limitations under the License.
 package v2
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -34,8 +35,8 @@ type TestSpec struct {
 	Name string `json:"name,omitempty"`
 	// DEPRECATED execution params passed to executor
 	Params map[string]string `json:"params,omitempty"`
-	// Variabled are new params but with secrets attached
-	Variables []Variable `json:"variables,omitempty"`
+	// Variables are new params with secrets attached
+	Variables map[string]Variable `json:"variables,omitempty"`
 	// test content object
 	Content *TestContent `json:"content,omitempty"`
 	// schedule in cron job format for scheduled test execution
@@ -43,12 +44,20 @@ type TestSpec struct {
 }
 
 type Variable struct {
-	Name            string `json:"name,omitempty"`
-	Value           string `json:"value,omitempty"`
-	Type_           string `json:"type,omitempty"`
-	SecretName      string `json:"secretName,omitempty"`
-	SecretNamespace string `json:"secretNamespace,omitempty"`
+	// variable type
+	Type_ string `json:"type,omitempty"`
+	// variable name
+	Name string `json:"name,omitempty"`
+	// variable string value
+	Value string `json:"value,omitempty"`
+	// or load it from var source
+	ValueFrom corev1.EnvVarSource
 }
+
+const (
+	VariableTypeBasic  = "basic"
+	VariableTypeSecret = "secret"
+)
 
 // TestContent defines test content
 type TestContent struct {

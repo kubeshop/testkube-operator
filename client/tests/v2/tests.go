@@ -2,13 +2,18 @@ package tests
 
 import (
 	"context"
+	"fmt"
 
+	v1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	testsv2 "github.com/kubeshop/testkube-operator/apis/tests/v2"
 	"k8s.io/apimachinery/pkg/labels"
 )
+
+const testkubeTestSecretLabel = "tests-secrets"
 
 // NewClent creates new Test client
 func NewClient(client client.Client, namespace string) *TestsClient {
@@ -79,6 +84,7 @@ func (s TestsClient) Get(name string) (*testsv2.Test, error) {
 // Create creates new Test
 func (s TestsClient) Create(test *testsv2.Test) (*testsv2.Test, error) {
 	err := s.Client.Create(context.Background(), test)
+
 	return test, err
 }
 
@@ -107,4 +113,56 @@ func (s TestsClient) DeleteAll() error {
 	u.SetAPIVersion("tests.testkube.io/v2")
 	err := s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace))
 	return err
+}
+
+// Delete deletes existing Test
+func (s TestsClient) CreateTestSecrets(test *testsv2.Test) error {
+	secretName := fmt.Sprintf("%s-vars", test.Name)
+	secret := &v1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      secretName,
+			Namespace: s.Namespace,
+			Labels:    map[string]string{"testkube": testkubeTestSecretLabel},
+		},
+		Type: v1.SecretTypeOpaque,
+	}
+
+	for k := range test.Spec.Variables {
+		v := test.Spec.Variables[k]
+		if v.Type_ == testsv2.VariableTypeSecret {
+			secret.StringData[v.Name] = v.Value
+			v.Value = ""
+			v.ValueFrom = v1.EnvVarSource{
+				SecretKeyRef: &v1.SecretKeySelector{
+					Key: v.Name,
+					LocalObjectReference: v1.LocalObjectReference{
+						Name: secretName,
+					},
+				},
+			}
+		}
+		test.Spec.Variables[k] = v
+
+		s.Client.Create(context.Background(), secret)
+	}
+	return nil
+}
+
+// NewSpec is a method to return secret spec
+func NewSpec(id, namespace string, labels, stringData map[string]string) *v1.Secret {
+	configuration := &v1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      id,
+			Namespace: namespace,
+			Labels:    map[string]string{"testkube": testkubeTestSecretLabel},
+		},
+		Type:       v1.SecretTypeOpaque,
+		StringData: stringData,
+	}
+
+	for key, value := range labels {
+		configuration.Labels[key] = value
+	}
+
+	return configuration
 }
