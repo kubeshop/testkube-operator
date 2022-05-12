@@ -158,7 +158,7 @@ func (s TestSuitesClient) DeleteAll() error {
 	return s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace))
 }
 
-// CreateTestSecrets creates corresponding test vars secrets
+// CreateTestsuiteSecrets creates corresponding TestSuite vars secrets
 func (s TestSuitesClient) CreateTestsuiteSecrets(testsuite *testsuitev1.TestSuite) error {
 	secretName := secretName(testsuite.Name)
 	secret := &corev1.Secret{
