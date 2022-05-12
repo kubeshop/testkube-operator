@@ -231,7 +231,7 @@ func testVarsToSecret(testsuite *testsuitev1.TestSuite, secret *corev1.Secret) {
 	}
 }
 
-// secretToTestVars loads secrets data passed into Test CRD and remove plain text data
+// secretToTestVars loads secrets data passed into TestSuite CRD and remove plain text data
 func secretToTestVars(secret *corev1.Secret, testsuite *testsuitev1.TestSuite) {
 
 	if secret.Data == nil {
