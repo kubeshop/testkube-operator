@@ -249,3 +249,18 @@ func secretToTestVars(secret *corev1.Secret, testsuite *testsuitev1.TestSuite) {
 func secretName(testsuiteName string) string {
 	return fmt.Sprintf("%s-testsuitevars", testsuiteName)
 }
+
+// DeleteByLabels deletes TestSuites by labels
+func (s TestSuitesClient) DeleteByLabels(selector string) error {
+	reqs, err := labels.ParseToRequirements(selector)
+	if err != nil {
+		return err
+	}
+
+	u := &unstructured.Unstructured{}
+	u.SetKind("TestSuite")
+	u.SetAPIVersion("tests.testkube.io/v1")
+	err = s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace),
+		client.MatchingLabelsSelector{Selector: labels.NewSelector().Add(reqs...)})
+	return err
+}
