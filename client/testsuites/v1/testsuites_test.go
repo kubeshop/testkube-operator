@@ -1,4 +1,4 @@
-///go:build kubernetesIntegrationTest
+//go:build kubernetesIntegrationTest
 
 // TODO set-up workflows which can run kubernetes related tests
 
