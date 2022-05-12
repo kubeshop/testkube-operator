@@ -1,18 +1,19 @@
-//go:build kubernetesIntegrationTest
+///go:build kubernetesIntegrationTest
 
 // TODO set-up workflows which can run kubernetes related tests
 
-package tests
+package v1
 
 import (
-	"fmt"
 	"testing"
 
-	testsv2 "github.com/kubeshop/testkube-operator/apis/tests/v2"
+	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
 	kubeclient "github.com/kubeshop/testkube-operator/client"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
+
+const testsuiteName = "testsuite-example-with-secrets"
 
 func TestClient_IntegrationWithSecrets(t *testing.T) {
 	// given test client and example test
@@ -20,24 +21,21 @@ func TestClient_IntegrationWithSecrets(t *testing.T) {
 	assert.NoError(t, err)
 
 	c := NewClient(client, "testkube")
-	tst0, err := c.Create(&testsv2.Test{
+
+	tst0, err := c.Create(&testsuitev1.TestSuite{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      "test-example-with-secrets",
+			Name:      testsuiteName,
 			Namespace: "testkube",
 		},
-		Spec: testsv2.TestSpec{
-			Type_: "postman/collection",
-			Content: &testsv2.TestContent{
-				Data: "{}",
-			},
-			Variables: map[string]testsv2.Variable{
+		Spec: testsuitev1.TestSuiteSpec{
+			Variables: map[string]testsuitev1.Variable{
 				"secretVar1": {
-					Type_: testsv2.VariableTypeSecret,
+					Type_: testsuitev1.VariableTypeSecret,
 					Name:  "secretVar1",
 					Value: "SECR3t",
 				},
 				"secretVar2": {
-					Type_: testsv2.VariableTypeSecret,
+					Type_: testsuitev1.VariableTypeSecret,
 					Name:  "secretVar2",
 					Value: "SomeOtherSecretVar",
 				},
@@ -51,12 +49,18 @@ func TestClient_IntegrationWithSecrets(t *testing.T) {
 	secret := tst0.Spec.Variables["secretVar1"]
 	secret.Value = "UpdatedSecretValue"
 	tst0.Spec.Variables["secretVar1"] = secret
+
+	secret = tst0.Spec.Variables["secretVar2"]
+	secret.Value = "SomeOtherSecretVar"
+	tst0.Spec.Variables["secretVar2"] = secret
+
 	tstUpdated, err := c.Update(tst0)
 	assert.NoError(t, err)
 
 	// then value should be updated
 	tst1, err := c.Get(tst0.Name)
 	assert.NoError(t, err)
+
 	assert.Equal(t, "UpdatedSecretValue", tst1.Spec.Variables["secretVar1"].Value)
 	assert.Equal(t, "SomeOtherSecretVar", tst1.Spec.Variables["secretVar2"].Value)
 
@@ -68,4 +72,5 @@ func TestClient_IntegrationWithSecrets(t *testing.T) {
 	tst2, err := c.Get(tst0.Name)
 	assert.Nil(t, tst2)
 	assert.Error(t, err)
+
 }

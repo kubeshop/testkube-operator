@@ -12,10 +12,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-const testkubeTestSecretLabel = "testsuites-secrets"
+const testkubeTestsuiteSecretLabel = "testsuites-secrets"
 
-var testSecretDefaultLabels = map[string]string{
-	"testkube":           testkubeTestSecretLabel,
+var testsuiteSecretDefaultLabels = map[string]string{
+	"testkube":           testkubeTestsuiteSecretLabel,
 	"testkubeSecretType": "variables",
 }
 
@@ -153,7 +153,7 @@ func (s TestSuitesClient) DeleteAll() error {
 	u = &unstructured.Unstructured{}
 	u.SetKind("Secret")
 	u.SetAPIVersion("v1")
-	u.SetLabels(testSecretDefaultLabels)
+	u.SetLabels(testsuiteSecretDefaultLabels)
 
 	return s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace))
 }
@@ -165,7 +165,7 @@ func (s TestSuitesClient) CreateTestsuiteSecrets(testsuite *testsuitev1.TestSuit
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      secretName,
 			Namespace: s.Namespace,
-			Labels:    testSecretDefaultLabels,
+			Labels:    testsuiteSecretDefaultLabels,
 		},
 		Type:       corev1.SecretTypeOpaque,
 		StringData: map[string]string{},
@@ -246,6 +246,6 @@ func secretToTestVars(secret *corev1.Secret, testsuite *testsuitev1.TestSuite) {
 	}
 }
 
-func secretName(testName string) string {
-	return fmt.Sprintf("%s-testvars", testName)
+func secretName(testsuiteName string) string {
+	return fmt.Sprintf("%s-testsuitevars", testsuiteName)
 }
