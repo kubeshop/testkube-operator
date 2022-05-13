@@ -17,6 +17,7 @@ limitations under the License.
 package v2
 
 import (
+	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -32,13 +33,17 @@ type TestSpec struct {
 	Type_ string `json:"type,omitempty"`
 	// test execution custom name
 	Name string `json:"name,omitempty"`
-	// execution params passed to executor
+	// DEPRECATED execution params passed to executor
 	Params map[string]string `json:"params,omitempty"`
+	// Variables are new params with secrets attached
+	Variables map[string]Variable `json:"variables,omitempty"`
 	// test content object
 	Content *TestContent `json:"content,omitempty"`
 	// schedule in cron job format for scheduled test execution
 	Schedule string `json:"schedule,omitempty"`
 }
+
+type Variable commonv1.Variable
 
 // TestContent defines test content
 type TestContent struct {

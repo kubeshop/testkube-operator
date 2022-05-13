@@ -17,6 +17,7 @@ limitations under the License.
 package v1
 
 import (
+	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -40,9 +41,13 @@ type TestSuiteSpec struct {
 	// schedule in cron job format for scheduled test execution
 	Schedule string `json:"schedule,omitempty"`
 
-	// execution params passed to executor
+	// DEPRECATED execution params passed to executor
 	Params map[string]string `json:"params,omitempty"`
+	// Variables are new params with secrets attached
+	Variables map[string]Variable `json:"variables,omitempty"`
 }
+
+type Variable commonv1.Variable
 
 // TestSuiteStepSpec will of particular type will have config for possible step types
 type TestSuiteStepSpec struct {
