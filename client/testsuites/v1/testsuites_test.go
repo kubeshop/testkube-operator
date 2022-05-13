@@ -1,4 +1,4 @@
-//go:build kubernetesIntegrationTest
+//go:build k8sIntegration
 
 // TODO set-up workflows which can run kubernetes related tests
 
@@ -7,6 +7,7 @@ package v1
 import (
 	"testing"
 
+	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
 	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
 	kubeclient "github.com/kubeshop/testkube-operator/client"
 	"github.com/stretchr/testify/assert"
@@ -30,12 +31,12 @@ func TestClient_IntegrationWithSecrets(t *testing.T) {
 		Spec: testsuitev1.TestSuiteSpec{
 			Variables: map[string]testsuitev1.Variable{
 				"secretVar1": {
-					Type_: testsuitev1.VariableTypeSecret,
+					Type_: commonv1.VariableTypeSecret,
 					Name:  "secretVar1",
 					Value: "SECR3t",
 				},
 				"secretVar2": {
-					Type_: testsuitev1.VariableTypeSecret,
+					Type_: commonv1.VariableTypeSecret,
 					Name:  "secretVar2",
 					Value: "SomeOtherSecretVar",
 				},

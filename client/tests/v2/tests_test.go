@@ -1,13 +1,13 @@
-//go:build kubernetesIntegrationTest
+//go:build k8sIntegration
 
 // TODO set-up workflows which can run kubernetes related tests
 
 package tests
 
 import (
-	"fmt"
 	"testing"
 
+	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
 	testsv2 "github.com/kubeshop/testkube-operator/apis/tests/v2"
 	kubeclient "github.com/kubeshop/testkube-operator/client"
 	"github.com/stretchr/testify/assert"
@@ -20,7 +20,7 @@ func TestClient_IntegrationWithSecrets(t *testing.T) {
 	assert.NoError(t, err)
 
 	c := NewClient(client, "testkube")
-	tst0, err := c.Create(&testsv2.Test{
+	testSpec := &testsv2.Test{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      "test-example-with-secrets",
 			Namespace: "testkube",
@@ -31,41 +31,50 @@ func TestClient_IntegrationWithSecrets(t *testing.T) {
 				Data: "{}",
 			},
 			Variables: map[string]testsv2.Variable{
-				"secretVar1": {
-					Type_: testsv2.VariableTypeSecret,
-					Name:  "secretVar1",
-					Value: "SECR3t",
+				"var1": {
+					Type_: commonv1.VariableTypeSecret,
+					Name:  "var1",
+					Value: "val1",
 				},
-				"secretVar2": {
-					Type_: testsv2.VariableTypeSecret,
-					Name:  "secretVar2",
-					Value: "SomeOtherSecretVar",
+				"var2": {
+					Type_: commonv1.VariableTypeSecret,
+					Name:  "var2",
+					Value: "val2",
 				},
 			},
 		},
-	})
+	}
 
-	assert.NoError(t, err)
-
-	// when update test secret variable
-	secret := tst0.Spec.Variables["secretVar1"]
-	secret.Value = "UpdatedSecretValue"
-	tst0.Spec.Variables["secretVar1"] = secret
-	tstUpdated, err := c.Update(tst0)
+	// when create test
+	test1, err := c.Create(testSpec)
 	assert.NoError(t, err)
 
 	// then value should be updated
-	tst1, err := c.Get(tst0.Name)
+	test2, err := c.Get(test1.Name)
 	assert.NoError(t, err)
-	assert.Equal(t, "UpdatedSecretValue", tst1.Spec.Variables["secretVar1"].Value)
-	assert.Equal(t, "SomeOtherSecretVar", tst1.Spec.Variables["secretVar2"].Value)
+	assert.Equal(t, "val1", test2.Spec.Variables["var1"].Value)
+	assert.Equal(t, "val2", test2.Spec.Variables["var2"].Value)
+
+	// when and update test secret variable
+	secret := test2.Spec.Variables["var1"]
+	secret.Value = "updated1"
+	test2.Spec.Variables["var1"] = secret
+
+	test3, err := c.Update(test2)
+	assert.NoError(t, err)
+
+	// then value should be updated
+	test4, err := c.Get(test3.Name)
+	assert.NoError(t, err)
+	assert.Equal(t, "updated1", test4.Spec.Variables["var1"].Value)
+	assert.Equal(t, "val2", test4.Spec.Variables["var2"].Value)
 
 	// when test is deleted
-	err = c.Delete(tstUpdated.Name)
+	err = c.Delete(test4.Name)
 	assert.NoError(t, err)
 
 	// then there should be no test anymore
-	tst2, err := c.Get(tst0.Name)
-	assert.Nil(t, tst2)
+	test5, err := c.Get(test4.Name)
+	assert.Nil(t, test5)
 	assert.Error(t, err)
 }

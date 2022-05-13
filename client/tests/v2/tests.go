@@ -9,6 +9,7 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
 	testsv2 "github.com/kubeshop/testkube-operator/apis/tests/v2"
 	"k8s.io/apimachinery/pkg/labels"
 )
@@ -212,7 +213,7 @@ func testVarsToSecret(test *testsv2.Test, secret *corev1.Secret) {
 	}
 	for k := range test.Spec.Variables {
 		v := test.Spec.Variables[k]
-		if v.Type_ == testsv2.VariableTypeSecret {
+		if v.Type_ == commonv1.VariableTypeSecret {
 			secret.StringData[v.Name] = v.Value
 			// clear passed test variable secret value and save as reference o secret
 			v.Value = ""

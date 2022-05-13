@@ -17,7 +17,7 @@ limitations under the License.
 package v1
 
 import (
-	corev1 "k8s.io/api/core/v1"
+	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -47,21 +47,7 @@ type TestSuiteSpec struct {
 	Variables map[string]Variable `json:"variables,omitempty"`
 }
 
-const (
-	VariableTypeBasic  = "basic"
-	VariableTypeSecret = "secret"
-)
-
-type Variable struct {
-	// variable type
-	Type_ string `json:"type,omitempty"`
-	// variable name
-	Name string `json:"name,omitempty"`
-	// variable string value
-	Value string `json:"value,omitempty"`
-	// or load it from var source
-	ValueFrom corev1.EnvVarSource `json:"valueFrom,omitempty"`
-}
+type Variable commonv1.Variable
 
 // TestSuiteStepSpec will of particular type will have config for possible step types
 type TestSuiteStepSpec struct {

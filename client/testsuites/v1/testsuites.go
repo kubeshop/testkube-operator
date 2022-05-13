@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
 	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -214,7 +215,7 @@ func testVarsToSecret(testsuite *testsuitev1.TestSuite, secret *corev1.Secret) {
 	}
 	for k := range testsuite.Spec.Variables {
 		v := testsuite.Spec.Variables[k]
-		if v.Type_ == testsuitev1.VariableTypeSecret {
+		if v.Type_ == commonv1.VariableTypeSecret {
 			secret.StringData[v.Name] = v.Value
 			// clear passed test variable secret value and save as reference o secret
 			v.Value = ""
