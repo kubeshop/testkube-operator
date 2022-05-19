@@ -2,7 +2,7 @@ name: Build and publish Docker image with a commit hash tag
 on:
   push:
     branches:
-      - trigger_deploy-to-stage
+      - main
 
 jobs:
   docker:
@@ -50,5 +50,5 @@ jobs:
         with:
           token: ${{ secrets.DEVOPS_GITHUB_TOKEN }}
           repository: kubeshop/helm-charts
-          event-type: trigger-workflow-dashboard
+          event-type: trigger-workflow-operator
           client-payload: '{"image_tag_operator": "sha-${{ steps.github_sha.outputs.sha_short }}"}'
