@@ -3,6 +3,7 @@ package v1
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
 	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
@@ -90,13 +91,14 @@ func (s TestSuitesClient) Get(name string) (*testsuitev1.TestSuite, error) {
 	}
 
 	secret, err := s.LoadTestVariablesSecret(testsuite)
-	if err != nil {
+	secretExists := !s.ErrIsNotFound(err)
+	if err != nil && secretExists {
 		return nil, err
 	}
 
 	secretToTestVars(secret, testsuite)
 
-	return testsuite, err
+	return testsuite, nil
 }
 
 // Create creates new TestSuite
@@ -129,7 +131,8 @@ func (s TestSuitesClient) Delete(name string) error {
 	}
 
 	secret, err := s.LoadTestVariablesSecret(testsuite)
-	if err != nil {
+	secretExists := !s.ErrIsNotFound(err)
+	if err != nil && secretExists {
 		return err
 	}
 
@@ -138,7 +141,10 @@ func (s TestSuitesClient) Delete(name string) error {
 		return err
 	}
 
-	return s.Client.Delete(context.Background(), secret)
+	if secretExists {
+		return s.Client.Delete(context.Background(), secret)
+	}
+	return nil
 }
 
 // DeleteAll delete all TestSuites
@@ -186,13 +192,14 @@ func (s TestSuitesClient) CreateTestsuiteSecrets(testsuite *testsuitev1.TestSuit
 
 func (s TestSuitesClient) UpdateTestsuiteSecrets(testsuite *testsuitev1.TestSuite) error {
 	secret, err := s.LoadTestVariablesSecret(testsuite)
-	if err != nil {
+	secretExists := !s.ErrIsNotFound(err)
+	if err != nil && secretExists {
 		return err
 	}
 
 	testVarsToSecret(testsuite, secret)
 
-	if len(secret.StringData) > 0 {
+	if secretExists && len(secret.StringData) > 0 {
 		err := s.Client.Update(context.Background(), secret)
 		if err != nil {
 			return err
@@ -208,8 +215,18 @@ func (s TestSuitesClient) LoadTestVariablesSecret(testsuite *testsuitev1.TestSui
 	return secret, err
 }
 
+func (s TestSuitesClient) ErrIsNotFound(err error) bool {
+	if err != nil {
+		return strings.Contains(err.Error(), "not found")
+	}
+	return false
+}
+
 // testVarsToSecret loads secrets data passed into TestSuite CRD and remove plain text data
 func testVarsToSecret(testsuite *testsuitev1.TestSuite, secret *corev1.Secret) {
+	if secret == nil {
+		return
+	}
 	if secret.StringData == nil {
 		secret.StringData = map[string]string{}
 	}

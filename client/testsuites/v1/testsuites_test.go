@@ -14,9 +14,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const testsuiteName = "testsuite-example-with-secrets"
-
 func TestClient_IntegrationWithSecrets(t *testing.T) {
+	const testsuiteName = "testsuite-example-with-secrets"
 	// given test client and example test
 	client, err := kubeclient.GetClient()
 	assert.NoError(t, err)
@@ -64,6 +63,57 @@ func TestClient_IntegrationWithSecrets(t *testing.T) {
 
 	assert.Equal(t, "UpdatedSecretValue", tst1.Spec.Variables["secretVar1"].Value)
 	assert.Equal(t, "SomeOtherSecretVar", tst1.Spec.Variables["secretVar2"].Value)
+
+	// when test is deleted
+	err = c.Delete(tstUpdated.Name)
+	assert.NoError(t, err)
+
+	// then there should be no test anymore
+	tst2, err := c.Get(tst0.Name)
+	assert.Nil(t, tst2)
+	assert.Error(t, err)
+
+}
+
+func TestClient_IntegrationWithoutSecrets(t *testing.T) {
+	const testsuiteName = "testsuite-example-without-secrets"
+	// given test client and example test
+	client, err := kubeclient.GetClient()
+	assert.NoError(t, err)
+
+	c := NewClient(client, "testkube")
+
+	tst0, err := c.Create(&testsuitev1.TestSuite{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      testsuiteName,
+			Namespace: "testkube",
+		},
+		Spec: testsuitev1.TestSuiteSpec{
+			Variables: map[string]testsuitev1.Variable{
+				"secretVar1": {
+					Type_: commonv1.VariableTypeBasic,
+					Name:  "var1",
+					Value: "val1",
+				},
+			},
+		},
+	})
+
+	assert.NoError(t, err)
+
+	// when update test secret variable
+	secret := tst0.Spec.Variables["secretVar1"]
+	secret.Value = "updatedval"
+	tst0.Spec.Variables["var1"] = secret
+
+	tstUpdated, err := c.Update(tst0)
+	assert.NoError(t, err)
+
+	// then value should be updated
+	tst1, err := c.Get(tst0.Name)
+	assert.NoError(t, err)
+
+	assert.Equal(t, "updatedval", tst1.Spec.Variables["var1"].Value)
 
 	// when test is deleted
 	err = c.Delete(tstUpdated.Name)
