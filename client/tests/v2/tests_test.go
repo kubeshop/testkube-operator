@@ -1,4 +1,4 @@
-///go:build k8sIntegration
+//go:build k8sIntegration
 
 // TODO set-up workflows which can run kubernetes related tests
 
