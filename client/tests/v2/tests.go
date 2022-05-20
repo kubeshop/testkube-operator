@@ -3,6 +3,7 @@ package tests
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -89,13 +90,20 @@ func (s TestsClient) Get(name string) (*testsv2.Test, error) {
 	}
 
 	secret, err := s.LoadTestVariablesSecret(test)
-	if err != nil {
+	if err != nil && !s.ErrIsNotFound(err) {
 		return nil, err
 	}
 
 	secretToTestVars(secret, test)
 
 	return test, nil
+}
+
+func (s TestsClient) ErrIsNotFound(err error) bool {
+	if err != nil {
+		return strings.Contains(err.Error(), "not found")
+	}
+	return false
 }
 
 // Create creates new Test and coupled resources
@@ -126,7 +134,8 @@ func (s TestsClient) Delete(name string) error {
 	}
 
 	secret, err := s.LoadTestVariablesSecret(test)
-	if err != nil {
+	secretExists := !s.ErrIsNotFound(err)
+	if err != nil && secretExists {
 		return err
 	}
 
@@ -135,7 +144,12 @@ func (s TestsClient) Delete(name string) error {
 		return err
 	}
 
-	return s.Client.Delete(context.Background(), secret)
+	// delete secret only if exists ignore otherwise
+	if secretExists {
+		return s.Client.Delete(context.Background(), secret)
+	}
+
+	return nil
 }
 
 // DeleteAll deletes all Tests
@@ -184,7 +198,7 @@ func (s TestsClient) CreateTestSecrets(test *testsv2.Test) error {
 
 func (s TestsClient) UpdateTestSecrets(test *testsv2.Test) error {
 	secret, err := s.LoadTestVariablesSecret(test)
-	if err != nil {
+	if err != nil && !s.ErrIsNotFound(err) {
 		return err
 	}
 
@@ -233,7 +247,7 @@ func testVarsToSecret(test *testsv2.Test, secret *corev1.Secret) {
 // secretToTestVars loads secrets data passed into Test CRD and remove plain text data
 func secretToTestVars(secret *corev1.Secret, test *testsv2.Test) {
 
-	if secret.Data == nil {
+	if test == nil || secret == nil || secret.Data == nil {
 		return
 	}
 

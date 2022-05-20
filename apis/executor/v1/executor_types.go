@@ -49,6 +49,7 @@ type ExecutorSpec struct {
 	JobTemplate string `json:"job_template,omitempty"`
 }
 
+// +kubebuilder:validation:Enum=artifacts;junit-report
 type Feature string
 
 const (
@@ -56,6 +57,7 @@ const (
 	FeatureJUnitReport Feature = "junit-report"
 )
 
+// +kubebuilder:validation:Enum=string;file-uri;git-file;git-dir
 type ScriptContentType string
 
 const (

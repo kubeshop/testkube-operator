@@ -39,6 +39,11 @@ spec:
               content_types:
                 description: ContentTypes list of handled content types
                 items:
+                  enum:
+                  - string
+                  - file-uri
+                  - git-file
+                  - git-dir
                   type: string
                 type: array
               executor_type:
@@ -48,6 +53,9 @@ spec:
               features:
                 description: Features list of possible features which executor handles
                 items:
+                  enum:
+                  - artifacts
+                  - junit-report
                   type: string
                 type: array
               image:
