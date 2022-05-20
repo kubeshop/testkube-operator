@@ -1,4 +1,4 @@
-///go:build k8sIntegration
+//go:build k8sIntegration
 
 // TODO set-up workflows which can run kubernetes related tests
 
@@ -14,9 +14,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const testsuiteName = "testsuite-example-with-secrets"
-
 func TestClient_IntegrationWithSecrets(t *testing.T) {
+	const testsuiteName = "testsuite-example-with-secrets"
 	// given test client and example test
 	client, err := kubeclient.GetClient()
 	assert.NoError(t, err)
@@ -77,6 +76,7 @@ func TestClient_IntegrationWithSecrets(t *testing.T) {
 }
 
 func TestClient_IntegrationWithoutSecrets(t *testing.T) {
+	const testsuiteName = "testsuite-example-without-secrets"
 	// given test client and example test
 	client, err := kubeclient.GetClient()
 	assert.NoError(t, err)

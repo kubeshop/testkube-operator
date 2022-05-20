@@ -91,14 +91,14 @@ func (s TestSuitesClient) Get(name string) (*testsuitev1.TestSuite, error) {
 	}
 
 	secret, err := s.LoadTestVariablesSecret(testsuite)
-	secretExists := s.ErrIsNotFound(err)
+	secretExists := !s.ErrIsNotFound(err)
 	if err != nil && secretExists {
 		return nil, err
 	}
 
 	secretToTestVars(secret, testsuite)
 
-	return testsuite, err
+	return testsuite, nil
 }
 
 // Create creates new TestSuite
