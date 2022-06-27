@@ -55,7 +55,7 @@ func (s TestsClient) List(selector string) (*testsv2.TestList, error) {
 	for i := range list.Items {
 		secret, err := s.LoadTestVariablesSecret(&list.Items[i])
 		if err != nil && !s.ErrIsNotFound(err) {
-			return nil, err
+			return list, err
 		}
 
 		secretToTestVars(secret, &list.Items[i])
