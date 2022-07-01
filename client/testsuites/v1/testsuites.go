@@ -239,7 +239,7 @@ func (s TestSuitesClient) LoadTestVariablesSecret(testsuite *testsuitev1.TestSui
 func (s TestSuitesClient) GetCurrentSnaphsotUUID(testSuiteName string) (string, error) {
 	secret := &corev1.Secret{}
 	if err := s.Client.Get(context.Background(), client.ObjectKey{
-		Namespace: s.Namespace, Name: secretName(testSuiteName)}, secret); err != nil {
+		Namespace: s.Namespace, Name: secretName(testSuiteName)}, secret); err != nil && !s.ErrIsNotFound(err) {
 		return "", err
 	}
 
@@ -257,7 +257,7 @@ func (s TestSuitesClient) GetCurrentSnaphsotUUID(testSuiteName string) (string, 
 func (s TestSuitesClient) GetSnaphsotTestSuiteVars(testSuiteName, snapshotUUID string) (map[string]string, error) {
 	secret := &corev1.Secret{}
 	if err := s.Client.Get(context.Background(), client.ObjectKey{
-		Namespace: s.Namespace, Name: secretName(testSuiteName)}, secret); err != nil {
+		Namespace: s.Namespace, Name: secretName(testSuiteName)}, secret); err != nil && !s.ErrIsNotFound(err) {
 		return nil, err
 	}
 
