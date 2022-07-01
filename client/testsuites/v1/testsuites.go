@@ -235,6 +235,44 @@ func (s TestSuitesClient) LoadTestVariablesSecret(testsuite *testsuitev1.TestSui
 	return secret, err
 }
 
+// GetCurrentSnaphsotUUID returns current snapshot uuid
+func (s TestSuitesClient) GetCurrentSnaphsotUUID(testSuiteName string) (string, error) {
+	secret := &corev1.Secret{}
+	if err := s.Client.Get(context.Background(), client.ObjectKey{
+		Namespace: s.Namespace, Name: secretName(testSuiteName)}, secret); err != nil {
+		return "", err
+	}
+
+	snapshotUUID := ""
+	if secret.Data != nil {
+		if value, ok := secret.Data[currentSnapshotKey]; ok {
+			snapshotUUID = string(value)
+		}
+	}
+
+	return snapshotUUID, nil
+}
+
+// GetSnaphsotTestSuiteVars returns snapshot test suite vars
+func (s TestSuitesClient) GetSnaphsotTestSuiteVars(testSuiteName, snapshotUUID string) (map[string]string, error) {
+	secret := &corev1.Secret{}
+	if err := s.Client.Get(context.Background(), client.ObjectKey{
+		Namespace: s.Namespace, Name: secretName(testSuiteName)}, secret); err != nil {
+		return nil, err
+	}
+
+	secrets := make(map[string]string)
+	if secret.Data != nil {
+		if value, ok := secret.Data[snapshotUUID]; ok {
+			if err := json.Unmarshal(value, &secrets); err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	return secrets, nil
+}
+
 func (s TestSuitesClient) ErrIsNotFound(err error) bool {
 	if err != nil {
 		return strings.Contains(err.Error(), "not found")

@@ -238,6 +238,44 @@ func (s TestsClient) LoadTestVariablesSecret(test *testsv2.Test) (*corev1.Secret
 	return secret, err
 }
 
+// GetCurrentSnaphsotUUID returns current snapshot uuid
+func (s TestsClient) GetCurrentSnaphsotUUID(testName string) (string, error) {
+	secret := &corev1.Secret{}
+	if err := s.Client.Get(context.Background(), client.ObjectKey{
+		Namespace: s.Namespace, Name: secretName(testName)}, secret); err != nil {
+		return "", err
+	}
+
+	snapshotUUID := ""
+	if secret.Data != nil {
+		if value, ok := secret.Data[currentSnapshotKey]; ok {
+			snapshotUUID = string(value)
+		}
+	}
+
+	return snapshotUUID, nil
+}
+
+// GetSnaphsotTestVars returns snapshot test vars
+func (s TestsClient) GetSnaphsotTestVars(testName, snapshotUUID string) (map[string]string, error) {
+	secret := &corev1.Secret{}
+	if err := s.Client.Get(context.Background(), client.ObjectKey{
+		Namespace: s.Namespace, Name: secretName(testName)}, secret); err != nil {
+		return nil, err
+	}
+
+	secrets := make(map[string]string)
+	if secret.Data != nil {
+		if value, ok := secret.Data[snapshotUUID]; ok {
+			if err := json.Unmarshal(value, &secrets); err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	return secrets, nil
+}
+
 // testVarsToSecret loads secrets data passed into Test CRD and remove plain text data
 func testVarsToSecret(test *testsv2.Test, secret *corev1.Secret) error {
 	if secret.StringData == nil {
