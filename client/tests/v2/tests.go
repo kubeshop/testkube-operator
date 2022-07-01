@@ -2,9 +2,11 @@ package tests
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strings"
 
+	"github.com/google/uuid"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -15,7 +17,10 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 )
 
-const testkubeTestSecretLabel = "tests-secrets"
+const (
+	testkubeTestSecretLabel = "tests-secrets"
+	currentSnapshotKey      = "current-snapshot"
+)
 
 var testSecretDefaultLabels = map[string]string{
 	"testkube":           testkubeTestSecretLabel,
@@ -193,7 +198,9 @@ func (s TestsClient) CreateTestSecrets(test *testsv2.Test) error {
 		StringData: map[string]string{},
 	}
 
-	testVarsToSecret(test, secret)
+	if err := testVarsToSecret(test, secret); err != nil {
+		return err
+	}
 
 	if len(secret.StringData) > 0 {
 		err := s.Client.Create(context.Background(), secret)
@@ -211,7 +218,9 @@ func (s TestsClient) UpdateTestSecrets(test *testsv2.Test) error {
 		return err
 	}
 
-	testVarsToSecret(test, secret)
+	if err := testVarsToSecret(test, secret); err != nil {
+		return err
+	}
 
 	if len(secret.StringData) > 0 {
 		err := s.Client.Update(context.Background(), secret)
@@ -230,14 +239,17 @@ func (s TestsClient) LoadTestVariablesSecret(test *testsv2.Test) (*corev1.Secret
 }
 
 // testVarsToSecret loads secrets data passed into Test CRD and remove plain text data
-func testVarsToSecret(test *testsv2.Test, secret *corev1.Secret) {
+func testVarsToSecret(test *testsv2.Test, secret *corev1.Secret) error {
 	if secret.StringData == nil {
 		secret.StringData = map[string]string{}
 	}
+
+	snapshot := make(map[string]string)
 	for k := range test.Spec.Variables {
 		v := test.Spec.Variables[k]
 		if v.Type_ == commonv1.VariableTypeSecret {
 			secret.StringData[v.Name] = v.Value
+			snapshot[v.Name] = v.Value
 			// clear passed test variable secret value and save as reference o secret
 			v.Value = ""
 			v.ValueFrom = corev1.EnvVarSource{
@@ -248,14 +260,31 @@ func testVarsToSecret(test *testsv2.Test, secret *corev1.Secret) {
 					},
 				},
 			}
+
+			test.Spec.Variables[k] = v
 		}
-		test.Spec.Variables[k] = v
 	}
+
+	if len(snapshot) != 0 {
+		random, err := uuid.NewRandom()
+		if err != nil {
+			return err
+		}
+
+		data, err := json.Marshal(snapshot)
+		if err != nil {
+			return err
+		}
+
+		secret.StringData[random.String()] = string(data)
+		secret.StringData[currentSnapshotKey] = random.String()
+	}
+
+	return nil
 }
 
 // secretToTestVars loads secrets data passed into Test CRD and remove plain text data
 func secretToTestVars(secret *corev1.Secret, test *testsv2.Test) {
-
 	if test == nil || secret == nil || secret.Data == nil {
 		return
 	}

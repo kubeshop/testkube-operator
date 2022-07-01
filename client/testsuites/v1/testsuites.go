@@ -2,19 +2,25 @@ package v1
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strings"
 
-	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
-	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/labels"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	"github.com/google/uuid"
+	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
+	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
 )
 
-const testkubeTestsuiteSecretLabel = "testsuites-secrets"
+const (
+	testkubeTestsuiteSecretLabel = "testsuites-secrets"
+	currentSnapshotKey           = "current-snapshot"
+)
 
 var testsuiteSecretDefaultLabels = map[string]string{
 	"testkube":           testkubeTestsuiteSecretLabel,
@@ -50,6 +56,16 @@ func (s TestSuitesClient) List(selector string) (*testsuitev1.TestSuiteList, err
 
 	if err = s.Client.List(context.Background(), list, options); err != nil {
 		return list, err
+	}
+
+	for i := range list.Items {
+		secret, err := s.LoadTestVariablesSecret(&list.Items[i])
+		secretExists := !s.ErrIsNotFound(err)
+		if err != nil && secretExists {
+			return list, err
+		}
+
+		secretToTestVars(secret, &list.Items[i])
 	}
 
 	return list, nil
@@ -178,7 +194,9 @@ func (s TestSuitesClient) CreateTestsuiteSecrets(testsuite *testsuitev1.TestSuit
 		StringData: map[string]string{},
 	}
 
-	testVarsToSecret(testsuite, secret)
+	if err := testVarsToSecret(testsuite, secret); err != nil {
+		return err
+	}
 
 	if len(secret.StringData) > 0 {
 		err := s.Client.Create(context.Background(), secret)
@@ -197,7 +215,9 @@ func (s TestSuitesClient) UpdateTestsuiteSecrets(testsuite *testsuitev1.TestSuit
 		return err
 	}
 
-	testVarsToSecret(testsuite, secret)
+	if err := testVarsToSecret(testsuite, secret); err != nil {
+		return err
+	}
 
 	if secretExists && len(secret.StringData) > 0 {
 		err := s.Client.Update(context.Background(), secret)
@@ -223,13 +243,16 @@ func (s TestSuitesClient) ErrIsNotFound(err error) bool {
 }
 
 // testVarsToSecret loads secrets data passed into TestSuite CRD and remove plain text data
-func testVarsToSecret(testsuite *testsuitev1.TestSuite, secret *corev1.Secret) {
+func testVarsToSecret(testsuite *testsuitev1.TestSuite, secret *corev1.Secret) error {
 	if secret == nil {
-		return
+		return nil
 	}
+
 	if secret.StringData == nil {
 		secret.StringData = map[string]string{}
 	}
+
+	snapshot := make(map[string]string)
 	for k := range testsuite.Spec.Variables {
 		v := testsuite.Spec.Variables[k]
 		if v.Type_ == commonv1.VariableTypeSecret {
@@ -244,14 +267,31 @@ func testVarsToSecret(testsuite *testsuitev1.TestSuite, secret *corev1.Secret) {
 					},
 				},
 			}
+
+			testsuite.Spec.Variables[k] = v
 		}
-		testsuite.Spec.Variables[k] = v
 	}
+
+	if len(snapshot) != 0 {
+		random, err := uuid.NewRandom()
+		if err != nil {
+			return err
+		}
+
+		data, err := json.Marshal(snapshot)
+		if err != nil {
+			return err
+		}
+
+		secret.StringData[random.String()] = string(data)
+		secret.StringData[currentSnapshotKey] = random.String()
+	}
+
+	return nil
 }
 
 // secretToTestVars loads secrets data passed into TestSuite CRD and remove plain text data
 func secretToTestVars(secret *corev1.Secret, testsuite *testsuitev1.TestSuite) {
-
 	if secret.Data == nil {
 		return
 	}
