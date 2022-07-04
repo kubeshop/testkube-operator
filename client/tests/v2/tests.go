@@ -19,7 +19,7 @@ import (
 
 const (
 	testkubeTestSecretLabel = "tests-secrets"
-	currentSnapshotKey      = "current-snapshot"
+	currentSecretKey        = "current-secret"
 )
 
 var testSecretDefaultLabels = map[string]string{
@@ -238,26 +238,26 @@ func (s TestsClient) LoadTestVariablesSecret(test *testsv2.Test) (*corev1.Secret
 	return secret, err
 }
 
-// GetCurrentSnaphsotUUID returns current snapshot uuid
-func (s TestsClient) GetCurrentSnaphsotUUID(testName string) (string, error) {
+// GetCurrentSecretUUID returns current secret uuid
+func (s TestsClient) GetCurrentSecretUUID(testName string) (string, error) {
 	secret := &corev1.Secret{}
 	if err := s.Client.Get(context.Background(), client.ObjectKey{
 		Namespace: s.Namespace, Name: secretName(testName)}, secret); err != nil && !s.ErrIsNotFound(err) {
 		return "", err
 	}
 
-	snapshotUUID := ""
+	secretUUID := ""
 	if secret.Data != nil {
-		if value, ok := secret.Data[currentSnapshotKey]; ok {
-			snapshotUUID = string(value)
+		if value, ok := secret.Data[currentSecretKey]; ok {
+			secretUUID = string(value)
 		}
 	}
 
-	return snapshotUUID, nil
+	return secretUUID, nil
 }
 
-// GetSnaphsotTestVars returns snapshot test vars
-func (s TestsClient) GetSnaphsotTestVars(testName, snapshotUUID string) (map[string]string, error) {
+// GetSecretTestVars returns secret test vars
+func (s TestsClient) GetSecretTestVars(testName, secretUUID string) (map[string]string, error) {
 	secret := &corev1.Secret{}
 	if err := s.Client.Get(context.Background(), client.ObjectKey{
 		Namespace: s.Namespace, Name: secretName(testName)}, secret); err != nil && !s.ErrIsNotFound(err) {
@@ -266,7 +266,7 @@ func (s TestsClient) GetSnaphsotTestVars(testName, snapshotUUID string) (map[str
 
 	secrets := make(map[string]string)
 	if secret.Data != nil {
-		if value, ok := secret.Data[snapshotUUID]; ok {
+		if value, ok := secret.Data[secretUUID]; ok {
 			if err := json.Unmarshal(value, &secrets); err != nil {
 				return nil, err
 			}
@@ -282,12 +282,12 @@ func testVarsToSecret(test *testsv2.Test, secret *corev1.Secret) error {
 		secret.StringData = map[string]string{}
 	}
 
-	snapshot := make(map[string]string)
+	secretMap := make(map[string]string)
 	for k := range test.Spec.Variables {
 		v := test.Spec.Variables[k]
 		if v.Type_ == commonv1.VariableTypeSecret {
 			secret.StringData[v.Name] = v.Value
-			snapshot[v.Name] = v.Value
+			secretMap[v.Name] = v.Value
 			// clear passed test variable secret value and save as reference o secret
 			v.Value = ""
 			v.ValueFrom = corev1.EnvVarSource{
@@ -303,19 +303,19 @@ func testVarsToSecret(test *testsv2.Test, secret *corev1.Secret) error {
 		}
 	}
 
-	if len(snapshot) != 0 {
+	if len(secretMap) != 0 {
 		random, err := uuid.NewRandom()
 		if err != nil {
 			return err
 		}
 
-		data, err := json.Marshal(snapshot)
+		data, err := json.Marshal(secretMap)
 		if err != nil {
 			return err
 		}
 
 		secret.StringData[random.String()] = string(data)
-		secret.StringData[currentSnapshotKey] = random.String()
+		secret.StringData[currentSecretKey] = random.String()
 	}
 
 	return nil
