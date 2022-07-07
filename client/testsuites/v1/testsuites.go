@@ -295,6 +295,7 @@ func testVarsToSecret(testsuite *testsuitev1.TestSuite, secret *corev1.Secret) e
 		v := testsuite.Spec.Variables[k]
 		if v.Type_ == commonv1.VariableTypeSecret {
 			secret.StringData[v.Name] = v.Value
+			secretMap[v.Name] = v.Value
 			// clear passed test variable secret value and save as reference o secret
 			v.Value = ""
 			v.ValueFrom = corev1.EnvVarSource{
