@@ -2,9 +2,11 @@ package tests
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strings"
 
+	"github.com/google/uuid"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -15,7 +17,10 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 )
 
-const testkubeTestSecretLabel = "tests-secrets"
+const (
+	testkubeTestSecretLabel = "tests-secrets"
+	currentSecretKey        = "current-secret"
+)
 
 var testSecretDefaultLabels = map[string]string{
 	"testkube":           testkubeTestSecretLabel,
@@ -193,7 +198,9 @@ func (s TestsClient) CreateTestSecrets(test *testsv2.Test) error {
 		StringData: map[string]string{},
 	}
 
-	testVarsToSecret(test, secret)
+	if err := testVarsToSecret(test, secret); err != nil {
+		return err
+	}
 
 	if len(secret.StringData) > 0 {
 		err := s.Client.Create(context.Background(), secret)
@@ -211,7 +218,9 @@ func (s TestsClient) UpdateTestSecrets(test *testsv2.Test) error {
 		return err
 	}
 
-	testVarsToSecret(test, secret)
+	if err := testVarsToSecret(test, secret); err != nil {
+		return err
+	}
 
 	if len(secret.StringData) > 0 {
 		err := s.Client.Update(context.Background(), secret)
@@ -229,15 +238,56 @@ func (s TestsClient) LoadTestVariablesSecret(test *testsv2.Test) (*corev1.Secret
 	return secret, err
 }
 
+// GetCurrentSecretUUID returns current secret uuid
+func (s TestsClient) GetCurrentSecretUUID(testName string) (string, error) {
+	secret := &corev1.Secret{}
+	if err := s.Client.Get(context.Background(), client.ObjectKey{
+		Namespace: s.Namespace, Name: secretName(testName)}, secret); err != nil && !s.ErrIsNotFound(err) {
+		return "", err
+	}
+
+	secretUUID := ""
+	if secret.Data != nil {
+		if value, ok := secret.Data[currentSecretKey]; ok {
+			secretUUID = string(value)
+		}
+	}
+
+	return secretUUID, nil
+}
+
+// GetSecretTestVars returns secret test vars
+func (s TestsClient) GetSecretTestVars(testName, secretUUID string) (map[string]string, error) {
+	secret := &corev1.Secret{}
+	if err := s.Client.Get(context.Background(), client.ObjectKey{
+		Namespace: s.Namespace, Name: secretName(testName)}, secret); err != nil && !s.ErrIsNotFound(err) {
+		return nil, err
+	}
+
+	secrets := make(map[string]string)
+	if secret.Data != nil {
+		if value, ok := secret.Data[secretUUID]; ok {
+			if err := json.Unmarshal(value, &secrets); err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	return secrets, nil
+}
+
 // testVarsToSecret loads secrets data passed into Test CRD and remove plain text data
-func testVarsToSecret(test *testsv2.Test, secret *corev1.Secret) {
+func testVarsToSecret(test *testsv2.Test, secret *corev1.Secret) error {
 	if secret.StringData == nil {
 		secret.StringData = map[string]string{}
 	}
+
+	secretMap := make(map[string]string)
 	for k := range test.Spec.Variables {
 		v := test.Spec.Variables[k]
 		if v.Type_ == commonv1.VariableTypeSecret {
 			secret.StringData[v.Name] = v.Value
+			secretMap[v.Name] = v.Value
 			// clear passed test variable secret value and save as reference o secret
 			v.Value = ""
 			v.ValueFrom = corev1.EnvVarSource{
@@ -248,14 +298,31 @@ func testVarsToSecret(test *testsv2.Test, secret *corev1.Secret) {
 					},
 				},
 			}
+
+			test.Spec.Variables[k] = v
 		}
-		test.Spec.Variables[k] = v
 	}
+
+	if len(secretMap) != 0 {
+		random, err := uuid.NewRandom()
+		if err != nil {
+			return err
+		}
+
+		data, err := json.Marshal(secretMap)
+		if err != nil {
+			return err
+		}
+
+		secret.StringData[random.String()] = string(data)
+		secret.StringData[currentSecretKey] = random.String()
+	}
+
+	return nil
 }
 
 // secretToTestVars loads secrets data passed into Test CRD and remove plain text data
 func secretToTestVars(secret *corev1.Secret, test *testsv2.Test) {
-
 	if test == nil || secret == nil || secret.Data == nil {
 		return
 	}
