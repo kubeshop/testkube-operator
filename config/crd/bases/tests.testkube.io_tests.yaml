@@ -165,6 +165,9 @@ spec:
                       branch:
                         description: branch/tag name for checkout
                         type: string
+                      commit:
+                        description: commit id (sha) for checkout
+                        type: string
                       path:
                         description: if needed we can checkout particular path (dir
                           or file) in case of BIG/mono repositories

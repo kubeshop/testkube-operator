@@ -65,6 +65,8 @@ type Repository struct {
 	Uri string `json:"uri"`
 	// branch/tag name for checkout
 	Branch string `json:"branch"`
+	// commit id (sha) for checkout
+	Commit string `json:"commit"`
 	// if needed we can checkout particular path (dir or file) in case of BIG/mono repositories
 	Path string `json:"path,omitempty"`
 	// git auth username for private repositories
