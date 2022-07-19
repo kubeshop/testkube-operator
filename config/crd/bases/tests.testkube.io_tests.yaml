@@ -188,7 +188,6 @@ spec:
                         description: git auth username for private repositories
                         type: string
                     required:
-                    - branch
                     - type
                     - uri
                     type: object
