@@ -41,6 +41,8 @@ type TestSpec struct {
 	Content *TestContent `json:"content,omitempty"`
 	// schedule in cron job format for scheduled test execution
 	Schedule string `json:"schedule,omitempty"`
+	// additional executor binary arguments
+	ExecutorArgs []string `json:"executorArgs,omitempty"`
 }
 
 type Variable commonv1.Variable
@@ -64,9 +66,9 @@ type Repository struct {
 	// uri of content file or git directory
 	Uri string `json:"uri"`
 	// branch/tag name for checkout
-	Branch string `json:"branch"`
+	Branch string `json:"branch,omitempty"`
 	// commit id (sha) for checkout
-	Commit string `json:"commit"`
+	Commit string `json:"commit,omitempty"`
 	// if needed we can checkout particular path (dir or file) in case of BIG/mono repositories
 	Path string `json:"path,omitempty"`
 	// git auth username for private repositories
