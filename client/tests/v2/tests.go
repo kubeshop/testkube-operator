@@ -276,6 +276,22 @@ func (s TestsClient) GetSecretTestVars(testName, secretUUID string) (map[string]
 	return secrets, nil
 }
 
+// ListByNames returns Tests by names
+// TODO - should be replaced by --field-selector when it supports IN for expression
+func (s TestsClient) ListByNames(names []string) ([]testsv2.Test, error) {
+	tests := []testsv2.Test{}
+	for _, name := range names {
+		test := &testsv2.Test{}
+		if err := s.Client.Get(context.Background(), client.ObjectKey{Namespace: s.Namespace, Name: name}, test); err != nil {
+			return nil, err
+		}
+
+		tests = append(tests, *test)
+	}
+
+	return tests, nil
+}
+
 // testVarsToSecret loads secrets data passed into Test CRD and remove plain text data
 func testVarsToSecret(test *testsv2.Test, secret *corev1.Secret) error {
 	if secret.StringData == nil {
