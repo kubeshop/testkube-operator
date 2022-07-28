@@ -276,9 +276,9 @@ func (s TestsClient) GetSecretTestVars(testName, secretUUID string) (map[string]
 	return secrets, nil
 }
 
-// ListTestsByNames returns Tests by names
+// ListByNames returns Tests by names
 // TODO - should be replaced by --field-selector when it supports IN for expression
-func (s TestsClient) ListTestsByNames(names []string) ([]testsv2.Test, error) {
+func (s TestsClient) ListByNames(names []string) ([]testsv2.Test, error) {
 	tests := []testsv2.Test{}
 	for _, name := range names {
 		test := &testsv2.Test{}
