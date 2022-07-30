@@ -56,7 +56,8 @@ func (s WebhooksClient) GetByEvent(event string) (*executorsv1.WebhookList, erro
 		return nil, err
 	}
 
-	for i, exec := range list.Items {
+	for i := len(list.Items) - 1; i >= 0; i-- {
+		exec := list.Items[i]
 		hasEvent := false
 		for _, t := range exec.Spec.Events {
 			if t == event {
