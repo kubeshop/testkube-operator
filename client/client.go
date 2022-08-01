@@ -6,6 +6,7 @@ import (
 	scriptv2 "github.com/kubeshop/testkube-operator/apis/script/v2"
 	testsv1 "github.com/kubeshop/testkube-operator/apis/tests/v1"
 	testsv2 "github.com/kubeshop/testkube-operator/apis/tests/v2"
+	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
 	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -23,6 +24,7 @@ func GetClient() (client.Client, error) {
 	executorv1.AddToScheme(scheme)
 	testsv1.AddToScheme(scheme)
 	testsv2.AddToScheme(scheme)
+	testsv3.AddToScheme(scheme)
 	testsuitev1.AddToScheme(scheme)
 	corev1.AddToScheme(scheme)
 
