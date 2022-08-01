@@ -2,6 +2,7 @@ package executors
 
 import (
 	"context"
+	"fmt"
 
 	executorsv1 "github.com/kubeshop/testkube-operator/apis/executor/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -75,8 +76,18 @@ func (s WebhooksClient) GetByEvent(event string) (*executorsv1.WebhookList, erro
 
 // Create creates new Webhook CR
 func (s WebhooksClient) Create(webhook *executorsv1.Webhook) (*executorsv1.Webhook, error) {
+	if webhook.Namespace != s.Namespace {
+		return nil, fmt.Errorf("wrong namespace, expected: %s, got: %s", s.Namespace, webhook.Namespace)
+	}
 	err := s.Client.Create(context.Background(), webhook)
-	return webhook, err
+	if err != nil {
+		return nil, fmt.Errorf("could not create webhook: %w", err)
+	}
+	res, err := s.Get(webhook.Name)
+	if err != nil {
+		return nil, fmt.Errorf("could not get created webhook: %w", err)
+	}
+	return res, nil
 }
 
 // Delete deletes Webhook by name
