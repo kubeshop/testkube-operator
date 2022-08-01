@@ -1,0 +1,9 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/exu/code/kube/testkube-operator'
+[ -f /Users/exu/code/kube/testkube-operator/bin/controller-gen ] || { set -e ; TMP_DIR=$(mktemp -d) ; cd $TMP_DIR ; go mod init tmp ; echo "Downloading sigs.k8s.io/controller-tools/cmd/controller-gen@v0.4.1" ; GOBIN=/Users/exu/code/kube/testkube-operator/bin go get sigs.k8s.io/controller-tools/cmd/controller-gen@v0.4.1 ; rm -rf $TMP_DIR ; }
+/Users/exu/code/kube/testkube-operator/bin/controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..."
+go fmt ./...
+go vet ./...
+go build -o bin/manager main.go
+make: Leaving directory `/Users/exu/code/kube/testkube-operator'
+ 

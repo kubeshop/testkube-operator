@@ -1,0 +1,1 @@
+{"buildTargets":["all","build","controller-gen","deploy","docker-build","docker-push","fmt","generate","help","install","kustomize","manifests","run","test","undeploy","uninstall","vet"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}

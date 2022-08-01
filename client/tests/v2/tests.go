@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 	corev1 "k8s.io/api/core/v1"
@@ -43,6 +44,9 @@ type TestsClient struct {
 
 // List lists Tests
 func (s TestsClient) List(selector string) (*testsv2.TestList, error) {
+
+	n := time.Now()
+
 	list := &testsv2.TestList{}
 	reqs, err := labels.ParseToRequirements(selector)
 	if err != nil {
@@ -232,7 +236,20 @@ func (s TestsClient) UpdateTestSecrets(test *testsv2.Test) error {
 	return nil
 }
 
+func (s TestsClient) TestHasSecrets(test *testsv2.Test) (has bool) {
+	for _, v := range test.Spec.Variables {
+		if v.Type_ == commonv1.VariableTypeSecret {
+			return true
+		}
+	}
+
+	return
+}
+
 func (s TestsClient) LoadTestVariablesSecret(test *testsv2.Test) (*corev1.Secret, error) {
+	if !s.TestHasSecrets(test) {
+		return nil, nil
+	}
 	secret := &corev1.Secret{}
 	err := s.Client.Get(context.Background(), client.ObjectKey{Namespace: s.Namespace, Name: secretName(test.Name)}, secret)
 	return secret, err
