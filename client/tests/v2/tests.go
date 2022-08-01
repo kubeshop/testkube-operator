@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/google/uuid"
 	corev1 "k8s.io/api/core/v1"
@@ -44,8 +43,6 @@ type TestsClient struct {
 
 // List lists Tests
 func (s TestsClient) List(selector string) (*testsv2.TestList, error) {
-
-	n := time.Now()
 
 	list := &testsv2.TestList{}
 	reqs, err := labels.ParseToRequirements(selector)
