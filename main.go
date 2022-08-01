@@ -39,6 +39,7 @@ import (
 	testkubev2 "github.com/kubeshop/testkube-operator/apis/script/v2"
 	testsv1 "github.com/kubeshop/testkube-operator/apis/tests/v1"
 	testsv2 "github.com/kubeshop/testkube-operator/apis/tests/v2"
+	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
 	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
 	executorcontrollers "github.com/kubeshop/testkube-operator/controllers/executor"
 	scriptcontrollers "github.com/kubeshop/testkube-operator/controllers/script"
@@ -61,6 +62,7 @@ func init() {
 	utilruntime.Must(testkubev2.AddToScheme(scheme))
 	utilruntime.Must(testsuitev1.AddToScheme(scheme))
 	utilruntime.Must(testsv2.AddToScheme(scheme))
+	utilruntime.Must(testsv3.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -135,6 +137,14 @@ func main() {
 		}
 		if err = (&testkubev2.Script{}).SetupWebhookWithManager(mgr); err != nil {
 			setupLog.Error(err, "unable to create webhook", "webhook", "Script")
+			os.Exit(1)
+		}
+		if err = (&testsv2.Test{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "Test")
+			os.Exit(1)
+		}
+		if err = (&testsv3.Test{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "Test")
 			os.Exit(1)
 		}
 	}

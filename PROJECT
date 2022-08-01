@@ -50,4 +50,12 @@ resources:
   kind: Webhook
   path: github.com/kubeshop/testkube/apis/executor/v1
   version: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: testkube.io
+  group: tests
+  kind: Test
+  path: github.com/kubeshop/testkube/apis/tests/v3
+  version: v3
 version: "3"

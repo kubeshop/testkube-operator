@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v2
+package v3
 
 import (
 	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
@@ -31,18 +31,13 @@ type TestSpec struct {
 
 	// test type
 	Type_ string `json:"type,omitempty"`
-	// test execution custom name
+	// test name
 	Name string `json:"name,omitempty"`
-	// DEPRECATED execution params passed to executor
-	Params map[string]string `json:"params,omitempty"`
-	// Variables are new params with secrets attached
-	Variables map[string]Variable `json:"variables,omitempty"`
 	// test content object
 	Content *TestContent `json:"content,omitempty"`
 	// schedule in cron job format for scheduled test execution
-	Schedule string `json:"schedule,omitempty"`
-	// additional executor binary arguments
-	ExecutorArgs []string `json:"executorArgs,omitempty"`
+	Schedule         string            `json:"schedule,omitempty"`
+	ExecutionRequest *ExecutionRequest `json:"executionRequest,omitempty"`
 }
 
 type Variable commonv1.Variable
@@ -77,6 +72,39 @@ type Repository struct {
 	Token string `json:"token,omitempty"`
 }
 
+// test execution request body
+type ExecutionRequest struct {
+	// test execution custom name
+	Name string `json:"name,omitempty"`
+	// unique test suite name (CRD Test suite name), if it's run as a part of test suite
+	TestSuiteName string `json:"testSuiteName,omitempty"`
+	// test execution number
+	Number int32 `json:"number,omitempty"`
+	// test execution labels
+	ExecutionLabels map[string]string `json:"executionLabels,omitempty"`
+	// test kubernetes namespace (\"testkube\" when not set)
+	Namespace string `json:"namespace,omitempty"`
+	// variables file content - need to be in format for particular executor (e.g. postman envs file)
+	VariablesFile string              `json:"variablesFile,omitempty"`
+	Variables     map[string]Variable `json:"variables,omitempty"`
+	// test secret uuid
+	TestSecretUUID string `json:"testSecretUUID,omitempty"`
+	// test suite secret uuid, if it's run as a part of test suite
+	TestSuiteSecretUUID string `json:"testSuiteSecretUUID,omitempty"`
+	// additional executor binary arguments
+	Args []string `json:"args,omitempty"`
+	// environment variables passed to executor
+	Envs map[string]string `json:"envs,omitempty"`
+	// execution variables passed to executor from secrets
+	SecretEnvs map[string]string `json:"secretEnvs,omitempty"`
+	// whether to start execution sync or async
+	Sync bool `json:"sync,omitempty"`
+	// http proxy for executor containers
+	HttpProxy string `json:"httpProxy,omitempty"`
+	// https proxy for executor containers
+	HttpsProxy string `json:"httpsProxy,omitempty"`
+}
+
 // TestStatus defines the observed state of Test
 type TestStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
@@ -88,6 +116,7 @@ type TestStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:storageversion
 
 // Test is the Schema for the tests API
 type Test struct {
