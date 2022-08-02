@@ -26,7 +26,45 @@ func (src *Test) ConvertTo(dstRaw conversion.Hub) error {
 	// ObjectMeta
 	dst.ObjectMeta = src.ObjectMeta
 
-	// Status
+	// Spec
+	dst.Spec.Type_ = src.Spec.Type_
+	dst.Spec.Name = src.Spec.Name
+	dst.Spec.Schedule = src.Spec.Schedule
+
+	if src.Spec.ExecutionRequest != nil {
+		dst.Spec.Variables = make(map[string]testkubev2.Variable, len(src.Spec.ExecutionRequest.Variables))
+		for key, value := range src.Spec.ExecutionRequest.Variables {
+			dst.Spec.Variables[key] = testkubev2.Variable{
+				Type_:     value.Type_,
+				Name:      value.Name,
+				Value:     value.Value,
+				ValueFrom: value.ValueFrom,
+			}
+		}
+
+		dst.Spec.ExecutorArgs = make([]string, len(src.Spec.ExecutionRequest.Args))
+		for i, arg := range src.Spec.ExecutionRequest.Args {
+			dst.Spec.ExecutorArgs[i] = arg
+		}
+	}
+
+	if src.Spec.Content != nil {
+		dst.Spec.Content = &testkubev2.TestContent{
+			Data:  src.Spec.Content.Data,
+			Type_: src.Spec.Content.Type_,
+			Uri:   src.Spec.Content.Uri,
+		}
+	}
+
+	if src.Spec.Content != nil && src.Spec.Content.Repository != nil {
+		dst.Spec.Content.Repository = &testkubev2.Repository{
+			Type_:  src.Spec.Content.Repository.Type_,
+			Uri:    src.Spec.Content.Repository.Uri,
+			Branch: src.Spec.Content.Repository.Branch,
+			Commit: src.Spec.Content.Repository.Commit,
+			Path:   src.Spec.Content.Repository.Path,
+		}
+	}
 
 	return nil
 }
@@ -37,6 +75,49 @@ func (dst *Test) ConvertFrom(srcRaw conversion.Hub) error {
 
 	// ObjectMeta
 	dst.ObjectMeta = src.ObjectMeta
+
+	// Spec
+	dst.Spec.Type_ = src.Spec.Type_
+	dst.Spec.Name = src.Spec.Name
+	dst.Spec.Schedule = src.Spec.Schedule
+
+	if len(src.Spec.Variables) != 0 || len(src.Spec.ExecutorArgs) != 0 {
+		dst.Spec.ExecutionRequest = &ExecutionRequest{}
+		dst.Spec.ExecutionRequest.Variables = make(map[string]Variable, len(src.Spec.Variables))
+		for key, value := range src.Spec.Variables {
+			dst.Spec.ExecutionRequest.Variables[key] = Variable{
+				Type_:     value.Type_,
+				Name:      value.Name,
+				Value:     value.Value,
+				ValueFrom: value.ValueFrom,
+			}
+		}
+
+		dst.Spec.ExecutionRequest.Args = make([]string, len(src.Spec.ExecutorArgs))
+		for i, arg := range src.Spec.ExecutorArgs {
+			dst.Spec.ExecutionRequest.Args[i] = arg
+		}
+	}
+
+	if src.Spec.Content != nil {
+		if src.Spec.Content != nil {
+			dst.Spec.Content = &TestContent{
+				Data:  src.Spec.Content.Data,
+				Type_: src.Spec.Content.Type_,
+				Uri:   src.Spec.Content.Uri,
+			}
+		}
+	}
+
+	if src.Spec.Content != nil && src.Spec.Content.Repository != nil {
+		dst.Spec.Content.Repository = &Repository{
+			Type_:  src.Spec.Content.Repository.Type_,
+			Uri:    src.Spec.Content.Repository.Uri,
+			Branch: src.Spec.Content.Repository.Branch,
+			Commit: src.Spec.Content.Repository.Commit,
+			Path:   src.Spec.Content.Repository.Path,
+		}
+	}
 
 	// Status
 	return nil
