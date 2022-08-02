@@ -19,12 +19,16 @@ package tests
 import (
 	"context"
 
+	batchv1 "k8s.io/api/batch/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	testsv1 "github.com/kubeshop/testkube-operator/apis/tests/v1"
+	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
+	"github.com/kubeshop/testkube-operator/pkg/cronjob"
 )
 
 // TestReconciler reconciles a Test object
@@ -50,6 +54,29 @@ func (r *TestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 	_ = log.FromContext(ctx)
 
 	// TODO(user): your logic here
+	var test testsv3.Test
+	if err := r.Get(ctx, req.NamespacedName, &test); err != nil {
+		if errors.IsNotFound(err) {
+			var cronJob batchv1.CronJob
+			if err = r.Get(ctx, types.NamespacedName{
+				Name:      cronjob.GetMetadataName(req.NamespacedName.Name, "test"),
+				Namespace: req.NamespacedName.Namespace}, &cronJob); err != nil {
+				if errors.IsNotFound(err) {
+					return ctrl.Result{}, nil
+				}
+
+				return ctrl.Result{}, err
+			}
+
+			if err = r.Delete(ctx, &cronJob, &client.DeleteOptions{}); err != nil {
+				return ctrl.Result{}, err
+			}
+
+			return ctrl.Result{}, nil
+		}
+
+		return ctrl.Result{}, err
+	}
 
 	return ctrl.Result{}, nil
 }
@@ -57,6 +84,6 @@ func (r *TestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 // SetupWithManager sets up the controller with the Manager.
 func (r *TestReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&testsv1.Test{}).
+		For(&testsv3.Test{}).
 		Complete(r)
 }
