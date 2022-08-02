@@ -16,6 +16,7 @@ package v3
 import (
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 
+	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
 	testkubev2 "github.com/kubeshop/testkube-operator/apis/tests/v2"
 )
 
@@ -81,9 +82,17 @@ func (dst *Test) ConvertFrom(srcRaw conversion.Hub) error {
 	dst.Spec.Name = src.Spec.Name
 	dst.Spec.Schedule = src.Spec.Schedule
 
-	if len(src.Spec.Variables) != 0 || len(src.Spec.ExecutorArgs) != 0 {
+	if len(src.Spec.Variables) != 0 || len(src.Spec.ExecutorArgs) != 0 || len(src.Spec.Params) != 0 {
 		dst.Spec.ExecutionRequest = &ExecutionRequest{}
-		dst.Spec.ExecutionRequest.Variables = make(map[string]Variable, len(src.Spec.Variables))
+		dst.Spec.ExecutionRequest.Variables = make(map[string]Variable, len(src.Spec.Variables)+len(src.Spec.Params))
+		for key, value := range src.Spec.Params {
+			dst.Spec.ExecutionRequest.Variables[key] = Variable{
+				Type_: commonv1.VariableTypeBasic,
+				Name:  key,
+				Value: value,
+			}
+		}
+
 		for key, value := range src.Spec.Variables {
 			dst.Spec.ExecutionRequest.Variables[key] = Variable{
 				Type_:     value.Type_,
