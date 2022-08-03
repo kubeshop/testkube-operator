@@ -60,7 +60,7 @@ var (
 type config struct {
 	Port            int
 	Fullname        string
-	CronjobTemplate string
+	TemplateCronjob string
 }
 
 func init() {
@@ -96,14 +96,14 @@ func main() {
 		panic(err)
 	}
 
-	var cronJobTemplate string
-	if httpConfig.CronjobTemplate != "" {
-		data, err := base64.StdEncoding.DecodeString(httpConfig.CronjobTemplate)
+	var templateCronjob string
+	if httpConfig.TemplateCronjob != "" {
+		data, err := base64.StdEncoding.DecodeString(httpConfig.TemplateCronjob)
 		if err != nil {
 			panic(err)
 		}
 
-		cronJobTemplate = string(data)
+		templateCronjob = string(data)
 	}
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
@@ -136,7 +136,7 @@ func main() {
 	if err = (&testscontrollers.TestReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port, cronJobTemplate),
+		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port, templateCronjob),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Test")
 		os.Exit(1)
