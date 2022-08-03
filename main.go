@@ -17,6 +17,7 @@ limitations under the License.
 package main
 
 import (
+	"encoding/base64"
 	"flag"
 	"os"
 
@@ -27,6 +28,7 @@ import (
 	"go.uber.org/zap/zapcore"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
+	"github.com/kelseyhightower/envconfig"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
@@ -45,6 +47,7 @@ import (
 	scriptcontrollers "github.com/kubeshop/testkube-operator/controllers/script"
 	testscontrollers "github.com/kubeshop/testkube-operator/controllers/tests"
 	testsuitecontrollers "github.com/kubeshop/testkube-operator/controllers/testsuite"
+	"github.com/kubeshop/testkube-operator/pkg/cronjob"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -52,6 +55,13 @@ var (
 	scheme   = runtime.NewScheme()
 	setupLog = ctrl.Log.WithName("setup")
 )
+
+// config for HTTP server
+type config struct {
+	Port            int
+	Fullname        string
+	CronjobTemplate string
+}
 
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
@@ -78,6 +88,23 @@ func main() {
 	flag.Parse()
 
 	setLogger()
+
+	var httpConfig config
+	err := envconfig.Process("APISERVER", &httpConfig)
+	// Do we want to panic here or just ignore the err
+	if err != nil {
+		panic(err)
+	}
+
+	var cronJobTemplate string
+	if httpConfig.CronjobTemplate != "" {
+		data, err := base64.StdEncoding.DecodeString(httpConfig.CronjobTemplate)
+		if err != nil {
+			panic(err)
+		}
+
+		cronJobTemplate = string(data)
+	}
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,
@@ -107,8 +134,9 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&testscontrollers.TestReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port, cronJobTemplate),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Test")
 		os.Exit(1)

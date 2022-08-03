@@ -18,11 +18,10 @@ package tests
 
 import (
 	"context"
+	"encoding/json"
 
-	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
@@ -34,7 +33,8 @@ import (
 // TestReconciler reconciles a Test object
 type TestReconciler struct {
 	client.Client
-	Scheme *runtime.Scheme
+	Scheme        *runtime.Scheme
+	CronJobClient *cronjob.Client
 }
 
 //+kubebuilder:rbac:groups=tests.testkube.io,resources=tests,verbs=get;list;watch;create;update;patch;delete
@@ -53,28 +53,64 @@ type TestReconciler struct {
 func (r *TestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
-	// TODO(user): your logic here
+	// Delete CronJob if it was created for deleted Test
 	var test testsv3.Test
-	if err := r.Get(ctx, req.NamespacedName, &test); err != nil {
+	err := r.Get(ctx, req.NamespacedName, &test)
+	if err != nil {
 		if errors.IsNotFound(err) {
-			var cronJob batchv1.CronJob
-			if err = r.Get(ctx, types.NamespacedName{
-				Name:      cronjob.GetMetadataName(req.NamespacedName.Name, "test"),
-				Namespace: req.NamespacedName.Namespace}, &cronJob); err != nil {
-				if errors.IsNotFound(err) {
-					return ctrl.Result{}, nil
-				}
-
-				return ctrl.Result{}, err
-			}
-
-			if err = r.Delete(ctx, &cronJob, &client.DeleteOptions{}); err != nil {
+			if err = r.CronJobClient.Delete(ctx,
+				cronjob.GetMetadataName(req.NamespacedName.Name, cronjob.TestResourceURI), req.NamespacedName.Namespace); err != nil {
 				return ctrl.Result{}, err
 			}
 
 			return ctrl.Result{}, nil
 		}
 
+		return ctrl.Result{}, err
+	}
+
+	// Delete CronJob if it was created for cleaned Test schedule
+	if test.Spec.Schedule == "" {
+		if err := r.CronJobClient.Delete(ctx,
+			cronjob.GetMetadataName(req.NamespacedName.Name, cronjob.TestResourceURI), req.NamespacedName.Namespace); err != nil {
+			return ctrl.Result{}, err
+		}
+
+		return ctrl.Result{}, nil
+	}
+
+	var data []byte
+	if test.Spec.ExecutionRequest != nil {
+		data, err = json.Marshal(test.Spec.ExecutionRequest)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+	}
+
+	options := cronjob.CronJobOptions{
+		Schedule: test.Spec.Schedule,
+		Resource: cronjob.TestResourceURI,
+		Data:     string(data),
+		Labels:   test.Labels,
+	}
+
+	// Create CronJob if it was not created before for provided Test schedule
+	cronJob, err := r.CronJobClient.Get(ctx,
+		cronjob.GetMetadataName(req.NamespacedName.Name, cronjob.TestResourceURI), req.NamespacedName.Namespace)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			if err = r.CronJobClient.Create(ctx, test.Name,
+				cronjob.GetMetadataName(test.Name, cronjob.TestResourceURI), req.NamespacedName.Namespace, options); err != nil {
+				return ctrl.Result{}, err
+			}
+		}
+
+		return ctrl.Result{}, err
+	}
+
+	// Update CronJob if it was created before provided Test schedule
+	if err = r.CronJobClient.Update(ctx, cronJob, test.Name,
+		cronjob.GetMetadataName(test.Name, cronjob.TestResourceURI), req.NamespacedName.Namespace, options); err != nil {
 		return ctrl.Result{}, err
 	}
 
