@@ -60,7 +60,7 @@ var (
 type config struct {
 	Port            int
 	Fullname        string
-	TemplateCronjob string
+	TemplateCronjob string `split_words:"true"`
 }
 
 func init() {
