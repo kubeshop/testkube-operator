@@ -160,8 +160,9 @@ func (s TestsClient) Delete(name string) error {
 	}
 
 	// delete secret only if exists ignore otherwise
-	if secretExists {
-		return s.Client.Delete(context.Background(), secret)
+	if secretExists && secret != nil {
+		err = s.Client.Delete(context.Background(), secret)
+		return err
 	}
 
 	return nil
