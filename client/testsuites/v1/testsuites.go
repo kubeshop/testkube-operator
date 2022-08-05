@@ -157,7 +157,7 @@ func (s TestSuitesClient) Delete(name string) error {
 		return err
 	}
 
-	if secretExists {
+	if secretExists && secret != nil {
 		return s.Client.Delete(context.Background(), secret)
 	}
 	return nil
