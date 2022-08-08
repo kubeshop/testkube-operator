@@ -160,7 +160,7 @@ func (s TestsClient) Delete(name string) error {
 	}
 
 	// delete secret only if exists ignore otherwise
-	if secretExists {
+	if secretExists && secret != nil {
 		return s.Client.Delete(context.Background(), secret)
 	}
 
@@ -217,6 +217,10 @@ func (s TestsClient) UpdateTestSecrets(test *testsv3.Test) error {
 	secret, err := s.LoadTestVariablesSecret(test)
 	if err != nil && !s.ErrIsNotFound(err) {
 		return err
+	}
+
+	if secret == nil {
+		return nil
 	}
 
 	if err := testVarsToSecret(test, secret); err != nil {

@@ -31,16 +31,18 @@ func TestClient_IntegrationWithSecrets(t *testing.T) {
 			Content: &testsv3.TestContent{
 				Data: "{}",
 			},
-			Variables: map[string]testsv3.Variable{
-				"var1": {
-					Type_: commonv1.VariableTypeSecret,
-					Name:  "var1",
-					Value: "val1",
-				},
-				"var2": {
-					Type_: commonv1.VariableTypeSecret,
-					Name:  "var2",
-					Value: "val2",
+			ExecutionRequest: &testsv3.ExecutionRequest{
+				Variables: map[string]testsv3.Variable{
+					"var1": {
+						Type_: commonv1.VariableTypeSecret,
+						Name:  "var1",
+						Value: "val1",
+					},
+					"var2": {
+						Type_: commonv1.VariableTypeSecret,
+						Name:  "var2",
+						Value: "val2",
+					},
 				},
 			},
 		},
@@ -53,13 +55,13 @@ func TestClient_IntegrationWithSecrets(t *testing.T) {
 	// then value should be updated
 	test2, err := c.Get(test1.Name)
 	assert.NoError(t, err)
-	assert.Equal(t, "val1", test2.Spec.Variables["var1"].Value)
-	assert.Equal(t, "val2", test2.Spec.Variables["var2"].Value)
+	assert.Equal(t, "val1", test2.Spec.ExecutionRequest.Variables["var1"].Value)
+	assert.Equal(t, "val2", test2.Spec.ExecutionRequest.Variables["var2"].Value)
 
 	// when and update test secret variable
-	secret := test2.Spec.Variables["var1"]
+	secret := test2.Spec.ExecutionRequest.Variables["var1"]
 	secret.Value = "updated1"
-	test2.Spec.Variables["var1"] = secret
+	test2.Spec.ExecutionRequest.Variables["var1"] = secret
 
 	test3, err := c.Update(test2)
 	assert.NoError(t, err)
@@ -67,8 +69,8 @@ func TestClient_IntegrationWithSecrets(t *testing.T) {
 	// then value should be updated
 	test4, err := c.Get(test3.Name)
 	assert.NoError(t, err)
-	assert.Equal(t, "updated1", test4.Spec.Variables["var1"].Value)
-	assert.Equal(t, "val2", test4.Spec.Variables["var2"].Value)
+	assert.Equal(t, "updated1", test4.Spec.ExecutionRequest.Variables["var1"].Value)
+	assert.Equal(t, "val2", test4.Spec.ExecutionRequest.Variables["var2"].Value)
 
 	// when test is deleted
 	err = c.Delete(test4.Name)
@@ -96,11 +98,13 @@ func TestClient_IntegrationWithoutSecrets(t *testing.T) {
 			Content: &testsv3.TestContent{
 				Data: "{}",
 			},
-			Variables: map[string]testsv3.Variable{
-				"var1": {
-					Type_: commonv1.VariableTypeBasic,
-					Name:  "var1",
-					Value: "val1",
+			ExecutionRequest: &testsv3.ExecutionRequest{
+				Variables: map[string]testsv3.Variable{
+					"var1": {
+						Type_: commonv1.VariableTypeBasic,
+						Name:  "var1",
+						Value: "val1",
+					},
 				},
 			},
 		},
@@ -114,12 +118,12 @@ func TestClient_IntegrationWithoutSecrets(t *testing.T) {
 	test2, err := c.Get(test1.Name)
 
 	assert.NoError(t, err)
-	assert.Equal(t, "val1", test2.Spec.Variables["var1"].Value)
+	assert.Equal(t, "val1", test2.Spec.ExecutionRequest.Variables["var1"].Value)
 
 	// when and update test variable variable
-	variable := test2.Spec.Variables["var1"]
+	variable := test2.Spec.ExecutionRequest.Variables["var1"]
 	variable.Value = "updated1"
-	test2.Spec.Variables["var1"] = variable
+	test2.Spec.ExecutionRequest.Variables["var1"] = variable
 
 	test3, err := c.Update(test2)
 	assert.NoError(t, err)
@@ -127,7 +131,7 @@ func TestClient_IntegrationWithoutSecrets(t *testing.T) {
 	// then value should be updated
 	test4, err := c.Get(test3.Name)
 	assert.NoError(t, err)
-	assert.Equal(t, "updated1", test4.Spec.Variables["var1"].Value)
+	assert.Equal(t, "updated1", test4.Spec.ExecutionRequest.Variables["var1"].Value)
 
 	fmt.Printf("%+v\n", test4.Name)
 
