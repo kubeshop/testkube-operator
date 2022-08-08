@@ -43,6 +43,7 @@ import (
 	testsv2 "github.com/kubeshop/testkube-operator/apis/tests/v2"
 	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
 	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
+	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
 	executorcontrollers "github.com/kubeshop/testkube-operator/controllers/executor"
 	scriptcontrollers "github.com/kubeshop/testkube-operator/controllers/script"
 	testscontrollers "github.com/kubeshop/testkube-operator/controllers/tests"
@@ -73,6 +74,7 @@ func init() {
 	utilruntime.Must(testsuitev1.AddToScheme(scheme))
 	utilruntime.Must(testsv2.AddToScheme(scheme))
 	utilruntime.Must(testsv3.AddToScheme(scheme))
+	utilruntime.Must(testsuitev2.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
