@@ -215,6 +215,10 @@ func (s TestSuitesClient) UpdateTestsuiteSecrets(testsuite *testsuitev1.TestSuit
 		return err
 	}
 
+	if secret == nil {
+		return nil
+	}
+
 	if err := testVarsToSecret(testsuite, secret); err != nil {
 		return err
 	}
