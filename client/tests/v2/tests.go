@@ -220,6 +220,10 @@ func (s TestsClient) UpdateTestSecrets(test *testsv2.Test) error {
 		return err
 	}
 
+	if secret == nil {
+		return nil
+	}
+
 	if err := testVarsToSecret(test, secret); err != nil {
 		return err
 	}
