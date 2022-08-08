@@ -18,19 +18,23 @@ package testsuite
 
 import (
 	"context"
+	"encoding/json"
 
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
+	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
+	"github.com/kubeshop/testkube-operator/pkg/cronjob"
 )
 
 // TestSuiteReconciler reconciles a TestSuite object
 type TestSuiteReconciler struct {
 	client.Client
-	Scheme *runtime.Scheme
+	Scheme        *runtime.Scheme
+	CronJobClient *cronjob.Client
 }
 
 //+kubebuilder:rbac:groups=tests.testkube.io,resources=testsuites,verbs=get;list;watch;create;update;patch;delete
@@ -49,7 +53,66 @@ type TestSuiteReconciler struct {
 func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
-	// TODO(user): your logic here
+	// Delete CronJob if it was created for deleted TestSuite
+	var testSuite testsuitev2.TestSuite
+	err := r.Get(ctx, req.NamespacedName, &testSuite)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			if err = r.CronJobClient.Delete(ctx,
+				cronjob.GetMetadataName(req.NamespacedName.Name, cronjob.TestSuiteResourceURI), req.NamespacedName.Namespace); err != nil {
+				return ctrl.Result{}, err
+			}
+
+			return ctrl.Result{}, nil
+		}
+
+		return ctrl.Result{}, err
+	}
+
+	// Delete CronJob if it was created for cleaned TestSuite schedule
+	if testSuite.Spec.Schedule == "" {
+		if err := r.CronJobClient.Delete(ctx,
+			cronjob.GetMetadataName(req.NamespacedName.Name, cronjob.TestSuiteResourceURI), req.NamespacedName.Namespace); err != nil {
+			return ctrl.Result{}, err
+		}
+
+		return ctrl.Result{}, nil
+	}
+
+	var data []byte
+	if testSuite.Spec.ExecutionRequest != nil {
+		data, err = json.Marshal(testSuite.Spec.ExecutionRequest)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+	}
+
+	options := cronjob.CronJobOptions{
+		Schedule: testSuite.Spec.Schedule,
+		Resource: cronjob.TestSuiteResourceURI,
+		Data:     string(data),
+		Labels:   testSuite.Labels,
+	}
+
+	// Create CronJob if it was not created before for provided TestSuite schedule
+	cronJob, err := r.CronJobClient.Get(ctx,
+		cronjob.GetMetadataName(req.NamespacedName.Name, cronjob.TestSuiteResourceURI), req.NamespacedName.Namespace)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			if err = r.CronJobClient.Create(ctx, testSuite.Name,
+				cronjob.GetMetadataName(testSuite.Name, cronjob.TestSuiteResourceURI), req.NamespacedName.Namespace, options); err != nil {
+				return ctrl.Result{}, err
+			}
+		}
+
+		return ctrl.Result{}, err
+	}
+
+	// Update CronJob if it was created before provided Test schedule
+	if err = r.CronJobClient.Update(ctx, cronJob, testSuite.Name,
+		cronjob.GetMetadataName(testSuite.Name, cronjob.TestSuiteResourceURI), req.NamespacedName.Namespace, options); err != nil {
+		return ctrl.Result{}, err
+	}
 
 	return ctrl.Result{}, nil
 }
@@ -57,6 +120,6 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 // SetupWithManager sets up the controller with the Manager.
 func (r *TestSuiteReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&testsuitev1.TestSuite{}).
+		For(&testsuitev2.TestSuite{}).
 		Complete(r)
 }

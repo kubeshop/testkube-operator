@@ -144,8 +144,9 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&testsuitecontrollers.TestSuiteReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port, templateCronjob),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestSuite")
 		os.Exit(1)
@@ -179,6 +180,14 @@ func main() {
 		}
 		if err = (&testsv3.Test{}).SetupWebhookWithManager(mgr); err != nil {
 			setupLog.Error(err, "unable to create webhook", "webhook", "Test")
+			os.Exit(1)
+		}
+		if err = (&testsuitev1.TestSuite{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "TestSuite")
+			os.Exit(1)
+		}
+		if err = (&testsuitev2.TestSuite{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "TestSuite")
 			os.Exit(1)
 		}
 	}
