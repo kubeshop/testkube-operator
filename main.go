@@ -17,6 +17,7 @@ limitations under the License.
 package main
 
 import (
+	"encoding/base64"
 	"flag"
 	"os"
 
@@ -27,6 +28,7 @@ import (
 	"go.uber.org/zap/zapcore"
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
+	"github.com/kelseyhightower/envconfig"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
@@ -39,11 +41,14 @@ import (
 	testkubev2 "github.com/kubeshop/testkube-operator/apis/script/v2"
 	testsv1 "github.com/kubeshop/testkube-operator/apis/tests/v1"
 	testsv2 "github.com/kubeshop/testkube-operator/apis/tests/v2"
+	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
 	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
+	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
 	executorcontrollers "github.com/kubeshop/testkube-operator/controllers/executor"
 	scriptcontrollers "github.com/kubeshop/testkube-operator/controllers/script"
 	testscontrollers "github.com/kubeshop/testkube-operator/controllers/tests"
 	testsuitecontrollers "github.com/kubeshop/testkube-operator/controllers/testsuite"
+	"github.com/kubeshop/testkube-operator/pkg/cronjob"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -51,6 +56,13 @@ var (
 	scheme   = runtime.NewScheme()
 	setupLog = ctrl.Log.WithName("setup")
 )
+
+// config for HTTP server
+type config struct {
+	Port            int
+	Fullname        string
+	TemplateCronjob string `split_words:"true"`
+}
 
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
@@ -61,6 +73,8 @@ func init() {
 	utilruntime.Must(testkubev2.AddToScheme(scheme))
 	utilruntime.Must(testsuitev1.AddToScheme(scheme))
 	utilruntime.Must(testsv2.AddToScheme(scheme))
+	utilruntime.Must(testsv3.AddToScheme(scheme))
+	utilruntime.Must(testsuitev2.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -76,6 +90,23 @@ func main() {
 	flag.Parse()
 
 	setLogger()
+
+	var httpConfig config
+	err := envconfig.Process("APISERVER", &httpConfig)
+	// Do we want to panic here or just ignore the err
+	if err != nil {
+		panic(err)
+	}
+
+	var templateCronjob string
+	if httpConfig.TemplateCronjob != "" {
+		data, err := base64.StdEncoding.DecodeString(httpConfig.TemplateCronjob)
+		if err != nil {
+			panic(err)
+		}
+
+		templateCronjob = string(data)
+	}
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,
@@ -105,15 +136,17 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&testscontrollers.TestReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port, templateCronjob),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Test")
 		os.Exit(1)
 	}
 	if err = (&testsuitecontrollers.TestSuiteReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port, templateCronjob),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestSuite")
 		os.Exit(1)
@@ -135,6 +168,26 @@ func main() {
 		}
 		if err = (&testkubev2.Script{}).SetupWebhookWithManager(mgr); err != nil {
 			setupLog.Error(err, "unable to create webhook", "webhook", "Script")
+			os.Exit(1)
+		}
+		if err = (&testsv1.Test{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "Test")
+			os.Exit(1)
+		}
+		if err = (&testsv2.Test{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "Test")
+			os.Exit(1)
+		}
+		if err = (&testsv3.Test{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "Test")
+			os.Exit(1)
+		}
+		if err = (&testsuitev1.TestSuite{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "TestSuite")
+			os.Exit(1)
+		}
+		if err = (&testsuitev2.TestSuite{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "TestSuite")
 			os.Exit(1)
 		}
 	}
