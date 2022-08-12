@@ -79,12 +79,9 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{}, nil
 	}
 
-	var data []byte
-	if testSuite.Spec.ExecutionRequest != nil {
-		data, err = json.Marshal(testSuite.Spec.ExecutionRequest)
-		if err != nil {
-			return ctrl.Result{}, err
-		}
+	data, err := json.Marshal(testsuitev2.TestSuiteExecutionRequest{})
+	if err != nil {
+		return ctrl.Result{}, err
 	}
 
 	options := cronjob.CronJobOptions{

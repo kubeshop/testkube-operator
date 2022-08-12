@@ -79,12 +79,9 @@ func (r *TestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		return ctrl.Result{}, nil
 	}
 
-	var data []byte
-	if test.Spec.ExecutionRequest != nil {
-		data, err = json.Marshal(test.Spec.ExecutionRequest)
-		if err != nil {
-			return ctrl.Result{}, err
-		}
+	data, err := json.Marshal(testsv3.ExecutionRequest{})
+	if err != nil {
+		return ctrl.Result{}, err
 	}
 
 	options := cronjob.CronJobOptions{
