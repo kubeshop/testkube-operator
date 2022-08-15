@@ -54,6 +54,16 @@ type TestContent struct {
 	Uri string `json:"uri,omitempty"`
 }
 
+// Testkube internal reference for secret storage in Kubernetes secrets
+type SecretRef struct {
+	// object kubernetes namespace
+	Namespace string `json:"namespace,omitempty"`
+	// object name
+	Name string `json:"name"`
+	// object key
+	Key string `json:"key"`
+}
+
 // Repository represents VCS repo, currently we're handling Git only
 type Repository struct {
 	// VCS repository type
@@ -65,11 +75,9 @@ type Repository struct {
 	// commit id (sha) for checkout
 	Commit string `json:"commit,omitempty"`
 	// if needed we can checkout particular path (dir or file) in case of BIG/mono repositories
-	Path string `json:"path,omitempty"`
-	// git auth username for private repositories
-	Username string `json:"username,omitempty"`
-	// git auth token for private repositories
-	Token string `json:"token,omitempty"`
+	Path     string     `json:"path,omitempty"`
+	Username *SecretRef `json:"username,omitempty"`
+	Token    *SecretRef `json:"token,omitempty"`
 }
 
 // test execution request body
