@@ -111,26 +111,26 @@ func (dst *TestSuite) ConvertFrom(srcRaw conversion.Hub) error {
 	dst.Spec.After = make([]TestSuiteStepSpec, len(src.Spec.After))
 
 	var stepTypes = []struct {
-		Source     []testkubev1.TestSuiteStepSpec
-		Destinaton []TestSuiteStepSpec
+		source     []testkubev1.TestSuiteStepSpec
+		destinaton []TestSuiteStepSpec
 	}{
 		{
-			Source:     src.Spec.Before,
-			Destinaton: dst.Spec.Before,
+			source:     src.Spec.Before,
+			destinaton: dst.Spec.Before,
 		},
 		{
-			Source:     src.Spec.Steps,
-			Destinaton: dst.Spec.Steps,
+			source:     src.Spec.Steps,
+			destinaton: dst.Spec.Steps,
 		},
 		{
-			Source:     src.Spec.After,
-			Destinaton: dst.Spec.After,
+			source:     src.Spec.After,
+			destinaton: dst.Spec.After,
 		},
 	}
 
 	for _, stepType := range stepTypes {
-		for i := range stepType.Source {
-			value := stepType.Source[i]
+		for i := range stepType.source {
+			value := stepType.source[i]
 			step := TestSuiteStepSpec{
 				Type: value.Type,
 			}
@@ -149,7 +149,7 @@ func (dst *TestSuite) ConvertFrom(srcRaw conversion.Hub) error {
 				}
 			}
 
-			stepType.Destinaton[i] = step
+			stepType.destinaton[i] = step
 		}
 	}
 
