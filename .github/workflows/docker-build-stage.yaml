@@ -44,6 +44,23 @@ jobs:
         id: github_sha
         run: echo "::set-output name=sha_short::${GITHUB_SHA::7}"
 
+      - name: Docker meta for Testkube certificate image
+        id: meta_testkube_certificate
+        uses: docker/metadata-action@v3
+        with:
+          images: kubeshop/testkube-certificate
+          tags: |
+            type=sha
+
+      - name: Build certificate image
+        uses: docker/bake-action@v1
+        with:
+          files: |
+            ./certificates/docker-bake.hcl
+            ${{ steps.meta_testkube_certificate.outputs.bake-file }}
+          targets: build
+          push: true
+
       #Trigger Helm repo workflow to deploy Dashboard to Stage cluster
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v2
