@@ -61,7 +61,7 @@ jobs:
         uses: docker/bake-action@v1
         with:
           files: |
-            ./certiificates/docker-bake.hcl
+            ./certificates/docker-bake.hcl
             ${{ steps.meta_testkube_certificate.outputs.bake-file }}
           targets: build
           push: true
