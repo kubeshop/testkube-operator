@@ -32,6 +32,8 @@ type WebhookSpec struct {
 	Uri string `json:"uri,omitempty"`
 	// Events declare list if events on which webhook should be called
 	Events []string `json:"events,omitempty"`
+	// Labels to filter for tests and test suites
+	Selector string `json:"selector,omitempty"`
 }
 
 // WebhookStatus defines the observed state of Webhook
