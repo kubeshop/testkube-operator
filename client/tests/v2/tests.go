@@ -325,13 +325,24 @@ func testVarsToSecret(test *testsv2.Test, secret *corev1.Secret) error {
 			secretMap[v.Name] = v.Value
 			// clear passed test variable secret value and save as reference o secret
 			v.Value = ""
-			v.ValueFrom = corev1.EnvVarSource{
-				SecretKeyRef: &corev1.SecretKeySelector{
-					Key: v.Name,
-					LocalObjectReference: corev1.LocalObjectReference{
-						Name: secret.Name,
+			if v.ValueFrom.SecretKeyRef != nil {
+				v.ValueFrom = corev1.EnvVarSource{
+					SecretKeyRef: &corev1.SecretKeySelector{
+						Key: v.ValueFrom.SecretKeyRef.Key,
+						LocalObjectReference: corev1.LocalObjectReference{
+							Name: v.ValueFrom.SecretKeyRef.Name,
+						},
 					},
-				},
+				}
+			} else {
+				v.ValueFrom = corev1.EnvVarSource{
+					SecretKeyRef: &corev1.SecretKeySelector{
+						Key: v.Name,
+						LocalObjectReference: corev1.LocalObjectReference{
+							Name: secret.Name,
+						},
+					},
+				}
 			}
 
 			test.Spec.Variables[k] = v
