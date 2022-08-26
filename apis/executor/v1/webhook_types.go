@@ -24,7 +24,7 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-type Variable commonv1.Variable
+type Header commonv1.Header
 
 // WebhookSpec defines the desired state of Webhook
 type WebhookSpec struct {
@@ -36,8 +36,8 @@ type WebhookSpec struct {
 	// Events declare list if events on which webhook should be called
 	Events []string `json:"events,omitempty"`
 	// Labels to filter for tests and test suites
-	Selector string            `json:"selector,omitempty"`
-	Headers  []commonv1.Header `json:"headers,omitempty"`
+	Selector string   `json:"selector,omitempty"`
+	Headers  []Header `json:"headers,omitempty"`
 }
 
 // WebhookStatus defines the observed state of Webhook
