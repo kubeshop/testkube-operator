@@ -36,32 +36,41 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=sha
 
-      - name: Build 
-        uses: docker/bake-action@v1
-        with:
-          files: |
-            docker-bake.hcl
-            ${{ steps.meta_testkube_operator.outputs.bake-file }}
-          targets: build
-          push: true
+      - name: Docker Buildx (build)
+        run: |
+          docker buildx build \
+            --cache-from "type=local,src=/tmp/.buildx-cache" \
+            --cache-to "type=local,dest=/tmp/.buildx-cache" \
+            --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x \
+            --output "type=image,push=true" \
+            --tag kubeshop/testkube-operator:v1.5.0-test002 \
+            --file ./Dockerfile ./
+#      - name: Build
+#        uses: docker/bake-action@v1
+#        with:
+#          files: |
+#            docker-bake.hcl
+#            ${{ steps.meta_testkube_operator.outputs.bake-file }}
+#          targets: build
+#          push: true
 
-      - name: Docker meta for Testkube certificate
-        id: meta_testkube_certificate
-        uses: docker/metadata-action@v3
-        with:
-          images: kubeshop/testkube-certificate
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=sha
-
-      - name: Build certificate image
-        uses: docker/bake-action@v1
-        with:
-          files: |
-            ./certificates/docker-bake.hcl
-            ${{ steps.meta_testkube_certificate.outputs.bake-file }}
-          targets: build
-          push: true
+#      - name: Docker meta for Testkube certificate
+#        id: meta_testkube_certificate
+#        uses: docker/metadata-action@v3
+#        with:
+#          images: kubeshop/testkube-certificate
+#          tags: |
+#            type=ref,event=branch
+#            type=ref,event=pr
+#            type=semver,pattern={{version}}
+#            type=semver,pattern={{major}}.{{minor}}
+#            type=sha
+#
+#      - name: Build certificate image
+#        uses: docker/bake-action@v1
+#        with:
+#          files: |
+#            ./certificates/docker-bake.hcl
+#            ${{ steps.meta_testkube_certificate.outputs.bake-file }}
+#          targets: build
+#          push: true
