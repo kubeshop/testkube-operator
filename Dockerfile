@@ -3,6 +3,7 @@ FROM --platform=$BUILDPLATFORM golang:1.18 as builder
 
 ENV CGO_ENABLED=0
 ENV GOOS=linux
+
 WORKDIR /workspace
 # Copy the Go Modules manifests
 COPY go.mod go.mod
