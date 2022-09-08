@@ -3,7 +3,7 @@ layout:
 - go.kubebuilder.io/v3
 multigroup: true
 projectName: testkube
-repo: github.com/kubeshop/testkube
+repo: github.com/kubeshop/testkube-operator
 resources:
 - api:
     crdVersion: v1
@@ -48,7 +48,7 @@ resources:
   domain: testkube.io
   group: executor
   kind: Webhook
-  path: github.com/kubeshop/testkube/apis/executor/v1
+  path: github.com/kubeshop/testkube-operator/apis/executor/v1
   version: v1
 - api:
     crdVersion: v1
@@ -56,7 +56,7 @@ resources:
   domain: testkube.io
   group: tests
   kind: Test
-  path: github.com/kubeshop/testkube/apis/tests/v3
+  path: github.com/kubeshop/testkube-operator/apis/tests/v3
   version: v3
 - api:
     crdVersion: v1
@@ -64,6 +64,18 @@ resources:
   domain: testkube.io
   group: tests
   kind: TestSuite
-  path: github.com/kubeshop/testkube/apis/tests/v2
+  path: github.com/kubeshop/testkube-operator/apis/tests/v2
   version: v2
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: testkube.io
+  group: tests
+  kind: TestTrigger
+  path: github.com/kubeshop/testkube-operator/apis/testtriggers/v1
+  version: v1
+  webhooks:
+    validation: true
+    webhookVersion: v1
 version: "3"

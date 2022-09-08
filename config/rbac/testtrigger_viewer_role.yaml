@@ -1,0 +1,20 @@
+# permissions for end users to view testtriggers.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: testtrigger-viewer-role
+rules:
+- apiGroups:
+  - tests.testkube.io
+  resources:
+  - testtriggers
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - tests.testkube.io
+  resources:
+  - testtriggers/status
+  verbs:
+  - get

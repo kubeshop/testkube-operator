@@ -1,0 +1,79 @@
+/*
+Copyright 2021.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+package v1
+
+import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
+// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
+// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+
+//+kubebuilder:object:root=true
+//+kubebuilder:subresource:status
+
+// TestTrigger is the Schema for the testtriggers API
+type TestTrigger struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   TestTriggerSpec   `json:"spec,omitempty"`
+	Status TestTriggerStatus `json:"status,omitempty"`
+}
+
+// TestTriggerSpec defines the desired state of TestTrigger
+type TestTriggerSpec struct {
+	// For which Resource do we monitor Event which triggers an Action
+	Resource string `json:"resource"`
+	// ResourceSelector identifies which Kubernetes Objects should be watched
+	ResourceSelector TestTriggerSelector `json:"resourceSelector"`
+	// On which Event for a Resource should an Action be triggered
+	Event string `json:"event"`
+	// Action represents what needs to be executed for selected TestType Kubernetes Objects
+	Action string `json:"action"`
+	// TestType identifies on which test type should an Action be executed on
+	TestType string `json:"testType"`
+	// TargetSelector identifies on which Kubernetes Objects an Action should be taken
+	TestSelector TestTriggerSelector `json:"testSelector"`
+}
+
+// TestTriggerSelector is used for selecting Kubernetes Objects
+type TestTriggerSelector struct {
+	// Name selector is used to identify a Kubernetes Object based on the metadata name
+	Name string `json:"name,omitempty"`
+	// Labels selector is used to identify a group of Kubernetes Objects based on their metadata labels
+	Labels map[string]string `json:"labels,omitempty"`
+}
+
+// TestTriggerStatus defines the observed state of TestTrigger
+type TestTriggerStatus struct {
+	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
+	// Important: Run "make" to regenerate code after modifying this file
+}
+
+//+kubebuilder:object:root=true
+
+// TestTriggerList contains a list of TestTrigger
+type TestTriggerList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []TestTrigger `json:"items"`
+}
+
+func init() {
+	SchemeBuilder.Register(&TestTrigger{}, &TestTriggerList{})
+}
