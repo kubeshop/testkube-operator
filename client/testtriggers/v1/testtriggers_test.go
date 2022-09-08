@@ -1,127 +1,118 @@
-//go:build k8sIntegration
-
 // TODO set-up workflows which can run kubernetes related tests
 
 package v1
 
 import (
-	"testing"
-
-	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
-	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
-	kubeclient "github.com/kubeshop/testkube-operator/client"
+	"context"
+	testtriggerv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
 	"github.com/stretchr/testify/assert"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime/schema"
+	"sigs.k8s.io/controller-runtime/pkg/client/fake"
+	"sigs.k8s.io/controller-runtime/pkg/scheme"
+	"testing"
 )
 
-func TestClient_IntegrationWithSecrets(t *testing.T) {
-	const testsuiteName = "testsuite-example-with-secrets"
-	// given test client and example test
-	client, err := kubeclient.GetClient()
-	assert.NoError(t, err)
-
-	c := NewClient(client, "testkube")
-
-	tst0, err := c.Create(&testsuitev1.TestSuite{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      testsuiteName,
-			Namespace: "testkube",
-		},
-		Spec: testsuitev1.TestSuiteSpec{
-			Variables: map[string]testsuitev1.Variable{
-				"secretVar1": {
-					Type_: commonv1.VariableTypeSecret,
-					Name:  "secretVar1",
-					Value: "SECR3t",
-				},
-				"secretVar2": {
-					Type_: commonv1.VariableTypeSecret,
-					Name:  "secretVar2",
-					Value: "SomeOtherSecretVar",
-				},
+func TestTestTriggers(t *testing.T) {
+	ctx := context.Background()
+	var tClient *TestTriggersClient
+	testTestTriggers := []*testtriggerv1.TestTrigger{
+		{
+			ObjectMeta: v1.ObjectMeta{
+				Name:      "test-testtrigger1",
+				Namespace: "test-ns",
 			},
-		},
-	})
-
-	assert.NoError(t, err)
-
-	// when update test secret variable
-	secret := tst0.Spec.Variables["secretVar1"]
-	secret.Value = "UpdatedSecretValue"
-	tst0.Spec.Variables["secretVar1"] = secret
-
-	secret = tst0.Spec.Variables["secretVar2"]
-	secret.Value = "SomeOtherSecretVar"
-	tst0.Spec.Variables["secretVar2"] = secret
-
-	tstUpdated, err := c.Update(tst0)
-	assert.NoError(t, err)
-
-	// then value should be updated
-	tst1, err := c.Get(tst0.Name)
-	assert.NoError(t, err)
-
-	assert.Equal(t, "UpdatedSecretValue", tst1.Spec.Variables["secretVar1"].Value)
-	assert.Equal(t, "SomeOtherSecretVar", tst1.Spec.Variables["secretVar2"].Value)
-
-	// when test is deleted
-	err = c.Delete(tstUpdated.Name)
-	assert.NoError(t, err)
-
-	// then there should be no test anymore
-	tst2, err := c.Get(tst0.Name)
-	assert.Nil(t, tst2)
-	assert.Error(t, err)
-
-}
-
-func TestClient_IntegrationWithoutSecrets(t *testing.T) {
-	const testsuiteName = "testsuite-example-without-secrets"
-	// given test client and example test
-	client, err := kubeclient.GetClient()
-	assert.NoError(t, err)
-
-	c := NewClient(client, "testkube")
-
-	tst0, err := c.Create(&testsuitev1.TestSuite{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      testsuiteName,
-			Namespace: "testkube",
-		},
-		Spec: testsuitev1.TestSuiteSpec{
-			Variables: map[string]testsuitev1.Variable{
-				"secretVar1": {
-					Type_: commonv1.VariableTypeBasic,
-					Name:  "var1",
-					Value: "val1",
-				},
+			Spec: testtriggerv1.TestTriggerSpec{
+				Resource:         "test-resource1",
+				ResourceSelector: testtriggerv1.TestTriggerSelector{Name: "test-pod1"},
+				Event:            "",
+				Action:           "run",
+				TestType:         "test",
+				TestSelector:     testtriggerv1.TestTriggerSelector{Name: "test-test1"},
 			},
+			Status: testtriggerv1.TestTriggerStatus{},
 		},
+	}
+
+	t.Run("NewTestTriggerClient", func(t *testing.T) {
+		clientBuilder := fake.NewClientBuilder()
+
+		groupVersion := schema.GroupVersion{Group: "tests.testkube.io", Version: "v1"}
+		schemaBuilder := scheme.Builder{GroupVersion: groupVersion}
+		schemaBuilder.Register(&testtriggerv1.TestTriggerList{})
+		schemaBuilder.Register(&testtriggerv1.TestTrigger{})
+
+		schema, err := schemaBuilder.Build()
+		assert.NoError(t, err)
+		assert.NotEmpty(t, schema)
+		clientBuilder.WithScheme(schema)
+
+		kClient := clientBuilder.Build()
+		testNamespace := "test-ns"
+		tClient = NewClient(kClient, testNamespace)
+		assert.NotEmpty(t, tClient)
+		assert.Equal(t, testNamespace, tClient.Namespace)
 	})
+	t.Run("TestCreate", func(t *testing.T) {
+		t.Run("Create new TestTrigger", func(t *testing.T) {
+			for _, tt := range testTestTriggers {
+				created, err := tClient.Create(ctx, tt)
+				assert.NoError(t, err)
+				assert.Equal(t, tt.Name, created.Name)
 
-	assert.NoError(t, err)
+				res, err := tClient.Get(ctx, tt.Name)
+				assert.NoError(t, err)
+				assert.Equal(t, tt.Name, res.Name)
+			}
+		})
+	})
+	t.Run("TestList", func(t *testing.T) {
+		t.Run("List without selector", func(t *testing.T) {
+			l, err := tClient.List(ctx, "")
+			assert.NoError(t, err)
+			assert.Equal(t, len(testTestTriggers), len(l.Items))
+		})
+	})
+	t.Run("TestGet", func(t *testing.T) {
+		t.Run("Get TestTrigger with empty name", func(t *testing.T) {
+			t.Parallel()
+			_, err := tClient.Get(ctx, "")
+			assert.Error(t, err)
+		})
 
-	// when update test secret variable
-	secret := tst0.Spec.Variables["secretVar1"]
-	secret.Value = "updatedval"
-	tst0.Spec.Variables["var1"] = secret
+		t.Run("Get TestTrigger with non existent name", func(t *testing.T) {
+			t.Parallel()
+			_, err := tClient.Get(ctx, "no-testtrigger")
+			assert.Error(t, err)
+		})
 
-	tstUpdated, err := c.Update(tst0)
-	assert.NoError(t, err)
+		t.Run("Get existing TestTrigger", func(t *testing.T) {
+			res, err := tClient.Get(ctx, testTestTriggers[0].Name)
+			assert.NoError(t, err)
+			assert.Equal(t, testTestTriggers[0].Name, res.Name)
+		})
+	})
+	t.Run("TestDelete", func(t *testing.T) {
+		t.Run("Delete items", func(t *testing.T) {
+			for _, trigger := range testTestTriggers {
+				tt, err := tClient.Get(ctx, trigger.Name)
+				assert.NoError(t, err)
+				assert.Equal(t, tt.Name, trigger.Name)
 
-	// then value should be updated
-	tst1, err := c.Get(tst0.Name)
-	assert.NoError(t, err)
+				err = tClient.Delete(ctx, trigger.Name)
+				assert.NoError(t, err)
 
-	assert.Equal(t, "updatedval", tst1.Spec.Variables["var1"].Value)
+				_, err = tClient.Get(ctx, trigger.Name)
+				assert.Error(t, err)
+			}
+		})
 
-	// when test is deleted
-	err = c.Delete(tstUpdated.Name)
-	assert.NoError(t, err)
+		t.Run("Delete non-existent item", func(t *testing.T) {
+			_, err := tClient.Get(ctx, "no-testtrigger")
+			assert.Error(t, err)
 
-	// then there should be no test anymore
-	tst2, err := c.Get(tst0.Name)
-	assert.Nil(t, tst2)
-	assert.Error(t, err)
-
+			err = tClient.Delete(ctx, "no-testtrigger")
+			assert.Error(t, err)
+		})
+	})
 }
