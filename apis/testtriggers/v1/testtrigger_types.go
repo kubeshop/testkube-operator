@@ -43,10 +43,10 @@ type TestTriggerSpec struct {
 	ResourceSelector TestTriggerSelector `json:"resourceSelector"`
 	// On which Event for a Resource should an Action be triggered
 	Event string `json:"event"`
-	// Action represents what needs to be executed for selected TestType Kubernetes Objects
+	// Action represents what needs to be executed for selected Execution
 	Action string `json:"action"`
-	// TestType identifies on which test type should an Action be executed on
-	TestType string `json:"testType"`
+	// Execution identifies for which test execution should an Action be executed
+	Execution string `json:"execution"`
 	// TargetSelector identifies on which Kubernetes Objects an Action should be taken
 	TestSelector TestTriggerSelector `json:"testSelector"`
 }
@@ -55,6 +55,8 @@ type TestTriggerSpec struct {
 type TestTriggerSelector struct {
 	// Name selector is used to identify a Kubernetes Object based on the metadata name
 	Name string `json:"name,omitempty"`
+	// Namespace of the Kubernetes object
+	Namespace string `json:"namespace,omitempty"`
 	// Labels selector is used to identify a group of Kubernetes Objects based on their metadata labels
 	Labels map[string]string `json:"labels,omitempty"`
 }

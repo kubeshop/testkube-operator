@@ -37,10 +37,14 @@ spec:
             properties:
               action:
                 description: Action represents what needs to be executed for selected
-                  TestType Kubernetes Objects
+                  Execution
                 type: string
               event:
                 description: On which Event for a Resource should an Action be triggered
+                type: string
+              execution:
+                description: Execution identifies for which test execution should
+                  an Action be executed
                 type: string
               resource:
                 description: For which Resource do we monitor Event which triggers
@@ -76,17 +80,13 @@ spec:
                       based on the metadata name
                     type: string
                 type: object
-              testType:
-                description: TestType identifies on which test type should an Action
-                  be executed on
-                type: string
             required:
             - action
             - event
+            - execution
             - resource
             - resourceSelector
             - testSelector
-            - testType
             type: object
           status:
             description: TestTriggerStatus defines the observed state of TestTrigger

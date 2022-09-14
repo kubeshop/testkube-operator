@@ -27,7 +27,7 @@ func TestTestTriggers(t *testing.T) {
 				ResourceSelector: testtriggerv1.TestTriggerSelector{Name: "test-pod1"},
 				Event:            "",
 				Action:           "run",
-				TestType:         "test",
+				Execution:        "test",
 				TestSelector:     testtriggerv1.TestTriggerSelector{Name: "test-test1"},
 			},
 			Status: testtriggerv1.TestTriggerStatus{},

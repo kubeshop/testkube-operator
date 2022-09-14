@@ -19,19 +19,20 @@ package testtriggers
 import (
 	"context"
 	"fmt"
-	testsv1 "github.com/kubeshop/testkube-operator/apis/tests/v1"
-	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
-	v12 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
+	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
+	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
+	testtriggerv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
 	pkgerrors "github.com/pkg/errors"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 const (
-	testTypeTest        = "test"
-	testTypeTestsuite   = "testsuite"
+	executionTest       = "test"
+	executionTestsuite  = "testsuite"
 	actionRun           = "run"
 	resourcePod         = "pod"
 	resourceDeployment  = "deployment"
@@ -39,13 +40,18 @@ const (
 	resourceDaemonSet   = "daemonset"
 	resourceService     = "service"
 	resourceIngress     = "ingress"
+	defaultNamespace    = "testkube"
 )
 
 type Validator struct {
 	c client.Client
 }
 
-func (v *Validator) ValidateCreate(ctx context.Context, t *v12.TestTrigger) error {
+func NewValidator(c client.Client) *Validator {
+	return &Validator{c: c}
+}
+
+func (v *Validator) ValidateCreate(ctx context.Context, t *testtriggerv1.TestTrigger) error {
 	var allErrs field.ErrorList
 
 	if err := v.validateResource(t.Spec.Resource); err != nil {
@@ -56,7 +62,7 @@ func (v *Validator) ValidateCreate(ctx context.Context, t *v12.TestTrigger) erro
 		allErrs = append(allErrs, err)
 	}
 
-	if err := v.validateTestType(t.Spec.TestType); err != nil {
+	if err := v.validateExecution(t.Spec.Execution); err != nil {
 		allErrs = append(allErrs, err)
 	}
 
@@ -64,7 +70,7 @@ func (v *Validator) ValidateCreate(ctx context.Context, t *v12.TestTrigger) erro
 		allErrs = append(allErrs, err)
 	}
 
-	if err := v.validateTestSelector(ctx, t.Spec.TestSelector, t.Spec.TestType, t.Namespace); err != nil {
+	if err := v.validateTestSelector(ctx, t.Spec.TestSelector, t.Spec.Execution); err != nil {
 		allErrs = append(allErrs, err...)
 	}
 
@@ -74,7 +80,7 @@ func (v *Validator) ValidateCreate(ctx context.Context, t *v12.TestTrigger) erro
 
 	return k8serrors.NewInvalid(
 		schema.GroupKind{
-			Group: v12.GroupVersion.Group,
+			Group: testtriggerv1.GroupVersion.Group,
 			Kind:  "TestTrigger",
 		},
 		t.Name,
@@ -82,7 +88,48 @@ func (v *Validator) ValidateCreate(ctx context.Context, t *v12.TestTrigger) erro
 	)
 }
 
-func (v *Validator) validateResourceSelector(resourceSelector v12.TestTriggerSelector) *field.Error {
+func (v *Validator) ValidateUpdate(ctx context.Context, old runtime.Object, new *testtriggerv1.TestTrigger) error {
+	var allErrs field.ErrorList
+
+	if err := v.validateResource(new.Spec.Resource); err != nil {
+		allErrs = append(allErrs, err)
+	}
+
+	if err := v.validateAction(new.Spec.Action); err != nil {
+		allErrs = append(allErrs, err)
+	}
+
+	if err := v.validateExecution(new.Spec.Execution); err != nil {
+		allErrs = append(allErrs, err)
+	}
+
+	if err := v.validateResourceSelector(new.Spec.ResourceSelector); err != nil {
+		allErrs = append(allErrs, err)
+	}
+
+	if err := v.validateTestSelector(ctx, new.Spec.TestSelector, new.Spec.Execution); err != nil {
+		allErrs = append(allErrs, err...)
+	}
+
+	if len(allErrs) == 0 {
+		return nil
+	}
+
+	return k8serrors.NewInvalid(
+		schema.GroupKind{
+			Group: testtriggerv1.GroupVersion.Group,
+			Kind:  testtriggerv1.Resource,
+		},
+		new.Name,
+		allErrs,
+	)
+}
+
+func (v *Validator) ValidateDelete(ctx context.Context, trigger *testtriggerv1.TestTrigger) error {
+	return nil
+}
+
+func (v *Validator) validateResourceSelector(resourceSelector testtriggerv1.TestTriggerSelector) *field.Error {
 	fld := field.NewPath("spec").Child("testSelector")
 	if err := v.validateSelector(fld, resourceSelector); err != nil {
 		return err
@@ -92,18 +139,23 @@ func (v *Validator) validateResourceSelector(resourceSelector v12.TestTriggerSel
 
 func (v *Validator) validateTestSelector(
 	ctx context.Context,
-	testSelector v12.TestTriggerSelector,
-	testType, namespace string,
+	testSelector testtriggerv1.TestTriggerSelector,
+	execution string,
 ) field.ErrorList {
 	var allErrs field.ErrorList
 
-	fld := field.NewPath("spec").Child("testSelector").Child("name")
+	fld := field.NewPath("spec").Child("testSelector")
 	if err := v.validateSelector(fld, testSelector); err != nil {
 		allErrs = append(allErrs, err)
 	}
 
 	if testSelector.Name != "" {
-		if err := v.getTestResource(ctx, fld, testType, namespace, testSelector.Name); err != nil {
+		namespace := testSelector.Namespace
+		if namespace == "" {
+			namespace = defaultNamespace
+		}
+		fld = fld.Child("name")
+		if err := v.getTestResource(ctx, fld, execution, namespace, testSelector.Name); err != nil {
 			allErrs = append(allErrs, err)
 		}
 	}
@@ -111,9 +163,9 @@ func (v *Validator) validateTestSelector(
 	return allErrs
 }
 
-func (v *Validator) validateSelector(fld *field.Path, selector v12.TestTriggerSelector) *field.Error {
+func (v *Validator) validateSelector(fld *field.Path, selector testtriggerv1.TestTriggerSelector) *field.Error {
 	if selector.Name != "" && len(selector.Labels) > 0 {
-		verr := field.Invalid(fld, "", "either name or labels selector can be used")
+		verr := field.Duplicate(fld, "either name or labels selector can be used")
 		return verr
 	}
 	return nil
@@ -122,25 +174,30 @@ func (v *Validator) validateSelector(fld *field.Path, selector v12.TestTriggerSe
 func (v *Validator) getTestResource(
 	ctx context.Context,
 	fld *field.Path,
-	testType string,
-	namespace, name string,
+	execution, namespace, name string,
 ) *field.Error {
-	switch testType {
-	case testTypeTestsuite:
-		var testsuite testsuitev1.TestSuite
+	switch execution {
+	case executionTestsuite:
+		var testsuite testsuitev2.TestSuite
 		err := v.c.Get(ctx, client.ObjectKey{Name: name, Namespace: namespace}, &testsuite)
 		if k8serrors.IsNotFound(err) {
-			return field.Invalid(fld, name, fmt.Sprintf("TestSuite %s/%s not does not exist", namespace, name))
-		} else {
-			return field.InternalError(fld, pkgerrors.Errorf("error fetching TestSuite %s/%s", namespace, name))
+			return field.NotFound(fld, fmt.Sprintf("testsuites.tests.testkube.io/v2 %s/%s", namespace, name))
+		} else if err != nil {
+			return field.InternalError(
+				fld,
+				pkgerrors.Errorf("error fetching TestSuite V2 %s/%s: %v", namespace, name, err),
+			)
 		}
-	case testTypeTest:
-		var test testsv1.Test
+	case executionTest:
+		var test testsv3.Test
 		err := v.c.Get(ctx, client.ObjectKey{Name: name, Namespace: namespace}, &test)
 		if k8serrors.IsNotFound(err) {
-			return field.Invalid(fld, name, fmt.Sprintf("TestSuite %s/%s not does not exist", namespace, name))
-		} else {
-			return field.InternalError(fld, pkgerrors.Errorf("error fetching TestSuite %s/%s", namespace, name))
+			return field.NotFound(fld, fmt.Sprintf("tests.tests.testkube.io/v3 %s/%s", namespace, name))
+		} else if err != nil {
+			return field.InternalError(
+				fld,
+				pkgerrors.Errorf("error fetching Test V3 %s/%s: %v", namespace, name, err),
+			)
 		}
 	}
 	return nil
@@ -167,7 +224,7 @@ func (v *Validator) validateResource(resource string) *field.Error {
 	return nil
 }
 
-func in(target string, arr []string) bool {
+func in[T comparable](target T, arr []T) bool {
 	for _, v := range arr {
 		if v == target {
 			return true
@@ -185,11 +242,13 @@ func (v *Validator) validateAction(action string) *field.Error {
 	return nil
 }
 
-func (v *Validator) validateTestType(testType string) *field.Error {
-	if testType != testTypeTest && testType != testTypeTestsuite {
-		fld := field.NewPath("spec").Child("testType")
-		verr := field.NotSupported(fld, testType, []string{"test", "testsuite"})
+func (v *Validator) validateExecution(execution string) *field.Error {
+	if execution != executionTest && execution != executionTestsuite {
+		fld := field.NewPath("spec").Child("execution")
+		verr := field.NotSupported(fld, execution, []string{"test", "testsuite"})
 		return verr
 	}
 	return nil
 }
+
+var _ testtriggerv1.TestTriggerValidator = &Validator{}

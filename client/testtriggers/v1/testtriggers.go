@@ -54,14 +54,20 @@ func (s *TestTriggersClient) Get(ctx context.Context, name string) (*testtrigger
 
 // Create creates new TestTrigger
 func (s *TestTriggersClient) Create(ctx context.Context, t *testtriggerv1.TestTrigger) (*testtriggerv1.TestTrigger, error) {
-	err := s.Client.Create(ctx, t)
-	return t, err
+	if err := s.Client.Create(ctx, t); err != nil {
+		return nil, err
+	}
+
+	return t, nil
 }
 
 // Update updates existing TestTrigger
 func (s *TestTriggersClient) Update(ctx context.Context, t *testtriggerv1.TestTrigger) (*testtriggerv1.TestTrigger, error) {
-	err := s.Client.Update(ctx, t)
-	return t, err
+	if err := s.Client.Update(ctx, t); err != nil {
+		return nil, err
+	}
+
+	return t, nil
 }
 
 // Delete deletes existing TestTrigger

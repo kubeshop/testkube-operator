@@ -100,7 +100,7 @@ var _ = BeforeSuite(func() {
 	})
 	Expect(err).NotTo(HaveOccurred())
 
-	err = (&TestTrigger{}).SetupWebhookWithManager(mgr)
+	err = (&TestTrigger{}).SetupWebhookWithManager(mgr, nil)
 	Expect(err).NotTo(HaveOccurred())
 
 	//+kubebuilder:scaffold:webhook

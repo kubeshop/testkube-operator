@@ -35,6 +35,7 @@ type TestTriggerReconciler struct {
 //+kubebuilder:rbac:groups=tests.testkube.io,resources=testtriggers,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=tests.testkube.io,resources=testtriggers/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=tests.testkube.io,resources=testtriggers/finalizers,verbs=update
+//+kubebuilder:informers:group=tests.testkube.io,version=v1,kind=TestTrigger
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
