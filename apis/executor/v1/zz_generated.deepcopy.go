@@ -22,6 +22,7 @@ limitations under the License.
 package v1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -90,6 +91,21 @@ func (in *ExecutorSpec) DeepCopyInto(out *ExecutorSpec) {
 	if in.Types != nil {
 		in, out := &in.Types, &out.Types
 		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
+	if in.Args != nil {
+		in, out := &in.Args, &out.Args
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
+	if in.Command != nil {
+		in, out := &in.Command, &out.Command
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
+	if in.ImagePullSecrets != nil {
+		in, out := &in.ImagePullSecrets, &out.ImagePullSecrets
+		*out = make([]corev1.LocalObjectReference, len(*in))
 		copy(*out, *in)
 	}
 	if in.Features != nil {
