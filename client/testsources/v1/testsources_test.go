@@ -5,6 +5,7 @@ import (
 
 	testsourcev1 "github.com/kubeshop/testkube-operator/apis/testsource/v1"
 	"github.com/stretchr/testify/assert"
+	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
@@ -56,6 +57,7 @@ func TestTestSources(t *testing.T) {
 		schemaBuilder := scheme.Builder{GroupVersion: groupVersion}
 		schemaBuilder.Register(&testsourcev1.TestSourceList{})
 		schemaBuilder.Register(&testsourcev1.TestSource{})
+		schemaBuilder.Register(&corev1.Secret{})
 
 		schema, err := schemaBuilder.Build()
 		assert.NoError(t, err)
@@ -66,7 +68,7 @@ func TestTestSources(t *testing.T) {
 		testSourceNamespace := "test-ns"
 		wClient = NewClient(kClient, testSourceNamespace)
 		assert.NotEmpty(t, wClient)
-		assert.Equal(t, testSourceNamespace, wClient.Namespace)
+		assert.Equal(t, testSourceNamespace, wClient.namespace)
 	})
 	t.Run("TestCreate", func(t *testing.T) {
 		t.Run("Create new test sources", func(t *testing.T) {
