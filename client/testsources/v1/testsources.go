@@ -21,6 +21,7 @@ const (
 	gitTokenSecretName = "git-token"
 )
 
+// Option contain test source options
 type Option struct {
 	Secrets map[string]string
 }
