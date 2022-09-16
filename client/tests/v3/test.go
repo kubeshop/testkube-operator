@@ -57,7 +57,6 @@ type TestsClient struct {
 
 // List lists Tests
 func (s TestsClient) List(selector string) (*testsv3.TestList, error) {
-
 	list := &testsv3.TestList{}
 	reqs, err := labels.ParseToRequirements(selector)
 	if err != nil {
@@ -197,6 +196,11 @@ func (s TestsClient) Delete(name string) error {
 		return err
 	}
 
+	// delete secret only if exists ignore otherwise
+	if secretExists && secretObj != nil {
+		return s.k8sClient.Delete(context.Background(), secretObj)
+	}
+
 	secretName := secret.GetMetadataName(test.Name, secretKind)
 	if err := s.secretClient.Delete(secretName); err != nil && !errors.IsNotFound(err) {
 		return err
@@ -207,34 +211,27 @@ func (s TestsClient) Delete(name string) error {
 		return err
 	}
 
-	// delete secret only if exists ignore otherwise
-	if secretExists && secretObj != nil {
-		return s.k8sClient.Delete(context.Background(), secretObj)
-	}
-
 	return nil
 }
 
 // DeleteAll deletes all Tests
 func (s TestsClient) DeleteAll() error {
-
-	if err := s.secretClient.DeleteAll(""); err != nil {
-		return err
-	}
-
 	u := &unstructured.Unstructured{}
-	u.SetKind("Test")
-	u.SetAPIVersion("tests.testkube.io/v3")
+	u.SetKind("Secret")
+	u.SetAPIVersion("v1")
+	u.SetLabels(testSecretDefaultLabels)
 	err := s.k8sClient.DeleteAllOf(context.Background(), u, client.InNamespace(s.namespace))
 	if err != nil {
 		return err
 	}
 
-	u = &unstructured.Unstructured{}
-	u.SetKind("Secret")
-	u.SetAPIVersion("v1")
-	u.SetLabels(testSecretDefaultLabels)
+	if err := s.secretClient.DeleteAll(""); err != nil {
+		return err
+	}
 
+	u = &unstructured.Unstructured{}
+	u.SetKind("Test")
+	u.SetAPIVersion("tests.testkube.io/v3")
 	return s.k8sClient.DeleteAllOf(context.Background(), u, client.InNamespace(s.namespace))
 }
 
@@ -249,6 +246,10 @@ func (s TestsClient) CreateTestSecrets(test *testsv3.Test) error {
 		},
 		Type:       corev1.SecretTypeOpaque,
 		StringData: map[string]string{},
+	}
+
+	for key, value := range test.Labels {
+		secret.Labels[key] = value
 	}
 
 	if err := testVarsToSecret(test, secret); err != nil {
@@ -273,6 +274,10 @@ func (s TestsClient) UpdateTestSecrets(test *testsv3.Test) error {
 
 	if secret == nil {
 		return nil
+	}
+
+	for key, value := range test.Labels {
+		secret.Labels[key] = value
 	}
 
 	if err := testVarsToSecret(test, secret); err != nil {
@@ -450,12 +455,25 @@ func secretName(testName string) string {
 
 // DeleteByLabels deletes tests by labels
 func (s TestsClient) DeleteByLabels(selector string) error {
-	reqs, err := labels.ParseToRequirements(selector)
-	if err != nil {
-		return err
+	filter := ""
+	for key, value := range testSecretDefaultLabels {
+		if filter != "" {
+			filter += ","
+		}
+
+		filter += fmt.Sprintf("%s=%s", key, value)
 	}
 
-	if err := s.secretClient.DeleteAll(selector); err != nil {
+	if selector != "" {
+		if filter != "" {
+			filter += ","
+		}
+
+		filter += selector
+	}
+
+	reqs, err := labels.ParseToRequirements(filter)
+	if err != nil {
 		return err
 	}
 
@@ -465,6 +483,10 @@ func (s TestsClient) DeleteByLabels(selector string) error {
 	err = s.k8sClient.DeleteAllOf(context.Background(), u, client.InNamespace(s.namespace),
 		client.MatchingLabelsSelector{Selector: labels.NewSelector().Add(reqs...)})
 	if err != nil {
+		return err
+	}
+
+	if err := s.secretClient.DeleteAll(selector); err != nil {
 		return err
 	}
 
