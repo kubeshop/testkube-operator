@@ -268,7 +268,8 @@ func (s TestsClient) CreateTestSecrets(test *testsv3.Test) error {
 
 func (s TestsClient) UpdateTestSecrets(test *testsv3.Test) error {
 	secret, err := s.LoadTestVariablesSecret(test)
-	if err != nil && !errors.IsNotFound(err) {
+	secretExists := !errors.IsNotFound(err)
+	if err != nil && secretExists {
 		return err
 	}
 
@@ -276,16 +277,28 @@ func (s TestsClient) UpdateTestSecrets(test *testsv3.Test) error {
 		return nil
 	}
 
+	if !secretExists {
+		secret.Name = secretName(test.Name)
+		secret.Namespace = s.namespace
+		secret.Labels = testSecretDefaultLabels
+		secret.Type = corev1.SecretTypeOpaque
+	}
+
 	for key, value := range test.Labels {
 		secret.Labels[key] = value
 	}
 
-	if err := testVarsToSecret(test, secret); err != nil {
+	if err = testVarsToSecret(test, secret); err != nil {
 		return err
 	}
 
 	if len(secret.StringData) > 0 {
-		err := s.k8sClient.Update(context.Background(), secret)
+		if !secretExists {
+			err = s.k8sClient.Create(context.Background(), secret)
+		} else {
+			err = s.k8sClient.Update(context.Background(), secret)
+		}
+
 		if err != nil {
 			return err
 		}
