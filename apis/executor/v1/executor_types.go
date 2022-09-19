@@ -17,6 +17,7 @@ limitations under the License.
 package v1
 
 import (
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -30,7 +31,8 @@ type ExecutorSpec struct {
 	// Types defines what types can be handled by executor e.g. "postman/collection", ":curl/command" etc
 	Types []string `json:"types,omitempty"`
 
-	// ExecutorType one of "rest" for rest openapi based executors or "job" which will be default runners for testkube soon
+	// ExecutorType one of "rest" for rest openapi based executors or "job" which will be default runners for testkube
+	// or "container" for container executors
 	ExecutorType string `json:"executor_type,omitempty"`
 
 	// URI for rest based executors
@@ -38,6 +40,12 @@ type ExecutorSpec struct {
 
 	// Image for kube-job
 	Image string `json:"image,omitempty"`
+	// container executor binary arguments
+	Args []string `json:"args,omitempty"`
+	// container executor default binary command
+	Command []string `json:"command,omitempty"`
+	// container executor default image pull secrets
+	ImagePullSecrets []v1.LocalObjectReference `json:"imagePullSecrets,omitempty"`
 
 	// Features list of possible features which executor handles
 	Features []Feature `json:"features,omitempty"`

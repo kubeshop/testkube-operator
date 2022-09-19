@@ -18,6 +18,7 @@ package v3
 
 import (
 	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -103,6 +104,12 @@ type ExecutionRequest struct {
 	TestSuiteSecretUUID string `json:"testSuiteSecretUUID,omitempty"`
 	// additional executor binary arguments
 	Args []string `json:"args,omitempty"`
+	// container executor binary command
+	Command []string `json:"command,omitempty"`
+	// container executor image
+	Image string `json:"image,omitempty"`
+	// container executor image pull secrets
+	ImagePullSecrets []v1.LocalObjectReference `json:"imagePullSecrets,omitempty"`
 	// environment variables passed to executor
 	Envs map[string]string `json:"envs,omitempty"`
 	// execution variables passed to executor from secrets
