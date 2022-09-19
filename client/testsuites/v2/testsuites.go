@@ -219,12 +219,24 @@ func (s TestSuitesClient) UpdateTestsuiteSecrets(testsuite *testsuitev2.TestSuit
 		return nil
 	}
 
-	if err := testVarsToSecret(testsuite, secret); err != nil {
+	if !secretExists {
+		secret.Name = secretName(testsuite.Name)
+		secret.Namespace = s.Namespace
+		secret.Labels = testsuiteSecretDefaultLabels
+		secret.Type = corev1.SecretTypeOpaque
+	}
+
+	if err = testVarsToSecret(testsuite, secret); err != nil {
 		return err
 	}
 
 	if secretExists && len(secret.StringData) > 0 {
-		err := s.Client.Update(context.Background(), secret)
+		if !secretExists {
+			err = s.Client.Create(context.Background(), secret)
+		} else {
+			err = s.Client.Update(context.Background(), secret)
+		}
+
 		if err != nil {
 			return err
 		}
