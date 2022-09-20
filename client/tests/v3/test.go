@@ -513,28 +513,20 @@ func (s TestsClient) DeleteByLabels(selector string) error {
 
 func updateTestSecrets(test *testsv3.Test, secretName string, secrets map[string]string) {
 	if _, ok := secrets[gitUsernameSecretName]; ok {
-		if test.Spec.Content != nil && test.Spec.Content.Repository != nil {
+		if test.Spec.Content != nil && test.Spec.Content.Repository != nil && test.Spec.Content.Repository.UsernameSecret == nil {
 			test.Spec.Content.Repository.UsernameSecret = &testsv3.SecretRef{
 				Name: secretName,
 				Key:  gitUsernameSecretName,
 			}
 		}
-	} else {
-		if test.Spec.Content != nil && test.Spec.Content.Repository != nil {
-			test.Spec.Content.Repository.UsernameSecret = nil
-		}
 	}
 
 	if _, ok := secrets[gitTokenSecretName]; ok {
-		if test.Spec.Content != nil && test.Spec.Content.Repository != nil {
+		if test.Spec.Content != nil && test.Spec.Content.Repository != nil && test.Spec.Content.Repository.TokenSecret == nil {
 			test.Spec.Content.Repository.TokenSecret = &testsv3.SecretRef{
 				Name: secretName,
 				Key:  gitTokenSecretName,
 			}
-		}
-	} else {
-		if test.Spec.Content != nil && test.Spec.Content.Repository != nil {
-			test.Spec.Content.Repository.TokenSecret = nil
 		}
 	}
 
