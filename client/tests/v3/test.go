@@ -503,6 +503,11 @@ func (s TestsClient) DeleteByLabels(selector string) error {
 		return err
 	}
 
+	reqs, err = labels.ParseToRequirements(selector)
+	if err != nil {
+		return err
+	}
+
 	u = &unstructured.Unstructured{}
 	u.SetKind("Test")
 	u.SetAPIVersion("tests.testkube.io/v3")

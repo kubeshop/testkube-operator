@@ -129,7 +129,7 @@ func (c *Client) DeleteAll(selector string) error {
 	err = c.Client.DeleteAllOf(context.Background(), u, client.InNamespace(c.namespace),
 		client.MatchingLabelsSelector{Selector: labels.NewSelector().Add(reqs...)})
 
-	return c.Client.DeleteAllOf(ctx, u, client.InNamespace(c.namespace))
+	return err
 }
 
 // NewSpec is a method to return secret spec
