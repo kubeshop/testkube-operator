@@ -118,7 +118,7 @@ func (c *Client) DeleteAll(selector string) error {
 		filter += "," + selector
 	}
 
-	reqs, err := labels.ParseToRequirements(selector)
+	reqs, err := labels.ParseToRequirements(filter)
 	if err != nil {
 		return err
 	}
