@@ -219,23 +219,8 @@ func (s TestsClient) DeleteAll() error {
 	u := &unstructured.Unstructured{}
 	u.SetKind("Secret")
 	u.SetAPIVersion("v1")
-
-	filter := ""
-	for key, value := range testSecretDefaultLabels {
-		if filter != "" {
-			filter += ","
-		}
-
-		filter += fmt.Sprintf("%s=%s", key, value)
-	}
-
-	reqs, err := labels.ParseToRequirements(filter)
-	if err != nil {
-		return err
-	}
-
 	err := s.k8sClient.DeleteAllOf(context.Background(), u, client.InNamespace(s.namespace),
-		client.MatchingLabelsSelector{Selector: labels.NewSelector().Add(reqs...)})
+		client.MatchingLabels(testSecretDefaultLabels))
 	if err != nil {
 		return err
 	}
