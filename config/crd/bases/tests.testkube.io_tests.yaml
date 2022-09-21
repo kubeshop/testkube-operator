@@ -597,6 +597,9 @@ spec:
               schedule:
                 description: schedule in cron job format for scheduled test execution
                 type: string
+              source:
+                description: reference to test source resource
+                type: string
               type:
                 description: test type
                 type: string

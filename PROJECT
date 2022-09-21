@@ -66,4 +66,13 @@ resources:
   kind: TestSuite
   path: github.com/kubeshop/testkube/apis/tests/v2
   version: v2
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: testkube.io
+  group: tests
+  kind: TestSource
+  path: github.com/kubeshop/testkube/apis/tests/v1
+  version: v1
 version: "3"

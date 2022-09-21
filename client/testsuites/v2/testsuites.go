@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"strings"
 
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/labels"
@@ -60,7 +60,7 @@ func (s TestSuitesClient) List(selector string) (*testsuitev2.TestSuiteList, err
 
 	for i := range list.Items {
 		secret, err := s.LoadTestVariablesSecret(&list.Items[i])
-		secretExists := !s.ErrIsNotFound(err)
+		secretExists := !errors.IsNotFound(err)
 		if err != nil && secretExists {
 			return list, err
 		}
@@ -107,7 +107,7 @@ func (s TestSuitesClient) Get(name string) (*testsuitev2.TestSuite, error) {
 	}
 
 	secret, err := s.LoadTestVariablesSecret(testsuite)
-	secretExists := !s.ErrIsNotFound(err)
+	secretExists := !errors.IsNotFound(err)
 	if err != nil && secretExists {
 		return nil, err
 	}
@@ -147,7 +147,7 @@ func (s TestSuitesClient) Delete(name string) error {
 	}
 
 	secret, err := s.LoadTestVariablesSecret(testsuite)
-	secretExists := !s.ErrIsNotFound(err)
+	secretExists := !errors.IsNotFound(err)
 	if err != nil && secretExists {
 		return err
 	}
@@ -176,9 +176,8 @@ func (s TestSuitesClient) DeleteAll() error {
 	u = &unstructured.Unstructured{}
 	u.SetKind("Secret")
 	u.SetAPIVersion("v1")
-	u.SetLabels(testsuiteSecretDefaultLabels)
-
-	return s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace))
+	return s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace),
+		client.MatchingLabels(testsuiteSecretDefaultLabels))
 }
 
 // CreateTestsuiteSecrets creates corresponding TestSuite vars secrets
@@ -210,7 +209,7 @@ func (s TestSuitesClient) CreateTestsuiteSecrets(testsuite *testsuitev2.TestSuit
 
 func (s TestSuitesClient) UpdateTestsuiteSecrets(testsuite *testsuitev2.TestSuite) error {
 	secret, err := s.LoadTestVariablesSecret(testsuite)
-	secretExists := !s.ErrIsNotFound(err)
+	secretExists := !errors.IsNotFound(err)
 	if err != nil && secretExists {
 		return err
 	}
@@ -255,7 +254,7 @@ func (s TestSuitesClient) LoadTestVariablesSecret(testsuite *testsuitev2.TestSui
 func (s TestSuitesClient) GetCurrentSecretUUID(testSuiteName string) (string, error) {
 	secret := &corev1.Secret{}
 	if err := s.Client.Get(context.Background(), client.ObjectKey{
-		Namespace: s.Namespace, Name: secretName(testSuiteName)}, secret); err != nil && !s.ErrIsNotFound(err) {
+		Namespace: s.Namespace, Name: secretName(testSuiteName)}, secret); err != nil && !errors.IsNotFound(err) {
 		return "", err
 	}
 
@@ -273,7 +272,7 @@ func (s TestSuitesClient) GetCurrentSecretUUID(testSuiteName string) (string, er
 func (s TestSuitesClient) GetSecretTestSuiteVars(testSuiteName, secretUUID string) (map[string]string, error) {
 	secret := &corev1.Secret{}
 	if err := s.Client.Get(context.Background(), client.ObjectKey{
-		Namespace: s.Namespace, Name: secretName(testSuiteName)}, secret); err != nil && !s.ErrIsNotFound(err) {
+		Namespace: s.Namespace, Name: secretName(testSuiteName)}, secret); err != nil && !errors.IsNotFound(err) {
 		return nil, err
 	}
 
@@ -287,13 +286,6 @@ func (s TestSuitesClient) GetSecretTestSuiteVars(testSuiteName, secretUUID strin
 	}
 
 	return secrets, nil
-}
-
-func (s TestSuitesClient) ErrIsNotFound(err error) bool {
-	if err != nil {
-		return strings.Contains(err.Error(), "not found")
-	}
-	return false
 }
 
 // testVarsToSecret loads secrets data passed into TestSuite CRD and remove plain text data

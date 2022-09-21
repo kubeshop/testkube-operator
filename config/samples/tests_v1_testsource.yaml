@@ -1,0 +1,12 @@
+apiVersion: tests.testkube.io/v1
+kind: TestSource
+metadata:
+  name: testsource-sample
+spec:
+  type: git-dir  
+  repository:
+    type: git
+    uri: https://github.com/kubeshop/testkube-dashboard.git
+    branch: main
+    path: test
+
