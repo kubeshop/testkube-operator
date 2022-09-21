@@ -176,9 +176,8 @@ func (s TestSuitesClient) DeleteAll() error {
 	u = &unstructured.Unstructured{}
 	u.SetKind("Secret")
 	u.SetAPIVersion("v1")
-	u.SetLabels(testsuiteSecretDefaultLabels)
-
-	return s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace))
+	return s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace),
+		client.MatchingLabels(testsuiteSecretDefaultLabels))
 }
 
 // CreateTestsuiteSecrets creates corresponding TestSuite vars secrets
