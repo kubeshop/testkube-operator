@@ -17,8 +17,8 @@ limitations under the License.
 package externalversions
 
 import (
-	"fmt"
-	testtriggersv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
+	testsv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
+	"github.com/pkg/errors"
 
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	cache "k8s.io/client-go/tools/cache"
@@ -51,13 +51,13 @@ func (f *genericInformer) Lister() cache.GenericLister {
 func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource) (GenericInformer, error) {
 	switch resource {
 	// Group=tests.testkube.io, Version=v1
-	case testtriggersv1.GroupVersionResource:
+	case testsv1.GroupVersionResource:
 		return &genericInformer{
 			resource: resource.GroupResource(),
-			informer: f.TestTrigger().V1().TestTriggers().Informer(),
+			informer: f.Tests().V1().TestTriggers().Informer(),
 		}, nil
 
 	}
 
-	return nil, fmt.Errorf("no informer found for %v", resource)
+	return nil, errors.Errorf("no informer found for %v", resource)
 }

@@ -18,8 +18,8 @@ package fake
 
 import (
 	"github.com/kubeshop/testkube-operator/pkg/clientset/versioned"
-	v1 "github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/testtrigger/v1"
-	"github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/testtrigger/v1/fake"
+	v1 "github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/tests/v1"
+	"github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/tests/v1/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/discovery"
@@ -77,7 +77,7 @@ var (
 	_ testing.FakeClient  = &Clientset{}
 )
 
-// TestTriggerV1 retrieves the TestTriggerV1Client
-func (c *Clientset) TestTriggerV1() v1.TestTriggerV1Interface {
-	return &fake.FakeTestTriggerV1{Fake: &c.Fake}
+// TestTriggerV1 retrieves the TestsV1Client
+func (c *Clientset) TestsV1() v1.TestsV1Interface {
+	return &fake.FakeTestsV1{Fake: &c.Fake}
 }

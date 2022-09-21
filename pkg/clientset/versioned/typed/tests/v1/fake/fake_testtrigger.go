@@ -30,13 +30,13 @@ import (
 
 // FakeTestTriggers implements TestTriggerInterface
 type FakeTestTriggers struct {
-	Fake *FakeTestTriggerV1
+	Fake *FakeTestsV1
 	ns   string
 }
 
-var testTriggersResource = schema.GroupVersionResource{Group: "samplecontroller.k8s.io", Version: "v1alpha1", Resource: "testTriggers"}
+var testTriggersResource = schema.GroupVersionResource{Group: "tests.testkube.io", Version: "v1", Resource: "TestTrigger"}
 
-var testTriggersKind = schema.GroupVersionKind{Group: "samplecontroller.k8s.io", Version: "v1alpha1", Kind: "TestTrigger"}
+var testTriggersKind = schema.GroupVersionKind{Group: "tests.testkube.io", Version: "v1", Kind: "TestTrigger"}
 
 // Get takes name of the testTrigger, and returns the corresponding testTrigger object, and an error if there is any.
 func (c *FakeTestTriggers) Get(ctx context.Context, name string, options v1.GetOptions) (result *testtriggersv1.TestTrigger, err error) {

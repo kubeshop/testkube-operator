@@ -21,7 +21,7 @@ import (
 	testtriggersv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
 	"github.com/kubeshop/testkube-operator/pkg/clientset/versioned"
 	"github.com/kubeshop/testkube-operator/pkg/informers/externalversions/internalinterfaces"
-	testtriggerslisterv1 "github.com/kubeshop/testkube-operator/pkg/listers/testtriggers/v1"
+	testtriggerslisterv1 "github.com/kubeshop/testkube-operator/pkg/listers/tests/v1"
 	"time"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -44,14 +44,14 @@ type testTriggerInformer struct {
 
 // NewTestTriggerInformer constructs a new informer for TestTrigger type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
-// one. This reduces memory testTriggertprint and number of connections to the server.
+// one. This reduces memory print and number of connections to the server.
 func NewTestTriggerInformer(client versioned.Interface, namespace string, resyncPeriod time.Duration, indexers cache.Indexers) cache.SharedIndexInformer {
 	return NewFilteredTestTriggerInformer(client, namespace, resyncPeriod, indexers, nil)
 }
 
 // NewFilteredTestTriggerInformer constructs a new informer for TestTrigger type.
 // Always prefer using an informer factory to get a shared informer instead of getting an independent
-// one. This reduces memory testTriggertprint and number of connections to the server.
+// one. This reduces memory print and number of connections to the server.
 func NewFilteredTestTriggerInformer(
 	client versioned.Interface,
 	namespace string,
@@ -65,13 +65,13 @@ func NewFilteredTestTriggerInformer(
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.TestTriggerV1().TestTriggers(namespace).List(context.TODO(), options)
+				return client.TestsV1().TestTriggers(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.TestTriggerV1().TestTriggers(namespace).Watch(context.TODO(), options)
+				return client.TestsV1().TestTriggers(namespace).Watch(context.TODO(), options)
 			},
 		},
 		&testtriggersv1.TestTrigger{},

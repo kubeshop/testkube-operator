@@ -24,24 +24,24 @@ import (
 	"k8s.io/client-go/rest"
 )
 
-type TestTriggerV1Interface interface {
+type TestsV1Interface interface {
 	RESTClient() rest.Interface
 	TestTriggersGetter
 }
 
-// TestTriggerV1Client is used to interact with features provided by the testtriggers.tests.testkube.io group.
-type TestTriggerV1Client struct {
+// TestsV1Client is used to interact with features provided by the tests.testkube.io group.
+type TestsV1Client struct {
 	restClient rest.Interface
 }
 
-func (c *TestTriggerV1Client) TestTriggers(namespace string) TestTriggerInterface {
+func (c *TestsV1Client) TestTriggers(namespace string) TestTriggerInterface {
 	return newTestTriggers(c, namespace)
 }
 
-// NewForConfig creates a new SamplecontrollerV1alpha1Client for the given config.
+// NewForConfig creates a new TestsV1Client for the given config.
 // NewForConfig is equivalent to NewForConfigAndClient(c, httpClient),
 // where httpClient was generated with rest.HTTPClientFor(c).
-func NewForConfig(c *rest.Config) (*TestTriggerV1Client, error) {
+func NewForConfig(c *rest.Config) (*TestsV1Client, error) {
 	config := *c
 	if err := setConfigDefaults(&config); err != nil {
 		return nil, err
@@ -53,9 +53,9 @@ func NewForConfig(c *rest.Config) (*TestTriggerV1Client, error) {
 	return NewForConfigAndClient(&config, httpClient)
 }
 
-// NewForConfigAndClient creates a new SamplecontrollerV1alpha1Client for the given config and http client.
+// NewForConfigAndClient creates a new TestsV1Client for the given config and http client.
 // Note the http client provided takes precedence over the configured transport values.
-func NewForConfigAndClient(c *rest.Config, h *http.Client) (*TestTriggerV1Client, error) {
+func NewForConfigAndClient(c *rest.Config, h *http.Client) (*TestsV1Client, error) {
 	config := *c
 	if err := setConfigDefaults(&config); err != nil {
 		return nil, err
@@ -64,12 +64,12 @@ func NewForConfigAndClient(c *rest.Config, h *http.Client) (*TestTriggerV1Client
 	if err != nil {
 		return nil, err
 	}
-	return &TestTriggerV1Client{client}, nil
+	return &TestsV1Client{client}, nil
 }
 
-// NewForConfigOrDie creates a new SamplecontrollerV1alpha1Client for the given config and
+// NewForConfigOrDie creates a new TestsV1Client for the given config and
 // panics if there is an error in the config.
-func NewForConfigOrDie(c *rest.Config) *TestTriggerV1Client {
+func NewForConfigOrDie(c *rest.Config) *TestsV1Client {
 	client, err := NewForConfig(c)
 	if err != nil {
 		panic(err)
@@ -77,9 +77,9 @@ func NewForConfigOrDie(c *rest.Config) *TestTriggerV1Client {
 	return client
 }
 
-// New creates a new TestTriggerV1Client for the given RESTClient.
-func New(c rest.Interface) *TestTriggerV1Client {
-	return &TestTriggerV1Client{c}
+// New creates a new TestsV1Client for the given RESTClient.
+func New(c rest.Interface) *TestsV1Client {
+	return &TestsV1Client{c}
 }
 
 func setConfigDefaults(config *rest.Config) error {
@@ -97,7 +97,7 @@ func setConfigDefaults(config *rest.Config) error {
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
-func (c *TestTriggerV1Client) RESTClient() rest.Interface {
+func (c *TestsV1Client) RESTClient() rest.Interface {
 	if c == nil {
 		return nil
 	}

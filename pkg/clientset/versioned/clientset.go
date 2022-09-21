@@ -18,7 +18,7 @@ package versioned
 
 import (
 	"fmt"
-	v1 "github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/testtrigger/v1"
+	v1 "github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/tests/v1"
 	"net/http"
 
 	"k8s.io/client-go/discovery"
@@ -28,18 +28,18 @@ import (
 
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
-	TestTriggerV1() v1.TestTriggerV1Interface
+	TestsV1() v1.TestsV1Interface
 }
 
 // Clientset contains the clients for groups. Each group has exactly one version included in a Clientset.
 type Clientset struct {
 	*discovery.DiscoveryClient
-	testtriggerV1 *v1.TestTriggerV1Client
+	testsV1 *v1.TestsV1Client
 }
 
-// TestTriggerV1 retrieves the TestTriggerV1Client
-func (c *Clientset) TestTriggerV1() v1.TestTriggerV1Interface {
-	return c.testtriggerV1
+// TestsV1 retrieves the TestsV1Client
+func (c *Clientset) TestsV1() v1.TestsV1Interface {
+	return c.testsV1
 }
 
 // Discovery retrieves the DiscoveryClient
@@ -86,7 +86,7 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 
 	var cs Clientset
 	var err error
-	cs.testtriggerV1, err = v1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	cs.testsV1, err = v1.NewForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +111,7 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 // New creates a new Clientset for the given RESTClient.
 func New(c rest.Interface) *Clientset {
 	var cs Clientset
-	cs.testtriggerV1 = v1.New(c)
+	cs.testsV1 = v1.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)
 	return &cs

@@ -17,22 +17,22 @@ limitations under the License.
 package fake
 
 import (
-	v1 "github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/testtrigger/v1"
+	v1 "github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/tests/v1"
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
 )
 
-type FakeTestTriggerV1 struct {
+type FakeTestsV1 struct {
 	*testing.Fake
 }
 
-func (c *FakeTestTriggerV1) TestTriggers(namespace string) v1.TestTriggerInterface {
+func (c *FakeTestsV1) TestTriggers(namespace string) v1.TestTriggerInterface {
 	return &FakeTestTriggers{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
-func (c *FakeTestTriggerV1) RESTClient() rest.Interface {
+func (c *FakeTestsV1) RESTClient() rest.Interface {
 	var ret *rest.RESTClient
 	return ret
 }

@@ -14,16 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package testtrigger
+package tests
 
 import (
 	"github.com/kubeshop/testkube-operator/pkg/informers/externalversions/internalinterfaces"
-	v1 "github.com/kubeshop/testkube-operator/pkg/informers/externalversions/testtrigger/v1"
+	v1 "github.com/kubeshop/testkube-operator/pkg/informers/externalversions/tests/v1"
 )
 
 // Interface provides access to each of this group's versions.
 type Interface interface {
-	// V1 provides access to shared informers for resources in V1alpha1.
+	// V1 provides access to shared informers for resources in V1 version.
 	V1() v1.Interface
 }
 

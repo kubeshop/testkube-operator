@@ -19,7 +19,7 @@ package externalversions
 import (
 	"github.com/kubeshop/testkube-operator/pkg/clientset/versioned"
 	"github.com/kubeshop/testkube-operator/pkg/informers/externalversions/internalinterfaces"
-	"github.com/kubeshop/testkube-operator/pkg/informers/externalversions/testtrigger"
+	"github.com/kubeshop/testkube-operator/pkg/informers/externalversions/tests"
 	reflect "reflect"
 	sync "sync"
 	time "time"
@@ -168,9 +168,9 @@ type SharedInformerFactory interface {
 	ForResource(resource schema.GroupVersionResource) (GenericInformer, error)
 	WaitForCacheSync(stopCh <-chan struct{}) map[reflect.Type]bool
 
-	TestTrigger() testtrigger.Interface
+	Tests() tests.Interface
 }
 
-func (f *sharedInformerFactory) TestTrigger() testtrigger.Interface {
-	return testtrigger.New(f, f.namespace, f.tweakListOptions)
+func (f *sharedInformerFactory) Tests() tests.Interface {
+	return tests.New(f, f.namespace, f.tweakListOptions)
 }

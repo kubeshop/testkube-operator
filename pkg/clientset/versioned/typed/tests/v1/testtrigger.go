@@ -55,7 +55,7 @@ type testTriggers struct {
 }
 
 // newTestTriggers returns a TestTriggers
-func newTestTriggers(c *TestTriggerV1Client, namespace string) *testTriggers {
+func newTestTriggers(c *TestsV1Client, namespace string) *testTriggers {
 	return &testTriggers{
 		client: c.RESTClient(),
 		ns:     namespace,
