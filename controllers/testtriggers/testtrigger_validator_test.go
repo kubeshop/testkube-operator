@@ -27,16 +27,50 @@ import (
 )
 
 func TestValidator_validateAction(t *testing.T) {
+	t.Parallel()
+
 	v := NewValidator(buildFakeK8sClient(t))
 
-	t.Run("no error on valid action", func(t *testing.T) {
+	t.Run("no error for valid action", func(t *testing.T) {
 		err := v.validateAction("run")
 		assert.Nil(t, err)
 	})
 
-	t.Run("error on invalid action", func(t *testing.T) {
+	t.Run("error for invalid action", func(t *testing.T) {
 		err := v.validateAction("kill")
-		assert.Error(t, err)
+		assert.ErrorContains(t, err, "spec.action: Unsupported value: \"kill\"")
+	})
+}
+
+func TestValidator_validateExecution(t *testing.T) {
+	t.Parallel()
+
+	v := NewValidator(buildFakeK8sClient(t))
+
+	t.Run("no error for supported execution", func(t *testing.T) {
+		err := v.validateExecution("test")
+		assert.Nil(t, err)
+	})
+
+	t.Run("error for unsupported execution", func(t *testing.T) {
+		err := v.validateExecution("testspec")
+		assert.ErrorContains(t, err, "spec.execution: Unsupported value: \"testspec\"")
+	})
+}
+
+func TestValidator_validateResource(t *testing.T) {
+	t.Parallel()
+
+	v := NewValidator(buildFakeK8sClient(t))
+
+	t.Run("no error for supported resource", func(t *testing.T) {
+		err := v.validateResource("pod")
+		assert.Nil(t, err)
+	})
+
+	t.Run("error for unsupported resource", func(t *testing.T) {
+		err := v.validateResource("replicaset")
+		assert.ErrorContains(t, err, "spec.resource: Unsupported value: \"replicaset\"")
 	})
 }
 
