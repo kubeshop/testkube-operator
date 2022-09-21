@@ -22,25 +22,14 @@ import (
 	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
 	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
 	testtriggerv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
+	"github.com/kubeshop/testkube-operator/pkg/validation/tests/v1/testtrigger"
+	"github.com/kubeshop/testkube-operator/utils"
 	pkgerrors "github.com/pkg/errors"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-)
-
-const (
-	executionTest       = "test"
-	executionTestsuite  = "testsuite"
-	actionRun           = "run"
-	resourcePod         = "pod"
-	resourceDeployment  = "deployment"
-	resourceStatefulSet = "statefulset"
-	resourceDaemonSet   = "daemonset"
-	resourceService     = "service"
-	resourceIngress     = "ingress"
-	defaultNamespace    = "testkube"
 )
 
 type Validator struct {
@@ -152,7 +141,7 @@ func (v *Validator) validateTestSelector(
 	if testSelector.Name != "" {
 		namespace := testSelector.Namespace
 		if namespace == "" {
-			namespace = defaultNamespace
+			namespace = testtrigger.DefaultNamespace
 		}
 		fld = fld.Child("name")
 		if err := v.getTestResource(ctx, fld, execution, namespace, testSelector.Name); err != nil {
@@ -177,7 +166,7 @@ func (v *Validator) getTestResource(
 	execution, namespace, name string,
 ) *field.Error {
 	switch execution {
-	case executionTestsuite:
+	case testtrigger.ExecutionTestsuite:
 		var testsuite testsuitev2.TestSuite
 		err := v.c.Get(ctx, client.ObjectKey{Name: name, Namespace: namespace}, &testsuite)
 		if k8serrors.IsNotFound(err) {
@@ -188,7 +177,7 @@ func (v *Validator) getTestResource(
 				pkgerrors.Errorf("error fetching TestSuite V2 %s/%s: %v", namespace, name, err),
 			)
 		}
-	case executionTest:
+	case testtrigger.ExecutionTest:
 		var test testsv3.Test
 		err := v.c.Get(ctx, client.ObjectKey{Name: name, Namespace: namespace}, &test)
 		if k8serrors.IsNotFound(err) {
@@ -204,48 +193,31 @@ func (v *Validator) getTestResource(
 }
 
 func (v *Validator) validateResource(resource string) *field.Error {
-	allowedResources := []string{
-		resourcePod,
-		resourceDeployment,
-		resourceStatefulSet,
-		resourceDaemonSet,
-		resourceService,
-		resourceIngress,
-	}
-	if !in(resource, allowedResources) {
+	if !utils.In(resource, testtrigger.GetSupportedResources()) {
 		fld := field.NewPath("spec").Child("resource")
 		verr := field.NotSupported(
 			fld,
 			resource,
-			[]string{"pod", "deployment", "statefulset", "daemonset", "service", "ingress"},
+			testtrigger.GetSupportedResources(),
 		)
 		return verr
 	}
 	return nil
 }
 
-func in[T comparable](target T, arr []T) bool {
-	for _, v := range arr {
-		if v == target {
-			return true
-		}
-	}
-	return false
-}
-
 func (v *Validator) validateAction(action string) *field.Error {
-	if action != actionRun {
+	if !utils.In(action, testtrigger.GetSupportedActions()) {
 		fld := field.NewPath("spec").Child("action")
-		verr := field.NotSupported(fld, action, []string{"run"})
+		verr := field.NotSupported(fld, action, testtrigger.GetSupportedActions())
 		return verr
 	}
 	return nil
 }
 
 func (v *Validator) validateExecution(execution string) *field.Error {
-	if execution != executionTest && execution != executionTestsuite {
+	if !utils.In(execution, testtrigger.GetSupportedExecutions()) {
 		fld := field.NewPath("spec").Child("execution")
-		verr := field.NotSupported(fld, execution, []string{"test", "testsuite"})
+		verr := field.NotSupported(fld, execution, testtrigger.GetSupportedExecutions())
 		return verr
 	}
 	return nil

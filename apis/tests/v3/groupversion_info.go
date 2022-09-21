@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 // Package v3 contains API Schema definitions for the tests v3 API group
-//+kubebuilder:object:generate=true
-//+groupName=tests.testkube.io
+// +kubebuilder:object:generate=true
+// +groupName=tests.testkube.io
 package v3
 
 import (
