@@ -224,11 +224,11 @@ func (s TestsClient) DeleteAll() error {
 	if err != nil {
 		return err
 	}
-
-	if err := s.secretClient.DeleteAll(""); err != nil {
-		return err
-	}
-
+	/*
+		if err := s.secretClient.DeleteAll(""); err != nil {
+			return err
+		}
+	*/
 	u = &unstructured.Unstructured{}
 	u.SetKind("Test")
 	u.SetAPIVersion("tests.testkube.io/v3")
