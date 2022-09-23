@@ -413,6 +413,11 @@ spec:
                     description: uri of test content
                     type: string
                 type: object
+              copyFiles:
+                description: files to be copied from host of form source:destination
+                items:
+                  type: string
+                type: array
               executionRequest:
                 description: test execution request body
                 properties:
