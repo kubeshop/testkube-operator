@@ -42,7 +42,7 @@ var k8sClient client.Client
 var testEnv *envtest.Environment
 
 func TestAPIs(t *testing.T) {
-	t.Skip("Need to add etcd to Github first")
+	t.Skip("Need to define etcd and rest for Github runners")
 	RegisterFailHandler(Fail)
 
 	RunSpecsWithDefaultAndCustomReporters(t,

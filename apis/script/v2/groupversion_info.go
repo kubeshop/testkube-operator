@@ -12,8 +12,8 @@ limitations under the License.
 */
 
 // Package v2 contains API Schema definitions for the testkube v2 API group
-//+kubebuilder:object:generate=true
-//+groupName=tests.testkube.io
+// +kubebuilder:object:generate=true
+// +groupName=tests.testkube.io
 package v2
 
 import (

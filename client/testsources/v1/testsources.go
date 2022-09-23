@@ -21,6 +21,16 @@ const (
 	gitTokenSecretName = "git-token"
 )
 
+//go:generate mockgen -destination=./mock_testsources.go -package=testsources "github.com/kubeshop/testkube-operator/client/testsources/v1" Interface
+type Interface interface {
+	List(selector string) (*testsourcev1.TestSourceList, error)
+	Get(name string) (*testsourcev1.TestSource, error)
+	Create(testSource *testsourcev1.TestSource, options ...Option) (*testsourcev1.TestSource, error)
+	Update(testSource *testsourcev1.TestSource, options ...Option) (*testsourcev1.TestSource, error)
+	Delete(name string) error
+	DeleteByLabels(selector string) error
+}
+
 // Option contain test source options
 type Option struct {
 	Secrets map[string]string

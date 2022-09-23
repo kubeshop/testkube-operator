@@ -2,12 +2,12 @@ package scripts
 
 import (
 	"context"
+	"github.com/kubeshop/testkube-operator/utils"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	scriptv2 "github.com/kubeshop/testkube-operator/apis/script/v2"
-	"github.com/kubeshop/testkube-operator/utils"
 )
 
 func NewClient(client client.Client, namespace string) *ScriptsClient {
