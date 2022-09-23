@@ -40,7 +40,7 @@ type Interface interface {
 	ListLabels() (map[string][]string, error)
 	Get(name string) (*testsv3.Test, error)
 	Create(test *testsv3.Test, options ...Option) (*testsv3.Test, error)
-	Update(test *testsv3.Test) (*testsv3.Test, error)
+	Update(test *testsv3.Test, options ...Option) (*testsv3.Test, error)
 	Delete(name string) error
 	DeleteAll() error
 	CreateTestSecrets(test *testsv3.Test) error
