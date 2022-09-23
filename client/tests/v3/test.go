@@ -34,6 +34,24 @@ var testSecretDefaultLabels = map[string]string{
 	"testkubeSecretType": "variables",
 }
 
+//go:generate mockgen -destination=./mock_tests.go -package=tests "github.com/kubeshop/testkube-operator/client/tests/v3" Interface
+type Interface interface {
+	List(selector string) (*testsv3.TestList, error)
+	ListLabels() (map[string][]string, error)
+	Get(name string) (*testsv3.Test, error)
+	Create(test *testsv3.Test, options ...Option) (*testsv3.Test, error)
+	Update(test *testsv3.Test, options ...Option) (*testsv3.Test, error)
+	Delete(name string) error
+	DeleteAll() error
+	CreateTestSecrets(test *testsv3.Test) error
+	UpdateTestSecrets(test *testsv3.Test) error
+	LoadTestVariablesSecret(test *testsv3.Test) (*corev1.Secret, error)
+	GetCurrentSecretUUID(testName string) (string, error)
+	GetSecretTestVars(testName, secretUUID string) (map[string]string, error)
+	ListByNames(names []string) ([]testsv3.Test, error)
+	DeleteByLabels(selector string) error
+}
+
 // Option contain test source options
 type Option struct {
 	Secrets map[string]string

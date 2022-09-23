@@ -17,6 +17,7 @@ COPY main.go main.go
 COPY apis/ apis/
 COPY controllers/ controllers/
 COPY pkg/ pkg/
+COPY utils/ utils/
 
 ARG TARGETOS TARGETARCH
 # Build

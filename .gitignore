@@ -6,7 +6,7 @@
 *.so
 *.dylib
 bin
-testbin/*
+controllers/testbin/*
 
 # Test binary, build with `go test -c`
 *.test

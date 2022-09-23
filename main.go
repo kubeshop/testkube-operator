@@ -19,6 +19,7 @@ package main
 import (
 	"encoding/base64"
 	"flag"
+	testtriggersv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
 	"os"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
@@ -50,6 +51,7 @@ import (
 	testscontrollers "github.com/kubeshop/testkube-operator/controllers/tests"
 	testsourcecontrollers "github.com/kubeshop/testkube-operator/controllers/testsource"
 	testsuitecontrollers "github.com/kubeshop/testkube-operator/controllers/testsuite"
+	testtriggerscontrollers "github.com/kubeshop/testkube-operator/controllers/testtriggers"
 	"github.com/kubeshop/testkube-operator/pkg/cronjob"
 	//+kubebuilder:scaffold:imports
 )
@@ -77,6 +79,7 @@ func init() {
 	utilruntime.Must(testsv2.AddToScheme(scheme))
 	utilruntime.Must(testsv3.AddToScheme(scheme))
 	utilruntime.Must(testsuitev2.AddToScheme(scheme))
+	utilruntime.Must(testtriggersv1.AddToScheme(scheme))
 	utilruntime.Must(testsourcev1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
@@ -169,6 +172,13 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "TestSource")
 		os.Exit(1)
 	}
+	if err = (&testtriggerscontrollers.TestTriggerReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "TestTrigger")
+		os.Exit(1)
+	}
 	//+kubebuilder:scaffold:builder
 
 	if os.Getenv("ENABLE_WEBHOOKS") != "false" {
@@ -198,6 +208,11 @@ func main() {
 		}
 		if err = (&testsuitev2.TestSuite{}).SetupWebhookWithManager(mgr); err != nil {
 			setupLog.Error(err, "unable to create webhook", "webhook", "TestSuite")
+			os.Exit(1)
+		}
+		testtriggerValidator := testtriggerscontrollers.NewValidator(mgr.GetClient())
+		if err = (&testtriggersv1.TestTrigger{}).SetupWebhookWithManager(mgr, testtriggerValidator); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "TestTrigger")
 			os.Exit(1)
 		}
 	}

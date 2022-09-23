@@ -21,3 +21,12 @@ func RemoveDuplicates(s []string) []string {
 	}
 	return result
 }
+
+func In[T comparable](target T, arr []T) bool {
+	for _, v := range arr {
+		if v == target {
+			return true
+		}
+	}
+	return false
+}

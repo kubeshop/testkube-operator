@@ -1,0 +1,17 @@
+apiVersion: tests.testkube.io/v1
+kind: TestTrigger
+metadata:
+  name: testtrigger-sample
+  namespace: default
+spec:
+  resource: pod
+  resourceSelector:
+    labelSelector:
+      matchLabels:
+        testkube.io/tier: backend
+  event: modified
+  action: run
+  execution: testsuite
+  testSelector:
+    labels:
+      testkube.io/testtype: sanity-test

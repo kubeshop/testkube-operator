@@ -27,6 +27,23 @@ var testsuiteSecretDefaultLabels = map[string]string{
 	"testkubeSecretType": "variables",
 }
 
+//go:generate mockgen -destination=./mock_testsuites.go -package=v2 "github.com/kubeshop/testkube-operator/client/testsuites/v2" Interface
+type Interface interface {
+	List(selector string) (*testsuitev2.TestSuiteList, error)
+	ListLabels() (map[string][]string, error)
+	Get(name string) (*testsuitev2.TestSuite, error)
+	Create(testsuite *testsuitev2.TestSuite) (*testsuitev2.TestSuite, error)
+	Update(testsuite *testsuitev2.TestSuite) (*testsuitev2.TestSuite, error)
+	Delete(name string) error
+	DeleteAll() error
+	CreateTestsuiteSecrets(testsuite *testsuitev2.TestSuite) error
+	UpdateTestsuiteSecrets(testsuite *testsuitev2.TestSuite) error
+	LoadTestVariablesSecret(testsuite *testsuitev2.TestSuite) (*corev1.Secret, error)
+	GetCurrentSecretUUID(testSuiteName string) (string, error)
+	GetSecretTestSuiteVars(testSuiteName, secretUUID string) (map[string]string, error)
+	DeleteByLabels(selector string) error
+}
+
 // NewClient creates new TestSuite client
 func NewClient(client client.Client, namespace string) *TestSuitesClient {
 	return &TestSuitesClient{

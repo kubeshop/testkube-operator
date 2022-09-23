@@ -1,0 +1,24 @@
+# permissions for end users to edit testtriggers.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: testtrigger-editor-role
+rules:
+- apiGroups:
+  - tests.testkube.io
+  resources:
+  - testtriggers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - tests.testkube.io
+  resources:
+  - testtriggers/status
+  verbs:
+  - get
