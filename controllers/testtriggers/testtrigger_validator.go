@@ -18,14 +18,11 @@ package testtriggers
 
 import (
 	"context"
-	"fmt"
-	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
-	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
 	testtriggerv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
 	"github.com/kubeshop/testkube-operator/pkg/validation/tests/v1/testtrigger"
 	"github.com/kubeshop/testkube-operator/utils"
-	pkgerrors "github.com/pkg/errors"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/validation/field"
@@ -56,10 +53,10 @@ func (v *Validator) ValidateCreate(ctx context.Context, t *testtriggerv1.TestTri
 	}
 
 	if err := v.validateResourceSelector(t.Spec.ResourceSelector); err != nil {
-		allErrs = append(allErrs, err)
+		allErrs = append(allErrs, err...)
 	}
 
-	if err := v.validateTestSelector(ctx, t.Spec.TestSelector, t.Spec.Execution); err != nil {
+	if err := v.validateTestSelector(t.Spec.TestSelector); err != nil {
 		allErrs = append(allErrs, err...)
 	}
 
@@ -92,11 +89,11 @@ func (v *Validator) ValidateUpdate(ctx context.Context, old runtime.Object, new 
 		allErrs = append(allErrs, err)
 	}
 
-	if err := v.validateResourceSelector(new.Spec.ResourceSelector); err != nil {
-		allErrs = append(allErrs, err)
+	if errs := v.validateResourceSelector(new.Spec.ResourceSelector); errs != nil {
+		allErrs = append(allErrs, errs...)
 	}
 
-	if err := v.validateTestSelector(ctx, new.Spec.TestSelector, new.Spec.Execution); err != nil {
+	if err := v.validateTestSelector(new.Spec.TestSelector); err != nil {
 		allErrs = append(allErrs, err...)
 	}
 
@@ -118,89 +115,62 @@ func (v *Validator) ValidateDelete(ctx context.Context, trigger *testtriggerv1.T
 	return nil
 }
 
-func (v *Validator) validateResourceSelector(resourceSelector testtriggerv1.TestTriggerSelector) *field.Error {
+func (v *Validator) validateResourceSelector(resourceSelector testtriggerv1.TestTriggerSelector) field.ErrorList {
 	fld := field.NewPath("spec").Child("testSelector")
-	if err := v.validateSelector(fld, resourceSelector); err != nil {
-		return err
-	}
-	return nil
+	return v.validateSelector(fld, resourceSelector)
 }
 
-func (v *Validator) validateTestSelector(
-	ctx context.Context,
-	testSelector testtriggerv1.TestTriggerSelector,
-	execution string,
-) field.ErrorList {
+func (v *Validator) validateTestSelector(testSelector testtriggerv1.TestTriggerSelector) field.ErrorList {
 	var allErrs field.ErrorList
 
 	fld := field.NewPath("spec").Child("testSelector")
 	if err := v.validateSelector(fld, testSelector); err != nil {
-		allErrs = append(allErrs, err)
-	}
-
-	if testSelector.Name != "" {
-		namespace := testSelector.Namespace
-		if namespace == "" {
-			namespace = testtrigger.DefaultNamespace
-		}
-		fld = fld.Child("name")
-		if err := v.getTestResource(ctx, fld, execution, namespace, testSelector.Name); err != nil {
-			allErrs = append(allErrs, err)
-		}
+		allErrs = append(allErrs, err...)
 	}
 
 	return allErrs
 }
 
-func (v *Validator) validateSelector(fld *field.Path, selector testtriggerv1.TestTriggerSelector) *field.Error {
-	if selector.Name != "" && len(selector.Labels) > 0 {
-		verr := field.Duplicate(fld, "either name or labels selector can be used")
-		return verr
+func (v *Validator) validateSelector(fld *field.Path, selector testtriggerv1.TestTriggerSelector) field.ErrorList {
+	var allErrs field.ErrorList
+
+	isLabelSelectorEmpty := true
+
+	if selector.LabelSelector != nil {
+		isEmpty, verr := validateLabelSelector(selector.LabelSelector, fld.Child("labelSelector"))
+		if verr != nil {
+			allErrs = append(allErrs, verr)
+		}
+		isLabelSelectorEmpty = isEmpty
 	}
-	return nil
+
+	if selector.Name != "" && selector.LabelSelector != nil {
+		verr := field.Duplicate(fld, "either name or label selector can be used")
+		allErrs = append(allErrs, verr)
+	}
+
+	if selector.Name == "" && isLabelSelectorEmpty {
+		verr := field.Invalid(fld, selector, "neither name nor label selector is specified")
+		allErrs = append(allErrs, verr)
+	}
+
+	return allErrs
 }
 
-func (v *Validator) getTestResource(
-	ctx context.Context,
-	fld *field.Path,
-	execution, namespace, name string,
-) *field.Error {
-	switch execution {
-	case testtrigger.ExecutionTestsuite:
-		var testsuite testsuitev2.TestSuite
-		err := v.c.Get(ctx, client.ObjectKey{Name: name, Namespace: namespace}, &testsuite)
-		if k8serrors.IsNotFound(err) {
-			return field.NotFound(fld, fmt.Sprintf("testsuites.tests.testkube.io/v2 %s/%s", namespace, name))
-		} else if err != nil {
-			return field.InternalError(
-				fld,
-				pkgerrors.Errorf("error fetching TestSuite V2 %s/%s: %v", namespace, name, err),
-			)
-		}
-	case testtrigger.ExecutionTest:
-		var test testsv3.Test
-		err := v.c.Get(ctx, client.ObjectKey{Name: name, Namespace: namespace}, &test)
-		if k8serrors.IsNotFound(err) {
-			return field.NotFound(fld, fmt.Sprintf("tests.tests.testkube.io/v3 %s/%s", namespace, name))
-		} else if err != nil {
-			return field.InternalError(
-				fld,
-				pkgerrors.Errorf("error fetching Test V3 %s/%s: %v", namespace, name, err),
-			)
-		}
+func validateLabelSelector(labelSelector *v1.LabelSelector, fld *field.Path) (empty bool, verr *field.Error) {
+	s, err := v1.LabelSelectorAsSelector(labelSelector)
+	if err != nil {
+		isEmpty := len(labelSelector.MatchLabels) == 0 && len(labelSelector.MatchExpressions) == 0
+		return isEmpty, field.Invalid(fld, labelSelector, err.Error())
 	}
-	return nil
+
+	return s.Empty(), nil
 }
 
 func (v *Validator) validateResource(resource string) *field.Error {
 	if !utils.In(resource, testtrigger.GetSupportedResources()) {
 		fld := field.NewPath("spec").Child("resource")
-		verr := field.NotSupported(
-			fld,
-			resource,
-			testtrigger.GetSupportedResources(),
-		)
-		return verr
+		return field.NotSupported(fld, resource, testtrigger.GetSupportedResources())
 	}
 	return nil
 }
@@ -208,8 +178,7 @@ func (v *Validator) validateResource(resource string) *field.Error {
 func (v *Validator) validateAction(action string) *field.Error {
 	if !utils.In(action, testtrigger.GetSupportedActions()) {
 		fld := field.NewPath("spec").Child("action")
-		verr := field.NotSupported(fld, action, testtrigger.GetSupportedActions())
-		return verr
+		return field.NotSupported(fld, action, testtrigger.GetSupportedActions())
 	}
 	return nil
 }
@@ -217,8 +186,7 @@ func (v *Validator) validateAction(action string) *field.Error {
 func (v *Validator) validateExecution(execution string) *field.Error {
 	if !utils.In(execution, testtrigger.GetSupportedExecutions()) {
 		fld := field.NewPath("spec").Child("execution")
-		verr := field.NotSupported(fld, execution, testtrigger.GetSupportedExecutions())
-		return verr
+		return field.NotSupported(fld, execution, testtrigger.GetSupportedExecutions())
 	}
 	return nil
 }

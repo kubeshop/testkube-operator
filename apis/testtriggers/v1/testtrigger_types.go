@@ -57,8 +57,8 @@ type TestTriggerSelector struct {
 	Name string `json:"name,omitempty"`
 	// Namespace of the Kubernetes object
 	Namespace string `json:"namespace,omitempty"`
-	// Labels selector is used to identify a group of Kubernetes Objects based on their metadata labels
-	Labels map[string]string `json:"labels,omitempty"`
+	// LabelSelector is used to identify a group of Kubernetes Objects based on their metadata labels
+	LabelSelector *metav1.LabelSelector `json:"labelSelector"`
 }
 
 // TestTriggerStatus defines the observed state of TestTrigger
