@@ -6,8 +6,9 @@ metadata:
 spec:
   resource: pod
   resourceSelector:
-    labels:
-      testkube.io/tier: backend
+    labelSelector:
+      matchLabels:
+        testkube.io/tier: backend
   event: modified
   action: run
   execution: testsuite
