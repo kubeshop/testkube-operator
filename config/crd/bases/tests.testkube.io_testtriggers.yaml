@@ -106,8 +106,6 @@ spec:
                   namespace:
                     description: Namespace of the Kubernetes object
                     type: string
-                required:
-                - labelSelector
                 type: object
               testSelector:
                 description: TargetSelector identifies on which Kubernetes Objects
@@ -165,8 +163,6 @@ spec:
                   namespace:
                     description: Namespace of the Kubernetes object
                     type: string
-                required:
-                - labelSelector
                 type: object
             required:
             - action

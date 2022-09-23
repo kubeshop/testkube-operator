@@ -2,12 +2,12 @@ package tests
 
 import (
 	"context"
+	"github.com/kubeshop/testkube-operator/utils"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	testsv1 "github.com/kubeshop/testkube-operator/apis/tests/v1"
-	"github.com/kubeshop/testkube-operator/utils"
 )
 
 func NewClient(client client.Client, namespace string) *TestsClient {
