@@ -36,6 +36,8 @@ type TestSpec struct {
 	Name string `json:"name,omitempty"`
 	// test content object
 	Content *TestContent `json:"content,omitempty"`
+	// reference to test source resource
+	Source string `json:"source,omitempty"`
 	// schedule in cron job format for scheduled test execution
 	Schedule         string            `json:"schedule,omitempty"`
 	ExecutionRequest *ExecutionRequest `json:"executionRequest,omitempty"`

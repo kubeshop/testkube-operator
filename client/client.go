@@ -7,6 +7,7 @@ import (
 	testsv1 "github.com/kubeshop/testkube-operator/apis/tests/v1"
 	testsv2 "github.com/kubeshop/testkube-operator/apis/tests/v2"
 	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
+	testsourcev1 "github.com/kubeshop/testkube-operator/apis/testsource/v1"
 	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
 	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
 	corev1 "k8s.io/api/core/v1"
@@ -29,6 +30,7 @@ func GetClient() (client.Client, error) {
 	testsuitev1.AddToScheme(scheme)
 	corev1.AddToScheme(scheme)
 	testsuitev2.AddToScheme(scheme)
+	testsourcev1.AddToScheme(scheme)
 
 	kubeconfig, err := ctrl.GetConfig()
 	if err != nil {
