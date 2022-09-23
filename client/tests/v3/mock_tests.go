@@ -9,6 +9,7 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	v3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
+	v30 "github.com/kubeshop/testkube-operator/client/tests/v3"
 	v1 "k8s.io/api/core/v1"
 )
 
@@ -36,18 +37,23 @@ func (m *MockInterface) EXPECT() *MockInterfaceMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockInterface) Create(arg0 *v3.Test) (*v3.Test, error) {
+func (m *MockInterface) Create(arg0 *v3.Test, arg1 ...v30.Option) (*v3.Test, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", arg0)
+	varargs := []interface{}{arg0}
+	for _, a := range arg1 {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "Create", varargs...)
 	ret0, _ := ret[0].(*v3.Test)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Create indicates an expected call of Create.
-func (mr *MockInterfaceMockRecorder) Create(arg0 interface{}) *gomock.Call {
+func (mr *MockInterfaceMockRecorder) Create(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockInterface)(nil).Create), arg0)
+	varargs := append([]interface{}{arg0}, arg1...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockInterface)(nil).Create), varargs...)
 }
 
 // CreateTestSecrets mocks base method.
