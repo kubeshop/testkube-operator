@@ -47,7 +47,7 @@ type TestTriggerSpec struct {
 	Action string `json:"action"`
 	// Execution identifies for which test execution should an Action be executed
 	Execution string `json:"execution"`
-	// TargetSelector identifies on which Kubernetes Objects an Action should be taken
+	// TestSelector identifies on which Testkube Kubernetes Objects an Action should be taken
 	TestSelector TestTriggerSelector `json:"testSelector"`
 }
 
