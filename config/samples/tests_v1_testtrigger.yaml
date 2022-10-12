@@ -1,7 +1,7 @@
 apiVersion: tests.testkube.io/v1
 kind: TestTrigger
 metadata:
-  name: testtrigger-sample
+  name: testtrigger-example
   namespace: default
 spec:
   resource: pod
@@ -13,5 +13,5 @@ spec:
   action: run
   execution: testsuite
   testSelector:
-    labels:
-      testkube.io/testtype: sanity-test
+    name: sanity-test
+    namespace: frontend

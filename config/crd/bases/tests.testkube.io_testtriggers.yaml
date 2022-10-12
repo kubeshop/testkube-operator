@@ -108,8 +108,8 @@ spec:
                     type: string
                 type: object
               testSelector:
-                description: TargetSelector identifies on which Kubernetes Objects
-                  an Action should be taken
+                description: TestSelector identifies on which Testkube Kubernetes
+                  Objects an Action should be taken
                 properties:
                   labelSelector:
                     description: LabelSelector is used to identify a group of Kubernetes
