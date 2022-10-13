@@ -31,7 +31,7 @@ jobs:
           tags: |
             type=sha
 
-      - name: Build 
+      - name: Build
         uses: docker/bake-action@v1
         with:
           files: |
@@ -51,15 +51,6 @@ jobs:
           images: kubeshop/testkube-certificate
           tags: |
             type=sha
-
-      - name: Build certificate image
-        uses: docker/bake-action@v1
-        with:
-          files: |
-            ./certificates/docker-bake.hcl
-            ${{ steps.meta_testkube_certificate.outputs.bake-file }}
-          targets: build
-          push: true
 
       #Trigger Helm repo workflow to deploy Dashboard to Stage cluster
       - name: Repository Dispatch
