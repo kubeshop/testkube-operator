@@ -91,6 +91,10 @@ spec:
                     - key
                     - name
                     type: object
+                  working_dir:
+                    description: if provided we checkout the whole repository and
+                      run test from this directory
+                    type: string
                 required:
                 - type
                 - uri
