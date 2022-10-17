@@ -402,7 +402,7 @@ spec:
                         - key
                         - name
                         type: object
-                      working_dir:
+                      workingDir:
                         description: if provided we checkout the whole repository
                           and run test from this directory
                         type: string
