@@ -72,9 +72,9 @@ type SecretRef struct {
 // Repository represents VCS repo, currently we're handling Git only
 type Repository struct {
 	// VCS repository type
-	Type_ string `json:"type"`
+	Type_ string `json:"type,omitempty"`
 	// uri of content file or git directory
-	Uri string `json:"uri"`
+	Uri string `json:"uri,omitempty"`
 	// branch/tag name for checkout
 	Branch string `json:"branch,omitempty"`
 	// commit id (sha) for checkout
