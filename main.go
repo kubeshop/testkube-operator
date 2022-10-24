@@ -19,8 +19,9 @@ package main
 import (
 	"encoding/base64"
 	"flag"
-	testtriggersv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
 	"os"
+
+	testtriggersv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
@@ -245,12 +246,12 @@ func setLogger() {
 	consoleDebugging := zapcore.Lock(os.Stdout)
 	consoleErrors := zapcore.Lock(os.Stderr)
 
-	consoleEncoder := zapcore.NewConsoleEncoder(zapUber.NewDevelopmentEncoderConfig())
+	jsonEncoder := zapcore.NewJSONEncoder(zapUber.NewDevelopmentEncoderConfig())
 
 	updateZapcore := func(c zapcore.Core) zapcore.Core {
 		core := zapcore.NewTee(
-			zapcore.NewCore(consoleEncoder, consoleErrors, highPriority),
-			zapcore.NewCore(consoleEncoder, consoleDebugging, lowPriority),
+			zapcore.NewCore(jsonEncoder, consoleErrors, highPriority),
+			zapcore.NewCore(jsonEncoder, consoleDebugging, lowPriority),
 		)
 		return core
 	}
