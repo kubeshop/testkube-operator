@@ -18,9 +18,10 @@ package testtriggers
 
 import (
 	"context"
+
 	testtriggerv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
+	"github.com/kubeshop/testkube-operator/pkg/utils"
 	"github.com/kubeshop/testkube-operator/pkg/validation/tests/v1/testtrigger"
-	"github.com/kubeshop/testkube-operator/utils"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"

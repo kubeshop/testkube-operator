@@ -19,6 +19,7 @@ package testsuite
 import (
 	"context"
 	"encoding/json"
+	"os"
 
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -27,7 +28,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
+	"github.com/kubeshop/testkube-operator/pkg/config"
 	"github.com/kubeshop/testkube-operator/pkg/cronjob"
+	"github.com/kubeshop/testkube-operator/pkg/telemetry"
 )
 
 // TestSuiteReconciler reconciles a TestSuite object
@@ -35,6 +38,8 @@ type TestSuiteReconciler struct {
 	client.Client
 	Scheme        *runtime.Scheme
 	CronJobClient *cronjob.Client
+	ConfigMap     config.Repository
+	AppVersion    string
 }
 
 //+kubebuilder:rbac:groups=tests.testkube.io,resources=testsuites,verbs=get;list;watch;create;update;patch;delete
@@ -51,7 +56,7 @@ type TestSuiteReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.11.0/pkg/reconcile
 func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	logger := log.FromContext(ctx)
 
 	// Delete CronJob if it was created for deleted TestSuite
 	var testSuite testsuitev2.TestSuite
@@ -67,6 +72,36 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		}
 
 		return ctrl.Result{}, err
+	}
+
+	if testSuite.Generation == 1 {
+		telemetryEnabled, err := r.ConfigMap.GetTelemetryEnabled(ctx)
+		if err != nil {
+			logger.Error(err, "getting telemetry enabled error", "error")
+		}
+
+		if telemetryEnabled {
+			clusterID, err := r.ConfigMap.GetUniqueClusterId(ctx)
+			if err != nil {
+				logger.Error(err, "getting cluster id error", "error")
+			}
+
+			host, err := os.Hostname()
+			if err != nil {
+				logger.Error(err, "getting hostname error")
+			}
+
+			out, err := telemetry.SendCreateEvent("testkube_api_create_test_suite", telemetry.CreateParams{
+				AppVersion: r.AppVersion,
+				Host:       host,
+				ClusterID:  clusterID,
+			})
+			if err != nil {
+				logger.Error(err, "sending create test suite telemetry event error")
+			} else {
+				logger.Info("sending create test suite telemetry event", "output", out)
+			}
+		}
 	}
 
 	// Delete CronJob if it was created for cleaned TestSuite schedule

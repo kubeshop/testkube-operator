@@ -19,6 +19,7 @@ package main
 import (
 	"encoding/base64"
 	"flag"
+	"fmt"
 	"os"
 
 	testtriggersv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
@@ -53,12 +54,18 @@ import (
 	testsourcecontrollers "github.com/kubeshop/testkube-operator/controllers/testsource"
 	testsuitecontrollers "github.com/kubeshop/testkube-operator/controllers/testsuite"
 	testtriggerscontrollers "github.com/kubeshop/testkube-operator/controllers/testtriggers"
+	configmap "github.com/kubeshop/testkube-operator/pkg/config"
 	"github.com/kubeshop/testkube-operator/pkg/cronjob"
 	//+kubebuilder:scaffold:imports
 )
 
+const (
+	appVersion = "v1"
+)
+
 var (
 	scheme   = runtime.NewScheme()
+	runtime.names
 	setupLog = ctrl.Log.WithName("setup")
 )
 
@@ -128,6 +135,22 @@ func main() {
 		os.Exit(1)
 	}
 
+	namespace := "testkube"
+	if ns, ok := os.LookupEnv("TESTKUBE_NAMESPACE"); ok {
+		namespace = ns
+	}
+	
+	configName := fmt.Sprintf("testkube-api-server-config-%s", namespace)
+	if os.Getenv("APISERVER_CONFIG") != "" {
+		configName = os.Getenv("APISERVER_CONFIG")
+	}
+
+	configMapConfig, err := configmap.NewConfigMapConfig(mgr.GetClient(), configName, namespace)
+	if err != nil {
+		setupLog.Error(err, "unable to get config map config")
+		os.Exit(1)
+	}
+
 	if err = (&scriptcontrollers.ScriptReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
@@ -154,6 +177,8 @@ func main() {
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
 		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port, templateCronjob),
+		ConfigMap:     configMapConfig,
+		AppVersion:    appVersion,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestSuite")
 		os.Exit(1)
