@@ -65,7 +65,6 @@ const (
 
 var (
 	scheme   = runtime.NewScheme()
-	runtime.names
 	setupLog = ctrl.Log.WithName("setup")
 )
 
@@ -139,7 +138,7 @@ func main() {
 	if ns, ok := os.LookupEnv("TESTKUBE_NAMESPACE"); ok {
 		namespace = ns
 	}
-	
+
 	configName := fmt.Sprintf("testkube-api-server-config-%s", namespace)
 	if os.Getenv("APISERVER_CONFIG") != "" {
 		configName = os.Getenv("APISERVER_CONFIG")
