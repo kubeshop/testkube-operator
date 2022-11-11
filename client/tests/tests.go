@@ -2,7 +2,8 @@ package tests
 
 import (
 	"context"
-	"github.com/kubeshop/testkube-operator/utils"
+
+	"github.com/kubeshop/testkube-operator/pkg/utils"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
