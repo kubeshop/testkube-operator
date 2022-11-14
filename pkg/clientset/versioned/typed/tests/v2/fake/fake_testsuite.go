@@ -64,5 +64,4 @@ func (c *FakeTestSuites) List(ctx context.Context, opts v1.ListOptions) (result 
 func (c *FakeTestSuites) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(testSuitesResource, c.ns, opts))
-
 }

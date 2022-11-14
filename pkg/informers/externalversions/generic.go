@@ -17,6 +17,7 @@ limitations under the License.
 package externalversions
 
 import (
+	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
 	testsv2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
 	testsv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
 	"github.com/pkg/errors"
@@ -62,6 +63,12 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{
 			resource: resource.GroupResource(),
 			informer: f.Tests().V2().TestSuites().Informer(),
+		}, nil
+		// Group=tests.testkube.io, Version=v3
+	case testsv3.GroupVersionResource:
+		return &genericInformer{
+			resource: resource.GroupResource(),
+			informer: f.Tests().V3().Tests().Informer(),
 		}, nil
 	}
 
