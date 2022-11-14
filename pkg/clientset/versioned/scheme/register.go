@@ -17,6 +17,7 @@ limitations under the License.
 package scheme
 
 import (
+	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
 	testtriggersv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -28,8 +29,12 @@ import (
 var Scheme = runtime.NewScheme()
 var Codecs = serializer.NewCodecFactory(Scheme)
 var ParameterCodec = runtime.NewParameterCodec(Scheme)
-var localSchemeBuilder = runtime.SchemeBuilder{
+var localSchemeBuilderTestTriggersV1 = runtime.SchemeBuilder{
 	testtriggersv1.AddToScheme,
+}
+
+var localSchemeBuilderTestSuitesV2 = runtime.SchemeBuilder{
+	testsuitev2.AddToScheme,
 }
 
 // AddToScheme adds all types of this clientset into the given scheme. This allows composition
@@ -46,9 +51,12 @@ var localSchemeBuilder = runtime.SchemeBuilder{
 //
 // After this, RawExtensions in Kubernetes types will serialize kube-aggregator types
 // correctly.
-var AddToScheme = localSchemeBuilder.AddToScheme
+var AddToSchemelocalSchemeBuilderTestTriggersV1 = localSchemeBuilderTestTriggersV1.AddToScheme
+var AddToSchemelocalSchemeBuilderTestSuitesV2 = localSchemeBuilderTestSuitesV2.AddToScheme
 
 func init() {
 	v1.AddToGroupVersion(Scheme, schema.GroupVersion{Version: "v1"})
-	utilruntime.Must(AddToScheme(Scheme))
+	v1.AddToGroupVersion(Scheme, schema.GroupVersion{Version: "v2"})
+	utilruntime.Must(AddToSchemelocalSchemeBuilderTestTriggersV1(Scheme))
+	utilruntime.Must(AddToSchemelocalSchemeBuilderTestSuitesV2(Scheme))
 }

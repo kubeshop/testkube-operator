@@ -14,23 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package tests
+package v2
 
-import (
-	"github.com/kubeshop/testkube-operator/pkg/informers/externalversions/internalinterfaces"
-	v1 "github.com/kubeshop/testkube-operator/pkg/informers/externalversions/tests/v1"
-	v2 "github.com/kubeshop/testkube-operator/pkg/informers/externalversions/tests/v2"
-)
+import "github.com/kubeshop/testkube-operator/pkg/informers/externalversions/internalinterfaces"
 
-// Interface provides access to each of this group's versions.
+// Interface provides access to all the informers in this group version.
 type Interface interface {
-	// V1 provides access to shared informers for resources in V1 version.
-	V1() v1.Interface
-	// V2 provides access to shared informers for resources in V2 version.
-	V2() v2.Interface
+	// TestSuites returns a TestSuiteInformer.
+	TestSuites() TestSuiteInformer
 }
 
-type group struct {
+type version struct {
 	factory          internalinterfaces.SharedInformerFactory
 	namespace        string
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
@@ -42,15 +36,10 @@ func New(
 	namespace string,
 	tweakListOptions internalinterfaces.TweakListOptionsFunc,
 ) Interface {
-	return &group{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
-// V1 returns a new v1.Interface.
-func (g *group) V1() v1.Interface {
-	return v1.New(g.factory, g.namespace, g.tweakListOptions)
-}
-
-// V2 returns a new v2.Interface.
-func (g *group) V2() v2.Interface {
-	return v2.New(g.factory, g.namespace, g.tweakListOptions)
+// TestSuites returns a TestSuiteInformer.
+func (v *version) TestSuites() TestSuiteInformer {
+	return &testSuiteInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
