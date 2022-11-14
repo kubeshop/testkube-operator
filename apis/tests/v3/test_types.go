@@ -41,8 +41,8 @@ type TestSpec struct {
 	// schedule in cron job format for scheduled test execution
 	Schedule         string            `json:"schedule,omitempty"`
 	ExecutionRequest *ExecutionRequest `json:"executionRequest,omitempty"`
-	// files to be copied from host of form source:destination
-	CopyFiles []string `json:"copyFiles,omitempty"`
+	// files to be used from minio uploads
+	Uploads []string `json:"uploads,omitempty"`
 }
 
 type Variable commonv1.Variable
