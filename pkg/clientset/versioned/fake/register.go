@@ -17,6 +17,8 @@ limitations under the License.
 package fake
 
 import (
+	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
+	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
 	testtriggersv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -30,6 +32,8 @@ var codecs = serializer.NewCodecFactory(scheme)
 
 var localSchemeBuilder = runtime.SchemeBuilder{
 	testtriggersv1.AddToScheme,
+	testsuitev2.AddToScheme,
+	testsv3.AddToScheme,
 }
 
 // AddToScheme adds all types of this clientset into the given scheme. This allows composition
@@ -50,5 +54,7 @@ var AddToScheme = localSchemeBuilder.AddToScheme
 
 func init() {
 	v1.AddToGroupVersion(scheme, schema.GroupVersion{Version: "v1"})
+	v1.AddToGroupVersion(scheme, schema.GroupVersion{Version: "v2"})
+	v1.AddToGroupVersion(scheme, schema.GroupVersion{Version: "v3"})
 	utilruntime.Must(AddToScheme(scheme))
 }
