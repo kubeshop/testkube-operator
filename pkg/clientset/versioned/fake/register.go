@@ -50,11 +50,11 @@ var localSchemeBuilder = runtime.SchemeBuilder{
 //
 // After this, RawExtensions in Kubernetes types will serialize kube-aggregator types
 // correctly.
-var AddToSchemelocalSchemeBuilder = localSchemeBuilder.AddToScheme
+var AddToScheme = localSchemeBuilder.AddToScheme
 
 func init() {
 	v1.AddToGroupVersion(scheme, schema.GroupVersion{Version: "v1"})
 	v1.AddToGroupVersion(scheme, schema.GroupVersion{Version: "v2"})
 	v1.AddToGroupVersion(scheme, schema.GroupVersion{Version: "v3"})
-	utilruntime.Must(AddToSchemelocalSchemeBuilder(scheme))
+	utilruntime.Must(AddToScheme(scheme))
 }
