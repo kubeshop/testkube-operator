@@ -41,8 +41,6 @@ type TestSuiteSpec struct {
 	// schedule in cron job format for scheduled test execution
 	Schedule         string                     `json:"schedule,omitempty"`
 	ExecutionRequest *TestSuiteExecutionRequest `json:"executionRequest,omitempty"`
-	// files to be copied from host of form source:destination
-	CopyFiles []string `json:"copyFiles,omitempty"`
 }
 
 type Variable commonv1.Variable
@@ -94,6 +92,8 @@ type TestSuiteExecutionRequest struct {
 	HttpProxy string `json:"httpProxy,omitempty"`
 	// https proxy for executor containers
 	HttpsProxy string `json:"httpsProxy,omitempty"`
+	// timeout for test suite execution
+	Timeout int32 `json:"timeout,omitempty"`
 }
 
 // TestSuiteStatus defines the observed state of TestSuite

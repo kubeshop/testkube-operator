@@ -216,8 +216,8 @@ func (in *TestSpec) DeepCopyInto(out *TestSpec) {
 		*out = new(ExecutionRequest)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.CopyFiles != nil {
-		in, out := &in.CopyFiles, &out.CopyFiles
+	if in.Uploads != nil {
+		in, out := &in.Uploads, &out.Uploads
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
