@@ -29,7 +29,7 @@ var (
 	Group = "tests.testkube.io"
 
 	// Version represents the Resource version
-	Version = "v2"
+	Version = "v3"
 
 	// Resource corresponds to the CRD Kind
 	Resource = "Test"

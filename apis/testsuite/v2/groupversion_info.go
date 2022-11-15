@@ -32,7 +32,7 @@ var (
 	Version = "v2"
 
 	// Resource corresponds to the CRD Kind
-	Resource = "TestTrigger"
+	Resource = "TestSuite"
 
 	// GroupVersion is group version used to register these objects
 	GroupVersion = schema.GroupVersion{Group: Group, Version: Version}
