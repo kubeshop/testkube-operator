@@ -18,6 +18,8 @@ package fake
 
 import (
 	"context"
+	"fmt"
+
 	testtriggersv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -43,9 +45,14 @@ func (c *FakeTestTriggers) Get(ctx context.Context, name string, options v1.GetO
 	obj, err := c.Fake.
 		Invokes(testing.NewGetAction(testTriggersResource, c.ns, name), &testtriggersv1.TestTrigger{})
 
-	if obj == nil {
+	if err != nil {
 		return nil, err
 	}
+
+	if obj == nil {
+		return nil, fmt.Errorf("empty object %v", name)
+	}
+
 	return obj.(*testtriggersv1.TestTrigger), err
 }
 
@@ -54,8 +61,12 @@ func (c *FakeTestTriggers) List(ctx context.Context, opts v1.ListOptions) (resul
 	obj, err := c.Fake.
 		Invokes(testing.NewListAction(testTriggersResource, testTriggersKind, c.ns, opts), &testtriggersv1.TestTriggerList{})
 
-	if obj == nil {
+	if err != nil {
 		return nil, err
+	}
+
+	if obj == nil {
+		return nil, fmt.Errorf("empty object")
 	}
 
 	label, _, _ := testing.ExtractFromListOptions(opts)
@@ -83,9 +94,14 @@ func (c *FakeTestTriggers) Create(ctx context.Context, testTrigger *testtriggers
 	obj, err := c.Fake.
 		Invokes(testing.NewCreateAction(testTriggersResource, c.ns, testTrigger), &testtriggersv1.TestTrigger{})
 
-	if obj == nil {
+	if err != nil {
 		return nil, err
 	}
+
+	if obj == nil {
+		return nil, fmt.Errorf("empty object")
+	}
+
 	return obj.(*testtriggersv1.TestTrigger), err
 }
 
@@ -94,9 +110,14 @@ func (c *FakeTestTriggers) Update(ctx context.Context, testTrigger *testtriggers
 	obj, err := c.Fake.
 		Invokes(testing.NewUpdateAction(testTriggersResource, c.ns, testTrigger), &testtriggersv1.TestTrigger{})
 
-	if obj == nil {
+	if err != nil {
 		return nil, err
 	}
+
+	if obj == nil {
+		return nil, fmt.Errorf("empty object")
+	}
+
 	return obj.(*testtriggersv1.TestTrigger), err
 }
 
@@ -106,9 +127,14 @@ func (c *FakeTestTriggers) UpdateStatus(ctx context.Context, testTrigger *testtr
 	obj, err := c.Fake.
 		Invokes(testing.NewUpdateSubresourceAction(testTriggersResource, "status", c.ns, testTrigger), &testtriggersv1.TestTrigger{})
 
-	if obj == nil {
+	if err != nil {
 		return nil, err
 	}
+
+	if obj == nil {
+		return nil, fmt.Errorf("empty object")
+	}
+
 	return obj.(*testtriggersv1.TestTrigger), err
 }
 
@@ -133,8 +159,13 @@ func (c *FakeTestTriggers) Patch(ctx context.Context, name string, pt types.Patc
 	obj, err := c.Fake.
 		Invokes(testing.NewPatchSubresourceAction(testTriggersResource, c.ns, name, pt, data, subresources...), &testtriggersv1.TestTrigger{})
 
-	if obj == nil {
+	if err != nil {
 		return nil, err
 	}
+
+	if obj == nil {
+		return nil, fmt.Errorf("empty object")
+	}
+
 	return obj.(*testtriggersv1.TestTrigger), err
 }

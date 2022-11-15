@@ -18,6 +18,7 @@ package fake
 
 import (
 	"context"
+	"fmt"
 
 	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
 
@@ -43,8 +44,12 @@ func (c *FakeTestSuites) List(ctx context.Context, opts v1.ListOptions) (result 
 	obj, err := c.Fake.
 		Invokes(testing.NewListAction(testSuitesResource, testSuitesKind, c.ns, opts), &testsuitev2.TestSuiteList{})
 
-	if obj == nil {
+	if err != nil {
 		return nil, err
+	}
+
+	if obj == nil {
+		return nil, fmt.Errorf("empty object")
 	}
 
 	label, _, _ := testing.ExtractFromListOptions(opts)
