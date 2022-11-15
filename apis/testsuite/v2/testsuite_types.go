@@ -92,6 +92,8 @@ type TestSuiteExecutionRequest struct {
 	HttpProxy string `json:"httpProxy,omitempty"`
 	// https proxy for executor containers
 	HttpsProxy string `json:"httpsProxy,omitempty"`
+	// timeout for test suite execution
+	Timeout int32 `json:"timeout,omitempty"`
 }
 
 // TestSuiteStatus defines the observed state of TestSuite
