@@ -128,6 +128,12 @@ type ExecutionRequest struct {
 	// StartTime before the system will actively try to mark it failed and kill associated containers.
 	// Value must be a positive integer.
 	ActiveDeadlineSeconds int64 `json:"activeDeadlineSeconds,omitempty"`
+	// artifact volume name for container executors with test artifacts
+	ArtifactVolumeName string `json:"artifactVolumeName,omitempty"`
+	// artifact volume mount path for container executors with test artifacts
+	ArtifactVolumeMounthPath string `json:"artifactVolumeMounthPath,omitempty"`
+	// artifact directory for container executors with test artifacts
+	ArtifactDir string `json:"artifactDir,omitempty"`
 }
 
 // TestStatus defines the observed state of Test
