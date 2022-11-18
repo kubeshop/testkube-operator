@@ -87,6 +87,16 @@ type Repository struct {
 	WorkingDir string `json:"workingDir,omitempty"`
 }
 
+// artifact request body for container executors with test artifacts
+type ArtifactRequest struct {
+	// artifact volume name
+	VolumeName string `json:"volumeName"`
+	// artifact volume mount path
+	VolumeMounthPath string `json:"volumeMounthPath"`
+	// artifact directory
+	Dir string `json:"dir,omitempty"`
+}
+
 // test execution request body
 type ExecutionRequest struct {
 	// test execution custom name
@@ -127,13 +137,8 @@ type ExecutionRequest struct {
 	// Optional duration in seconds the pod may be active on the node relative to
 	// StartTime before the system will actively try to mark it failed and kill associated containers.
 	// Value must be a positive integer.
-	ActiveDeadlineSeconds int64 `json:"activeDeadlineSeconds,omitempty"`
-	// artifact volume name for container executors with test artifacts
-	ArtifactVolumeName string `json:"artifactVolumeName,omitempty"`
-	// artifact volume mount path for container executors with test artifacts
-	ArtifactVolumeMounthPath string `json:"artifactVolumeMounthPath,omitempty"`
-	// artifact directory for container executors with test artifacts
-	ArtifactDir string `json:"artifactDir,omitempty"`
+	ActiveDeadlineSeconds int64            `json:"activeDeadlineSeconds,omitempty"`
+	ArtifactRequest       *ArtifactRequest `json:"artifactRequest,omitempty"`
 }
 
 // TestStatus defines the observed state of Test
