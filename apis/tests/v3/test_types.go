@@ -93,8 +93,8 @@ type ArtifactRequest struct {
 	VolumeName string `json:"volumeName"`
 	// artifact volume mount path
 	VolumeMounthPath string `json:"volumeMounthPath"`
-	// artifact directory
-	Dir string `json:"dir,omitempty"`
+	// artifact directories
+	Dirs string `json:"dirs,omitempty"`
 }
 
 // test execution request body
