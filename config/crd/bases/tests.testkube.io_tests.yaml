@@ -438,14 +438,14 @@ spec:
                         items:
                           type: string
                         type: array
-                      volumeMounthPath:
+                      volumeMountPath:
                         description: artifact volume mount path
                         type: string
                       volumeName:
                         description: artifact volume name
                         type: string
                     required:
-                    - volumeMounthPath
+                    - volumeMountPath
                     - volumeName
                     type: object
                   command:
