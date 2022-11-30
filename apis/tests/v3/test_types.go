@@ -139,6 +139,8 @@ type ExecutionRequest struct {
 	// Value must be a positive integer.
 	ActiveDeadlineSeconds int64            `json:"activeDeadlineSeconds,omitempty"`
 	ArtifactRequest       *ArtifactRequest `json:"artifactRequest,omitempty"`
+	// job template extensions
+	JobTemplate string `json:"jobTemplate,omitempty"`
 }
 
 // TestStatus defines the observed state of Test
