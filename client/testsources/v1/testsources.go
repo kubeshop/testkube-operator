@@ -78,21 +78,24 @@ func (s TestSourcesClient) Get(name string) (*testsourcev1.TestSource, error) {
 
 // Create creates new test source CRD
 func (s TestSourcesClient) Create(testSource *testsourcev1.TestSource, options ...Option) (*testsourcev1.TestSource, error) {
-	secrets := make(map[string]string, 0)
-	for _, option := range options {
-		for key, value := range option.Secrets {
-			secrets[key] = value
+	if len(options) != 0 {
+		secrets := make(map[string]string, 0)
+		for _, option := range options {
+			for key, value := range option.Secrets {
+				secrets[key] = value
+			}
 		}
+
+		secretName := secret.GetMetadataName(testSource.Name, secretKind)
+		if len(secrets) != 0 {
+			if err := s.secretClient.Create(secretName, testSource.Labels, secrets); err != nil {
+				return nil, err
+			}
+		}
+
+		updateTestSourceSecrets(testSource, secretName, secrets)
 	}
 
-	secretName := secret.GetMetadataName(testSource.Name, secretKind)
-	if len(secrets) != 0 {
-		if err := s.secretClient.Create(secretName, testSource.Labels, secrets); err != nil {
-			return nil, err
-		}
-	}
-
-	updateTestSourceSecrets(testSource, secretName, secrets)
 	if err := s.k8sClient.Create(context.Background(), testSource); err != nil {
 		return nil, err
 	}
@@ -102,25 +105,28 @@ func (s TestSourcesClient) Create(testSource *testsourcev1.TestSource, options .
 
 // Update updates test source
 func (s TestSourcesClient) Update(testSource *testsourcev1.TestSource, options ...Option) (*testsourcev1.TestSource, error) {
-	secrets := make(map[string]string, 0)
-	for _, option := range options {
-		for key, value := range option.Secrets {
-			secrets[key] = value
+	if len(options) != 0 {
+		secrets := make(map[string]string, 0)
+		for _, option := range options {
+			for key, value := range option.Secrets {
+				secrets[key] = value
+			}
 		}
+
+		secretName := secret.GetMetadataName(testSource.Name, secretKind)
+		if len(secrets) != 0 {
+			if err := s.secretClient.Apply(secretName, testSource.Labels, secrets); err != nil {
+				return nil, err
+			}
+		} else {
+			if err := s.secretClient.Delete(secretName); err != nil && !errors.IsNotFound(err) {
+				return nil, err
+			}
+		}
+
+		updateTestSourceSecrets(testSource, secretName, secrets)
 	}
 
-	secretName := secret.GetMetadataName(testSource.Name, secretKind)
-	if len(secrets) != 0 {
-		if err := s.secretClient.Apply(secretName, testSource.Labels, secrets); err != nil {
-			return nil, err
-		}
-	} else {
-		if err := s.secretClient.Delete(secretName); err != nil && !errors.IsNotFound(err) {
-			return nil, err
-		}
-	}
-
-	updateTestSourceSecrets(testSource, secretName, secrets)
 	if err := s.k8sClient.Update(context.Background(), testSource); err != nil {
 		return nil, err
 	}

@@ -152,21 +152,24 @@ func (s TestsClient) Create(test *testsv3.Test, options ...Option) (*testsv3.Tes
 		return nil, err
 	}
 
-	secrets := make(map[string]string, 0)
-	for _, option := range options {
-		for key, value := range option.Secrets {
-			secrets[key] = value
+	if len(options) != 0 {
+		secrets := make(map[string]string, 0)
+		for _, option := range options {
+			for key, value := range option.Secrets {
+				secrets[key] = value
+			}
 		}
+
+		secretName := secret.GetMetadataName(test.Name, secretKind)
+		if len(secrets) != 0 {
+			if err := s.secretClient.Create(secretName, test.Labels, secrets); err != nil {
+				return nil, err
+			}
+		}
+
+		updateTestSecrets(test, secretName, secrets)
 	}
 
-	secretName := secret.GetMetadataName(test.Name, secretKind)
-	if len(secrets) != 0 {
-		if err := s.secretClient.Create(secretName, test.Labels, secrets); err != nil {
-			return nil, err
-		}
-	}
-
-	updateTestSecrets(test, secretName, secrets)
 	err = s.k8sClient.Create(context.Background(), test)
 	return test, err
 }
@@ -178,25 +181,28 @@ func (s TestsClient) Update(test *testsv3.Test, options ...Option) (*testsv3.Tes
 		return nil, err
 	}
 
-	secrets := make(map[string]string, 0)
-	for _, option := range options {
-		for key, value := range option.Secrets {
-			secrets[key] = value
+	if len(options) != 0 {
+		secrets := make(map[string]string, 0)
+		for _, option := range options {
+			for key, value := range option.Secrets {
+				secrets[key] = value
+			}
 		}
+
+		secretName := secret.GetMetadataName(test.Name, secretKind)
+		if len(secrets) != 0 {
+			if err := s.secretClient.Apply(secretName, test.Labels, secrets); err != nil {
+				return nil, err
+			}
+		} else {
+			if err := s.secretClient.Delete(secretName); err != nil && !errors.IsNotFound(err) {
+				return nil, err
+			}
+		}
+
+		updateTestSecrets(test, secretName, secrets)
 	}
 
-	secretName := secret.GetMetadataName(test.Name, secretKind)
-	if len(secrets) != 0 {
-		if err := s.secretClient.Apply(secretName, test.Labels, secrets); err != nil {
-			return nil, err
-		}
-	} else {
-		if err := s.secretClient.Delete(secretName); err != nil && !errors.IsNotFound(err) {
-			return nil, err
-		}
-	}
-
-	updateTestSecrets(test, secretName, secrets)
 	err = s.k8sClient.Update(context.Background(), test)
 	return test, err
 }
