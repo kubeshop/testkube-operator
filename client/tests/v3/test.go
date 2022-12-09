@@ -165,9 +165,9 @@ func (s TestsClient) Create(test *testsv3.Test, options ...Option) (*testsv3.Tes
 			if err := s.secretClient.Create(secretName, test.Labels, secrets); err != nil {
 				return nil, err
 			}
-		}
 
-		updateTestSecrets(test, secretName, secrets)
+			updateTestSecrets(test, secretName, secrets)
+		}
 	}
 
 	err = s.k8sClient.Create(context.Background(), test)
@@ -194,13 +194,15 @@ func (s TestsClient) Update(test *testsv3.Test, options ...Option) (*testsv3.Tes
 			if err := s.secretClient.Apply(secretName, test.Labels, secrets); err != nil {
 				return nil, err
 			}
+
+			updateTestSecrets(test, secretName, secrets)
 		} else {
 			if err := s.secretClient.Delete(secretName); err != nil && !errors.IsNotFound(err) {
 				return nil, err
 			}
-		}
 
-		updateTestSecrets(test, secretName, secrets)
+			clearTestSecrets(test, secretName)
+		}
 	}
 
 	err = s.k8sClient.Update(context.Background(), test)
@@ -557,6 +559,20 @@ func updateTestSecrets(test *testsv3.Test, secretName string, secrets map[string
 				Key:  gitTokenSecretName,
 			}
 		}
+	}
+
+	return
+}
+
+func clearTestSecrets(test *testsv3.Test, secretName string) {
+	if test.Spec.Content != nil && test.Spec.Content.Repository != nil && test.Spec.Content.Repository.UsernameSecret == nil &&
+		test.Spec.Content.Repository.UsernameSecret.Name == secretName {
+		test.Spec.Content.Repository.UsernameSecret = nil
+	}
+
+	if test.Spec.Content != nil && test.Spec.Content.Repository != nil && test.Spec.Content.Repository.TokenSecret == nil &&
+		test.Spec.Content.Repository.TokenSecret.Name == secretName {
+		test.Spec.Content.Repository.TokenSecret = nil
 	}
 
 	return
