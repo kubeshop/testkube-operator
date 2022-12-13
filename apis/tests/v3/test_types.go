@@ -141,6 +141,8 @@ type ExecutionRequest struct {
 	ArtifactRequest       *ArtifactRequest `json:"artifactRequest,omitempty"`
 	// job template extensions
 	JobTemplate string `json:"jobTemplate,omitempty"`
+	// script to run before test execution
+	PreRunScript string `json:"preRunScript,omitempty"`
 }
 
 // TestStatus defines the observed state of Test
