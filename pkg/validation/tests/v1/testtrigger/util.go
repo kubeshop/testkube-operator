@@ -9,6 +9,7 @@ func GetSupportedResources() []string {
 		ResourceService,
 		ResourceIngress,
 		ResourceEvent,
+		ResourceConfigMap,
 	}
 }
 
