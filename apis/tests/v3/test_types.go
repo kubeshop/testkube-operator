@@ -145,13 +145,38 @@ type ExecutionRequest struct {
 	PreRunScript string `json:"preRunScript,omitempty"`
 }
 
+type ExecutionStatus string
+
+// List of ExecutionStatus
+const (
+	QUEUED_ExecutionStatus  ExecutionStatus = "queued"
+	RUNNING_ExecutionStatus ExecutionStatus = "running"
+	PASSED_ExecutionStatus  ExecutionStatus = "passed"
+	FAILED_ExecutionStatus  ExecutionStatus = "failed"
+	ABORTED_ExecutionStatus ExecutionStatus = "aborted"
+	TIMEOUT_ExecutionStatus ExecutionStatus = "timeout"
+)
+
+// test execution core
+type ExecutionCore struct {
+	// execution id
+	Id string `json:"id,omitempty"`
+	// execution number
+	Number int32 `json:"number,omitempty"`
+	// test start time
+	StartTime metav1.Time `json:"startTime,omitempty"`
+	// test end time
+	EndTime metav1.Time      `json:"endTime,omitempty"`
+	Status  *ExecutionStatus `json:"status,omitempty"`
+}
+
 // TestStatus defines the observed state of Test
 type TestStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	LastExecution   metav1.Time `json:"last_execution,omitempty"`
-	ExecutionsCount int         `json:"executions_count,omitempty"`
+	// latest execution result
+	LatestExecution *ExecutionCore `json:"latestExecution,omitempty"`
 }
 
 //+kubebuilder:object:root=true
