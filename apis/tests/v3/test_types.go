@@ -143,6 +143,8 @@ type ExecutionRequest struct {
 	JobTemplate string `json:"jobTemplate,omitempty"`
 	// script to run before test execution
 	PreRunScript string `json:"preRunScript,omitempty"`
+	// scraper template extensions
+	ScraperTemplate string `json:"scraperTemplate,omitempty"`
 }
 
 type ExecutionStatus string
