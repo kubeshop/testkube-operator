@@ -42,6 +42,7 @@ type Interface interface {
 	GetCurrentSecretUUID(testSuiteName string) (string, error)
 	GetSecretTestSuiteVars(testSuiteName, secretUUID string) (map[string]string, error)
 	DeleteByLabels(selector string) error
+	UpdateStatus(testSuite *testsuitev2.TestSuite) error
 }
 
 // NewClient creates new TestSuite client
@@ -303,6 +304,11 @@ func (s TestSuitesClient) GetSecretTestSuiteVars(testSuiteName, secretUUID strin
 	}
 
 	return secrets, nil
+}
+
+// UpdateStatus updates existing TestSuite status
+func (s TestSuitesClient) UpdateStatus(testSuite *testsuitev2.TestSuite) error {
+	return s.Client.Status().Update(context.Background(), testSuite)
 }
 
 // testVarsToSecret loads secrets data passed into TestSuite CRD and remove plain text data

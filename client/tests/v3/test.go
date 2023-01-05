@@ -50,6 +50,7 @@ type Interface interface {
 	GetSecretTestVars(testName, secretUUID string) (map[string]string, error)
 	ListByNames(names []string) ([]testsv3.Test, error)
 	DeleteByLabels(selector string) error
+	UpdateStatus(test *testsv3.Test) error
 }
 
 // Option contain test source options
@@ -408,6 +409,11 @@ func (s TestsClient) ListByNames(names []string) ([]testsv3.Test, error) {
 	}
 
 	return tests, nil
+}
+
+// UpdateStatus updates existing Test status
+func (s TestsClient) UpdateStatus(test *testsv3.Test) error {
+	return s.k8sClient.Status().Update(context.Background(), test)
 }
 
 // testVarsToSecret loads secrets data passed into Test CRD and remove plain text data

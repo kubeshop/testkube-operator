@@ -211,6 +211,20 @@ func (mr *MockInterfaceMockRecorder) Update(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockInterface)(nil).Update), arg0)
 }
 
+// UpdateStatus mocks base method.
+func (m *MockInterface) UpdateStatus(testSuite *v2.TestSuite) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateStatus", testSuite)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateStatus indicates an expected call of UpdateStatus.
+func (mr *MockInterfaceMockRecorder) UpdateStatus(testSuite interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateStatus", reflect.TypeOf((*MockInterface)(nil).UpdateStatus), testSuite)
+}
+
 // UpdateTestsuiteSecrets mocks base method.
 func (m *MockInterface) UpdateTestsuiteSecrets(arg0 *v2.TestSuite) error {
 	m.ctrl.T.Helper()
