@@ -96,10 +96,37 @@ type TestSuiteExecutionRequest struct {
 	Timeout int32 `json:"timeout,omitempty"`
 }
 
+type TestSuiteExecutionStatus string
+
+// List of TestSuiteExecutionStatus
+const (
+	QUEUED_TestSuiteExecutionStatus   TestSuiteExecutionStatus = "queued"
+	RUNNING_TestSuiteExecutionStatus  TestSuiteExecutionStatus = "running"
+	PASSED_TestSuiteExecutionStatus   TestSuiteExecutionStatus = "passed"
+	FAILED_TestSuiteExecutionStatus   TestSuiteExecutionStatus = "failed"
+	ABORTING_TestSuiteExecutionStatus TestSuiteExecutionStatus = "aborting"
+	ABORTED_TestSuiteExecutionStatus  TestSuiteExecutionStatus = "aborted"
+	TIMEOUT_TestSuiteExecutionStatus  TestSuiteExecutionStatus = "timeout"
+)
+
+// test suite execution core
+type TestSuiteExecutionCore struct {
+	// execution id
+	Id string `json:"id,omitempty"`
+	// test suite execution start time
+	StartTime metav1.Time `json:"startTime,omitempty"`
+	// test suite execution end time
+	EndTime metav1.Time               `json:"endTime,omitempty"`
+	Status  *TestSuiteExecutionStatus `json:"status,omitempty"`
+}
+
 // TestSuiteStatus defines the observed state of TestSuite
 type TestSuiteStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+
+	// latest execution result
+	LatestExecution *TestSuiteExecutionCore `json:"latestExecution,omitempty"`
 }
 
 //+kubebuilder:object:root=true
