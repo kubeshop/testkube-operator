@@ -18,6 +18,7 @@ package testtriggers
 
 import (
 	"context"
+
 	testtriggerv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
 	"github.com/kubeshop/testkube-operator/pkg/validation/tests/v1/testtrigger"
 	"github.com/kubeshop/testkube-operator/utils"
@@ -83,6 +84,10 @@ func (v *Validator) ValidateUpdate(ctx context.Context, old runtime.Object, new 
 
 	if err := v.validateAction(new.Spec.Action); err != nil {
 		allErrs = append(allErrs, err)
+	}
+
+	if errs := v.validateConditions(new.Spec.Conditions); errs != nil {
+		allErrs = append(allErrs, errs...)
 	}
 
 	if err := v.validateExecution(new.Spec.Execution); err != nil {
@@ -189,6 +194,32 @@ func (v *Validator) validateExecution(execution string) *field.Error {
 		return field.NotSupported(fld, execution, testtrigger.GetSupportedExecutions())
 	}
 	return nil
+}
+
+func (v *Validator) validateConditions(conditions []testtriggerv1.TestTriggerCondition) field.ErrorList {
+	var allErrs field.ErrorList
+
+	for _, condition := range conditions {
+		if condition.Type_ == "" {
+			fld := field.NewPath("spec").Child("conditions").Child("condition")
+			verr := field.Invalid(fld, condition.Type_, "condition type is not specified")
+			allErrs = append(allErrs, verr)
+		}
+
+		if condition.Status == nil {
+			fld := field.NewPath("spec").Child("conditions").Child("condition")
+			verr := field.Invalid(fld, condition.Status, "condition status is not specified")
+			allErrs = append(allErrs, verr)
+			continue
+		}
+
+		if !utils.In(string(*condition.Status), testtrigger.GetSupportedConditionStatuses()) {
+			fld := field.NewPath("spec").Child("conditions").Child("condition")
+			allErrs = append(allErrs, field.NotSupported(fld, string(*condition.Status), testtrigger.GetSupportedConditionStatuses()))
+		}
+	}
+
+	return allErrs
 }
 
 var _ testtriggerv1.TestTriggerValidator = &Validator{}

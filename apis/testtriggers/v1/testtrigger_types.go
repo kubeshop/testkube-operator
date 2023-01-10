@@ -37,12 +37,14 @@ type TestTrigger struct {
 
 // TestTriggerSpec defines the desired state of TestTrigger
 type TestTriggerSpec struct {
-	// For which Resource do we monitor Event which triggers an Action
+	// For which Resource do we monitor Event which triggers an Action on certain comditions
 	Resource string `json:"resource"`
 	// ResourceSelector identifies which Kubernetes Objects should be watched
 	ResourceSelector TestTriggerSelector `json:"resourceSelector"`
 	// On which Event for a Resource should an Action be triggered
 	Event string `json:"event"`
+	// What resource conditions should be matched
+	Conditions []TestTriggerCondition `json:"conditions,omitempty"`
 	// Action represents what needs to be executed for selected Execution
 	Action string `json:"action"`
 	// Execution identifies for which test execution should an Action be executed
@@ -65,6 +67,23 @@ type TestTriggerSelector struct {
 type TestTriggerStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+}
+
+// TestTriggerConditionStatuses defines condition statuses for test triggers
+type TestTriggerConditionStatuses string
+
+// List of TestTriggerConditionStatuses
+const (
+	TRUE_TestTriggerConditionStatuses    TestTriggerConditionStatuses = "True"
+	FALSE_TestTriggerConditionStatuses   TestTriggerConditionStatuses = "False"
+	UNKNOWN_TestTriggerConditionStatuses TestTriggerConditionStatuses = "Unknown"
+)
+
+// TestTriggerCondition is used for definition of condition for test triggers
+type TestTriggerCondition struct {
+	Status *TestTriggerConditionStatuses `json:"status,omitempty"`
+	// test trigger condition
+	Type_ string `json:"type,omitempty"`
 }
 
 //+kubebuilder:object:root=true

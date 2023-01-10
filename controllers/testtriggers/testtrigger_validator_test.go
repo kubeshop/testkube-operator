@@ -17,6 +17,8 @@ limitations under the License.
 package testtriggers
 
 import (
+	"testing"
+
 	testtriggerv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -25,7 +27,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"sigs.k8s.io/controller-runtime/pkg/scheme"
-	"testing"
 )
 
 func TestValidator_validateAction(t *testing.T) {
@@ -183,4 +184,56 @@ func buildFakeK8sClient(t *testing.T) client.Client {
 
 	kClient := clientBuilder.Build()
 	return kClient
+}
+
+func TestValidator_validateConditions(t *testing.T) {
+	t.Parallel()
+
+	v := NewValidator(buildFakeK8sClient(t))
+
+	t.Run("no error for valid condition", func(t *testing.T) {
+		t.Parallel()
+
+		status := testtriggerv1.TRUE_TestTriggerConditionStatuses
+		verrs := v.validateConditions([]testtriggerv1.TestTriggerCondition{
+			{Status: &status, Type_: "Progressing"},
+		})
+
+		assert.Nil(t, verrs)
+	})
+
+	t.Run("error for invalid condition type", func(t *testing.T) {
+		t.Parallel()
+
+		status := testtriggerv1.TRUE_TestTriggerConditionStatuses
+		verrs := v.validateConditions([]testtriggerv1.TestTriggerCondition{
+			{Status: &status},
+		})
+
+		assert.Len(t, verrs, 1)
+		assert.ErrorContains(t, verrs[0], "spec.conditions.condition: Invalid value: \"\": condition type is not specified")
+	})
+
+	t.Run("error for invalid condition status", func(t *testing.T) {
+		t.Parallel()
+
+		verrs := v.validateConditions([]testtriggerv1.TestTriggerCondition{
+			{Type_: "Progressing"},
+		})
+
+		assert.Len(t, verrs, 1)
+		assert.ErrorContains(t, verrs[0], "spec.conditions.condition: Invalid value: \"null\": condition status is not specified")
+	})
+
+	t.Run("error for unsupported condition status", func(t *testing.T) {
+		t.Parallel()
+
+		status := testtriggerv1.TestTriggerConditionStatuses("")
+		verrs := v.validateConditions([]testtriggerv1.TestTriggerCondition{
+			{Status: &status, Type_: "Progressing"},
+		})
+
+		assert.Len(t, verrs, 1)
+		assert.ErrorContains(t, verrs[0], "spec.conditions.condition: Unsupported value: \"\": supported values: \"True\", \"False\", \"Unknown\"")
+	})
 }
