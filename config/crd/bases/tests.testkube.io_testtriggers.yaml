@@ -52,6 +52,9 @@ spec:
                     type:
                       description: test trigger condition
                       type: string
+                  required:
+                  - status
+                  - type
                   type: object
                 type: array
               event:
