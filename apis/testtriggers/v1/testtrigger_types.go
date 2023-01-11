@@ -37,7 +37,7 @@ type TestTrigger struct {
 
 // TestTriggerSpec defines the desired state of TestTrigger
 type TestTriggerSpec struct {
-	// For which Resource do we monitor Event which triggers an Action on certain comditions
+	// For which Resource do we monitor Event which triggers an Action on certain conditions
 	Resource string `json:"resource"`
 	// ResourceSelector identifies which Kubernetes Objects should be watched
 	ResourceSelector TestTriggerSelector `json:"resourceSelector"`
