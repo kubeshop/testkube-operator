@@ -191,49 +191,78 @@ func TestValidator_validateConditions(t *testing.T) {
 
 	v := NewValidator(buildFakeK8sClient(t))
 
-	t.Run("no error for valid condition", func(t *testing.T) {
+	t.Run("no error for valid condition spec", func(t *testing.T) {
 		t.Parallel()
 
 		status := testtriggerv1.TRUE_TestTriggerConditionStatuses
-		verrs := v.validateConditions([]testtriggerv1.TestTriggerCondition{
-			{Status: &status, Type_: "Progressing"},
-		})
+		verrs := v.validateConditions(&testtriggerv1.TestTriggerConditionSpec{
+			Timeout: 100,
+			Conditions: []testtriggerv1.TestTriggerCondition{
+				{Status: &status, Type_: "Progressing"},
+			}})
 
 		assert.Nil(t, verrs)
+	})
+
+	t.Run("error for invalid timeout", func(t *testing.T) {
+		t.Parallel()
+
+		verrs := v.validateConditions(&testtriggerv1.TestTriggerConditionSpec{
+			Timeout: -100,
+		})
+
+		assert.Len(t, verrs, 1)
+		assert.ErrorContains(t, verrs[0], "spec.conditionSpec.timeout: Invalid value: -100: timeout is negative")
 	})
 
 	t.Run("error for invalid condition type", func(t *testing.T) {
 		t.Parallel()
 
 		status := testtriggerv1.TRUE_TestTriggerConditionStatuses
-		verrs := v.validateConditions([]testtriggerv1.TestTriggerCondition{
-			{Status: &status},
-		})
+		verrs := v.validateConditions(&testtriggerv1.TestTriggerConditionSpec{
+			Conditions: []testtriggerv1.TestTriggerCondition{
+				{Status: &status},
+			}})
 
 		assert.Len(t, verrs, 1)
-		assert.ErrorContains(t, verrs[0], "spec.conditions.condition: Invalid value: \"\": condition type is not specified")
+		assert.ErrorContains(t, verrs[0], "spec.conditionSpec.conditions.condition: Invalid value: \"\": condition type is not specified")
+	})
+
+	t.Run("error for invalid condition type", func(t *testing.T) {
+		t.Parallel()
+
+		status := testtriggerv1.TRUE_TestTriggerConditionStatuses
+		verrs := v.validateConditions(&testtriggerv1.TestTriggerConditionSpec{
+			Conditions: []testtriggerv1.TestTriggerCondition{
+				{Status: &status},
+			}})
+
+		assert.Len(t, verrs, 1)
+		assert.ErrorContains(t, verrs[0], "spec.conditionSpec.conditions.condition: Invalid value: \"\": condition type is not specified")
 	})
 
 	t.Run("error for invalid condition status", func(t *testing.T) {
 		t.Parallel()
 
-		verrs := v.validateConditions([]testtriggerv1.TestTriggerCondition{
-			{Type_: "Progressing"},
-		})
+		verrs := v.validateConditions(&testtriggerv1.TestTriggerConditionSpec{
+			Conditions: []testtriggerv1.TestTriggerCondition{
+				{Type_: "Progressing"},
+			}})
 
 		assert.Len(t, verrs, 1)
-		assert.ErrorContains(t, verrs[0], "spec.conditions.condition: Invalid value: \"null\": condition status is not specified")
+		assert.ErrorContains(t, verrs[0], "spec.conditionSpec.conditions.condition: Invalid value: \"null\": condition status is not specified")
 	})
 
 	t.Run("error for unsupported condition status", func(t *testing.T) {
 		t.Parallel()
 
 		status := testtriggerv1.TestTriggerConditionStatuses("")
-		verrs := v.validateConditions([]testtriggerv1.TestTriggerCondition{
-			{Status: &status, Type_: "Progressing"},
-		})
+		verrs := v.validateConditions(&testtriggerv1.TestTriggerConditionSpec{
+			Conditions: []testtriggerv1.TestTriggerCondition{
+				{Status: &status, Type_: "Progressing"},
+			}})
 
 		assert.Len(t, verrs, 1)
-		assert.ErrorContains(t, verrs[0], "spec.conditions.condition: Unsupported value: \"\": supported values: \"True\", \"False\", \"Unknown\"")
+		assert.ErrorContains(t, verrs[0], "spec.conditionSpec.conditions.condition: Unsupported value: \"\": supported values: \"True\", \"False\", \"Unknown\"")
 	})
 }

@@ -86,7 +86,7 @@ func (v *Validator) ValidateUpdate(ctx context.Context, old runtime.Object, new 
 		allErrs = append(allErrs, err)
 	}
 
-	if errs := v.validateConditions(new.Spec.Conditions); errs != nil {
+	if errs := v.validateConditions(new.Spec.ConditionSpec); errs != nil {
 		allErrs = append(allErrs, errs...)
 	}
 
@@ -196,25 +196,34 @@ func (v *Validator) validateExecution(execution string) *field.Error {
 	return nil
 }
 
-func (v *Validator) validateConditions(conditions []testtriggerv1.TestTriggerCondition) field.ErrorList {
+func (v *Validator) validateConditions(conditionSpec *testtriggerv1.TestTriggerConditionSpec) field.ErrorList {
 	var allErrs field.ErrorList
+	if conditionSpec == nil {
+		return allErrs
+	}
 
-	for _, condition := range conditions {
+	if conditionSpec.Timeout < 0 {
+		fld := field.NewPath("spec").Child("conditionSpec").Child("timeout")
+		verr := field.Invalid(fld, conditionSpec.Timeout, "timeout is negative")
+		allErrs = append(allErrs, verr)
+	}
+
+	for _, condition := range conditionSpec.Conditions {
 		if condition.Type_ == "" {
-			fld := field.NewPath("spec").Child("conditions").Child("condition")
+			fld := field.NewPath("spec").Child("conditionSpec").Child("conditions").Child("condition")
 			verr := field.Invalid(fld, condition.Type_, "condition type is not specified")
 			allErrs = append(allErrs, verr)
 		}
 
 		if condition.Status == nil {
-			fld := field.NewPath("spec").Child("conditions").Child("condition")
+			fld := field.NewPath("spec").Child("conditionSpec").Child("conditions").Child("condition")
 			verr := field.Invalid(fld, condition.Status, "condition status is not specified")
 			allErrs = append(allErrs, verr)
 			continue
 		}
 
 		if !utils.In(string(*condition.Status), testtrigger.GetSupportedConditionStatuses()) {
-			fld := field.NewPath("spec").Child("conditions").Child("condition")
+			fld := field.NewPath("spec").Child("conditionSpec").Child("conditions").Child("condition")
 			allErrs = append(allErrs, field.NotSupported(fld, string(*condition.Status), testtrigger.GetSupportedConditionStatuses()))
 		}
 	}
