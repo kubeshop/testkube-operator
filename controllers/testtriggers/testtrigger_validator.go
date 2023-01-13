@@ -49,6 +49,10 @@ func (v *Validator) ValidateCreate(ctx context.Context, t *testtriggerv1.TestTri
 		allErrs = append(allErrs, err)
 	}
 
+	if errs := v.validateConditions(t.Spec.ConditionSpec); errs != nil {
+		allErrs = append(allErrs, errs...)
+	}
+
 	if err := v.validateExecution(t.Spec.Execution); err != nil {
 		allErrs = append(allErrs, err)
 	}
