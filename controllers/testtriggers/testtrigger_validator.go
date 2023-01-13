@@ -18,6 +18,7 @@ package testtriggers
 
 import (
 	"context"
+
 	testtriggerv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
 	"github.com/kubeshop/testkube-operator/pkg/validation/tests/v1/testtrigger"
 	"github.com/kubeshop/testkube-operator/utils"
@@ -46,6 +47,10 @@ func (v *Validator) ValidateCreate(ctx context.Context, t *testtriggerv1.TestTri
 
 	if err := v.validateAction(t.Spec.Action); err != nil {
 		allErrs = append(allErrs, err)
+	}
+
+	if errs := v.validateConditions(t.Spec.ConditionSpec); errs != nil {
+		allErrs = append(allErrs, errs...)
 	}
 
 	if err := v.validateExecution(t.Spec.Execution); err != nil {
@@ -83,6 +88,10 @@ func (v *Validator) ValidateUpdate(ctx context.Context, old runtime.Object, new 
 
 	if err := v.validateAction(new.Spec.Action); err != nil {
 		allErrs = append(allErrs, err)
+	}
+
+	if errs := v.validateConditions(new.Spec.ConditionSpec); errs != nil {
+		allErrs = append(allErrs, errs...)
 	}
 
 	if err := v.validateExecution(new.Spec.Execution); err != nil {
@@ -189,6 +198,41 @@ func (v *Validator) validateExecution(execution string) *field.Error {
 		return field.NotSupported(fld, execution, testtrigger.GetSupportedExecutions())
 	}
 	return nil
+}
+
+func (v *Validator) validateConditions(conditionSpec *testtriggerv1.TestTriggerConditionSpec) field.ErrorList {
+	var allErrs field.ErrorList
+	if conditionSpec == nil {
+		return allErrs
+	}
+
+	if conditionSpec.Timeout < 0 {
+		fld := field.NewPath("spec").Child("conditionSpec").Child("timeout")
+		verr := field.Invalid(fld, conditionSpec.Timeout, "timeout is negative")
+		allErrs = append(allErrs, verr)
+	}
+
+	for _, condition := range conditionSpec.Conditions {
+		if condition.Type_ == "" {
+			fld := field.NewPath("spec").Child("conditionSpec").Child("conditions").Child("condition")
+			verr := field.Invalid(fld, condition.Type_, "condition type is not specified")
+			allErrs = append(allErrs, verr)
+		}
+
+		if condition.Status == nil {
+			fld := field.NewPath("spec").Child("conditionSpec").Child("conditions").Child("condition")
+			verr := field.Invalid(fld, condition.Status, "condition status is not specified")
+			allErrs = append(allErrs, verr)
+			continue
+		}
+
+		if !utils.In(string(*condition.Status), testtrigger.GetSupportedConditionStatuses()) {
+			fld := field.NewPath("spec").Child("conditionSpec").Child("conditions").Child("condition")
+			allErrs = append(allErrs, field.NotSupported(fld, string(*condition.Status), testtrigger.GetSupportedConditionStatuses()))
+		}
+	}
+
+	return allErrs
 }
 
 var _ testtriggerv1.TestTriggerValidator = &Validator{}
