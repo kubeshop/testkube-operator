@@ -228,19 +228,6 @@ func TestValidator_validateConditions(t *testing.T) {
 		assert.ErrorContains(t, verrs[0], "spec.conditionSpec.conditions.condition: Invalid value: \"\": condition type is not specified")
 	})
 
-	t.Run("error for invalid condition type", func(t *testing.T) {
-		t.Parallel()
-
-		status := testtriggerv1.TRUE_TestTriggerConditionStatuses
-		verrs := v.validateConditions(&testtriggerv1.TestTriggerConditionSpec{
-			Conditions: []testtriggerv1.TestTriggerCondition{
-				{Status: &status},
-			}})
-
-		assert.Len(t, verrs, 1)
-		assert.ErrorContains(t, verrs[0], "spec.conditionSpec.conditions.condition: Invalid value: \"\": condition type is not specified")
-	})
-
 	t.Run("error for invalid condition status", func(t *testing.T) {
 		t.Parallel()
 
