@@ -15,7 +15,20 @@ spec:
     singular: testtrigger
   scope: Namespaced
   versions:
-  - name: v1
+  - additionalPrinterColumns:
+    - jsonPath: .spec.resource
+      name: Resource
+      type: string
+    - jsonPath: .spec.event
+      name: Event
+      type: string
+    - jsonPath: .spec.execution
+      name: Execution
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1
     schema:
       openAPIV3Schema:
         description: TestTrigger is the Schema for the testtriggers API
@@ -66,6 +79,11 @@ spec:
                     format: int32
                     type: integer
                 type: object
+              delay:
+                description: Delay is a duration string which specifies how long should
+                  the test be delayed after a trigger is matched
+                format: duration
+                type: string
               event:
                 description: On which Event for a Resource should an Action be triggered
                 type: string

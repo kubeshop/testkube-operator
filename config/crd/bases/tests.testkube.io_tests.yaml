@@ -323,7 +323,14 @@ spec:
     storage: false
     subresources:
       status: {}
-  - name: v3
+  - additionalPrinterColumns:
+    - jsonPath: .spec.type
+      name: Type
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v3
     schema:
       openAPIV3Schema:
         description: Test is the Schema for the tests API
