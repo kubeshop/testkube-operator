@@ -19,6 +19,8 @@ const (
 	gitUsernameSecretName = "git-username"
 	// gitTokenSecretName is git token secret name
 	gitTokenSecretName = "git-token"
+	// gitCertificateSecretName is git certificate secret name
+	gitCertificateSecretName = "git-certificate"
 )
 
 //go:generate mockgen -destination=./mock_testsources.go -package=testsources "github.com/kubeshop/testkube-operator/client/testsources/v1" Interface
@@ -192,7 +194,14 @@ func updateTestSourceSecrets(testSource *testsourcev1.TestSource, secretName str
 		}
 	}
 
-	return
+	if _, ok := secrets[gitCertificateSecretName]; ok {
+		if testSource.Spec.Repository != nil && testSource.Spec.Repository.CertificateSecret == nil {
+			testSource.Spec.Repository.CertificateSecret = &testsourcev1.SecretRef{
+				Name: secretName,
+				Key:  gitCertificateSecretName,
+			}
+		}
+	}
 }
 
 func clearTestSourceSecrets(testSource *testsourcev1.TestSource, secretName string) {
