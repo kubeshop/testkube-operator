@@ -27,6 +27,10 @@ import (
 //+kubebuilder:subresource:status
 
 // TestTrigger is the Schema for the testtriggers API
+// +kubebuilder:printcolumn:name="Resource",type=string,JSONPath=`.spec.resource`
+// +kubebuilder:printcolumn:name="Event",type=string,JSONPath=`.spec.event`
+// +kubebuilder:printcolumn:name="Execution",type=string,JSONPath=`.spec.execution`
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type TestTrigger struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -51,6 +55,10 @@ type TestTriggerSpec struct {
 	Execution string `json:"execution"`
 	// TestSelector identifies on which Testkube Kubernetes Objects an Action should be taken
 	TestSelector TestTriggerSelector `json:"testSelector"`
+	// Delay is a duration string which specifies how long should the test be delayed after a trigger is matched
+	// +kubebuilder:validation:Type:=string
+	// +kubebuilder:validation:Format:=duration
+	Delay *metav1.Duration `json:"delay,omitempty"`
 }
 
 // TestTriggerSelector is used for selecting Kubernetes Objects
@@ -86,7 +94,7 @@ type TestTriggerCondition struct {
 	Type_ string `json:"type"`
 }
 
-//TestTriggerConditionSpec defines the condition specification for TestTrigger
+// TestTriggerConditionSpec defines the condition specification for TestTrigger
 type TestTriggerConditionSpec struct {
 	// list of test trigger conditions
 	Conditions []TestTriggerCondition `json:"conditions,omitempty"`

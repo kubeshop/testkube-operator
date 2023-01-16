@@ -45,7 +45,7 @@ type TestSuiteSpec struct {
 
 type Variable commonv1.Variable
 
-// TestSuiteStepSpec will of particular type will have config for possible step types
+// TestSuiteStepSpec for particular type will have config for possible step types
 type TestSuiteStepSpec struct {
 	Type    string                `json:"type,omitempty"`
 	Execute *TestSuiteStepExecute `json:"execute,omitempty"`
