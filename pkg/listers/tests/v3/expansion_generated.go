@@ -22,3 +22,10 @@ type TestListerExpansion interface{}
 // TestNamespaceListerExpansion allows custom methods to be added to
 // TestNamespaceLister.
 type TestNamespaceListerExpansion interface{}
+
+// TestSuiteListerExpansion allows custom methods to be added to TestSuiteLister.
+type TestSuiteListerExpansion interface{}
+
+// TestSuiteNamespaceListerExpansion allows custom methods to be added to
+// TestSuiteNamespaceLister.
+type TestSuiteNamespaceListerExpansion interface{}

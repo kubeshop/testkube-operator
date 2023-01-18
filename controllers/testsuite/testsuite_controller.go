@@ -26,7 +26,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
+	testsuitev3 "github.com/kubeshop/testkube-operator/apis/testsuite/v3"
 	"github.com/kubeshop/testkube-operator/pkg/cronjob"
 )
 
@@ -54,7 +54,7 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	_ = log.FromContext(ctx)
 
 	// Delete CronJob if it was created for deleted TestSuite
-	var testSuite testsuitev2.TestSuite
+	var testSuite testsuitev3.TestSuite
 	err := r.Get(ctx, req.NamespacedName, &testSuite)
 	if err != nil {
 		if errors.IsNotFound(err) {
@@ -79,7 +79,7 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{}, nil
 	}
 
-	data, err := json.Marshal(testsuitev2.TestSuiteExecutionRequest{})
+	data, err := json.Marshal(testsuitev3.TestSuiteExecutionRequest{})
 	if err != nil {
 		return ctrl.Result{}, err
 	}
@@ -117,6 +117,6 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 // SetupWithManager sets up the controller with the Manager.
 func (r *TestSuiteReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&testsuitev2.TestSuite{}).
+		For(&testsuitev3.TestSuite{}).
 		Complete(r)
 }

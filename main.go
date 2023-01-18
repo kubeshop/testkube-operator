@@ -47,6 +47,7 @@ import (
 	testsourcev1 "github.com/kubeshop/testkube-operator/apis/testsource/v1"
 	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
 	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
+	testsuitev3 "github.com/kubeshop/testkube-operator/apis/testsuite/v3"
 	executorcontrollers "github.com/kubeshop/testkube-operator/controllers/executor"
 	scriptcontrollers "github.com/kubeshop/testkube-operator/controllers/script"
 	testscontrollers "github.com/kubeshop/testkube-operator/controllers/tests"
@@ -82,6 +83,7 @@ func init() {
 	utilruntime.Must(testsuitev2.AddToScheme(scheme))
 	utilruntime.Must(testtriggersv1.AddToScheme(scheme))
 	utilruntime.Must(testsourcev1.AddToScheme(scheme))
+	utilruntime.Must(testsuitev3.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -208,6 +210,10 @@ func main() {
 			os.Exit(1)
 		}
 		if err = (&testsuitev2.TestSuite{}).SetupWebhookWithManager(mgr); err != nil {
+			setupLog.Error(err, "unable to create webhook", "webhook", "TestSuite")
+			os.Exit(1)
+		}
+		if err = (&testsuitev3.TestSuite{}).SetupWebhookWithManager(mgr); err != nil {
 			setupLog.Error(err, "unable to create webhook", "webhook", "TestSuite")
 			os.Exit(1)
 		}

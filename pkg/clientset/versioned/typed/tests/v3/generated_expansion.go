@@ -17,3 +17,5 @@ limitations under the License.
 package v3
 
 type TestExpansion interface{}
+
+type TestSuiteExpansion interface{}
