@@ -83,7 +83,7 @@ type Repository struct {
 	Path              string     `json:"path,omitempty"`
 	UsernameSecret    *SecretRef `json:"usernameSecret,omitempty"`
 	TokenSecret       *SecretRef `json:"tokenSecret,omitempty"`
-	CertificateSecret *SecretRef `json:"certificate,omitempty"`
+	CertificateSecret string     `json:"certificate,omitempty"`
 	// if provided we checkout the whole repository and run test from this directory
 	WorkingDir string `json:"workingDir,omitempty"`
 }
