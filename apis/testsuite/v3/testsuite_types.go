@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v2
+package v3
 
 import (
 	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
@@ -29,12 +29,12 @@ type TestSuiteSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Before steps is list of tests which will be sequentially orchestrated
-	Before []TestSuiteStepSpec `json:"before,omitempty"`
-	// Steps is list of tests which will be sequentially orchestrated
-	Steps []TestSuiteStepSpec `json:"steps,omitempty"`
-	// After steps is list of tests which will be sequentially orchestrated
-	After []TestSuiteStepSpec `json:"after,omitempty"`
+	// Before batch steps is list of batch tests which will be sequentially orchestrated for parallel tests in each batch
+	Before []TestSuiteBatchStep `json:"before,omitempty"`
+	// Batch steps is list of batch tests which will be sequentially orchestrated for parallel tests in each batch
+	Steps []TestSuiteBatchStep `json:"steps"`
+	// After batch steps is list of batch tests which will be sequentially orchestrated for parallel tests in each batch
+	After []TestSuiteBatchStep `json:"after,omitempty"`
 
 	Repeats     int    `json:"repeats,omitempty"`
 	Description string `json:"description,omitempty"`
@@ -47,24 +47,20 @@ type Variable commonv1.Variable
 
 // TestSuiteStepSpec for particular type will have config for possible step types
 type TestSuiteStepSpec struct {
-	Type    string                `json:"type,omitempty"`
 	Execute *TestSuiteStepExecute `json:"execute,omitempty"`
 	Delay   *TestSuiteStepDelay   `json:"delay,omitempty"`
 }
 
-// TestSuiteStepType deines different type of test suite steps
-type TestSuiteStepType string
-
-const (
-	TestSuiteStepTypeExecute TestSuiteStepType = "execute"
-	TestSuiteStepTypeDelay   TestSuiteStepType = "delay"
-)
+// set of steps run in parallel
+type TestSuiteBatchStep struct {
+	StopOnFailure bool                `json:"stopOnFailure"`
+	Batch         []TestSuiteStepSpec `json:"batch,omitempty"`
+}
 
 // TestSuiteStepExecute defines step to be executed
 type TestSuiteStepExecute struct {
-	Namespace     string `json:"namespace,omitempty"`
-	Name          string `json:"name,omitempty"`
-	StopOnFailure bool   `json:"stopOnFailure,omitempty"`
+	Namespace string `json:"namespace,omitempty"`
+	Name      string `json:"name,omitempty"`
 }
 
 // TestSuiteStepDelay contains step delay parameters
@@ -131,6 +127,7 @@ type TestSuiteStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:storageversion
 
 // TestSuite is the Schema for the testsuites API
 type TestSuite struct {

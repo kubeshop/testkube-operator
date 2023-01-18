@@ -11,7 +11,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v2
+package v3
 
-// Hub marks this type as a conversion hub.
-func (*TestSuite) Hub() {}
+import (
+	ctrl "sigs.k8s.io/controller-runtime"
+)
+
+// SetupWebhookWithManager sets up webhook with manager
+func (t *TestSuite) SetupWebhookWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewWebhookManagedBy(mgr).
+		For(t).
+		Complete()
+}
