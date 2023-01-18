@@ -27,8 +27,6 @@ const (
 	gitUsernameSecretName = "git-username"
 	// gitTokenSecretName is git token secret name
 	gitTokenSecretName = "git-token"
-	// gitCertificateSecretName is git certificate secret name
-	gitCertificateSecretName = "git-certificate"
 )
 
 var testSecretDefaultLabels = map[string]string{
@@ -565,15 +563,6 @@ func updateTestSecrets(test *testsv3.Test, secretName string, secrets map[string
 			test.Spec.Content.Repository.TokenSecret = &testsv3.SecretRef{
 				Name: secretName,
 				Key:  gitTokenSecretName,
-			}
-		}
-	}
-
-	if _, ok := secrets[gitCertificateSecretName]; ok {
-		if test.Spec.Content != nil && test.Spec.Content.Repository != nil && test.Spec.Content.Repository.CertificateSecret == nil {
-			test.Spec.Content.Repository.CertificateSecret = &testsv3.SecretRef{
-				Name: secretName,
-				Key:  gitCertificateSecretName,
 			}
 		}
 	}
