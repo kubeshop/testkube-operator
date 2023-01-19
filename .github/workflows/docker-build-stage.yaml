@@ -2,8 +2,7 @@ name: Build and publish Docker image with a commit hash tag
 on:
   push:
     branches:
-      - main
-
+      - "*" # Run on all branches
 jobs:
   docker:
     runs-on: ubuntu-latest
