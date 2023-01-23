@@ -135,7 +135,7 @@ type ExecutionRequest struct {
 	HttpProxy string `json:"httpProxy,omitempty"`
 	// https proxy for executor containers
 	HttpsProxy string `json:"httpsProxy,omitempty"`
-	// negative test will fail if it is a success and it will succeed if it is a failure
+	// negative test will fail the execution if it is a success and it will succeed if it is a failure
 	NegativeTest bool `json:"negativeTest,omitempty"`
 	// Optional duration in seconds the pod may be active on the node relative to
 	// StartTime before the system will actively try to mark it failed and kill associated containers.
