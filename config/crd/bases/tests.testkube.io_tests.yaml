@@ -415,6 +415,9 @@ spec:
                         description: if provided we checkout the whole repository
                           and run test from this directory
                         type: string
+                      certificateSecret:
+                        description: git auth certificate secret for private repositories
+                        type: string
                     type: object
                   type:
                     description: test type
@@ -426,6 +429,9 @@ spec:
               executionRequest:
                 description: test execution request body
                 properties:
+                  negativeTest:
+                    description: negative test will fail the execution if it is a success and it will succeed if it is a failure
+                    type: boolean
                   activeDeadlineSeconds:
                     description: Optional duration in seconds the pod may be active
                       on the node relative to StartTime before the system will actively

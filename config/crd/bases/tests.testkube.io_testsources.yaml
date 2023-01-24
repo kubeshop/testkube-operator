@@ -97,6 +97,9 @@ spec:
                     description: if provided we checkout the whole repository and
                       run test from this directory
                     type: string
+                  certificateSecret:
+                    description: git auth certificate secret for private repositories
+                    type: string
                 required:
                 - type
                 - uri
