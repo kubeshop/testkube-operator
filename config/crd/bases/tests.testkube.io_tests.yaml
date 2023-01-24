@@ -362,7 +362,7 @@ spec:
                       branch:
                         description: branch/tag name for checkout
                         type: string
-                      certificate:
+                      certificateSecret:
                         type: string
                       commit:
                         description: commit id (sha) for checkout
