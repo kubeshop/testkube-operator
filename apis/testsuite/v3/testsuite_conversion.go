@@ -141,15 +141,17 @@ func (dst *TestSuite) ConvertFrom(srcRaw conversion.Hub) error {
 				}
 			}
 
+			var stopOnFailure bool
 			if value.Execute != nil {
 				step.Execute = &TestSuiteStepExecute{
 					Namespace: value.Execute.Namespace,
 					Name:      value.Execute.Name,
 				}
+				stopOnFailure = value.Execute.StopOnFailure
 			}
 
 			stepType.destinaton[i] = TestSuiteBatchStep{
-				StopOnFailure: value.Execute.StopOnFailure,
+				StopOnFailure: stopOnFailure,
 				Batch:         []TestSuiteStepSpec{step},
 			}
 		}
