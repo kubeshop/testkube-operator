@@ -1,0 +1,15 @@
+apiVersion: tests.testkube.io/v3
+kind: TestSuite
+metadata:
+  name: testsuite-sample
+spec:
+  description: "Sample test suite"
+  steps:
+  - stopOnFailure: false
+    batch:
+    - execute:
+        name: test-sample
+  - stopOnFailure: false
+    batch:
+    - delay:
+        duration: 1000
