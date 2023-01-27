@@ -40,7 +40,7 @@ func (c *TestsV3Client) Tests(namespace string) TestInterface {
 	return newTests(c, namespace)
 }
 
-func (c *TestsV3Client) Testsuites(namespace string) TestSuiteInterface {
+func (c *TestsV3Client) TestSuites(namespace string) TestSuiteInterface {
 	return newTestSuites(c, namespace)
 }
 
