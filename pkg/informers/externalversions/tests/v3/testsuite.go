@@ -66,13 +66,13 @@ func NewFilteredTestSuiteInformer(
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.TestsV2().TestSuites(namespace).List(context.TODO(), options)
+				return client.TestsV3().TestSuites(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options v1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.TestsV2().TestSuites(namespace).Watch(context.TODO(), options)
+				return client.TestsV3().TestSuites(namespace).Watch(context.TODO(), options)
 			},
 		},
 		&testsuitev3.TestSuite{},

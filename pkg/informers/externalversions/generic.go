@@ -58,7 +58,7 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 			resource: resource.GroupResource(),
 			informer: f.Tests().V1().TestTriggers().Informer(),
 		}, nil
-		// Group=tests.testkube.io, Version=v2
+		// Group=tests.testkube.io, Version=v3
 	case testsuitev3.GroupVersionResource:
 		return &genericInformer{
 			resource: resource.GroupResource(),
