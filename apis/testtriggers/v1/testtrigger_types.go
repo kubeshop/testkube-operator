@@ -92,6 +92,8 @@ type TestTriggerCondition struct {
 	Status *TestTriggerConditionStatuses `json:"status"`
 	// test trigger condition
 	Type_ string `json:"type"`
+	// test trigger condition reason
+	Reason string `json:"reason,omitempty"`
 }
 
 // TestTriggerConditionSpec defines the condition specification for TestTrigger
