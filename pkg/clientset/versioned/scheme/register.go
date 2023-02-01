@@ -18,7 +18,7 @@ package scheme
 
 import (
 	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
-	testsuitev3 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
+	testsuitev3 "github.com/kubeshop/testkube-operator/apis/testsuite/v3"
 	testtriggersv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
