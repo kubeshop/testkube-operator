@@ -86,8 +86,6 @@ type ExecutorMeta struct {
 	DocsURI string `json:"docsURI,omitempty"`
 	// executor tooltips
 	Tooltips map[string]string `json:"tooltips,omitempty"`
-	// supported content types
-	ContentTypes []string `json:"contentTypes,omitempty"`
 }
 
 type Runner struct {
