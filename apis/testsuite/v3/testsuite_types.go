@@ -32,7 +32,7 @@ type TestSuiteSpec struct {
 	// Before batch steps is list of batch tests which will be sequentially orchestrated for parallel tests in each batch
 	Before []TestSuiteBatchStep `json:"before,omitempty"`
 	// Batch steps is list of batch tests which will be sequentially orchestrated for parallel tests in each batch
-	Steps []TestSuiteBatchStep `json:"steps"`
+	Steps []TestSuiteBatchStep `json:"steps,omitempty"`
 	// After batch steps is list of batch tests which will be sequentially orchestrated for parallel tests in each batch
 	After []TestSuiteBatchStep `json:"after,omitempty"`
 
