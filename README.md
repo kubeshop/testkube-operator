@@ -6,4 +6,3 @@ This is the k8s operator for [testkube](https://github.com/kubeshop/testkube/) -
 
 *`Please note!`* For now it has limited functionality and only installs needed CRDs (custom resurces definitions) into an active k8s cluster. 
 It's meant to be installed as a part of main Helm chart as described in the [Installation](https://kubeshop.github.io/testkube/installing/) guide.
-

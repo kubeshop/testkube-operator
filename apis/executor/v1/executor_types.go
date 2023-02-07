@@ -55,6 +55,9 @@ type ExecutorSpec struct {
 
 	// Job template to launch executor
 	JobTemplate string `json:"job_template,omitempty"`
+
+	// Meta data about executor
+	Meta *ExecutorMeta `json:"meta,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=artifacts;junit-report
@@ -74,6 +77,16 @@ const (
 	ScriptContentTypeGitFile ScriptContentType = "git-file"
 	ScriptContentTypeGitDir  ScriptContentType = "git-dir"
 )
+
+// Executor meta data
+type ExecutorMeta struct {
+	// URI for executor icon
+	IconURI string `json:"iconURI,omitempty"`
+	// URI for executor docs
+	DocsURI string `json:"docsURI,omitempty"`
+	// executor tooltips
+	Tooltips map[string]string `json:"tooltips,omitempty"`
+}
 
 type Runner struct {
 }
