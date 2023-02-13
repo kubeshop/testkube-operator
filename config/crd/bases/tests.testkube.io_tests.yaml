@@ -362,6 +362,9 @@ spec:
                       branch:
                         description: branch/tag name for checkout
                         type: string
+                      certificateSecret:
+                        description: git auth certificate secret for private repositories
+                        type: string
                       commit:
                         description: commit id (sha) for checkout
                         type: string
@@ -413,9 +416,6 @@ spec:
                         description: if provided we checkout the whole repository
                           and run test from this directory
                         type: string
-                      certificateSecret:
-                        description: git auth certificate secret for private repositories
-                        type: string
                     type: object
                   type:
                     description: test type
@@ -427,9 +427,6 @@ spec:
               executionRequest:
                 description: test execution request body
                 properties:
-                  negativeTest:
-                    description: negative test will fail the execution if it is a success and it will succeed if it is a failure
-                    type: boolean
                   activeDeadlineSeconds:
                     description: Optional duration in seconds the pod may be active
                       on the node relative to StartTime before the system will actively
@@ -469,7 +466,8 @@ spec:
                   envs:
                     additionalProperties:
                       type: string
-                    description: environment variables passed to executor
+                    description: 'Environment variables passed to executor. Deprecated:
+                      use Basic Variables instead'
                     type: object
                   executionLabels:
                     additionalProperties:
@@ -507,6 +505,9 @@ spec:
                     description: test kubernetes namespace (\"testkube\" when not
                       set)
                     type: string
+                  negativeTest:
+                    description: negative test will fail the execution if it is a success and it will succeed if it is a failure
+                    type: boolean
                   number:
                     description: test execution number
                     format: int32
@@ -520,7 +521,8 @@ spec:
                   secretEnvs:
                     additionalProperties:
                       type: string
-                    description: execution variables passed to executor from secrets
+                    description: 'Execution variables passed to executor from secrets.
+                      Deprecated: use Secret Variables instead'
                     type: object
                   sync:
                     description: whether to start execution sync or async
