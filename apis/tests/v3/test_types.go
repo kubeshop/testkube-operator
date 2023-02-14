@@ -153,7 +153,7 @@ type ExecutionRequest struct {
 	// config map references
 	EnvConfigMaps []EnvReference `json:"envConfigMaps,omitempty"`
 	// secret references
-	EnvSecrets []EnvReference `json:"envSecret,omitempty"`
+	EnvSecrets []EnvReference `json:"envSecrets,omitempty"`
 }
 
 // Reference to env resource

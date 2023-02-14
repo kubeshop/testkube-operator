@@ -488,7 +488,7 @@ spec:
                       - reference
                       type: object
                     type: array
-                  envSecret:
+                  envSecrets:
                     description: secret references
                     items:
                       description: Reference to env resource
