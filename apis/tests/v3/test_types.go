@@ -150,6 +150,19 @@ type ExecutionRequest struct {
 	PreRunScript string `json:"preRunScript,omitempty"`
 	// scraper template extensions
 	ScraperTemplate string `json:"scraperTemplate,omitempty"`
+	// config map references
+	EnvConfigMaps []EnvReference `json:"envConfigMaps,omitempty"`
+	// secret references
+	EnvSecrets []EnvReference `json:"envSecret,omitempty"`
+}
+
+// Reference to env resource
+type EnvReference struct {
+	v1.LocalObjectReference `json:"reference"`
+	// whether we shoud mount resource
+	Mount bool `json:"mount,omitempty"`
+	// whether we shoud map to variables from resource
+	MapToVariables bool `json:"mapToVariables,omitempty"`
 }
 
 type ExecutionStatus string
