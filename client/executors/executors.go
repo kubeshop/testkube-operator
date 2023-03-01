@@ -41,7 +41,7 @@ func (s ExecutorsClient) Get(name string) (*executorv1.Executor, error) {
 // GetByType gets first available executor for given type
 func (s ExecutorsClient) GetByType(executorType string) (*executorv1.Executor, error) {
 	list := &executorv1.ExecutorList{}
-	err := s.Client.List(context.Background(), list, &client.ListOptions{})
+	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: s.Namespace})
 	if err != nil {
 		return nil, err
 	}
