@@ -68,14 +68,17 @@ const (
 	FeatureJUnitReport Feature = "junit-report"
 )
 
-// +kubebuilder:validation:Enum=string;file-uri;git-file;git-dir
+// +kubebuilder:validation:Enum=string;file-uri;git-file;git-dir;git
 type ScriptContentType string
 
 const (
 	ScriptContentTypeString  ScriptContentType = "string"
 	ScriptContentTypeFileURI ScriptContentType = "file-uri"
+	// Deprecated: use git instead
 	ScriptContentTypeGitFile ScriptContentType = "git-file"
-	ScriptContentTypeGitDir  ScriptContentType = "git-dir"
+	// Deprecated: use git instead
+	ScriptContentTypeGitDir ScriptContentType = "git-dir"
+	ScriptContentTypeGit    ScriptContentType = "git"
 )
 
 // Executor meta data
