@@ -98,6 +98,14 @@ type ArtifactRequest struct {
 	Dirs []string `json:"dirs,omitempty"`
 }
 
+// running context for test or test suite execution
+type RunningContext struct {
+	// One of possible context types
+	Type_ string `json:"type"`
+	// Context value depending from its type
+	Context string `json:"context,omitempty"`
+}
+
 // test execution request body
 type ExecutionRequest struct {
 	// test execution custom name
@@ -153,8 +161,20 @@ type ExecutionRequest struct {
 	// config map references
 	EnvConfigMaps []EnvReference `json:"envConfigMaps,omitempty"`
 	// secret references
-	EnvSecrets []EnvReference `json:"envSecrets,omitempty"`
+	EnvSecrets     []EnvReference  `json:"envSecrets,omitempty"`
+	RunningContext *RunningContext `json:"runningContext,omitempty"`
 }
+
+type RunningContextType string
+
+const (
+	RunningContextTypeUserCLI     RunningContextType = "user-cli"
+	RunningContextTypeUserUI      RunningContextType = "user-ui"
+	RunningContextTypeTestSuite   RunningContextType = "testsuite"
+	RunningContextTypeTestTrigger RunningContextType = "testtrigger"
+	RunningContextTypeScheduler   RunningContextType = "scheduler"
+	RunningContextTypeEmpty       RunningContextType = ""
+)
 
 // Reference to env resource
 type EnvReference struct {
