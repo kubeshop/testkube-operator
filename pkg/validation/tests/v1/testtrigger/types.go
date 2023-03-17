@@ -20,8 +20,8 @@ const (
 	EventCreated                      EventType = "created"
 	EventModified                     EventType = "modified"
 	EventDeleted                      EventType = "deleted"
-	CauseDeploymentScaleUpdate        Cause     = "deployment_scale_update"
-	CauseDeploymentImageUpdate        Cause     = "deployment_image_update"
-	CauseDeploymentEnvUpdate          Cause     = "deployment_env_update"
-	CauseDeploymentContainersModified Cause     = "deployment_containers_modified"
+	CauseDeploymentScaleUpdate        Cause     = "deployment-scale-update"
+	CauseDeploymentImageUpdate        Cause     = "deployment-image-update"
+	CauseDeploymentEnvUpdate          Cause     = "deployment-env-update"
+	CauseDeploymentContainersModified Cause     = "deployment-containers-modified"
 )
