@@ -23,10 +23,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Release
-        uses: goreleaser/goreleaser-action@v3
+        uses: goreleaser/goreleaser-action@v4
         with:
           distribution: goreleaser
           version: latest
-          args: "-f ./.goreleaser.yml release"
+          args: release -f .goreleaser.yml
         env:
           GITHUB_TOKEN: ${{ secrets.CI_BOT_TOKEN }}
