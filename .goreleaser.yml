@@ -16,7 +16,6 @@ dockers:
     goos: linux
     goarch: amd64
     image_templates:
-      - "kubeshop/testkube-operator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-amd64"
       - "kubeshop/testkube-operator:{{ .ShortCommit }}-amd64"
       - "kubeshop/testkube-operator:{{ .Version }}-amd64"
       - "kubeshop/testkube-operator:{{ .Branch }}-amd64"
@@ -25,7 +24,6 @@ dockers:
       - "--platform=linux/amd64"
       - "--label=org.opencontainers.image.title={{ .ProjectName }}"
       - "--label=org.opencontainers.image.created={{.Date}}"
-      - "--label=org.opencontainers.image.title={{.ProjectName}}"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
       - "--label=org.opencontainers.image.version={{.Version}}"
 
@@ -34,11 +32,10 @@ dockers:
     goos: linux
     goarch: arm64
     image_templates:
-      - "kubeshop/testkube-operator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-arm64"
-      - "kubeshop/testkube-operator:{{ .ShortCommit }}-arm64"
-      - "kubeshop/testkube-operator:{{ .Version }}-arm64"
-      - "kubeshop/testkube-operator:{{ .Branch }}-arm64"
-      - "kubeshop/testkube-operator:latest-arm64"
+      - "kubeshop/testkube-operator:{{ .ShortCommit }}-arm64v8"
+      - "kubeshop/testkube-operator:{{ .Version }}-arm64v8"
+      - "kubeshop/testkube-operator:{{ .Branch }}-arm64v8"
+      - "kubeshop/testkube-operator:latest-arm64v8"
     build_flag_templates:
       - "--platform=linux/arm64/v8"
       - "--label=org.opencontainers.image.created={{.Date}}"
@@ -47,10 +44,6 @@ dockers:
       - "--label=org.opencontainers.image.version={{.Version}}"
 
 docker_manifests:
-  - name_template: kubeshop/testkube-operator:{{ .Major }}.{{ .Minor }}
-    image_templates:
-      - kubeshop/testkube-operator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-amd64
-      - kubeshop/testkube-operator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-arm64v8
   - name_template: kubeshop/testkube-operator:{{ .ShortCommit }}
     image_templates:
       - kubeshop/testkube-operator:{{ .ShortCommit }}-amd64
@@ -67,4 +60,5 @@ docker_manifests:
     image_templates:
       - kubeshop/testkube-operator:latest-amd64
       - kubeshop/testkube-operator:latest-arm64v8
+
 
