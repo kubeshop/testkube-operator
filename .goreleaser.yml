@@ -9,10 +9,6 @@ builds:
     goarch:
       - amd64
       - arm64
-      - arm
-    goarm:
-      - 6
-      - 7
     mod_timestamp: "{{ .CommitTimestamp }}"
 dockers:
   - dockerfile: Dockerfile
@@ -20,13 +16,14 @@ dockers:
     goos: linux
     goarch: amd64
     image_templates:
-      - "kubeshop/testkube-operator:{{ .Major }}.{{ .Minor }}-amd64"
+      - "kubeshop/testkube-operator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-amd64"
       - "kubeshop/testkube-operator:{{ .ShortCommit }}-amd64"
       - "kubeshop/testkube-operator:{{ .Version }}-amd64"
       - "kubeshop/testkube-operator:{{ .Branch }}-amd64"
       - "kubeshop/testkube-operator:latest-amd64"
     build_flag_templates:
       - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.title={{ .ProjectName }}"
       - "--label=org.opencontainers.image.created={{.Date}}"
       - "--label=org.opencontainers.image.title={{.ProjectName}}"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
@@ -37,49 +34,13 @@ dockers:
     goos: linux
     goarch: arm64
     image_templates:
-      - "kubeshop/testkube-operator:{{ .Major }}.{{ .Minor }}-arm64"
+      - "kubeshop/testkube-operator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-arm64"
       - "kubeshop/testkube-operator:{{ .ShortCommit }}-arm64"
       - "kubeshop/testkube-operator:{{ .Version }}-arm64"
       - "kubeshop/testkube-operator:{{ .Branch }}-arm64"
       - "kubeshop/testkube-operator:latest-arm64"
     build_flag_templates:
-      - "--platform=linux/arm64"
-      - "--label=org.opencontainers.image.created={{.Date}}"
-      - "--label=org.opencontainers.image.title={{.ProjectName}}"
-      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-      - "--label=org.opencontainers.image.version={{.Version}}"
-
-  - dockerfile: Dockerfile
-    use: buildx
-    goos: linux
-    goarch: arm
-    goarm: 6
-    image_templates:
-      - "kubeshop/testkube-operator:{{ .Major }}.{{ .Minor }}-arm64v6"
-      - "kubeshop/testkube-operator:{{ .ShortCommit }}-arm64v6"
-      - "kubeshop/testkube-operator:{{ .Version }}-arm64v6"
-      - "kubeshop/testkube-operator:{{ .Branch }}-arm64v6"
-      - "kubeshop/testkube-operator:latest-arm64v6"
-    build_flag_templates:
-      - "--platform=linux/arm64"
-      - "--label=org.opencontainers.image.created={{.Date}}"
-      - "--label=org.opencontainers.image.title={{.ProjectName}}"
-      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-      - "--label=org.opencontainers.image.version={{.Version}}"
-
-  - dockerfile: Dockerfile
-    use: buildx
-    goos: linux
-    goarch: arm
-    goarm: 7
-    image_templates:
-      - "kubeshop/testkube-operator:{{ .Major }}.{{ .Minor }}-arm64v7"
-      - "kubeshop/testkube-operator:{{ .ShortCommit }}-arm64v7"
-      - "kubeshop/testkube-operator:{{ .Version }}-arm64v7"
-      - "kubeshop/testkube-operator:{{ .Branch }}-arm64v7"
-      - "kubeshop/testkube-operator:latest-arm64v7"
-    build_flag_templates:
-      - "--platform=linux/arm64"
+      - "--platform=linux/arm64/v8"
       - "--label=org.opencontainers.image.created={{.Date}}"
       - "--label=org.opencontainers.image.title={{.ProjectName}}"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
@@ -88,32 +49,22 @@ dockers:
 docker_manifests:
   - name_template: kubeshop/testkube-operator:{{ .Major }}.{{ .Minor }}
     image_templates:
-      - kubeshop/testkube-operator:{{ .Major }}.{{ .Minor }}-amd64
-      - kubeshop/testkube-operator:{{ .Major }}.{{ .Minor }}-arm64v8
-      - kubeshop/testkube-operator:{{ .Major }}.{{ .Minor }}-armv6
-      - kubeshop/testkube-operator:{{ .Major }}.{{ .Minor }}-armv7
+      - kubeshop/testkube-operator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-amd64
+      - kubeshop/testkube-operator:{{ .Major }}.{{ .Minor }}.{{ .Patch }}-arm64v8
   - name_template: kubeshop/testkube-operator:{{ .ShortCommit }}
     image_templates:
       - kubeshop/testkube-operator:{{ .ShortCommit }}-amd64
       - kubeshop/testkube-operator:{{ .ShortCommit }}-arm64v8
-      - kubeshop/testkube-operator:{{ .ShortCommit }}-armv6
-      - kubeshop/testkube-operator:{{ .ShortCommit }}-armv7
   - name_template: kubeshop/testkube-operator:{{ .Version }}
     image_templates:
       - kubeshop/testkube-operator:{{ .Version }}-amd64
       - kubeshop/testkube-operator:{{ .Version }}-arm64v8
-      - kubeshop/testkube-operator:{{ .Version }}-armv6
-      - kubeshop/testkube-operator:{{ .Version }}-armv7
   - name_template: kubeshop/testkube-operator:{{ .Branch }}
     image_templates:
       - kubeshop/testkube-operator:{{ .Branch }}-amd64
       - kubeshop/testkube-operator:{{ .Branch }}-arm64v8
-      - kubeshop/testkube-operator:{{ .Branch }}-armv6
-      - kubeshop/testkube-operator:{{ .Branch }}-armv7
   - name_template: kubeshop/testkube-operator:latest
     image_templates:
       - kubeshop/testkube-operator:latest-amd64
       - kubeshop/testkube-operator:latest-arm64v8
-      - kubeshop/testkube-operator:latest-armv6
-      - kubeshop/testkube-operator:latest-armv7
 
