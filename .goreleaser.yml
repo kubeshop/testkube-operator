@@ -1,3 +1,19 @@
+project_name: testkube-operator
+builds:
+  - id: "linux"
+    env: [CGO_ENABLED=0]
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+      - arm
+    goarm:
+      - 6
+      - 7
+    mod_timestamp: "{{ .CommitTimestamp }}"
 dockers:
   - dockerfile: Dockerfile
     use: buildx
