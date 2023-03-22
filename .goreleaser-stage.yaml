@@ -14,37 +14,11 @@ dockers:
     goos: linux
     goarch: amd64
     image_templates:
-      - "kubeshop/testkube-operator:{{ .ShortCommit }}-amd64"
+      - "kubeshop/testkube-operator:{{ .ShortCommit }}"
     build_flag_templates:
       - "--platform=linux/amd64"
       - "--label=org.opencontainers.image.title={{ .ProjectName }}"
       - "--label=org.opencontainers.image.created={{.Date}}"
       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-
-  - dockerfile: Dockerfile
-    use: buildx
-    goos: linux
-    goarch: arm64
-    image_templates:
-      - "kubeshop/testkube-operator:{{ .ShortCommit }}-arm64v8"
-    build_flag_templates:
-      - "--platform=linux/arm64/v8"
-      - "--label=org.opencontainers.image.created={{.Date}}"
-      - "--label=org.opencontainers.image.title={{.ProjectName}}"
-      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-
-docker_manifests:
-  - name_template: kubeshop/testkube-operator:{{ .ShortCommit }}
-    image_templates:
-      - kubeshop/testkube-operator:{{ .ShortCommit }}-amd64
-      - kubeshop/testkube-operator:{{ .ShortCommit }}-arm64v8
-  - name_template: kubeshop/testkube-operator:{{ .Version }}
-    image_templates:
-      - kubeshop/testkube-operator:{{ .Version }}-amd64
-      - kubeshop/testkube-operator:{{ .Version }}-arm64v8
-  - name_template: kubeshop/testkube-operator:latest
-    image_templates:
-      - kubeshop/testkube-operator:latest-amd64
-      - kubeshop/testkube-operator:latest-arm64v8
 
 
