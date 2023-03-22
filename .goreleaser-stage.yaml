@@ -6,7 +6,6 @@ builds:
       - linux
     goarch:
       - amd64
-      - arm64
     mod_timestamp: "{{ .CommitTimestamp }}"
 dockers:
   - dockerfile: Dockerfile
