@@ -44,7 +44,7 @@ type ScriptSpec struct {
 	Tags       []string    `json:"tags,omitempty"`
 }
 
-// Repository represents VCS repo, currently we're habdling Git only
+// Repository represents VCS repo, currently we're handling Git only
 type Repository struct {
 	// Type_ repository type
 	Type_ string `json:"type"`
@@ -58,6 +58,8 @@ type Repository struct {
 	Username string `json:"username,omitempty"`
 	// git auth token for private repositories
 	Token string `json:"token,omitempty"`
+	// if true git clone will be executed with the http.extraHeader arg set to the value specified in token
+	IsHeaderToken *bool `json:"isHeaderToken,omitempty"`
 }
 
 // ScriptStatus defines the observed state of Script
