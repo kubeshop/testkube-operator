@@ -79,7 +79,13 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{}, nil
 	}
 
-	data, err := json.Marshal(testsuitev2.TestSuiteExecutionRequest{})
+	data, err := json.Marshal(testsuitev2.TestSuiteExecutionRequest{
+		RunningContext: &testsuitev2.RunningContext{
+			Type_:   string(testsuitev2.RunningContextTypeScheduler),
+			Context: testSuite.Spec.Schedule,
+		},
+	})
+
 	if err != nil {
 		return ctrl.Result{}, err
 	}
