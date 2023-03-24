@@ -59,8 +59,6 @@ type Repository struct {
 	Username string `json:"username,omitempty"`
 	// git auth token for private repositories
 	Token string `json:"token,omitempty"`
-	// if true git clone will be executed with the http.extraHeader arg set to the value specified in token
-	IsHeaderToken *bool `json:"isHeaderToken,omitempty"`
 }
 
 // ScriptStatus defines the observed state of Script
