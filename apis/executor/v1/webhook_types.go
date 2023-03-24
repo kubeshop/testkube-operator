@@ -34,6 +34,8 @@ type WebhookSpec struct {
 	Events []string `json:"events,omitempty"`
 	// Labels to filter for tests and test suites
 	Selector string `json:"selector,omitempty"`
+	// will load the generated payload for notification inside the object
+	PayloadObjectField string `json:"payloadObjectField,omitempty"`
 }
 
 // WebhookStatus defines the observed state of Webhook
