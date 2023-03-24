@@ -41,4 +41,4 @@ jobs:
           token: ${{ secrets.CI_BOT_TOKEN }}
           repository: kubeshop/helm-charts
           event-type: trigger-workflow-operator
-          client-payload: '{"image_tag_operator": "sha-${{ steps.github_sha.outputs.sha_short }}"}'
+          client-payload: '{"image_tag_operator": "${{ steps.github_sha.outputs.sha_short }}"}'
