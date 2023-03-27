@@ -359,6 +359,9 @@ spec:
                   repository:
                     description: repository of test content
                     properties:
+                      authType:
+                        description: auth type for git requests
+                        type: string
                       branch:
                         description: branch/tag name for checkout
                         type: string
@@ -562,7 +565,8 @@ spec:
                       set)
                     type: string
                   negativeTest:
-                    description: negative test will fail the execution if it is a success and it will succeed if it is a failure
+                    description: negative test will fail the execution if it is a
+                      success and it will succeed if it is a failure
                     type: boolean
                   number:
                     description: test execution number
