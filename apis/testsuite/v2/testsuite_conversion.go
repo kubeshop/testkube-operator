@@ -58,7 +58,7 @@ func (src *TestSuite) ConvertTo(dstRaw conversion.Hub) error {
 		for i := range stepType.Source {
 			value := stepType.Source[i]
 			step := testkubev1.TestSuiteStepSpec{
-				Type: value.Type,
+				Type: string(value.Type),
 			}
 
 			if value.Delay != nil {
@@ -132,7 +132,7 @@ func (dst *TestSuite) ConvertFrom(srcRaw conversion.Hub) error {
 		for i := range stepType.source {
 			value := stepType.source[i]
 			step := TestSuiteStepSpec{
-				Type: value.Type,
+				Type: TestSuiteStepType(value.Type),
 			}
 
 			if value.Delay != nil {
