@@ -81,7 +81,7 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	data, err := json.Marshal(testsuitev2.TestSuiteExecutionRequest{
 		RunningContext: &testsuitev2.RunningContext{
-			Type_:   string(testsuitev2.RunningContextTypeScheduler),
+			Type_:   testsuitev2.RunningContextTypeScheduler,
 			Context: testSuite.Spec.Schedule,
 		},
 	})
