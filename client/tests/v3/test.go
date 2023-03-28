@@ -27,6 +27,8 @@ const (
 	gitUsernameSecretName = "git-username"
 	// gitTokenSecretName is git token secret name
 	gitTokenSecretName = "git-token"
+	// isHeaderToken specifies whether to modify the git clone command of the runner
+	isHeaderToken = false
 )
 
 var testSecretDefaultLabels = map[string]string{
@@ -167,7 +169,7 @@ func (s TestsClient) Create(test *testsv3.Test, options ...Option) (*testsv3.Tes
 				return nil, err
 			}
 
-			updateTestSecrets(test, secretName, secrets)
+			updateTestSecrets(test, secretName, secrets, isHeaderToken)
 		}
 	}
 
@@ -196,7 +198,7 @@ func (s TestsClient) Update(test *testsv3.Test, options ...Option) (*testsv3.Tes
 				return nil, err
 			}
 
-			updateTestSecrets(test, secretName, secrets)
+			updateTestSecrets(test, secretName, secrets, isHeaderToken)
 		} else {
 			if err := s.secretClient.Delete(secretName); err != nil && !errors.IsNotFound(err) {
 				return nil, err
@@ -548,7 +550,7 @@ func (s TestsClient) DeleteByLabels(selector string) error {
 	return err
 }
 
-func updateTestSecrets(test *testsv3.Test, secretName string, secrets map[string]string) {
+func updateTestSecrets(test *testsv3.Test, secretName string, secrets map[string]string, isHeaderToken bool) {
 	if _, ok := secrets[gitUsernameSecretName]; ok {
 		if test.Spec.Content != nil && test.Spec.Content.Repository != nil && test.Spec.Content.Repository.UsernameSecret == nil {
 			test.Spec.Content.Repository.UsernameSecret = &testsv3.SecretRef{
@@ -565,6 +567,9 @@ func updateTestSecrets(test *testsv3.Test, secretName string, secrets map[string
 				Key:  gitTokenSecretName,
 			}
 		}
+	}
+	if test.Spec.Content != nil && test.Spec.Content.Repository != nil && test.Spec.Content.Repository.IsHeaderToken == nil {
+		test.Spec.Content.Repository.IsHeaderToken = &isHeaderToken
 	}
 }
 

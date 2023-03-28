@@ -44,7 +44,7 @@ type ScriptSpec struct {
 	Tags       []string    `json:"tags,omitempty"`
 }
 
-// Repository represents VCS repo, currently we're habdling Git only
+// Repository represents VCS repo, currently we're handling Git only
 type Repository struct {
 	// Type_ repository type
 	Type_ string `json:"type"`

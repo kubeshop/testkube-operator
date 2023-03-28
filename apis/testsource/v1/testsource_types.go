@@ -58,10 +58,12 @@ type Repository struct {
 	// commit id (sha) for checkout
 	Commit string `json:"commit,omitempty"`
 	// if needed we can checkout particular path (dir or file) in case of BIG/mono repositories
-	Path              string     `json:"path,omitempty"`
-	UsernameSecret    *SecretRef `json:"usernameSecret,omitempty"`
-	TokenSecret       *SecretRef `json:"tokenSecret,omitempty"`
-	CertificateSecret string     `json:"certificateSecret,omitempty"`
+	Path           string     `json:"path,omitempty"`
+	UsernameSecret *SecretRef `json:"usernameSecret,omitempty"`
+	TokenSecret    *SecretRef `json:"tokenSecret,omitempty"`
+	// if true git clone will be executed with the http.extraHeader arg set to the value specified in token
+	IsHeaderToken     *bool  `json:"isHeaderToken,omitempty"`
+	CertificateSecret string `json:"certificateSecret,omitempty"`
 	// if provided we checkout the whole repository and run test from this directory
 	WorkingDir string `json:"workingDir,omitempty"`
 }

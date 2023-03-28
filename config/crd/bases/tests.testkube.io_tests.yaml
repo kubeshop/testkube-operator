@@ -172,8 +172,13 @@ spec:
                           or file) in case of BIG/mono repositories
                         type: string
                       token:
-                        description: git auth token for private repositories
-                        type: string
+                        properties:
+                          value: 
+                            description: git auth token for private repositories
+                            type: string
+                          isHeaderToken: 
+                            description: modifies the git clone command to use authorization header
+                            type: boolean
                       type:
                         description: VCS repository type
                         type: string

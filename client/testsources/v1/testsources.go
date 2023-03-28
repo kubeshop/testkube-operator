@@ -19,6 +19,8 @@ const (
 	gitUsernameSecretName = "git-username"
 	// gitTokenSecretName is git token secret name
 	gitTokenSecretName = "git-token"
+	// isHeaderToken specifies whether to modify the git clone command of the runner
+	isHeaderToken = false
 )
 
 //go:generate mockgen -destination=./mock_testsources.go -package=testsources "github.com/kubeshop/testkube-operator/client/testsources/v1" Interface
@@ -92,7 +94,7 @@ func (s TestSourcesClient) Create(testSource *testsourcev1.TestSource, options .
 				return nil, err
 			}
 
-			updateTestSourceSecrets(testSource, secretName, secrets)
+			updateTestSourceSecrets(testSource, secretName, secrets, isHeaderToken)
 		}
 	}
 
@@ -119,13 +121,13 @@ func (s TestSourcesClient) Update(testSource *testsourcev1.TestSource, options .
 				return nil, err
 			}
 
-			updateTestSourceSecrets(testSource, secretName, secrets)
+			updateTestSourceSecrets(testSource, secretName, secrets, isHeaderToken)
 		} else {
 			if err := s.secretClient.Delete(secretName); err != nil && !errors.IsNotFound(err) {
 				return nil, err
 			}
 
-			clearTestSourceSecrets(testSource, secretName)
+			clearTestSourceSecrets(testSource, secretName, isHeaderToken)
 		}
 	}
 
@@ -173,7 +175,7 @@ func (s TestSourcesClient) DeleteByLabels(selector string) error {
 	return err
 }
 
-func updateTestSourceSecrets(testSource *testsourcev1.TestSource, secretName string, secrets map[string]string) {
+func updateTestSourceSecrets(testSource *testsourcev1.TestSource, secretName string, secrets map[string]string, isHeaderToken bool) {
 	if _, ok := secrets[gitUsernameSecretName]; ok {
 		if testSource.Spec.Repository != nil && testSource.Spec.Repository.UsernameSecret == nil {
 			testSource.Spec.Repository.UsernameSecret = &testsourcev1.SecretRef{
@@ -191,9 +193,12 @@ func updateTestSourceSecrets(testSource *testsourcev1.TestSource, secretName str
 			}
 		}
 	}
+	if testSource.Spec.Repository != nil && testSource.Spec.Repository.IsHeaderToken == nil {
+		testSource.Spec.Repository.IsHeaderToken = &isHeaderToken
+	}
 }
 
-func clearTestSourceSecrets(testSource *testsourcev1.TestSource, secretName string) {
+func clearTestSourceSecrets(testSource *testsourcev1.TestSource, secretName string, isHeaderToken bool) {
 	if testSource.Spec.Repository != nil && testSource.Spec.Repository.UsernameSecret != nil &&
 		testSource.Spec.Repository.UsernameSecret.Name == secretName {
 		testSource.Spec.Repository.UsernameSecret = nil
@@ -202,6 +207,9 @@ func clearTestSourceSecrets(testSource *testsourcev1.TestSource, secretName stri
 	if testSource.Spec.Repository != nil && testSource.Spec.Repository.TokenSecret != nil &&
 		testSource.Spec.Repository.TokenSecret.Name == secretName {
 		testSource.Spec.Repository.TokenSecret = nil
+	}
+	if testSource.Spec.Repository != nil && testSource.Spec.Repository.IsHeaderToken != nil && testSource.Spec.Repository.IsHeaderToken == &isHeaderToken {
+		testSource.Spec.Repository.IsHeaderToken = nil
 	}
 
 	return
