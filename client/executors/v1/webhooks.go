@@ -50,7 +50,7 @@ func (s WebhooksClient) Get(name string) (*executorsv1.Webhook, error) {
 }
 
 // GetByEvent gets all webhooks with given event
-func (s WebhooksClient) GetByEvent(event string) (*executorsv1.WebhookList, error) {
+func (s WebhooksClient) GetByEvent(event executorsv1.EventType) (*executorsv1.WebhookList, error) {
 	list := &executorsv1.WebhookList{}
 	err := s.Client.List(context.Background(), list, &client.ListOptions{Namespace: s.Namespace})
 	if err != nil {
