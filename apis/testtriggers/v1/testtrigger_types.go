@@ -78,6 +78,7 @@ type TestTriggerStatus struct {
 }
 
 // TestTriggerConditionStatuses defines condition statuses for test triggers
+// +kubebuilder:validation:Enum=True;False;Unknown
 type TestTriggerConditionStatuses string
 
 // List of TestTriggerConditionStatuses

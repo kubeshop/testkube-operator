@@ -67,6 +67,10 @@ spec:
                         status:
                           description: TestTriggerConditionStatuses defines condition
                             statuses for test triggers
+                          enum:
+                          - "True"
+                          - "False"
+                          - Unknown
                           type: string
                         type:
                           description: test trigger condition

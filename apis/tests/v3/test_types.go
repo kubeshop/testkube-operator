@@ -50,7 +50,7 @@ type Variable commonv1.Variable
 // TestContent defines test content
 type TestContent struct {
 	// test type
-	Type_ string `json:"type,omitempty"`
+	Type_ TestContentType `json:"type,omitempty"`
 	// repository of test content
 	Repository *Repository `json:"repository,omitempty"`
 	// test content body
@@ -58,6 +58,19 @@ type TestContent struct {
 	// uri of test content
 	Uri string `json:"uri,omitempty"`
 }
+
+// +kubebuilder:validation:Enum=string;file-uri;git-file;git-dir;git
+type TestContentType string
+
+const (
+	TestContentTypeString  TestContentType = "string"
+	TestContentTypeFileURI TestContentType = "file-uri"
+	// Deprecated: use git instead
+	TestContentTypeGitFile TestContentType = "git-file"
+	// Deprecated: use git instead
+	TestContentTypeGitDir TestContentType = "git-dir"
+	TestContentTypeGit    TestContentType = "git"
+)
 
 // Testkube internal reference for secret storage in Kubernetes secrets
 type SecretRef struct {
@@ -88,8 +101,19 @@ type Repository struct {
 	// if provided we checkout the whole repository and run test from this directory
 	WorkingDir string `json:"workingDir,omitempty"`
 	// auth type for git requests
-	AuthType string `json:"authType,omitempty"`
+	AuthType GitAuthType `json:"authType,omitempty"`
 }
+
+// GitAuthType defines git auth type
+// +kubebuilder:validation:Enum=basic;header
+type GitAuthType string
+
+const (
+	// GitAuthTypeBasic for git basic auth requests
+	GitAuthTypeBasic GitAuthType = "basic"
+	// GitAuthTypeHeader for git header auth requests
+	GitAuthTypeHeader GitAuthType = "header"
+)
 
 // artifact request body for container executors with test artifacts
 type ArtifactRequest struct {
@@ -104,10 +128,21 @@ type ArtifactRequest struct {
 // running context for test or test suite execution
 type RunningContext struct {
 	// One of possible context types
-	Type_ string `json:"type"`
+	Type_ RunningContextType `json:"type"`
 	// Context value depending from its type
 	Context string `json:"context,omitempty"`
 }
+
+type RunningContextType string
+
+const (
+	RunningContextTypeUserCLI     RunningContextType = "user-cli"
+	RunningContextTypeUserUI      RunningContextType = "user-ui"
+	RunningContextTypeTestSuite   RunningContextType = "testsuite"
+	RunningContextTypeTestTrigger RunningContextType = "testtrigger"
+	RunningContextTypeScheduler   RunningContextType = "scheduler"
+	RunningContextTypeEmpty       RunningContextType = ""
+)
 
 // test execution request body
 type ExecutionRequest struct {
@@ -168,17 +203,6 @@ type ExecutionRequest struct {
 	RunningContext *RunningContext `json:"runningContext,omitempty"`
 }
 
-type RunningContextType string
-
-const (
-	RunningContextTypeUserCLI     RunningContextType = "user-cli"
-	RunningContextTypeUserUI      RunningContextType = "user-ui"
-	RunningContextTypeTestSuite   RunningContextType = "testsuite"
-	RunningContextTypeTestTrigger RunningContextType = "testtrigger"
-	RunningContextTypeScheduler   RunningContextType = "scheduler"
-	RunningContextTypeEmpty       RunningContextType = ""
-)
-
 // Reference to env resource
 type EnvReference struct {
 	v1.LocalObjectReference `json:"reference"`
@@ -190,6 +214,7 @@ type EnvReference struct {
 	MapToVariables bool `json:"mapToVariables,omitempty"`
 }
 
+// +kubebuilder:validation:Enum=queued;running;passed;failed;aborted;timeout
 type ExecutionStatus string
 
 // List of ExecutionStatus

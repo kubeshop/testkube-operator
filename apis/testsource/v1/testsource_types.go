@@ -28,7 +28,7 @@ type TestSourceSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	Type_ string `json:"type,omitempty"`
+	Type_ TestSourceType `json:"type,omitempty"`
 	// repository of test content
 	Repository *Repository `json:"repository,omitempty"`
 	// test content body
@@ -36,6 +36,19 @@ type TestSourceSpec struct {
 	// uri of test content
 	Uri string `json:"uri,omitempty"`
 }
+
+// +kubebuilder:validation:Enum=string;file-uri;git-file;git-dir;git
+type TestSourceType string
+
+const (
+	TestSourceTypeString  TestSourceType = "string"
+	TestSourceTypeFileURI TestSourceType = "file-uri"
+	// Deprecated: use git instead
+	TestSourceTypeGitFile TestSourceType = "git-file"
+	// Deprecated: use git instead
+	TestSourceTypeGitDir TestSourceType = "git-dir"
+	TestSourceTypeGit    TestSourceType = "git"
+)
 
 // Testkube internal reference for secret storage in Kubernetes secrets
 type SecretRef struct {
@@ -66,8 +79,19 @@ type Repository struct {
 	// if provided we checkout the whole repository and run test from this directory
 	WorkingDir string `json:"workingDir,omitempty"`
 	// auth type for git requests
-	AuthType string `json:"authType,omitempty"`
+	AuthType GitAuthType `json:"authType,omitempty"`
 }
+
+// GitAuthType defines git auth type
+// +kubebuilder:validation:Enum=basic;header
+type GitAuthType string
+
+const (
+	// GitAuthTypeBasic for git basic auth requests
+	GitAuthTypeBasic GitAuthType = "basic"
+	// GitAuthTypeHeader for git header auth requests
+	GitAuthTypeHeader GitAuthType = "header"
+)
 
 // TestSourceStatus defines the observed state of TestSource
 type TestSourceStatus struct {

@@ -283,6 +283,11 @@ spec:
                           type: boolean
                       type: object
                     type:
+                      description: TestSuiteStepType deines different type of test
+                        suite steps
+                      enum:
+                      - execute
+                      - delay
                       type: string
                   type: object
                 type: array
@@ -312,6 +317,11 @@ spec:
                           type: boolean
                       type: object
                     type:
+                      description: TestSuiteStepType deines different type of test
+                        suite steps
+                      enum:
+                      - execute
+                      - delay
                       type: string
                   type: object
                 type: array
@@ -482,6 +492,11 @@ spec:
                           type: boolean
                       type: object
                     type:
+                      description: TestSuiteStepType deines different type of test
+                        suite steps
+                      enum:
+                      - execute
+                      - delay
                       type: string
                   type: object
                 type: array
@@ -504,6 +519,14 @@ spec:
                     format: date-time
                     type: string
                   status:
+                    enum:
+                    - queued
+                    - running
+                    - passed
+                    - failed
+                    - aborting
+                    - aborted
+                    - timeout
                     type: string
                 type: object
             type: object
