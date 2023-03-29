@@ -62,6 +62,9 @@ spec:
                 description: ExecutorType one of "rest" for rest openapi based executors
                   or "job" which will be default runners for testkube or "container"
                   for container executors
+                enum:
+                - job
+                - conrainer
                 type: string
               features:
                 description: Features list of possible features which executor handles
