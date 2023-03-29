@@ -64,7 +64,7 @@ spec:
                   for container executors
                 enum:
                 - job
-                - conrainer
+                - container
                 type: string
               features:
                 description: Features list of possible features which executor handles

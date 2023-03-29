@@ -68,7 +68,7 @@ const (
 	FeatureJUnitReport Feature = "junit-report"
 )
 
-// +kubebuilder:validation:Enum=job;conrainer
+// +kubebuilder:validation:Enum=job;container
 type ExecutorType string
 
 const (
