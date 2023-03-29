@@ -56,7 +56,7 @@ type TestSuiteStepSpec struct {
 	Delay   *TestSuiteStepDelay   `json:"delay,omitempty"`
 }
 
-// TestSuiteStepType deines different type of test suite steps
+// TestSuiteStepType defines different type of test suite steps
 type TestSuiteStepType string
 
 const (

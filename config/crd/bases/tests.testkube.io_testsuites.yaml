@@ -283,7 +283,7 @@ spec:
                           type: boolean
                       type: object
                     type:
-                      description: TestSuiteStepType deines different type of test
+                      description: TestSuiteStepType defines different type of test
                         suite steps
                       enum:
                       - execute
@@ -317,7 +317,7 @@ spec:
                           type: boolean
                       type: object
                     type:
-                      description: TestSuiteStepType deines different type of test
+                      description: TestSuiteStepType defines different type of test
                         suite steps
                       enum:
                       - execute
@@ -492,7 +492,7 @@ spec:
                           type: boolean
                       type: object
                     type:
-                      description: TestSuiteStepType deines different type of test
+                      description: TestSuiteStepType defines different type of test
                         suite steps
                       enum:
                       - execute
