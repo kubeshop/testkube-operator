@@ -42,17 +42,17 @@ type TestTrigger struct {
 // TestTriggerSpec defines the desired state of TestTrigger
 type TestTriggerSpec struct {
 	// For which Resource do we monitor Event which triggers an Action on certain conditions
-	Resource string `json:"resource"`
+	Resource TestTriggerResource `json:"resource"`
 	// ResourceSelector identifies which Kubernetes Objects should be watched
 	ResourceSelector TestTriggerSelector `json:"resourceSelector"`
 	// On which Event for a Resource should an Action be triggered
-	Event string `json:"event"`
+	Event TestTriggerEvent `json:"event"`
 	// What resource conditions should be matched
 	ConditionSpec *TestTriggerConditionSpec `json:"conditionSpec,omitempty"`
 	// Action represents what needs to be executed for selected Execution
-	Action string `json:"action"`
+	Action TestTriggerAction `json:"action"`
 	// Execution identifies for which test execution should an Action be executed
-	Execution string `json:"execution"`
+	Execution TestTriggerExecution `json:"execution"`
 	// TestSelector identifies on which Testkube Kubernetes Objects an Action should be taken
 	TestSelector TestTriggerSelector `json:"testSelector"`
 	// Delay is a duration string which specifies how long should the test be delayed after a trigger is matched
@@ -60,6 +60,56 @@ type TestTriggerSpec struct {
 	// +kubebuilder:validation:Format:=duration
 	Delay *metav1.Duration `json:"delay,omitempty"`
 }
+
+// TestTriggerResource defines resource for test triggers
+// +kubebuilder:validation:Enum=pod;deployment;statefulset;daemonset;service;ingress;event;configmap
+type TestTriggerResource string
+
+// List of TestTriggerResources
+const (
+	TestTriggerResourcePod         TestTriggerResource = "pod"
+	TestTriggerResourceDeployment  TestTriggerResource = "deployment"
+	TestTriggerResourceStatefulSet TestTriggerResource = "statefulset"
+	TestTriggerResourceDaemonSet   TestTriggerResource = "daemonset"
+	TestTriggerResourceService     TestTriggerResource = "service"
+	TestTriggerResourceIngress     TestTriggerResource = "ingress"
+	TestTriggerResourceEvent       TestTriggerResource = "event"
+	TestTriggerResourceConfigMap   TestTriggerResource = "configmap"
+)
+
+// TestTriggerEvent defines event for test triggers
+// +kubebuilder:validation:Enum=created;modified;deleted;deployment-scale-update;deployment-image-update;deployment-env-update;deployment-containers-modified
+type TestTriggerEvent string
+
+// List of TestTriggerEvents
+const (
+	TestTriggerEventCreated                      TestTriggerEvent = "created"
+	TestTriggerEventModified                     TestTriggerEvent = "modified"
+	TestTriggerEventDeleted                      TestTriggerEvent = "deleted"
+	TestTriggerCauseDeploymentScaleUpdate        TestTriggerEvent = "deployment-scale-update"
+	TestTriggerCauseDeploymentImageUpdate        TestTriggerEvent = "deployment-image-update"
+	TestTriggerCauseDeploymentEnvUpdate          TestTriggerEvent = "deployment-env-update"
+	TestTriggerCauseDeploymentContainersModified TestTriggerEvent = "deployment-containers-modified"
+)
+
+// TestTriggerAction defines action for test triggers
+// +kubebuilder:validation:Enum=run
+type TestTriggerAction string
+
+// List of TestTriggerAction
+const (
+	TestTriggerActionRun TestTriggerAction = "run"
+)
+
+// TestTriggerExecution defines execution for test triggers
+// +kubebuilder:validation:Enum=test;testsuite
+type TestTriggerExecution string
+
+// List of TestTriggerExecution
+const (
+	TestTriggerExecutionTest      TestTriggerExecution = "test"
+	TestTriggerExecutionTestsuite TestTriggerExecution = "testsuite"
+)
 
 // TestTriggerSelector is used for selecting Kubernetes Objects
 type TestTriggerSelector struct {
@@ -78,6 +128,7 @@ type TestTriggerStatus struct {
 }
 
 // TestTriggerConditionStatuses defines condition statuses for test triggers
+// +kubebuilder:validation:Enum=True;False;Unknown
 type TestTriggerConditionStatuses string
 
 // List of TestTriggerConditionStatuses

@@ -359,6 +359,12 @@ spec:
                   repository:
                     description: repository of test content
                     properties:
+                      authType:
+                        description: auth type for git requests
+                        enum:
+                        - basic
+                        - header
+                        type: string
                       branch:
                         description: branch/tag name for checkout
                         type: string
@@ -419,6 +425,12 @@ spec:
                     type: object
                   type:
                     description: test type
+                    enum:
+                    - string
+                    - file-uri
+                    - git-file
+                    - git-dir
+                    - git
                     type: string
                   uri:
                     description: uri of test content
@@ -562,7 +574,8 @@ spec:
                       set)
                     type: string
                   negativeTest:
-                    description: negative test will fail the execution if it is a success and it will succeed if it is a failure
+                    description: negative test will fail the execution if it is a
+                      success and it will succeed if it is a failure
                     type: boolean
                   number:
                     description: test execution number
@@ -737,6 +750,13 @@ spec:
                     format: date-time
                     type: string
                   status:
+                    enum:
+                    - queued
+                    - running
+                    - passed
+                    - failed
+                    - aborted
+                    - timeout
                     type: string
                 type: object
             type: object

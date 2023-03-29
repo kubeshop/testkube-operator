@@ -33,7 +33,7 @@ type ExecutorSpec struct {
 
 	// ExecutorType one of "rest" for rest openapi based executors or "job" which will be default runners for testkube
 	// or "container" for container executors
-	ExecutorType string `json:"executor_type,omitempty"`
+	ExecutorType ExecutorType `json:"executor_type,omitempty"`
 
 	// URI for rest based executors
 	URI string `json:"uri,omitempty"`
@@ -66,6 +66,14 @@ type Feature string
 const (
 	FeatureArtifacts   Feature = "artifacts"
 	FeatureJUnitReport Feature = "junit-report"
+)
+
+// +kubebuilder:validation:Enum=job;container
+type ExecutorType string
+
+const (
+	ExecutorTypeJob       ExecutorType = "job"
+	ExecutorTypeContainer ExecutorType = "container"
 )
 
 // +kubebuilder:validation:Enum=string;file-uri;git-file;git-dir;git

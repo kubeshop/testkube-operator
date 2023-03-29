@@ -81,7 +81,7 @@ func (r *TestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 
 	data, err := json.Marshal(testsv3.ExecutionRequest{
 		RunningContext: &testsv3.RunningContext{
-			Type_:   string(testsv3.RunningContextTypeScheduler),
+			Type_:   testsv3.RunningContextTypeScheduler,
 			Context: test.Spec.Schedule,
 		},
 	})

@@ -31,12 +31,29 @@ type WebhookSpec struct {
 	// Uri is address where webhook should be made
 	Uri string `json:"uri,omitempty"`
 	// Events declare list if events on which webhook should be called
-	Events []string `json:"events,omitempty"`
+	Events []EventType `json:"events,omitempty"`
 	// Labels to filter for tests and test suites
 	Selector string `json:"selector,omitempty"`
 	// will load the generated payload for notification inside the object
 	PayloadObjectField string `json:"payloadObjectField,omitempty"`
 }
+
+// +kubebuilder:validation:Enum=start-test;end-test-success;end-test-failed;end-test-aborted;end-test-timeout;start-testsuite;end-testsuite-success;end-testsuite-failed;end-testsuite-aborted;end-testsuite-timeout
+type EventType string
+
+// List of EventType
+const (
+	START_TEST_EventType            EventType = "start-test"
+	END_TEST_SUCCESS_EventType      EventType = "end-test-success"
+	END_TEST_FAILED_EventType       EventType = "end-test-failed"
+	END_TEST_ABORTED_EventType      EventType = "end-test-aborted"
+	END_TEST_TIMEOUT_EventType      EventType = "end-test-timeout"
+	START_TESTSUITE_EventType       EventType = "start-testsuite"
+	END_TESTSUITE_SUCCESS_EventType EventType = "end-testsuite-success"
+	END_TESTSUITE_FAILED_EventType  EventType = "end-testsuite-failed"
+	END_TESTSUITE_ABORTED_EventType EventType = "end-testsuite-aborted"
+	END_TESTSUITE_TIMEOUT_EventType EventType = "end-testsuite-timeout"
+)
 
 // WebhookStatus defines the observed state of Webhook
 type WebhookStatus struct {

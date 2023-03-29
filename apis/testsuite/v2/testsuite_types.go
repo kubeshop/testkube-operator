@@ -47,12 +47,13 @@ type Variable commonv1.Variable
 
 // TestSuiteStepSpec for particular type will have config for possible step types
 type TestSuiteStepSpec struct {
-	Type    string                `json:"type,omitempty"`
+	Type    TestSuiteStepType     `json:"type,omitempty"`
 	Execute *TestSuiteStepExecute `json:"execute,omitempty"`
 	Delay   *TestSuiteStepDelay   `json:"delay,omitempty"`
 }
 
-// TestSuiteStepType deines different type of test suite steps
+// TestSuiteStepType defines different type of test suite steps
+// +kubebuilder:validation:Enum=execute;delay
 type TestSuiteStepType string
 
 const (
@@ -76,10 +77,21 @@ type TestSuiteStepDelay struct {
 // running context for test or test suite execution
 type RunningContext struct {
 	// One of possible context types
-	Type_ string `json:"type"`
+	Type_ RunningContextType `json:"type"`
 	// Context value depending from its type
 	Context string `json:"context,omitempty"`
 }
+
+type RunningContextType string
+
+const (
+	RunningContextTypeUserCLI     RunningContextType = "user-cli"
+	RunningContextTypeUserUI      RunningContextType = "user-ui"
+	RunningContextTypeTestSuite   RunningContextType = "testsuite"
+	RunningContextTypeTestTrigger RunningContextType = "testtrigger"
+	RunningContextTypeScheduler   RunningContextType = "scheduler"
+	RunningContextTypeEmpty       RunningContextType = ""
+)
 
 // test suite execution request body
 type TestSuiteExecutionRequest struct {
@@ -105,17 +117,7 @@ type TestSuiteExecutionRequest struct {
 	RunningContext *RunningContext `json:"runningContext,omitempty"`
 }
 
-type RunningContextType string
-
-const (
-	RunningContextTypeUserCLI     RunningContextType = "user-cli"
-	RunningContextTypeUserUI      RunningContextType = "user-ui"
-	RunningContextTypeTestSuite   RunningContextType = "testsuite"
-	RunningContextTypeTestTrigger RunningContextType = "testtrigger"
-	RunningContextTypeScheduler   RunningContextType = "scheduler"
-	RunningContextTypeEmpty       RunningContextType = ""
-)
-
+// +kubebuilder:validation:Enum=queued;running;passed;failed;aborting;aborted;timeout
 type TestSuiteExecutionStatus string
 
 // List of TestSuiteExecutionStatus

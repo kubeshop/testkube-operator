@@ -52,7 +52,7 @@ func (src *Test) ConvertTo(dstRaw conversion.Hub) error {
 	if src.Spec.Content != nil {
 		dst.Spec.Content = &testkubev2.TestContent{
 			Data:  src.Spec.Content.Data,
-			Type_: src.Spec.Content.Type_,
+			Type_: string(src.Spec.Content.Type_),
 			Uri:   src.Spec.Content.Uri,
 		}
 	}
@@ -112,7 +112,7 @@ func (dst *Test) ConvertFrom(srcRaw conversion.Hub) error {
 		if src.Spec.Content != nil {
 			dst.Spec.Content = &TestContent{
 				Data:  src.Spec.Content.Data,
-				Type_: src.Spec.Content.Type_,
+				Type_: TestContentType(src.Spec.Content.Type_),
 				Uri:   src.Spec.Content.Uri,
 			}
 		}
