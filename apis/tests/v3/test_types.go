@@ -166,7 +166,7 @@ type ExecutionRequest struct {
 	// additional executor binary arguments
 	Args []string `json:"args,omitempty"`
 	// usage mode for arguments
-	ArgsMode string `json:"argsMode,omitempty"`
+	ArgsMode ArgsModeType `json:"argsMode,omitempty"`
 	// executor binary command
 	Command []string `json:"command,omitempty"`
 	// container executor image
@@ -204,6 +204,17 @@ type ExecutionRequest struct {
 	EnvSecrets     []EnvReference  `json:"envSecrets,omitempty"`
 	RunningContext *RunningContext `json:"runningContext,omitempty"`
 }
+
+// ArgsModeType defines args mode type
+// +kubebuilder:validation:Enum=append;override
+type ArgsModeType string
+
+const (
+	// ArgsModeTypeAppend for append args mode
+	ArgsModeTypeAppend ArgsModeType = "append"
+	// ArgsModeTypeOverride for override args mode
+	ArgsModeTypeOverride ArgsModeType = "override"
+)
 
 // Reference to env resource
 type EnvReference struct {

@@ -453,6 +453,9 @@ spec:
                     type: array
                   argsMode:
                     description: usage mode for arguments
+                    enum:
+                    - append
+                    - override
                     type: string
                   artifactRequest:
                     description: artifact request body for container executors with
