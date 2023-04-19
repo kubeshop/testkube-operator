@@ -40,9 +40,9 @@ type ExecutorSpec struct {
 
 	// Image for kube-job
 	Image string `json:"image,omitempty"`
-	// container executor binary arguments
+	// executor binary arguments
 	Args []string `json:"args,omitempty"`
-	// container executor default binary command
+	// executor default binary command
 	Command []string `json:"command,omitempty"`
 	// container executor default image pull secrets
 	ImagePullSecrets []v1.LocalObjectReference `json:"imagePullSecrets,omitempty"`

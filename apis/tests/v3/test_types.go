@@ -165,7 +165,9 @@ type ExecutionRequest struct {
 	TestSuiteSecretUUID string `json:"testSuiteSecretUUID,omitempty"`
 	// additional executor binary arguments
 	Args []string `json:"args,omitempty"`
-	// container executor binary command
+	// usage mode for arguments
+	ArgsMode string `json:"argsMode,omitempty"`
+	// executor binary command
 	Command []string `json:"command,omitempty"`
 	// container executor image
 	Image string `json:"image,omitempty"`
