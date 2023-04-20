@@ -1,0 +1,45 @@
+name: Build and publish Docker image with a branch name tag
+on:
+  push:
+    branches:
+      - develop
+      - new-release-flow
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+#      - name: Output commit sha
+#        id: github_sha
+#        run: echo "::set-output name=sha_short::${GITHUB_SHA::7}"
+
+      - name: Build images with GoReleaser
+        uses: goreleaser/goreleaser-action@v4
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release -f .goreleaser-develop.yaml
+        env:
+          GITHUB_TOKEN: ${{ secrets.CI_BOT_TOKEN }}
+
+      - name: Push Docker images
+        run: |
+          docker push kubeshop/testkube-operator:${{ github.ref }}
+
+#      #Trigger Helm repo workflow to deploy Dashboard to Stage cluster
+#      - name: Repository Dispatch
+#        uses: peter-evans/repository-dispatch@v2
+#        with:
+#          token: ${{ secrets.CI_BOT_TOKEN }}
+#          repository: kubeshop/helm-charts
+#          event-type: trigger-workflow-operator-develop
+#          client-payload: '{"image_tag_operator": "${{ github.ref }}"}'
