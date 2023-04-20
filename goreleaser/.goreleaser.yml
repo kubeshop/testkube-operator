@@ -53,4 +53,5 @@ docker_manifests:
       - kubeshop/testkube-operator:latest-amd64
       - kubeshop/testkube-operator:latest-arm64v8
 
-
+release:
+  disable: true
