@@ -1,4 +1,4 @@
-name: Docker images building and pushing with GoReleaser
+name: GoReleaser tag build
 on:
   push:
     tags:
@@ -45,6 +45,9 @@ jobs:
           cd ./helm-charts
           git config user.name "kubeshop-bot"
           git config user.email "kubeshop-bot@kubeshop.io"
+
+          git fetch origin "release-$RELEASE_VERSION"
+          git checkout "release-$RELEASE_VERSION"
 
           # Calling chart releaser script by passing needed folder name:
           # E.G. in order to relase api-server":
