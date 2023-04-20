@@ -18,9 +18,9 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-#      - name: Output commit sha
-#        id: github_sha
-#        run: echo "::set-output name=sha_short::${GITHUB_SHA::7}"
+      - name: Output commit sha
+        id: github_sha
+        run: echo ${GITHUB_REF##*/}
 
       - name: Build images with GoReleaser
         uses: goreleaser/goreleaser-action@v4
@@ -33,7 +33,7 @@ jobs:
 
       - name: Push Docker images
         run: |
-          docker push kubeshop/testkube-operator:${{ github.ref }}
+          docker push kubeshop/testkube-operator:${GITHUB_REF##*/}
 
 #      #Trigger Helm repo workflow to deploy Dashboard to Stage cluster
 #      - name: Repository Dispatch
@@ -42,4 +42,4 @@ jobs:
 #          token: ${{ secrets.CI_BOT_TOKEN }}
 #          repository: kubeshop/helm-charts
 #          event-type: trigger-workflow-operator-develop
-#          client-payload: '{"image_tag_operator": "${{ github.ref }}"}'
+#          client-payload: '{"image_tag_operator": "${GITHUB_REF##*/}"}'
