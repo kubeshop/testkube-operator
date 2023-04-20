@@ -18,16 +18,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Output commit sha
-        id: github_sha
-        run: echo ${GITHUB_REF##*/}
-
       - name: Build images with GoReleaser
         uses: goreleaser/goreleaser-action@v4
         with:
           distribution: goreleaser
           version: latest
-          args: release -f .goreleaser-develop.yaml --snapshot
+          args: release -f goreleaser/.goreleaser-snapshot.yaml --snapshot
         env:
           GITHUB_TOKEN: ${{ secrets.CI_BOT_TOKEN }}
 
@@ -35,7 +31,7 @@ jobs:
         run: |
           docker push kubeshop/testkube-operator:${GITHUB_REF##*/}
 
-#      #Trigger Helm repo workflow to deploy Dashboard to Stage cluster
+#      #Trigger Helm repo workflow to deploy Operator to Stage cluster
 #      - name: Repository Dispatch
 #        uses: peter-evans/repository-dispatch@v2
 #        with:

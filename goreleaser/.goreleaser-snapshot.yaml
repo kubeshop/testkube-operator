@@ -14,6 +14,7 @@ dockers:
     goarch: amd64
     image_templates:
       - "kubeshop/testkube-operator:{{ .Branch }}"
+      - "kubeshop/testkube-operator:{{ .ShortCommit }}"
     build_flag_templates:
       - "--platform=linux/amd64"
       - "--label=org.opencontainers.image.title={{ .ProjectName }}"
