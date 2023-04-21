@@ -115,13 +115,13 @@ const (
 	GitAuthTypeHeader GitAuthType = "header"
 )
 
-// artifact request body for container executors with test artifacts
+// artifact request body with test artifacts
 type ArtifactRequest struct {
-	// artifact storage class name
+	// artifact storage class name for container executor
 	StorageClassName string `json:"storageClassName"`
-	// artifact volume mount path
+	// artifact volume mount path for container executor
 	VolumeMountPath string `json:"volumeMountPath"`
-	// artifact directories
+	// artifact directories for scraping
 	Dirs []string `json:"dirs,omitempty"`
 }
 
