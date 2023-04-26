@@ -563,6 +563,8 @@ spec:
                           type: string
                       type: object
                     type: array
+                  isVariablesFileArchived:
+                    type: boolean
                   jobTemplate:
                     description: job template extensions
                     type: string
