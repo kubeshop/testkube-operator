@@ -563,6 +563,8 @@ spec:
                           type: string
                       type: object
                     type: array
+                  isVariablesFileArchived:
+                    type: boolean
                   jobTemplate:
                     description: job template extensions
                     type: string
@@ -584,6 +586,18 @@ spec:
                   preRunScript:
                     description: script to run before test execution
                     type: string
+                  runningContext:
+                    description: running context for test or test suite execution
+                    properties:
+                      context:
+                        description: Context value depending from its type
+                        type: string
+                      type:
+                        description: One of possible context types
+                        type: string
+                    required:
+                    - type
+                    type: object
                   scraperTemplate:
                     description: scraper template extensions
                     type: string
