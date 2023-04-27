@@ -193,6 +193,8 @@ type ExecutionRequest struct {
 	ArtifactRequest       *ArtifactRequest `json:"artifactRequest,omitempty"`
 	// job template extensions
 	JobTemplate string `json:"jobTemplate,omitempty"`
+	// cron job template extensions
+	CronJobTemplate string `json:"cronJobTemplate,omitempty"`
 	// script to run before test execution
 	PreRunScript string `json:"preRunScript,omitempty"`
 	// scraper template extensions
