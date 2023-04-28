@@ -55,11 +55,11 @@ jobs:
         run: |
           docker push kubeshop/testkube-operator:${{ steps.github_sha.outputs.sha_short }}
 
-#      #Trigger Helm repo workflow to deploy Operator to Develop cluster
-#      - name: Repository Dispatch
-#        uses: peter-evans/repository-dispatch@v2
-#        with:
-#          token: ${{ secrets.CI_BOT_TOKEN }}
-#          repository: kubeshop/helm-charts
-#          event-type: trigger-workflow-operator-develop
-#          client-payload: '{"image_tag_operator": "${{ steps.github_sha.outputs.sha_short }}"}'
+      #Trigger Helm repo workflow to deploy Operator to Develop cluster
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.CI_BOT_TOKEN }}
+          repository: kubeshop/helm-charts
+          event-type: trigger-workflow-operator-develop
+          client-payload: '{"image_tag_operator": "${{ steps.github_sha.outputs.sha_short }}"}'

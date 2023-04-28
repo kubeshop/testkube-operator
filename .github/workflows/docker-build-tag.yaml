@@ -48,9 +48,11 @@ jobs:
           DOCKER_BUILDX_CACHE_FROM: "type=gha"
           DOCKER_BUILDX_CACHE_TO: "type=gha,mode=max"
 
-      - name: getting Tag name
-        id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - name: Get tag
+        id: tag
+        uses: dawidd6/action-get-tag@v1
+        with:
+          strip_v: false
 
       - name: Editing helm-release repo with version based on a Tag pushed.
         run: |
@@ -77,4 +79,4 @@ jobs:
 
         env:
           GH_PUSH_TOKEN: ${{ secrets.CI_BOT_TOKEN }}
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+          RELEASE_VERSION: ${{ steps.tag.outputs.tag }}
