@@ -157,8 +157,9 @@ type ExecutionRequest struct {
 	// test kubernetes namespace (\"testkube\" when not set)
 	Namespace string `json:"namespace,omitempty"`
 	// variables file content - need to be in format for particular executor (e.g. postman envs file)
-	VariablesFile string              `json:"variablesFile,omitempty"`
-	Variables     map[string]Variable `json:"variables,omitempty"`
+	VariablesFile           string              `json:"variablesFile,omitempty"`
+	IsVariablesFileArchived bool                `json:"isVariablesFileArchived,omitempty"`
+	Variables               map[string]Variable `json:"variables,omitempty"`
 	// test secret uuid
 	TestSecretUUID string `json:"testSecretUUID,omitempty"`
 	// test suite secret uuid, if it's run as a part of test suite
@@ -194,6 +195,8 @@ type ExecutionRequest struct {
 	ArtifactRequest       *ArtifactRequest `json:"artifactRequest,omitempty"`
 	// job template extensions
 	JobTemplate string `json:"jobTemplate,omitempty"`
+	// cron job template extensions
+	CronJobTemplate string `json:"cronJobTemplate,omitempty"`
 	// script to run before test execution
 	PreRunScript string `json:"preRunScript,omitempty"`
 	// scraper template extensions

@@ -480,6 +480,9 @@ spec:
                     items:
                       type: string
                     type: array
+                  cronJobTemplate:
+                    description: cron job template extensions
+                    type: string
                   envConfigMaps:
                     description: config map references
                     items:
@@ -568,6 +571,8 @@ spec:
                           type: string
                       type: object
                     type: array
+                  isVariablesFileArchived:
+                    type: boolean
                   jobTemplate:
                     description: job template extensions
                     type: string
