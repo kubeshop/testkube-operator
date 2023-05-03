@@ -2,7 +2,7 @@ name: GoReleaser tag build
 on:
   push:
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]-beta-*"
+      - "v[0-9]+.[0-9]+.[0-9]+-*"
 
 jobs:
   docker:
