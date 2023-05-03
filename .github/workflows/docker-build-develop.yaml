@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - develop
-      - new-release-flow
 
 jobs:
   docker:
@@ -55,7 +54,6 @@ jobs:
         run: |
           docker push kubeshop/testkube-operator:${{ steps.github_sha.outputs.sha_short }}
 
-      #Trigger Helm repo workflow to deploy Operator to Develop cluster
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v2
         with:

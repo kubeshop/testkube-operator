@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - release_**
-      - new-release-flow
+
 jobs:
   docker:
     runs-on: ubuntu-latest
@@ -76,7 +76,6 @@ jobs:
             echo "Branch ${BRANCH_NAME} already exists in ${REPO_OWNER}/${REPO_NAME}"
           fi
 
-      #Trigger Helm repo workflow to deploy Operator to Stage cluster
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v2
         with:
