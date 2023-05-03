@@ -89,17 +89,11 @@ func (r *TestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		return ctrl.Result{}, err
 	}
 
-	jobTemplate := ""
-	if test.Spec.ExecutionRequest != nil {
-		jobTemplate = test.Spec.ExecutionRequest.CronJobTemplate
-	}
-
 	options := cronjob.CronJobOptions{
-		Schedule:                  test.Spec.Schedule,
-		Resource:                  cronjob.TestResourceURI,
-		Data:                      string(data),
-		Labels:                    test.Labels,
-		CronJobTemplateExtensions: jobTemplate,
+		Schedule: test.Spec.Schedule,
+		Resource: cronjob.TestResourceURI,
+		Data:     string(data),
+		Labels:   test.Labels,
 	}
 
 	// Create CronJob if it was not created before for provided Test schedule
