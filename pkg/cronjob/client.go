@@ -12,8 +12,6 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/yaml"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	kyaml "sigs.k8s.io/kustomize/kyaml/yaml"
-	"sigs.k8s.io/kustomize/kyaml/yaml/merge2"
 )
 
 const (
@@ -32,25 +30,23 @@ type Client struct {
 }
 
 type CronJobOptions struct {
-	Schedule                  string
-	Resource                  string
-	Data                      string
-	Labels                    map[string]string
-	CronJobTemplateExtensions string
+	Schedule string
+	Resource string
+	Data     string
+	Labels   map[string]string
 }
 
 type templateParameters struct {
-	Id                        string
-	Name                      string
-	Namespace                 string
-	ServiceName               string
-	ServicePort               int
-	Schedule                  string
-	Resource                  string
-	CronJobTemplate           string
-	CronJobTemplateExtensions string
-	Data                      string
-	Labels                    map[string]string
+	Id              string
+	Name            string
+	Namespace       string
+	ServiceName     string
+	ServicePort     int
+	Schedule        string
+	Resource        string
+	CronJobTemplate string
+	Data            string
+	Labels          map[string]string
 }
 
 // NewClient is a method to create new cron job client
@@ -76,17 +72,16 @@ func (c *Client) Get(ctx context.Context, name, namespace string) (*batchv1.Cron
 // Create is a method to create a cron job
 func (c *Client) Create(ctx context.Context, id, name, namespace string, options CronJobOptions) error {
 	parameters := templateParameters{
-		Id:                        id,
-		Name:                      name,
-		Namespace:                 namespace,
-		ServiceName:               c.serviceName,
-		ServicePort:               c.servicePort,
-		Schedule:                  options.Schedule,
-		Resource:                  options.Resource,
-		CronJobTemplate:           c.cronJobTemplate,
-		CronJobTemplateExtensions: options.CronJobTemplateExtensions,
-		Data:                      options.Data,
-		Labels:                    options.Labels,
+		Id:              id,
+		Name:            name,
+		Namespace:       namespace,
+		ServiceName:     c.serviceName,
+		ServicePort:     c.servicePort,
+		Schedule:        options.Schedule,
+		Resource:        options.Resource,
+		CronJobTemplate: c.cronJobTemplate,
+		Data:            options.Data,
+		Labels:          options.Labels,
 	}
 
 	cronJobSpec, err := NewCronJobSpec(parameters)
@@ -104,17 +99,16 @@ func (c *Client) Create(ctx context.Context, id, name, namespace string, options
 // Update is a method to update an existing cron job
 func (c *Client) Update(ctx context.Context, cronJob *batchv1.CronJob, id, name, namespace string, options CronJobOptions) error {
 	parameters := templateParameters{
-		Id:                        id,
-		Name:                      name,
-		Namespace:                 namespace,
-		ServiceName:               c.serviceName,
-		ServicePort:               c.servicePort,
-		Schedule:                  options.Schedule,
-		Resource:                  options.Resource,
-		CronJobTemplate:           c.cronJobTemplate,
-		CronJobTemplateExtensions: options.CronJobTemplateExtensions,
-		Data:                      options.Data,
-		Labels:                    options.Labels,
+		Id:              id,
+		Name:            name,
+		Namespace:       namespace,
+		ServiceName:     c.serviceName,
+		ServicePort:     c.servicePort,
+		Schedule:        options.Schedule,
+		Resource:        options.Resource,
+		CronJobTemplate: c.cronJobTemplate,
+		Data:            options.Data,
+		Labels:          options.Labels,
 	}
 
 	cronJobSpec, err := NewCronJobSpec(parameters)
@@ -166,22 +160,6 @@ func NewCronJobSpec(parameters templateParameters) (*batchv1.CronJob, error) {
 
 	var cronJob batchv1.CronJob
 	cronJobSpec := buffer.String()
-	if parameters.CronJobTemplateExtensions != "" {
-		tmplExt, err := template.New("cronJobExt").Parse(parameters.CronJobTemplateExtensions)
-		if err != nil {
-			return nil, fmt.Errorf("creating cron job extensions spec from default template error: %w", err)
-		}
-
-		var bufferExt bytes.Buffer
-		if err = tmplExt.ExecuteTemplate(&bufferExt, "cronJobExt", parameters); err != nil {
-			return nil, fmt.Errorf("executing cron job extensions spec default template: %w", err)
-		}
-
-		if cronJobSpec, err = merge2.MergeStrings(bufferExt.String(), cronJobSpec, false, kyaml.MergeOptions{}); err != nil {
-			return nil, fmt.Errorf("merging cron job spec templates: %w", err)
-		}
-	}
-
 	decoder := yaml.NewYAMLOrJSONDecoder(bytes.NewBufferString(cronJobSpec), len(cronJobSpec))
 	if err := decoder.Decode(&cronJob); err != nil {
 		return nil, fmt.Errorf("decoding cron job spec error: %w", err)
