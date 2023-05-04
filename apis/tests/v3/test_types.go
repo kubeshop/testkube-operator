@@ -158,7 +158,7 @@ type ExecutionRequest struct {
 	Namespace string `json:"namespace,omitempty"`
 	// variables file content - need to be in format for particular executor (e.g. postman envs file)
 	VariablesFile           string              `json:"variablesFile,omitempty"`
-	IsVariablesFileArchived bool                `json:"isVariablesFileArchived,omitempty"`
+	IsVariablesFileUploaded bool                `json:"isVariablesFileUploaded,omitempty"`
 	Variables               map[string]Variable `json:"variables,omitempty"`
 	// test secret uuid
 	TestSecretUUID string `json:"testSecretUUID,omitempty"`
