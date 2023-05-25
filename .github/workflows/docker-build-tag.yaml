@@ -69,6 +69,7 @@ jobs:
 
           export GH_TOKEN
           export RELEASE_VERSION
+          export SERVICE
 
           # Check if release branch exists in helm-charts repository
           REPO_OWNER=kubeshop
