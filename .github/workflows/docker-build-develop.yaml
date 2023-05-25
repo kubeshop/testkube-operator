@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - develop
-      - feat/add-docker-registry-description
 
 env:
   ALPINE_IMAGE: alpine:3.18.0
@@ -37,17 +36,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Push README to Dockerhub
-        uses: christian-korneck/update-container-description-action@v1
-        env:
-          DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
-          DOCKER_PASS: ${{ secrets.DOCKERHUB_TOKEN }}
-        with:
-          destination_container_repo: ${{ github.repository }}
-          provider: dockerhub
-          short_description: 'Testkube Kubernetes Operator'
-          readme_file: './README.md'
 
       - name: Output commit sha
         id: github_sha
