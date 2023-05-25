@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - develop
-      - ci/parametrize-alpine
+      - feat/add-docker-registry-description
 
 env:
   ALPINE_IMAGE: alpine:3.18.0
@@ -38,31 +38,42 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Output commit sha
-        id: github_sha
-        run: echo "::set-output name=sha_short::${GITHUB_SHA::7}"
-
-      - name: Build images with GoReleaser
-        uses: goreleaser/goreleaser-action@v4
-        with:
-          distribution: goreleaser
-          version: latest
-          args: release -f goreleaser/.goreleaser-snapshot.yaml --snapshot
+      - name: Push README to Dockerhub
+        uses: christian-korneck/update-container-description-action@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.CI_BOT_TOKEN }}
-          DOCKER_BUILDX_BUILDER: "${{ steps.buildx.outputs.name }}"
-          DOCKER_BUILDX_CACHE_FROM: "type=gha"
-          DOCKER_BUILDX_CACHE_TO: "type=gha,mode=max"
-          ALPINE_IMAGE: ${{ env.ALPINE_IMAGE }}
-
-      - name: Push Docker images
-        run: |
-          docker push kubeshop/testkube-operator:${{ steps.github_sha.outputs.sha_short }}
-
-      - name: Repository Dispatch
-        uses: peter-evans/repository-dispatch@v2
+          DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKER_PASS: ${{ secrets.DOCKERHUB_TOKEN }}
         with:
-          token: ${{ secrets.CI_BOT_TOKEN }}
-          repository: kubeshop/helm-charts
-          event-type: trigger-workflow-operator-develop
-          client-payload: '{"image_tag_operator": "${{ steps.github_sha.outputs.sha_short }}"}'
+          destination_container_repo: kubeshop/testkube-operator
+          provider: dockerhub
+          short_description: 'Testkube Kubernetes Operator'
+          readme_file: './README.md'
+
+#      - name: Output commit sha
+#        id: github_sha
+#        run: echo "::set-output name=sha_short::${GITHUB_SHA::7}"
+#
+#      - name: Build images with GoReleaser
+#        uses: goreleaser/goreleaser-action@v4
+#        with:
+#          distribution: goreleaser
+#          version: latest
+#          args: release -f goreleaser/.goreleaser-snapshot.yaml --snapshot
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.CI_BOT_TOKEN }}
+#          DOCKER_BUILDX_BUILDER: "${{ steps.buildx.outputs.name }}"
+#          DOCKER_BUILDX_CACHE_FROM: "type=gha"
+#          DOCKER_BUILDX_CACHE_TO: "type=gha,mode=max"
+#          ALPINE_IMAGE: ${{ env.ALPINE_IMAGE }}
+#
+#      - name: Push Docker images
+#        run: |
+#          docker push kubeshop/testkube-operator:${{ steps.github_sha.outputs.sha_short }}
+#
+#      - name: Repository Dispatch
+#        uses: peter-evans/repository-dispatch@v2
+#        with:
+#          token: ${{ secrets.CI_BOT_TOKEN }}
+#          repository: kubeshop/helm-charts
+#          event-type: trigger-workflow-operator-develop
+#          client-payload: '{"image_tag_operator": "${{ steps.github_sha.outputs.sha_short }}"}'
