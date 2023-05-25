@@ -62,13 +62,14 @@ jobs:
         run: |
 
           # Setting up Git:
-          git clone https://kubeshop-bot:$GH_PUSH_TOKEN@github.com/kubeshop/helm-charts
+          git clone https://kubeshop-bot:$GH_TOKEN@github.com/kubeshop/helm-charts
           cd ./helm-charts
           git config user.name "kubeshop-bot"
           git config user.email "kubeshop-bot@kubeshop.io"
 
-          export GH_PUSH_TOKEN
+          export GH_TOKEN
           export RELEASE_VERSION
+          export SERVICE
 
           # Check if release branch exists in helm-charts repository
           REPO_OWNER=kubeshop
@@ -92,5 +93,5 @@ jobs:
 
         env:
           SERVICE: operator
-          GH_PUSH_TOKEN: ${{ secrets.CI_BOT_TOKEN }}
+          GH_TOKEN: ${{ secrets.CI_BOT_TOKEN }}
           RELEASE_VERSION: ${{ steps.tag.outputs.tag }}
