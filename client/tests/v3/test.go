@@ -556,6 +556,11 @@ func updateTestSecrets(test *testsv3.Test, secretName string, secrets map[string
 				Key:  gitUsernameSecretName,
 			}
 		}
+	} else {
+		if test.Spec.Content != nil && test.Spec.Content.Repository != nil && test.Spec.Content.Repository.UsernameSecret != nil &&
+			test.Spec.Content.Repository.UsernameSecret.Name == secretName {
+			test.Spec.Content.Repository.UsernameSecret = nil
+		}
 	}
 
 	if _, ok := secrets[gitTokenSecretName]; ok {
@@ -565,16 +570,21 @@ func updateTestSecrets(test *testsv3.Test, secretName string, secrets map[string
 				Key:  gitTokenSecretName,
 			}
 		}
+	} else {
+		if test.Spec.Content != nil && test.Spec.Content.Repository != nil && test.Spec.Content.Repository.TokenSecret != nil &&
+			test.Spec.Content.Repository.TokenSecret.Name == secretName {
+			test.Spec.Content.Repository.TokenSecret = nil
+		}
 	}
 }
 
 func clearTestSecrets(test *testsv3.Test, secretName string) {
-	if test.Spec.Content != nil && test.Spec.Content.Repository != nil && test.Spec.Content.Repository.UsernameSecret == nil &&
+	if test.Spec.Content != nil && test.Spec.Content.Repository != nil && test.Spec.Content.Repository.UsernameSecret != nil &&
 		test.Spec.Content.Repository.UsernameSecret.Name == secretName {
 		test.Spec.Content.Repository.UsernameSecret = nil
 	}
 
-	if test.Spec.Content != nil && test.Spec.Content.Repository != nil && test.Spec.Content.Repository.TokenSecret == nil &&
+	if test.Spec.Content != nil && test.Spec.Content.Repository != nil && test.Spec.Content.Repository.TokenSecret != nil &&
 		test.Spec.Content.Repository.TokenSecret.Name == secretName {
 		test.Spec.Content.Repository.TokenSecret = nil
 	}
