@@ -38,7 +38,7 @@ type Interface interface {
 	DeleteAll() error
 	CreateTestsuiteSecrets(testsuite *testsuitev2.TestSuite) error
 	UpdateTestsuiteSecrets(testsuite *testsuitev2.TestSuite) error
-	LoadTessuiteVariablesSecret(testsuite *testsuitev2.TestSuite) (*corev1.Secret, error)
+	LoadTestsuiteVariablesSecret(testsuite *testsuitev2.TestSuite) (*corev1.Secret, error)
 	GetCurrentSecretUUID(testSuiteName string) (string, error)
 	GetSecretTestSuiteVars(testSuiteName, secretUUID string) (map[string]string, error)
 	DeleteByLabels(selector string) error
