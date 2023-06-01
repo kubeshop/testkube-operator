@@ -181,6 +181,11 @@ func updateTestSourceSecrets(testSource *testsourcev1.TestSource, secretName str
 				Key:  gitUsernameSecretName,
 			}
 		}
+	} else {
+		if testSource.Spec.Repository != nil && testSource.Spec.Repository.UsernameSecret != nil &&
+			testSource.Spec.Repository.UsernameSecret.Name == secretName {
+			testSource.Spec.Repository.UsernameSecret = nil
+		}
 	}
 
 	if _, ok := secrets[gitTokenSecretName]; ok {
@@ -189,6 +194,11 @@ func updateTestSourceSecrets(testSource *testsourcev1.TestSource, secretName str
 				Name: secretName,
 				Key:  gitTokenSecretName,
 			}
+		}
+	} else {
+		if testSource.Spec.Repository != nil && testSource.Spec.Repository.TokenSecret != nil &&
+			testSource.Spec.Repository.TokenSecret.Name == secretName {
+			testSource.Spec.Repository.TokenSecret = nil
 		}
 	}
 }

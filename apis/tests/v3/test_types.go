@@ -115,13 +115,13 @@ const (
 	GitAuthTypeHeader GitAuthType = "header"
 )
 
-// artifact request body for container executors with test artifacts
+// artifact request body with test artifacts
 type ArtifactRequest struct {
-	// artifact storage class name
+	// artifact storage class name for container executor
 	StorageClassName string `json:"storageClassName"`
-	// artifact volume mount path
+	// artifact volume mount path for container executor
 	VolumeMountPath string `json:"volumeMountPath"`
-	// artifact directories
+	// artifact directories for scraping
 	Dirs []string `json:"dirs,omitempty"`
 }
 
@@ -166,7 +166,9 @@ type ExecutionRequest struct {
 	TestSuiteSecretUUID string `json:"testSuiteSecretUUID,omitempty"`
 	// additional executor binary arguments
 	Args []string `json:"args,omitempty"`
-	// container executor binary command
+	// usage mode for arguments
+	ArgsMode ArgsModeType `json:"argsMode,omitempty"`
+	// executor binary command
 	Command []string `json:"command,omitempty"`
 	// container executor image
 	Image string `json:"image,omitempty"`
@@ -193,6 +195,8 @@ type ExecutionRequest struct {
 	ArtifactRequest       *ArtifactRequest `json:"artifactRequest,omitempty"`
 	// job template extensions
 	JobTemplate string `json:"jobTemplate,omitempty"`
+	// cron job template extensions
+	CronJobTemplate string `json:"cronJobTemplate,omitempty"`
 	// script to run before test execution
 	PreRunScript string `json:"preRunScript,omitempty"`
 	// scraper template extensions
@@ -203,6 +207,17 @@ type ExecutionRequest struct {
 	EnvSecrets     []EnvReference  `json:"envSecrets,omitempty"`
 	RunningContext *RunningContext `json:"runningContext,omitempty"`
 }
+
+// ArgsModeType defines args mode type
+// +kubebuilder:validation:Enum=append;override
+type ArgsModeType string
+
+const (
+	// ArgsModeTypeAppend for append args mode
+	ArgsModeTypeAppend ArgsModeType = "append"
+	// ArgsModeTypeOverride for override args mode
+	ArgsModeTypeOverride ArgsModeType = "override"
+)
 
 // Reference to env resource
 type EnvReference struct {

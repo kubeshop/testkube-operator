@@ -115,6 +115,8 @@ type TestSuiteExecutionRequest struct {
 	// timeout for test suite execution
 	Timeout        int32           `json:"timeout,omitempty"`
 	RunningContext *RunningContext `json:"runningContext,omitempty"`
+	// cron job template extensions
+	CronJobTemplate string `json:"cronJobTemplate,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=queued;running;passed;failed;aborting;aborted;timeout
