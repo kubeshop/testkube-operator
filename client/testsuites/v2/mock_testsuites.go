@@ -181,19 +181,19 @@ func (mr *MockInterfaceMockRecorder) ListLabels() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListLabels", reflect.TypeOf((*MockInterface)(nil).ListLabels))
 }
 
-// LoadTestVariablesSecret mocks base method.
-func (m *MockInterface) LoadTestVariablesSecret(arg0 *v2.TestSuite) (*v1.Secret, error) {
+// LoadTestsuiteVariablesSecret mocks base method.
+func (m *MockInterface) LoadTestsuiteVariablesSecret(arg0 *v2.TestSuite) (*v1.Secret, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "LoadTestVariablesSecret", arg0)
+	ret := m.ctrl.Call(m, "LoadTestsuiteVariablesSecret", arg0)
 	ret0, _ := ret[0].(*v1.Secret)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// LoadTestVariablesSecret indicates an expected call of LoadTestVariablesSecret.
-func (mr *MockInterfaceMockRecorder) LoadTestVariablesSecret(arg0 interface{}) *gomock.Call {
+// LoadTestsuiteVariablesSecret indicates an expected call of LoadTestsuiteVariablesSecret.
+func (mr *MockInterfaceMockRecorder) LoadTestsuiteVariablesSecret(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadTestVariablesSecret", reflect.TypeOf((*MockInterface)(nil).LoadTestVariablesSecret), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LoadTestsuiteVariablesSecret", reflect.TypeOf((*MockInterface)(nil).LoadTestsuiteVariablesSecret), arg0)
 }
 
 // Update mocks base method.
