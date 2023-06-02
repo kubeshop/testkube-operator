@@ -224,8 +224,10 @@ func (s TestsClient) Delete(name string) error {
 	}
 
 	// delete secret only if exists ignore otherwise
-	if secretExists && secretObj != nil {
-		return s.k8sClient.Delete(context.Background(), secretObj)
+	if err == nil && secretObj != nil {
+		if err = s.k8sClient.Delete(context.Background(), secretObj); err != nil {
+			return err
+		}
 	}
 
 	secretName := secret.GetMetadataName(test.Name, secretKind)
@@ -300,7 +302,7 @@ func (s TestsClient) UpdateTestSecrets(test *testsv3.Test) error {
 		return err
 	}
 
-	if secret == nil {
+	if err == nil && secret == nil {
 		return nil
 	}
 
@@ -340,7 +342,8 @@ func (s TestsClient) TestHasSecrets(test *testsv3.Test) (has bool) {
 	}
 
 	for _, v := range test.Spec.ExecutionRequest.Variables {
-		if v.Type_ == commonv1.VariableTypeSecret {
+		if v.Type_ == commonv1.VariableTypeSecret &&
+			(v.ValueFrom.SecretKeyRef != nil && (v.ValueFrom.SecretKeyRef.Name == secretName(test.Name))) {
 			return true
 		}
 	}
@@ -430,10 +433,6 @@ func testVarsToSecret(test *testsv3.Test, secret *corev1.Secret) error {
 	for k := range test.Spec.ExecutionRequest.Variables {
 		v := test.Spec.ExecutionRequest.Variables[k]
 		if v.Type_ == commonv1.VariableTypeSecret {
-			secret.StringData[v.Name] = v.Value
-			secretMap[v.Name] = v.Value
-			// clear passed test variable secret value and save as reference o secret
-			v.Value = ""
 			if v.ValueFrom.SecretKeyRef != nil {
 				v.ValueFrom = corev1.EnvVarSource{
 					SecretKeyRef: &corev1.SecretKeySelector{
@@ -444,6 +443,10 @@ func testVarsToSecret(test *testsv3.Test, secret *corev1.Secret) error {
 					},
 				}
 			} else {
+				secret.StringData[v.Name] = v.Value
+				secretMap[v.Name] = v.Value
+				// clear passed test variable secret value and save as reference o secret
+				v.Value = ""
 				v.ValueFrom = corev1.EnvVarSource{
 					SecretKeyRef: &corev1.SecretKeySelector{
 						Key: v.Name,
