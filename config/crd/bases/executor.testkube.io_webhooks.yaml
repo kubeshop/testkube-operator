@@ -62,7 +62,7 @@ spec:
                   the object
                 type: string
               payloadTemplate:
-                description: golang based template for notification paylod
+                description: golang based template for notification payload
                 type: string
               selector:
                 description: Labels to filter for tests and test suites
