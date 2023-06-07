@@ -265,7 +265,7 @@ func (s TestSuitesClient) UpdateTestsuiteSecrets(testsuite *testsuitev3.TestSuit
 	return nil
 }
 
-func (s TestSuitesClient) TestsuiteHasSecrets(testsuite *testsuitev2.TestSuite) (has bool) {
+func (s TestSuitesClient) TestsuiteHasSecrets(testsuite *testsuitev3.TestSuite) (has bool) {
 	if testsuite.Spec.ExecutionRequest == nil {
 		return
 	}
