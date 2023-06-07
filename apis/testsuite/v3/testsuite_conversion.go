@@ -90,6 +90,7 @@ func (src *TestSuite) ConvertTo(dstRaw conversion.Hub) error {
 			HttpProxy:       src.Spec.ExecutionRequest.HttpProxy,
 			HttpsProxy:      src.Spec.ExecutionRequest.HttpsProxy,
 			Timeout:         src.Spec.ExecutionRequest.Timeout,
+			CronJobTemplate: src.Spec.ExecutionRequest.CronJobTemplate,
 		}
 	}
 
@@ -174,6 +175,7 @@ func (dst *TestSuite) ConvertFrom(srcRaw conversion.Hub) error {
 			HttpProxy:       src.Spec.ExecutionRequest.HttpProxy,
 			HttpsProxy:      src.Spec.ExecutionRequest.HttpsProxy,
 			Timeout:         src.Spec.ExecutionRequest.Timeout,
+			CronJobTemplate: src.Spec.ExecutionRequest.CronJobTemplate,
 		}
 	}
 

@@ -170,14 +170,17 @@ func (s TestSuitesClient) Delete(name string) error {
 		return err
 	}
 
+	if err == nil && secret != nil {
+		if err = s.Client.Delete(context.Background(), secret); err != nil {
+			return err
+		}
+	}
+
 	err = s.Client.Delete(context.Background(), testsuite)
 	if err != nil {
 		return err
 	}
 
-	if secretExists && secret != nil {
-		return s.Client.Delete(context.Background(), secret)
-	}
 	return nil
 }
 
@@ -232,7 +235,7 @@ func (s TestSuitesClient) UpdateTestsuiteSecrets(testsuite *testsuitev3.TestSuit
 		return err
 	}
 
-	if secret == nil {
+	if err == nil && secret == nil {
 		return nil
 	}
 
@@ -262,7 +265,25 @@ func (s TestSuitesClient) UpdateTestsuiteSecrets(testsuite *testsuitev3.TestSuit
 	return nil
 }
 
+func (s TestSuitesClient) TestsuiteHasSecrets(testsuite *testsuitev2.TestSuite) (has bool) {
+	if testsuite.Spec.ExecutionRequest == nil {
+		return
+	}
+
+	for _, v := range testsuite.Spec.ExecutionRequest.Variables {
+		if v.Type_ == commonv1.VariableTypeSecret &&
+			(v.ValueFrom.SecretKeyRef != nil && (v.ValueFrom.SecretKeyRef.Name == secretName(testsuite.Name))) {
+			return true
+		}
+	}
+
+	return
+}
+
 func (s TestSuitesClient) LoadTestVariablesSecret(testsuite *testsuitev3.TestSuite) (*corev1.Secret, error) {
+	if !s.TestsuiteHasSecrets(testsuite) {
+		return nil, nil
+	}
 	secret := &corev1.Secret{}
 	err := s.Client.Get(context.Background(), client.ObjectKey{Namespace: s.Namespace, Name: secretName(testsuite.Name)}, secret)
 	return secret, err
@@ -329,10 +350,6 @@ func testVarsToSecret(testsuite *testsuitev3.TestSuite, secret *corev1.Secret) e
 	for k := range testsuite.Spec.ExecutionRequest.Variables {
 		v := testsuite.Spec.ExecutionRequest.Variables[k]
 		if v.Type_ == commonv1.VariableTypeSecret {
-			secret.StringData[v.Name] = v.Value
-			secretMap[v.Name] = v.Value
-			// clear passed test variable secret value and save as reference o secret
-			v.Value = ""
 			if v.ValueFrom.SecretKeyRef != nil {
 				v.ValueFrom = corev1.EnvVarSource{
 					SecretKeyRef: &corev1.SecretKeySelector{
@@ -343,6 +360,10 @@ func testVarsToSecret(testsuite *testsuitev3.TestSuite, secret *corev1.Secret) e
 					},
 				}
 			} else {
+				secret.StringData[v.Name] = v.Value
+				secretMap[v.Name] = v.Value
+				// clear passed test variable secret value and save as reference o secret
+				v.Value = ""
 				v.ValueFrom = corev1.EnvVarSource{
 					SecretKeyRef: &corev1.SecretKeySelector{
 						Key: v.Name,
@@ -377,7 +398,7 @@ func testVarsToSecret(testsuite *testsuitev3.TestSuite, secret *corev1.Secret) e
 
 // secretToTestVars loads secrets data passed into TestSuite CRD and remove plain text data
 func secretToTestVars(secret *corev1.Secret, testsuite *testsuitev3.TestSuite) {
-	if secret.Data == nil {
+	if testsuite == nil || secret == nil || secret.Data == nil {
 		return
 	}
 
