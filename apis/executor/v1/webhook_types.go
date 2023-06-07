@@ -36,6 +36,10 @@ type WebhookSpec struct {
 	Selector string `json:"selector,omitempty"`
 	// will load the generated payload for notification inside the object
 	PayloadObjectField string `json:"payloadObjectField,omitempty"`
+	// golang based template for notification payload
+	PayloadTemplate string `json:"payloadTemplate,omitempty"`
+	// webhook headers
+	Headers map[string]string `json:"headers,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=start-test;end-test-success;end-test-failed;end-test-aborted;end-test-timeout;start-testsuite;end-testsuite-success;end-testsuite-failed;end-testsuite-aborted;end-testsuite-timeout
