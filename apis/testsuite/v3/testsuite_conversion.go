@@ -14,9 +14,12 @@ limitations under the License.
 package v3
 
 import (
+	"time"
+
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 
 	testkubev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // ConvertTo converts this Script to the Hub version (v2).
@@ -56,14 +59,13 @@ func (src *TestSuite) ConvertTo(dstRaw conversion.Hub) error {
 
 				if value.Delay != nil {
 					step.Delay = &testkubev2.TestSuiteStepDelay{
-						Duration: value.Delay.Duration,
+						Duration: int32(value.Delay.Duration.Duration),
 					}
 				}
 
-				if value.Execute != nil {
+				if value.Test != nil {
 					step.Execute = &testkubev2.TestSuiteStepExecute{
-						Namespace:     value.Execute.Namespace,
-						Name:          value.Execute.Name,
+						Name:          value.Test.Name,
 						StopOnFailure: stepType.Source[i].StopOnFailure,
 					}
 				}
@@ -138,15 +140,14 @@ func (dst *TestSuite) ConvertFrom(srcRaw conversion.Hub) error {
 
 			if value.Delay != nil {
 				step.Delay = &TestSuiteStepDelay{
-					Duration: value.Delay.Duration,
+					Duration: metav1.Duration{time.Duration(value.Delay.Duration) * time.Millisecond},
 				}
 			}
 
 			var stopOnFailure bool
 			if value.Execute != nil {
-				step.Execute = &TestSuiteStepExecute{
-					Namespace: value.Execute.Namespace,
-					Name:      value.Execute.Name,
+				step.Test = &TestSuiteStepTest{
+					Name: value.Execute.Name,
 				}
 				stopOnFailure = value.Execute.StopOnFailure
 			}
