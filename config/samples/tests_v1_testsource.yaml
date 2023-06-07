@@ -3,7 +3,7 @@ kind: TestSource
 metadata:
   name: testsource-sample
 spec:
-  type: git-dir  
+  type: git
   repository:
     type: git
     uri: https://github.com/kubeshop/testkube-dashboard.git

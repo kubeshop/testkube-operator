@@ -36,12 +36,12 @@ spec:
             description: ExecutorSpec defines the desired state of Executor
             properties:
               args:
-                description: container executor binary arguments
+                description: executor binary arguments
                 items:
                   type: string
                 type: array
               command:
-                description: container executor default binary command
+                description: executor default binary command
                 items:
                   type: string
                 type: array
@@ -51,14 +51,20 @@ spec:
                   enum:
                   - string
                   - file-uri
+                  # Deprecated: use git instead
                   - git-file
+                  # Deprecated: use git instead
                   - git-dir
+                  - git
                   type: string
                 type: array
               executor_type:
                 description: ExecutorType one of "rest" for rest openapi based executors
                   or "job" which will be default runners for testkube or "container"
                   for container executors
+                enum:
+                - job
+                - container
                 type: string
               features:
                 description: Features list of possible features which executor handles

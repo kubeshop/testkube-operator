@@ -41,10 +41,17 @@ spec:
               repository:
                 description: repository of test content
                 properties:
+                  authType:
+                    description: auth type for git requests
+                    enum:
+                    - basic
+                    - header
+                    type: string
                   branch:
                     description: branch/tag name for checkout
                     type: string
                   certificateSecret:
+                    description: git auth certificate secret for private repositories
                     type: string
                   commit:
                     description: commit id (sha) for checkout
@@ -97,14 +104,17 @@ spec:
                     description: if provided we checkout the whole repository and
                       run test from this directory
                     type: string
-                  certificateSecret:
-                    description: git auth certificate secret for private repositories
-                    type: string
                 required:
                 - type
                 - uri
                 type: object
               type:
+                enum:
+                - string
+                - file-uri
+                - git-file
+                - git-dir
+                - git
                 type: string
               uri:
                 description: uri of test content

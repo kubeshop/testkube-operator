@@ -50,7 +50,7 @@ type Variable commonv1.Variable
 // TestContent defines test content
 type TestContent struct {
 	// test type
-	Type_ string `json:"type,omitempty"`
+	Type_ TestContentType `json:"type,omitempty"`
 	// repository of test content
 	Repository *Repository `json:"repository,omitempty"`
 	// test content body
@@ -58,6 +58,19 @@ type TestContent struct {
 	// uri of test content
 	Uri string `json:"uri,omitempty"`
 }
+
+// +kubebuilder:validation:Enum=string;file-uri;git-file;git-dir;git
+type TestContentType string
+
+const (
+	TestContentTypeString  TestContentType = "string"
+	TestContentTypeFileURI TestContentType = "file-uri"
+	// Deprecated: use git instead
+	TestContentTypeGitFile TestContentType = "git-file"
+	// Deprecated: use git instead
+	TestContentTypeGitDir TestContentType = "git-dir"
+	TestContentTypeGit    TestContentType = "git"
+)
 
 // Testkube internal reference for secret storage in Kubernetes secrets
 type SecretRef struct {
@@ -80,23 +93,56 @@ type Repository struct {
 	// commit id (sha) for checkout
 	Commit string `json:"commit,omitempty"`
 	// if needed we can checkout particular path (dir or file) in case of BIG/mono repositories
-	Path              string     `json:"path,omitempty"`
-	UsernameSecret    *SecretRef `json:"usernameSecret,omitempty"`
-	TokenSecret       *SecretRef `json:"tokenSecret,omitempty"`
-	CertificateSecret string     `json:"certificateSecret,omitempty"`
+	Path           string     `json:"path,omitempty"`
+	UsernameSecret *SecretRef `json:"usernameSecret,omitempty"`
+	TokenSecret    *SecretRef `json:"tokenSecret,omitempty"`
+	// git auth certificate secret for private repositories
+	CertificateSecret string `json:"certificateSecret,omitempty"`
 	// if provided we checkout the whole repository and run test from this directory
 	WorkingDir string `json:"workingDir,omitempty"`
+	// auth type for git requests
+	AuthType GitAuthType `json:"authType,omitempty"`
 }
 
-// artifact request body for container executors with test artifacts
+// GitAuthType defines git auth type
+// +kubebuilder:validation:Enum=basic;header
+type GitAuthType string
+
+const (
+	// GitAuthTypeBasic for git basic auth requests
+	GitAuthTypeBasic GitAuthType = "basic"
+	// GitAuthTypeHeader for git header auth requests
+	GitAuthTypeHeader GitAuthType = "header"
+)
+
+// artifact request body with test artifacts
 type ArtifactRequest struct {
-	// artifact storage class name
+	// artifact storage class name for container executor
 	StorageClassName string `json:"storageClassName"`
-	// artifact volume mount path
+	// artifact volume mount path for container executor
 	VolumeMountPath string `json:"volumeMountPath"`
-	// artifact directories
+	// artifact directories for scraping
 	Dirs []string `json:"dirs,omitempty"`
 }
+
+// running context for test or test suite execution
+type RunningContext struct {
+	// One of possible context types
+	Type_ RunningContextType `json:"type"`
+	// Context value depending from its type
+	Context string `json:"context,omitempty"`
+}
+
+type RunningContextType string
+
+const (
+	RunningContextTypeUserCLI     RunningContextType = "user-cli"
+	RunningContextTypeUserUI      RunningContextType = "user-ui"
+	RunningContextTypeTestSuite   RunningContextType = "testsuite"
+	RunningContextTypeTestTrigger RunningContextType = "testtrigger"
+	RunningContextTypeScheduler   RunningContextType = "scheduler"
+	RunningContextTypeEmpty       RunningContextType = ""
+)
 
 // test execution request body
 type ExecutionRequest struct {
@@ -111,23 +157,28 @@ type ExecutionRequest struct {
 	// test kubernetes namespace (\"testkube\" when not set)
 	Namespace string `json:"namespace,omitempty"`
 	// variables file content - need to be in format for particular executor (e.g. postman envs file)
-	VariablesFile string              `json:"variablesFile,omitempty"`
-	Variables     map[string]Variable `json:"variables,omitempty"`
+	VariablesFile           string              `json:"variablesFile,omitempty"`
+	IsVariablesFileUploaded bool                `json:"isVariablesFileUploaded,omitempty"`
+	Variables               map[string]Variable `json:"variables,omitempty"`
 	// test secret uuid
 	TestSecretUUID string `json:"testSecretUUID,omitempty"`
 	// test suite secret uuid, if it's run as a part of test suite
 	TestSuiteSecretUUID string `json:"testSuiteSecretUUID,omitempty"`
 	// additional executor binary arguments
 	Args []string `json:"args,omitempty"`
-	// container executor binary command
+	// usage mode for arguments
+	ArgsMode ArgsModeType `json:"argsMode,omitempty"`
+	// executor binary command
 	Command []string `json:"command,omitempty"`
 	// container executor image
 	Image string `json:"image,omitempty"`
 	// container executor image pull secrets
 	ImagePullSecrets []v1.LocalObjectReference `json:"imagePullSecrets,omitempty"`
-	// environment variables passed to executor
+	// Environment variables passed to executor.
+	// Deprecated: use Basic Variables instead
 	Envs map[string]string `json:"envs,omitempty"`
-	// execution variables passed to executor from secrets
+	// Execution variables passed to executor from secrets.
+	// Deprecated: use Secret Variables instead
 	SecretEnvs map[string]string `json:"secretEnvs,omitempty"`
 	// whether to start execution sync or async
 	Sync bool `json:"sync,omitempty"`
@@ -144,12 +195,42 @@ type ExecutionRequest struct {
 	ArtifactRequest       *ArtifactRequest `json:"artifactRequest,omitempty"`
 	// job template extensions
 	JobTemplate string `json:"jobTemplate,omitempty"`
+	// cron job template extensions
+	CronJobTemplate string `json:"cronJobTemplate,omitempty"`
 	// script to run before test execution
 	PreRunScript string `json:"preRunScript,omitempty"`
 	// scraper template extensions
 	ScraperTemplate string `json:"scraperTemplate,omitempty"`
+	// config map references
+	EnvConfigMaps []EnvReference `json:"envConfigMaps,omitempty"`
+	// secret references
+	EnvSecrets     []EnvReference  `json:"envSecrets,omitempty"`
+	RunningContext *RunningContext `json:"runningContext,omitempty"`
 }
 
+// ArgsModeType defines args mode type
+// +kubebuilder:validation:Enum=append;override
+type ArgsModeType string
+
+const (
+	// ArgsModeTypeAppend for append args mode
+	ArgsModeTypeAppend ArgsModeType = "append"
+	// ArgsModeTypeOverride for override args mode
+	ArgsModeTypeOverride ArgsModeType = "override"
+)
+
+// Reference to env resource
+type EnvReference struct {
+	v1.LocalObjectReference `json:"reference"`
+	// whether we shoud mount resource
+	Mount bool `json:"mount,omitempty"`
+	// where we shoud mount resource
+	MountPath string `json:"mountPath,omitempty"`
+	// whether we shoud map to variables from resource
+	MapToVariables bool `json:"mapToVariables,omitempty"`
+}
+
+// +kubebuilder:validation:Enum=queued;running;passed;failed;aborted;timeout
 type ExecutionStatus string
 
 // List of ExecutionStatus

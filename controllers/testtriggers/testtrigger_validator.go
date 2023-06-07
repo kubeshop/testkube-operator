@@ -176,24 +176,24 @@ func validateLabelSelector(labelSelector *v1.LabelSelector, fld *field.Path) (em
 	return s.Empty(), nil
 }
 
-func (v *Validator) validateResource(resource string) *field.Error {
-	if !utils.In(resource, testtrigger.GetSupportedResources()) {
+func (v *Validator) validateResource(resource testtriggerv1.TestTriggerResource) *field.Error {
+	if !utils.In(string(resource), testtrigger.GetSupportedResources()) {
 		fld := field.NewPath("spec").Child("resource")
 		return field.NotSupported(fld, resource, testtrigger.GetSupportedResources())
 	}
 	return nil
 }
 
-func (v *Validator) validateAction(action string) *field.Error {
-	if !utils.In(action, testtrigger.GetSupportedActions()) {
+func (v *Validator) validateAction(action testtriggerv1.TestTriggerAction) *field.Error {
+	if !utils.In(string(action), testtrigger.GetSupportedActions()) {
 		fld := field.NewPath("spec").Child("action")
 		return field.NotSupported(fld, action, testtrigger.GetSupportedActions())
 	}
 	return nil
 }
 
-func (v *Validator) validateExecution(execution string) *field.Error {
-	if !utils.In(execution, testtrigger.GetSupportedExecutions()) {
+func (v *Validator) validateExecution(execution testtriggerv1.TestTriggerExecution) *field.Error {
+	if !utils.In(string(execution), testtrigger.GetSupportedExecutions()) {
 		fld := field.NewPath("spec").Child("execution")
 		return field.NotSupported(fld, execution, testtrigger.GetSupportedExecutions())
 	}

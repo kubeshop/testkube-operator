@@ -33,16 +33,16 @@ type ExecutorSpec struct {
 
 	// ExecutorType one of "rest" for rest openapi based executors or "job" which will be default runners for testkube
 	// or "container" for container executors
-	ExecutorType string `json:"executor_type,omitempty"`
+	ExecutorType ExecutorType `json:"executor_type,omitempty"`
 
 	// URI for rest based executors
 	URI string `json:"uri,omitempty"`
 
 	// Image for kube-job
 	Image string `json:"image,omitempty"`
-	// container executor binary arguments
+	// executor binary arguments
 	Args []string `json:"args,omitempty"`
-	// container executor default binary command
+	// executor default binary command
 	Command []string `json:"command,omitempty"`
 	// container executor default image pull secrets
 	ImagePullSecrets []v1.LocalObjectReference `json:"imagePullSecrets,omitempty"`
@@ -68,14 +68,25 @@ const (
 	FeatureJUnitReport Feature = "junit-report"
 )
 
-// +kubebuilder:validation:Enum=string;file-uri;git-file;git-dir
+// +kubebuilder:validation:Enum=job;container
+type ExecutorType string
+
+const (
+	ExecutorTypeJob       ExecutorType = "job"
+	ExecutorTypeContainer ExecutorType = "container"
+)
+
+// +kubebuilder:validation:Enum=string;file-uri;git-file;git-dir;git
 type ScriptContentType string
 
 const (
 	ScriptContentTypeString  ScriptContentType = "string"
 	ScriptContentTypeFileURI ScriptContentType = "file-uri"
+	// Deprecated: use git instead
 	ScriptContentTypeGitFile ScriptContentType = "git-file"
-	ScriptContentTypeGitDir  ScriptContentType = "git-dir"
+	// Deprecated: use git instead
+	ScriptContentTypeGitDir ScriptContentType = "git-dir"
+	ScriptContentTypeGit    ScriptContentType = "git"
 )
 
 // Executor meta data

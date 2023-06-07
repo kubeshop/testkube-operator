@@ -79,16 +79,28 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{}, nil
 	}
 
-	data, err := json.Marshal(testsuitev3.TestSuiteExecutionRequest{})
+	data, err := json.Marshal(testsuitev3.TestSuiteExecutionRequest{
+		RunningContext: &testsuitev3.RunningContext{
+			Type_:   testsuitev3.RunningContextTypeScheduler,
+			Context: testSuite.Spec.Schedule,
+		},
+	})
+
 	if err != nil {
 		return ctrl.Result{}, err
 	}
 
+	jobTemplate := ""
+	if testSuite.Spec.ExecutionRequest != nil {
+		jobTemplate = testSuite.Spec.ExecutionRequest.CronJobTemplate
+	}
+
 	options := cronjob.CronJobOptions{
-		Schedule: testSuite.Spec.Schedule,
-		Resource: cronjob.TestSuiteResourceURI,
-		Data:     string(data),
-		Labels:   testSuite.Labels,
+		Schedule:                  testSuite.Spec.Schedule,
+		Resource:                  cronjob.TestSuiteResourceURI,
+		Data:                      string(data),
+		Labels:                    testSuite.Labels,
+		CronJobTemplateExtensions: jobTemplate,
 	}
 
 	// Create CronJob if it was not created before for provided TestSuite schedule

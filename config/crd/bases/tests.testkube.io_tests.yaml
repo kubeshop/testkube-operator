@@ -359,10 +359,17 @@ spec:
                   repository:
                     description: repository of test content
                     properties:
+                      authType:
+                        description: auth type for git requests
+                        enum:
+                        - basic
+                        - header
+                        type: string
                       branch:
                         description: branch/tag name for checkout
                         type: string
                       certificateSecret:
+                        description: git auth certificate secret for private repositories
                         type: string
                       commit:
                         description: commit id (sha) for checkout
@@ -415,12 +422,15 @@ spec:
                         description: if provided we checkout the whole repository
                           and run test from this directory
                         type: string
-                      certificateSecret:
-                        description: git auth certificate secret for private repositories
-                        type: string
                     type: object
                   type:
                     description: test type
+                    enum:
+                    - string
+                    - file-uri
+                    - git-file
+                    - git-dir
+                    - git
                     type: string
                   uri:
                     description: uri of test content
@@ -429,9 +439,6 @@ spec:
               executionRequest:
                 description: test execution request body
                 properties:
-                  negativeTest:
-                    description: negative test will fail the execution if it is a success and it will succeed if it is a failure
-                    type: boolean
                   activeDeadlineSeconds:
                     description: Optional duration in seconds the pod may be active
                       on the node relative to StartTime before the system will actively
@@ -444,34 +451,99 @@ spec:
                     items:
                       type: string
                     type: array
+                  argsMode:
+                    description: usage mode for arguments
+                    enum:
+                    - append
+                    - override
+                    type: string
                   artifactRequest:
-                    description: artifact request body for container executors with
-                      test artifacts
+                    description: artifact request body with test artifacts
                     properties:
                       dirs:
-                        description: artifact directories
+                        description: artifact directories for scraping
                         items:
                           type: string
                         type: array
                       storageClassName:
-                        description: artifact storage class name
+                        description: artifact storage class name for container executor
                         type: string
                       volumeMountPath:
-                        description: artifact volume mount path
+                        description: artifact volume mount path for container executor
                         type: string
                     required:
                     - storageClassName
                     - volumeMountPath
                     type: object
                   command:
-                    description: container executor binary command
+                    description: executor binary command
                     items:
                       type: string
+                    type: array
+                  cronJobTemplate:
+                    description: cron job template extensions
+                    type: string
+                  envConfigMaps:
+                    description: config map references
+                    items:
+                      description: Reference to env resource
+                      properties:
+                        mapToVariables:
+                          description: whether we shoud map to variables from resource
+                          type: boolean
+                        mount:
+                          description: whether we shoud mount resource
+                          type: boolean
+                        mountPath:
+                          description: where we shoud mount resource
+                          type: string
+                        reference:
+                          description: LocalObjectReference contains enough information
+                            to let you locate the referenced object inside the same
+                            namespace.
+                          properties:
+                            name:
+                              description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Add other useful fields. apiVersion, kind, uid?'
+                              type: string
+                          type: object
+                      required:
+                      - reference
+                      type: object
+                    type: array
+                  envSecrets:
+                    description: secret references
+                    items:
+                      description: Reference to env resource
+                      properties:
+                        mapToVariables:
+                          description: whether we shoud map to variables from resource
+                          type: boolean
+                        mount:
+                          description: whether we shoud mount resource
+                          type: boolean
+                        mountPath:
+                          description: where we shoud mount resource
+                          type: string
+                        reference:
+                          description: LocalObjectReference contains enough information
+                            to let you locate the referenced object inside the same
+                            namespace.
+                          properties:
+                            name:
+                              description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                                TODO: Add other useful fields. apiVersion, kind, uid?'
+                              type: string
+                          type: object
+                      required:
+                      - reference
+                      type: object
                     type: array
                   envs:
                     additionalProperties:
                       type: string
-                    description: environment variables passed to executor
+                    description: 'Environment variables passed to executor. Deprecated:
+                      use Basic Variables instead'
                     type: object
                   executionLabels:
                     additionalProperties:
@@ -499,6 +571,8 @@ spec:
                           type: string
                       type: object
                     type: array
+                  isVariablesFileUploaded:
+                    type: boolean
                   jobTemplate:
                     description: job template extensions
                     type: string
@@ -509,6 +583,10 @@ spec:
                     description: test kubernetes namespace (\"testkube\" when not
                       set)
                     type: string
+                  negativeTest:
+                    description: negative test will fail the execution if it is a
+                      success and it will succeed if it is a failure
+                    type: boolean
                   number:
                     description: test execution number
                     format: int32
@@ -522,7 +600,8 @@ spec:
                   secretEnvs:
                     additionalProperties:
                       type: string
-                    description: execution variables passed to executor from secrets
+                    description: 'Execution variables passed to executor from secrets.
+                      Deprecated: use Secret Variables instead'
                     type: object
                   sync:
                     description: whether to start execution sync or async
@@ -681,6 +760,13 @@ spec:
                     format: date-time
                     type: string
                   status:
+                    enum:
+                    - queued
+                    - running
+                    - passed
+                    - failed
+                    - aborted
+                    - timeout
                     type: string
                 type: object
             type: object

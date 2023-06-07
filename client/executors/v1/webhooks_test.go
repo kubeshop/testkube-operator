@@ -20,7 +20,7 @@ func TestWebhooks(t *testing.T) {
 				Namespace: "test-ns",
 			},
 			Spec: executorsv1.WebhookSpec{
-				Events: []string{"test-event1"},
+				Events: []executorsv1.EventType{"test-event1"},
 			},
 			Status: executorsv1.WebhookStatus{},
 		},
@@ -30,7 +30,7 @@ func TestWebhooks(t *testing.T) {
 				Namespace: "test-ns",
 			},
 			Spec: executorsv1.WebhookSpec{
-				Events: []string{"test-event2"},
+				Events: []executorsv1.EventType{"test-event2"},
 			},
 			Status: executorsv1.WebhookStatus{},
 		},
@@ -40,7 +40,7 @@ func TestWebhooks(t *testing.T) {
 				Namespace: "test-ns",
 			},
 			Spec: executorsv1.WebhookSpec{
-				Events: []string{"test-event1"},
+				Events: []executorsv1.EventType{"test-event1"},
 			},
 			Status: executorsv1.WebhookStatus{},
 		},
@@ -84,7 +84,7 @@ func TestWebhooks(t *testing.T) {
 					Namespace: "wrong-ns",
 				},
 				Spec: executorsv1.WebhookSpec{
-					Events: []string{"test-event"},
+					Events: []executorsv1.EventType{"test-event"},
 				},
 				Status: executorsv1.WebhookStatus{},
 			}
