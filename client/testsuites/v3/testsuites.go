@@ -38,7 +38,7 @@ type Interface interface {
 	DeleteAll() error
 	CreateTestsuiteSecrets(testsuite *testsuitev3.TestSuite) error
 	UpdateTestsuiteSecrets(testsuite *testsuitev3.TestSuite) error
-	LoadTestVariablesSecret(testsuite *testsuitev3.TestSuite) (*corev1.Secret, error)
+	LoadTestsuiteVariablesSecret(testsuite *testsuitev3.TestSuite) (*corev1.Secret, error)
 	GetCurrentSecretUUID(testSuiteName string) (string, error)
 	GetSecretTestSuiteVars(testSuiteName, secretUUID string) (map[string]string, error)
 	DeleteByLabels(selector string) error
@@ -77,13 +77,13 @@ func (s TestSuitesClient) List(selector string) (*testsuitev3.TestSuiteList, err
 	}
 
 	for i := range list.Items {
-		secret, err := s.LoadTestVariablesSecret(&list.Items[i])
+		secret, err := s.LoadTestsuiteVariablesSecret(&list.Items[i])
 		secretExists := !errors.IsNotFound(err)
 		if err != nil && secretExists {
 			return list, err
 		}
 
-		secretToTestVars(secret, &list.Items[i])
+		secretToTestsuiteVars(secret, &list.Items[i])
 	}
 
 	return list, nil
@@ -98,8 +98,8 @@ func (s TestSuitesClient) ListLabels() (map[string][]string, error) {
 		return labels, err
 	}
 
-	for _, test := range list.Items {
-		for key, value := range test.Labels {
+	for _, testsuite := range list.Items {
+		for key, value := range testsuite.Labels {
 			if values, ok := labels[key]; !ok {
 				labels[key] = []string{value}
 			} else {
@@ -124,13 +124,13 @@ func (s TestSuitesClient) Get(name string) (*testsuitev3.TestSuite, error) {
 		return nil, err
 	}
 
-	secret, err := s.LoadTestVariablesSecret(testsuite)
+	secret, err := s.LoadTestsuiteVariablesSecret(testsuite)
 	secretExists := !errors.IsNotFound(err)
 	if err != nil && secretExists {
 		return nil, err
 	}
 
-	secretToTestVars(secret, testsuite)
+	secretToTestsuiteVars(secret, testsuite)
 
 	return testsuite, nil
 }
@@ -164,7 +164,7 @@ func (s TestSuitesClient) Delete(name string) error {
 		return err
 	}
 
-	secret, err := s.LoadTestVariablesSecret(testsuite)
+	secret, err := s.LoadTestsuiteVariablesSecret(testsuite)
 	secretExists := !errors.IsNotFound(err)
 	if err != nil && secretExists {
 		return err
@@ -214,7 +214,7 @@ func (s TestSuitesClient) CreateTestsuiteSecrets(testsuite *testsuitev3.TestSuit
 		StringData: map[string]string{},
 	}
 
-	if err := testVarsToSecret(testsuite, secret); err != nil {
+	if err := testsuiteVarsToSecret(testsuite, secret); err != nil {
 		return err
 	}
 
@@ -229,7 +229,7 @@ func (s TestSuitesClient) CreateTestsuiteSecrets(testsuite *testsuitev3.TestSuit
 }
 
 func (s TestSuitesClient) UpdateTestsuiteSecrets(testsuite *testsuitev3.TestSuite) error {
-	secret, err := s.LoadTestVariablesSecret(testsuite)
+	secret, err := s.LoadTestsuiteVariablesSecret(testsuite)
 	secretExists := !errors.IsNotFound(err)
 	if err != nil && secretExists {
 		return err
@@ -246,7 +246,7 @@ func (s TestSuitesClient) UpdateTestsuiteSecrets(testsuite *testsuitev3.TestSuit
 		secret.Type = corev1.SecretTypeOpaque
 	}
 
-	if err = testVarsToSecret(testsuite, secret); err != nil {
+	if err = testsuiteVarsToSecret(testsuite, secret); err != nil {
 		return err
 	}
 
@@ -280,7 +280,7 @@ func (s TestSuitesClient) TestsuiteHasSecrets(testsuite *testsuitev3.TestSuite) 
 	return
 }
 
-func (s TestSuitesClient) LoadTestVariablesSecret(testsuite *testsuitev3.TestSuite) (*corev1.Secret, error) {
+func (s TestSuitesClient) LoadTestsuiteVariablesSecret(testsuite *testsuitev3.TestSuite) (*corev1.Secret, error) {
 	if !s.TestsuiteHasSecrets(testsuite) {
 		return nil, nil
 	}
@@ -332,8 +332,8 @@ func (s TestSuitesClient) UpdateStatus(testSuite *testsuitev3.TestSuite) error {
 	return s.Client.Status().Update(context.Background(), testSuite)
 }
 
-// testVarsToSecret loads secrets data passed into TestSuite CRD and remove plain text data
-func testVarsToSecret(testsuite *testsuitev3.TestSuite, secret *corev1.Secret) error {
+// testsuiteVarsToSecret loads secrets data passed into TestSuite CRD and remove plain text data
+func testsuiteVarsToSecret(testsuite *testsuitev3.TestSuite, secret *corev1.Secret) error {
 	if secret == nil {
 		return nil
 	}
@@ -362,7 +362,7 @@ func testVarsToSecret(testsuite *testsuitev3.TestSuite, secret *corev1.Secret) e
 			} else {
 				secret.StringData[v.Name] = v.Value
 				secretMap[v.Name] = v.Value
-				// clear passed test variable secret value and save as reference o secret
+				// clear passed test suite variable secret value and save as reference o secret
 				v.Value = ""
 				v.ValueFrom = corev1.EnvVarSource{
 					SecretKeyRef: &corev1.SecretKeySelector{
@@ -396,8 +396,8 @@ func testVarsToSecret(testsuite *testsuitev3.TestSuite, secret *corev1.Secret) e
 	return nil
 }
 
-// secretToTestVars loads secrets data passed into TestSuite CRD and remove plain text data
-func secretToTestVars(secret *corev1.Secret, testsuite *testsuitev3.TestSuite) {
+// secretToTestsuiteVars loads secrets data passed into TestSuite CRD and remove plain text data
+func secretToTestsuiteVars(secret *corev1.Secret, testsuite *testsuitev3.TestSuite) {
 	if testsuite == nil || secret == nil || secret.Data == nil {
 		return
 	}
