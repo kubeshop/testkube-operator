@@ -54,7 +54,7 @@ func (src *TestSuite) ConvertTo(dstRaw conversion.Hub) error {
 
 	for _, stepType := range stepTypes {
 		for i := range stepType.Source {
-			for _, value := range stepType.Source[i].Batch {
+			for _, value := range stepType.Source[i].Execute {
 				step := testkubev2.TestSuiteStepSpec{}
 
 				if value.Delay != nil {
@@ -154,7 +154,7 @@ func (dst *TestSuite) ConvertFrom(srcRaw conversion.Hub) error {
 
 			stepType.destinaton[i] = TestSuiteBatchStep{
 				StopOnFailure: stopOnFailure,
-				Batch:         []TestSuiteStepSpec{step},
+				Execute:       []TestSuiteStepSpec{step},
 			}
 		}
 	}

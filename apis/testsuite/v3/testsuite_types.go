@@ -54,7 +54,7 @@ type TestSuiteStepSpec struct {
 // set of steps run in parallel
 type TestSuiteBatchStep struct {
 	StopOnFailure bool                `json:"stopOnFailure"`
-	Batch         []TestSuiteStepSpec `json:"execute,omitempty"`
+	Execute       []TestSuiteStepSpec `json:"execute,omitempty"`
 }
 
 // TestSuiteStepTest defines test to be executed
@@ -64,7 +64,7 @@ type TestSuiteStepTest struct {
 
 // TestSuiteStepDelay contains step delay parameters
 type TestSuiteStepDelay struct {
-	// Duration in ms
+	// Duration in time units
 	Duration metav1.Duration `json:"duration,omitempty"`
 }
 
