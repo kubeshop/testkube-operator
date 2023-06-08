@@ -39,10 +39,10 @@ type Interface interface {
 	CreateTestsuiteSecrets(testsuite *testsuitev3.TestSuite) error
 	UpdateTestsuiteSecrets(testsuite *testsuitev3.TestSuite) error
 	LoadTestsuiteVariablesSecret(testsuite *testsuitev3.TestSuite) (*corev1.Secret, error)
-	GetCurrentSecretUUID(testSuiteName string) (string, error)
-	GetSecretTestSuiteVars(testSuiteName, secretUUID string) (map[string]string, error)
+	GetCurrentSecretUUID(testsuiteName string) (string, error)
+	GetSecretTestSuiteVars(testsuiteName, secretUUID string) (map[string]string, error)
 	DeleteByLabels(selector string) error
-	UpdateStatus(testSuite *testsuitev3.TestSuite) error
+	UpdateStatus(testsuite *testsuitev3.TestSuite) error
 }
 
 // NewClient creates new TestSuite client
@@ -290,10 +290,10 @@ func (s TestSuitesClient) LoadTestsuiteVariablesSecret(testsuite *testsuitev3.Te
 }
 
 // GetCurrentSecretUUID returns current secret uuid
-func (s TestSuitesClient) GetCurrentSecretUUID(testSuiteName string) (string, error) {
+func (s TestSuitesClient) GetCurrentSecretUUID(testsuiteName string) (string, error) {
 	secret := &corev1.Secret{}
 	if err := s.Client.Get(context.Background(), client.ObjectKey{
-		Namespace: s.Namespace, Name: secretName(testSuiteName)}, secret); err != nil && !errors.IsNotFound(err) {
+		Namespace: s.Namespace, Name: secretName(testsuiteName)}, secret); err != nil && !errors.IsNotFound(err) {
 		return "", err
 	}
 
@@ -308,10 +308,10 @@ func (s TestSuitesClient) GetCurrentSecretUUID(testSuiteName string) (string, er
 }
 
 // GetSecretTestSuiteVars returns secret test suite vars
-func (s TestSuitesClient) GetSecretTestSuiteVars(testSuiteName, secretUUID string) (map[string]string, error) {
+func (s TestSuitesClient) GetSecretTestSuiteVars(testsuiteName, secretUUID string) (map[string]string, error) {
 	secret := &corev1.Secret{}
 	if err := s.Client.Get(context.Background(), client.ObjectKey{
-		Namespace: s.Namespace, Name: secretName(testSuiteName)}, secret); err != nil && !errors.IsNotFound(err) {
+		Namespace: s.Namespace, Name: secretName(testsuiteName)}, secret); err != nil && !errors.IsNotFound(err) {
 		return nil, err
 	}
 
@@ -328,8 +328,8 @@ func (s TestSuitesClient) GetSecretTestSuiteVars(testSuiteName, secretUUID strin
 }
 
 // UpdateStatus updates existing TestSuite status
-func (s TestSuitesClient) UpdateStatus(testSuite *testsuitev3.TestSuite) error {
-	return s.Client.Status().Update(context.Background(), testSuite)
+func (s TestSuitesClient) UpdateStatus(testsuite *testsuitev3.TestSuite) error {
+	return s.Client.Status().Update(context.Background(), testsuite)
 }
 
 // testsuiteVarsToSecret loads secrets data passed into TestSuite CRD and remove plain text data
