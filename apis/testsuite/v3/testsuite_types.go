@@ -65,6 +65,8 @@ type TestSuiteStepTest struct {
 // TestSuiteStepDelay contains step delay parameters
 type TestSuiteStepDelay struct {
 	// Duration in time units
+	// +kubebuilder:validation:Type:=string
+	// +kubebuilder:validation:Format:=duration
 	Duration metav1.Duration `json:"duration,omitempty"`
 }
 
