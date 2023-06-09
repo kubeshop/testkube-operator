@@ -250,7 +250,7 @@ func (s TestSuitesClient) UpdateTestsuiteSecrets(testsuite *testsuitev2.TestSuit
 		return err
 	}
 
-	if secretExists && len(secret.StringData) > 0 {
+	if len(secret.StringData) > 0 {
 		if !secretExists {
 			err = s.Client.Create(context.Background(), secret)
 		} else {
