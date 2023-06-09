@@ -250,7 +250,7 @@ func (s TestSuitesClient) UpdateTestsuiteSecrets(testsuite *testsuitev2.TestSuit
 		return err
 	}
 
-	if secretExists && len(secret.StringData) > 0 {
+	if len(secret.StringData) > 0 {
 		if !secretExists {
 			err = s.Client.Create(context.Background(), secret)
 		} else {
@@ -271,8 +271,8 @@ func (s TestSuitesClient) TestsuiteHasSecrets(testsuite *testsuitev2.TestSuite) 
 	}
 
 	for _, v := range testsuite.Spec.ExecutionRequest.Variables {
-		if v.Type_ == commonv1.VariableTypeSecret &&
-			(v.ValueFrom.SecretKeyRef != nil && (v.ValueFrom.SecretKeyRef.Name == secretName(testsuite.Name))) {
+		if v.Type_ == commonv1.VariableTypeSecret && (v.ValueFrom.SecretKeyRef == nil ||
+			(v.ValueFrom.SecretKeyRef != nil && (v.ValueFrom.SecretKeyRef.Name == secretName(testsuite.Name)))) {
 			return true
 		}
 	}
