@@ -342,8 +342,8 @@ func (s TestsClient) TestHasSecrets(test *testsv3.Test) (has bool) {
 	}
 
 	for _, v := range test.Spec.ExecutionRequest.Variables {
-		if v.Type_ == commonv1.VariableTypeSecret &&
-			(v.ValueFrom.SecretKeyRef != nil && (v.ValueFrom.SecretKeyRef.Name == secretName(test.Name))) {
+		if v.Type_ == commonv1.VariableTypeSecret && (v.ValueFrom.SecretKeyRef == nil ||
+			(v.ValueFrom.SecretKeyRef != nil && (v.ValueFrom.SecretKeyRef.Name == secretName(test.Name)))) {
 			return true
 		}
 	}
