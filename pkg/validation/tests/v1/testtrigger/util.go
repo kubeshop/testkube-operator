@@ -33,7 +33,7 @@ func GetSupportedConditionStatuses() []string {
 	}
 }
 
-func GetConditions() []string {
+func GetSupportedConditions() []string {
 	return []string{ConditionAvailable, ConditionContainersReady, ConditionInitialized, ConditionPodHasNetwork,
 		ConditionPodScheduled, ConditionProgressing, ConditionReady, ConditionReplicaFailure}
 }
