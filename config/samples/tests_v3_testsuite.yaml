@@ -7,9 +7,7 @@ spec:
   steps:
   - stopOnFailure: false
     execute:
-    - test:
-        name: test-sample
+    - test: test-sample
   - stopOnFailure: false
     execute:
-    - delay:
-        duration: 1s
+    - delay: 1s
