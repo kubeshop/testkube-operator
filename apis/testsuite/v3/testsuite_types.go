@@ -50,7 +50,9 @@ type TestSuiteStepSpec struct {
 	// object name
 	Test string `json:"test,omitempty"`
 	// delay duration in time units
-	Delay string `json:"delay,omitempty"`
+	// +kubebuilder:validation:Type:=string
+	// +kubebuilder:validation:Format:=duration
+	Delay metav1.Duration `json:"delay,omitempty"`
 }
 
 // set of steps run in parallel
