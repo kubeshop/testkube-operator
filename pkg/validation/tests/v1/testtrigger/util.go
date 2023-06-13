@@ -32,3 +32,8 @@ func GetSupportedConditionStatuses() []string {
 		string(testtriggerv1.UNKNOWN_TestTriggerConditionStatuses),
 	}
 }
+
+func GetSupportedConditions() []string {
+	return []string{ConditionAvailable, ConditionContainersReady, ConditionInitialized, ConditionPodHasNetwork,
+		ConditionPodScheduled, ConditionProgressing, ConditionReady, ConditionReplicaFailure}
+}
