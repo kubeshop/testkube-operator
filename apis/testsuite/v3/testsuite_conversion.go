@@ -19,7 +19,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 
 	testkubev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // ConvertTo converts this Script to the Hub version (v2).
@@ -57,15 +56,20 @@ func (src *TestSuite) ConvertTo(dstRaw conversion.Hub) error {
 			for _, value := range stepType.Source[i].Execute {
 				step := testkubev2.TestSuiteStepSpec{}
 
-				if value.Delay != nil {
+				if value.Delay != "" {
+					duration, err := time.ParseDuration(value.Delay)
+					if err != nil {
+						return err
+					}
+
 					step.Delay = &testkubev2.TestSuiteStepDelay{
-						Duration: int32(value.Delay.Duration.Duration),
+						Duration: int32(duration / time.Millisecond),
 					}
 				}
 
-				if value.Test != nil {
+				if value.Test != "" {
 					step.Execute = &testkubev2.TestSuiteStepExecute{
-						Name:          value.Test.Name,
+						Name:          value.Test,
 						StopOnFailure: stepType.Source[i].StopOnFailure,
 					}
 				}
@@ -139,16 +143,12 @@ func (dst *TestSuite) ConvertFrom(srcRaw conversion.Hub) error {
 			step := TestSuiteStepSpec{}
 
 			if value.Delay != nil {
-				step.Delay = &TestSuiteStepDelay{
-					Duration: metav1.Duration{time.Duration(value.Delay.Duration) * time.Millisecond},
-				}
+				step.Delay = (time.Duration(value.Delay.Duration) * time.Millisecond).String()
 			}
 
 			var stopOnFailure bool
 			if value.Execute != nil {
-				step.Test = &TestSuiteStepTest{
-					Name: value.Execute.Name,
-				}
+				step.Test = value.Execute.Name
 				stopOnFailure = value.Execute.StopOnFailure
 			}
 

@@ -47,27 +47,16 @@ type Variable commonv1.Variable
 
 // TestSuiteStepSpec for particular type will have config for possible step types
 type TestSuiteStepSpec struct {
-	Test  *TestSuiteStepTest  `json:"test,omitempty"`
-	Delay *TestSuiteStepDelay `json:"delay,omitempty"`
+	// object name
+	Test string `json:"test,omitempty"`
+	// delay duration in time units
+	Delay string `json:"delay,omitempty"`
 }
 
 // set of steps run in parallel
 type TestSuiteBatchStep struct {
 	StopOnFailure bool                `json:"stopOnFailure"`
 	Execute       []TestSuiteStepSpec `json:"execute,omitempty"`
-}
-
-// TestSuiteStepTest defines test to be executed
-type TestSuiteStepTest struct {
-	Name string `json:"name,omitempty"`
-}
-
-// TestSuiteStepDelay contains step delay parameters
-type TestSuiteStepDelay struct {
-	// Duration in time units
-	// +kubebuilder:validation:Type:=string
-	// +kubebuilder:validation:Format:=duration
-	Duration metav1.Duration `json:"duration,omitempty"`
 }
 
 // running context for test or test suite execution

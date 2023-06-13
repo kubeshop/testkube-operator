@@ -570,19 +570,11 @@ spec:
                           config for possible step types
                         properties:
                           delay:
-                            description: TestSuiteStepDelay contains step delay parameters
-                            properties:
-                              duration:
-                                description: Duration in time units
-                                format: duration
-                                type: string
-                            type: object
+                            description: delay duration in time units
+                            type: string
                           test:
-                            description: TestSuiteStepTest defines test to be executed
-                            properties:
-                              name:
-                                type: string
-                            type: object
+                            description: object name
+                            type: string
                         type: object
                       type: array
                     stopOnFailure:
@@ -603,19 +595,11 @@ spec:
                           config for possible step types
                         properties:
                           delay:
-                            description: TestSuiteStepDelay contains step delay parameters
-                            properties:
-                              duration:
-                                description: Duration in time units
-                                format: duration
-                                type: string
-                            type: object
+                            description: delay duration in time units
+                            type: string
                           test:
-                            description: TestSuiteStepTest defines test to be executed
-                            properties:
-                              name:
-                                type: string
-                            type: object
+                            description: object name
+                            type: string
                         type: object
                       type: array
                     stopOnFailure:
@@ -781,19 +765,11 @@ spec:
                           config for possible step types
                         properties:
                           delay:
-                            description: TestSuiteStepDelay contains step delay parameters
-                            properties:
-                              duration:
-                                description: Duration in time units
-                                format: duration
-                                type: string
-                            type: object
+                            description: delay duration in time units
+                            type: string
                           test:
-                            description: TestSuiteStepTest defines test to be executed
-                            properties:
-                              name:
-                                type: string
-                            type: object
+                            description: object name
+                            type: string
                         type: object
                       type: array
                     stopOnFailure:
