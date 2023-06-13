@@ -271,8 +271,8 @@ func (s TestSuitesClient) TestsuiteHasSecrets(testsuite *testsuitev3.TestSuite) 
 	}
 
 	for _, v := range testsuite.Spec.ExecutionRequest.Variables {
-		if v.Type_ == commonv1.VariableTypeSecret &&
-			(v.ValueFrom.SecretKeyRef != nil && (v.ValueFrom.SecretKeyRef.Name == secretName(testsuite.Name))) {
+		if v.Type_ == commonv1.VariableTypeSecret && (v.ValueFrom.SecretKeyRef == nil ||
+			(v.ValueFrom.SecretKeyRef != nil && (v.ValueFrom.SecretKeyRef.Name == secretName(testsuite.Name)))) {
 			return true
 		}
 	}
