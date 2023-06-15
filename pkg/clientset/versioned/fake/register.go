@@ -18,7 +18,7 @@ package fake
 
 import (
 	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
-	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
+	testsuitev3 "github.com/kubeshop/testkube-operator/apis/testsuite/v3"
 	testtriggersv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -32,7 +32,7 @@ var codecs = serializer.NewCodecFactory(scheme)
 
 var localSchemeBuilder = runtime.SchemeBuilder{
 	testtriggersv1.AddToScheme,
-	testsuitev2.AddToScheme,
+	testsuitev3.AddToScheme,
 	testsv3.AddToScheme,
 }
 

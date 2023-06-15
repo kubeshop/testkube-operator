@@ -28,6 +28,7 @@ import (
 type TestsV3Interface interface {
 	RESTClient() rest.Interface
 	TestsGetter
+	TestSuitesGetter
 }
 
 // TestsV3Client is used to interact with features provided by the tests.testkube.io group.
@@ -37,6 +38,10 @@ type TestsV3Client struct {
 
 func (c *TestsV3Client) Tests(namespace string) TestInterface {
 	return newTests(c, namespace)
+}
+
+func (c *TestsV3Client) TestSuites(namespace string) TestSuiteInterface {
+	return newTestSuites(c, namespace)
 }
 
 // NewForConfig creates a new TestsV3Client for the given config.
