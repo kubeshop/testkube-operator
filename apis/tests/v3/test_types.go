@@ -197,8 +197,10 @@ type ExecutionRequest struct {
 	JobTemplate string `json:"jobTemplate,omitempty"`
 	// cron job template extensions
 	CronJobTemplate string `json:"cronJobTemplate,omitempty"`
-	// script to run before test execution
+	// script to run before test execution (not supported for container executors)
 	PreRunScript string `json:"preRunScript,omitempty"`
+	// script to run after test execution (not supported for container executors)
+	PostRunScript string `json:"postRunScript,omitempty"`
 	// scraper template extensions
 	ScraperTemplate string `json:"scraperTemplate,omitempty"`
 	// config map references
