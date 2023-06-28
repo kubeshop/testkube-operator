@@ -253,3 +253,44 @@ func TestValidator_validateConditions(t *testing.T) {
 		assert.ErrorContains(t, verrs[0], "spec.conditionSpec.conditions.condition: Unsupported value: \"\": supported values: \"True\", \"False\", \"Unknown\"")
 	})
 }
+
+func TestValidator_validateProbes(t *testing.T) {
+	t.Parallel()
+
+	v := NewValidator(buildFakeK8sClient(t))
+
+	t.Run("no error for valid probe spec", func(t *testing.T) {
+		t.Parallel()
+
+		verrs := v.validateProbes(&testtriggerv1.TestTriggerProbeSpec{
+			Timeout: 50,
+			Probes: []testtriggerv1.TestTriggerProbe{
+				{Uri: "https://testkube.io"},
+			}})
+
+		assert.Nil(t, verrs)
+	})
+
+	t.Run("error for invalid timeout", func(t *testing.T) {
+		t.Parallel()
+
+		verrs := v.validateProbes(&testtriggerv1.TestTriggerProbeSpec{
+			Timeout: -100,
+		})
+
+		assert.Len(t, verrs, 1)
+		assert.ErrorContains(t, verrs[0], "spec.probeSpec.timeout: Invalid value: -100: timeout is negative")
+	})
+
+	t.Run("error for invalid probe uri", func(t *testing.T) {
+		t.Parallel()
+
+		verrs := v.validateProbes(&testtriggerv1.TestTriggerProbeSpec{
+			Probes: []testtriggerv1.TestTriggerProbe{
+				{},
+			}})
+
+		assert.Len(t, verrs, 1)
+		assert.ErrorContains(t, verrs[0], "spec.probeSpec.probes.probe: Invalid value: \"\": probe uri is not specified")
+	})
+}

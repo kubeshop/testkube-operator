@@ -53,6 +53,10 @@ func (v *Validator) ValidateCreate(ctx context.Context, t *testtriggerv1.TestTri
 		allErrs = append(allErrs, errs...)
 	}
 
+	if errs := v.validateProbes(t.Spec.ProbeSpec); errs != nil {
+		allErrs = append(allErrs, errs...)
+	}
+
 	if err := v.validateExecution(t.Spec.Execution); err != nil {
 		allErrs = append(allErrs, err)
 	}
@@ -91,6 +95,10 @@ func (v *Validator) ValidateUpdate(ctx context.Context, old runtime.Object, new 
 	}
 
 	if errs := v.validateConditions(new.Spec.ConditionSpec); errs != nil {
+		allErrs = append(allErrs, errs...)
+	}
+
+	if errs := v.validateProbes(new.Spec.ProbeSpec); errs != nil {
 		allErrs = append(allErrs, errs...)
 	}
 
@@ -229,6 +237,29 @@ func (v *Validator) validateConditions(conditionSpec *testtriggerv1.TestTriggerC
 		if !utils.In(string(*condition.Status), testtrigger.GetSupportedConditionStatuses()) {
 			fld := field.NewPath("spec").Child("conditionSpec").Child("conditions").Child("condition")
 			allErrs = append(allErrs, field.NotSupported(fld, string(*condition.Status), testtrigger.GetSupportedConditionStatuses()))
+		}
+	}
+
+	return allErrs
+}
+
+func (v *Validator) validateProbes(probeSpec *testtriggerv1.TestTriggerProbeSpec) field.ErrorList {
+	var allErrs field.ErrorList
+	if probeSpec == nil {
+		return allErrs
+	}
+
+	if probeSpec.Timeout < 0 {
+		fld := field.NewPath("spec").Child("probeSpec").Child("timeout")
+		verr := field.Invalid(fld, probeSpec.Timeout, "timeout is negative")
+		allErrs = append(allErrs, verr)
+	}
+
+	for _, probe := range probeSpec.Probes {
+		if probe.Uri == "" {
+			fld := field.NewPath("spec").Child("probeSpec").Child("probes").Child("probe")
+			verr := field.Invalid(fld, probe.Uri, "probe uri is not specified")
+			allErrs = append(allErrs, verr)
 		}
 	}
 
