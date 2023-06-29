@@ -220,6 +220,12 @@ func (v *Validator) validateConditions(conditionSpec *testtriggerv1.TestTriggerC
 		allErrs = append(allErrs, verr)
 	}
 
+	if conditionSpec.Delay < 0 {
+		fld := field.NewPath("spec").Child("conditionSpec").Child("delay")
+		verr := field.Invalid(fld, conditionSpec.Delay, "delay is negative")
+		allErrs = append(allErrs, verr)
+	}
+
 	for _, condition := range conditionSpec.Conditions {
 		if condition.Type_ == "" {
 			fld := field.NewPath("spec").Child("conditionSpec").Child("conditions").Child("condition")
@@ -255,12 +261,10 @@ func (v *Validator) validateProbes(probeSpec *testtriggerv1.TestTriggerProbeSpec
 		allErrs = append(allErrs, verr)
 	}
 
-	for _, probe := range probeSpec.Probes {
-		if probe.Uri == "" {
-			fld := field.NewPath("spec").Child("probeSpec").Child("probes").Child("probe")
-			verr := field.Invalid(fld, probe.Uri, "probe uri is not specified")
-			allErrs = append(allErrs, verr)
-		}
+	if probeSpec.Delay < 0 {
+		fld := field.NewPath("spec").Child("probeSpec").Child("delay")
+		verr := field.Invalid(fld, probeSpec.Delay, "delay is negative")
+		allErrs = append(allErrs, verr)
 	}
 
 	return allErrs

@@ -215,6 +215,17 @@ func TestValidator_validateConditions(t *testing.T) {
 		assert.ErrorContains(t, verrs[0], "spec.conditionSpec.timeout: Invalid value: -100: timeout is negative")
 	})
 
+	t.Run("error for invalid delay", func(t *testing.T) {
+		t.Parallel()
+
+		verrs := v.validateConditions(&testtriggerv1.TestTriggerConditionSpec{
+			Delay: -1,
+		})
+
+		assert.Len(t, verrs, 1)
+		assert.ErrorContains(t, verrs[0], "spec.conditionSpec.delay: Invalid value: -1: delay is negative")
+	})
+
 	t.Run("error for invalid condition type", func(t *testing.T) {
 		t.Parallel()
 
@@ -265,7 +276,11 @@ func TestValidator_validateProbes(t *testing.T) {
 		verrs := v.validateProbes(&testtriggerv1.TestTriggerProbeSpec{
 			Timeout: 50,
 			Probes: []testtriggerv1.TestTriggerProbe{
-				{Uri: "https://testkube.io"},
+				{
+					Host: "testkube-api-server",
+					Path: "/health",
+					Port: 8088,
+				},
 			}})
 
 		assert.Nil(t, verrs)
@@ -282,15 +297,14 @@ func TestValidator_validateProbes(t *testing.T) {
 		assert.ErrorContains(t, verrs[0], "spec.probeSpec.timeout: Invalid value: -100: timeout is negative")
 	})
 
-	t.Run("error for invalid probe uri", func(t *testing.T) {
+	t.Run("error for invalid delay", func(t *testing.T) {
 		t.Parallel()
 
 		verrs := v.validateProbes(&testtriggerv1.TestTriggerProbeSpec{
-			Probes: []testtriggerv1.TestTriggerProbe{
-				{},
-			}})
+			Delay: -1,
+		})
 
 		assert.Len(t, verrs, 1)
-		assert.ErrorContains(t, verrs[0], "spec.probeSpec.probes.probe: Invalid value: \"\": probe uri is not specified")
+		assert.ErrorContains(t, verrs[0], "spec.probeSpec.delay: Invalid value: -1: delay is negative")
 	})
 }
