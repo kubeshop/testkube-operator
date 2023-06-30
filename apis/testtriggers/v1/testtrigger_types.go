@@ -69,7 +69,7 @@ type TestTriggerCRGroupVersionResource struct {
 }
 
 // TestTriggerResource defines resource for test triggers
-// +kubebuilder:validation:Enum=pod;deployment;statefulset;daemonset;service;ingress;event;configmap
+// +kubebuilder:validation:Enum=pod;deployment;statefulset;daemonset;service;ingress;event;configmap;customr-resource
 type TestTriggerResource string
 
 // List of TestTriggerResources
