@@ -11,6 +11,7 @@ func GetSupportedResources() []string {
 		ResourceStatefulSet,
 		ResourceDaemonSet,
 		ResourceService,
+		ResourceCustomResource,
 		ResourceIngress,
 		ResourceEvent,
 		ResourceConfigMap,

@@ -18,6 +18,7 @@ package v1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -44,7 +45,8 @@ type TestTriggerSpec struct {
 	// For which Resource do we monitor Event which triggers an Action on certain conditions
 	Resource TestTriggerResource `json:"resource"`
 	// ResourceSelector identifies which Kubernetes Objects should be watched
-	ResourceSelector TestTriggerSelector `json:"resourceSelector"`
+	ResourceSelector TestTriggerSelector         `json:"resourceSelector"`
+	CustomResource   schema.GroupVersionResource `json:"customResource"`
 	// On which Event for a Resource should an Action be triggered
 	Event TestTriggerEvent `json:"event"`
 	// What resource conditions should be matched
@@ -67,14 +69,15 @@ type TestTriggerResource string
 
 // List of TestTriggerResources
 const (
-	TestTriggerResourcePod         TestTriggerResource = "pod"
-	TestTriggerResourceDeployment  TestTriggerResource = "deployment"
-	TestTriggerResourceStatefulSet TestTriggerResource = "statefulset"
-	TestTriggerResourceDaemonSet   TestTriggerResource = "daemonset"
-	TestTriggerResourceService     TestTriggerResource = "service"
-	TestTriggerResourceIngress     TestTriggerResource = "ingress"
-	TestTriggerResourceEvent       TestTriggerResource = "event"
-	TestTriggerResourceConfigMap   TestTriggerResource = "configmap"
+	TestTriggerResourcePod            TestTriggerResource = "pod"
+	TestTriggerResourceDeployment     TestTriggerResource = "deployment"
+	TestTriggerResourceStatefulSet    TestTriggerResource = "statefulset"
+	TestTriggerResourceDaemonSet      TestTriggerResource = "daemonset"
+	TestTriggerResourceService        TestTriggerResource = "service"
+	TestTriggerResourceCustomResource TestTriggerResource = "custom-resource"
+	TestTriggerResourceIngress        TestTriggerResource = "ingress"
+	TestTriggerResourceEvent          TestTriggerResource = "event"
+	TestTriggerResourceConfigMap      TestTriggerResource = "configmap"
 )
 
 // TestTriggerEvent defines event for test triggers
