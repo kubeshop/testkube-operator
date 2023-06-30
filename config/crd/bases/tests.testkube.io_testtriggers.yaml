@@ -141,6 +141,7 @@ spec:
                 - ingress
                 - event
                 - configmap
+                - custom-resource
                 type: string
               resourceSelector:
                 description: ResourceSelector identifies which Kubernetes Objects
