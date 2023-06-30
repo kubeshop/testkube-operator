@@ -18,7 +18,6 @@ package v1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -45,8 +44,8 @@ type TestTriggerSpec struct {
 	// For which Resource do we monitor Event which triggers an Action on certain conditions
 	Resource TestTriggerResource `json:"resource"`
 	// ResourceSelector identifies which Kubernetes Objects should be watched
-	ResourceSelector TestTriggerSelector         `json:"resourceSelector"`
-	CustomResource   schema.GroupVersionResource `json:"customResource"`
+	ResourceSelector TestTriggerSelector               `json:"resourceSelector"`
+	CustomResource   TestTriggerCRGroupVersionResource `json:"customResource,omitempty"`
 	// On which Event for a Resource should an Action be triggered
 	Event TestTriggerEvent `json:"event"`
 	// What resource conditions should be matched
@@ -61,6 +60,12 @@ type TestTriggerSpec struct {
 	// +kubebuilder:validation:Type:=string
 	// +kubebuilder:validation:Format:=duration
 	Delay *metav1.Duration `json:"delay,omitempty"`
+}
+
+type TestTriggerCRGroupVersionResource struct {
+	Group    string `json:"group"`
+	Version  string `json:"version"`
+	Resource string `json:"resource"`
 }
 
 // TestTriggerResource defines resource for test triggers

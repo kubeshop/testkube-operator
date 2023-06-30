@@ -1,9 +1,10 @@
+
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.8.0
+    controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
   name: tests.tests.testkube.io
 spec:
@@ -388,6 +389,9 @@ spec:
                           name:
                             description: object name
                             type: string
+                          namespace:
+                            description: object kubernetes namespace
+                            type: string
                         required:
                         - key
                         - name
@@ -407,6 +411,9 @@ spec:
                             type: string
                           name:
                             description: object name
+                            type: string
+                          namespace:
+                            description: object kubernetes namespace
                             type: string
                         required:
                         - key
@@ -593,6 +600,18 @@ spec:
                     description: script to run before test execution (not supported
                       for container executors)
                     type: string
+                  runningContext:
+                    description: running context for test or test suite execution
+                    properties:
+                      context:
+                        description: Context value depending from its type
+                        type: string
+                      type:
+                        description: One of possible context types
+                        type: string
+                    required:
+                    - type
+                    type: object
                   scraperTemplate:
                     description: scraper template extensions
                     type: string
