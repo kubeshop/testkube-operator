@@ -3,7 +3,6 @@ package tests
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"strings"
 
 	"github.com/google/uuid"
@@ -14,6 +13,7 @@ import (
 
 	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
 	testsv2 "github.com/kubeshop/testkube-operator/apis/tests/v2"
+	"github.com/kubeshop/testkube-operator/pkg/secret"
 	"k8s.io/apimachinery/pkg/labels"
 )
 
@@ -381,7 +381,7 @@ func secretToTestVars(secret *corev1.Secret, test *testsv2.Test) {
 }
 
 func secretName(testName string) string {
-	return fmt.Sprintf("%s-testvars", testName)
+	return secret.GetMetadataName(testName, secret.Postfix)
 }
 
 // DeleteByLabels deletes tests by labels

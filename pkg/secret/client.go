@@ -18,6 +18,8 @@ const (
 	TestkubeTestSecretLabel = "tests-secrets"
 	// TestkubeTestSourcesSecretLabel is testkube test sources secrets label
 	TestkubeTestSourcesSecretLabel = "test-sources-secrets"
+	// Postfix is secret postfix
+	Postfix = "testvars"
 )
 
 // Client provide methods to manage secrets

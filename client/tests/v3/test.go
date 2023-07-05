@@ -21,8 +21,6 @@ import (
 const (
 	testkubeTestSecretLabel = "tests-secrets"
 	currentSecretKey        = "current-secret"
-	// secretKind is a kind of the secrets
-	secretKind = "secrets"
 	// gitUsernameSecretName is git username secret name
 	gitUsernameSecretName = "git-username"
 	// gitTokenSecretName is git token secret name
@@ -174,7 +172,7 @@ func (s TestsClient) Create(test *testsv3.Test, options ...Option) (*testsv3.Tes
 			}
 		}
 
-		secretName := secret.GetMetadataName(test.Name, secretKind)
+		secretName := secret.GetMetadataName(test.Name, secret.Postfix)
 		if len(secrets) != 0 {
 			if err := s.secretClient.Create(secretName, test.Labels, secrets); err != nil {
 				return nil, err
@@ -203,7 +201,7 @@ func (s TestsClient) Update(test *testsv3.Test, options ...Option) (*testsv3.Tes
 			}
 		}
 
-		secretName := secret.GetMetadataName(test.Name, secretKind)
+		secretName := secret.GetMetadataName(test.Name, secret.Postfix)
 		if len(secrets) != 0 {
 			if err := s.secretClient.Apply(secretName, test.Labels, secrets); err != nil {
 				return nil, err
@@ -264,7 +262,7 @@ func (s TestsClient) Delete(name string) error {
 		}
 	}
 
-	secretName := secret.GetMetadataName(test.Name, secretKind)
+	secretName := secret.GetMetadataName(test.Name, secret.Postfix)
 	if err := s.secretClient.Delete(secretName); err != nil && !errors.IsNotFound(err) {
 		allErrors = append(allErrors, err)
 	}
@@ -630,6 +628,4 @@ func clearTestSecrets(test *testsv3.Test, secretName string) {
 		test.Spec.Content.Repository.TokenSecret.Name == secretName {
 		test.Spec.Content.Repository.TokenSecret = nil
 	}
-
-	return
 }
