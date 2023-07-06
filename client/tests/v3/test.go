@@ -238,29 +238,15 @@ func (s TestsClient) Delete(name string) error {
 	var allErrors []error
 
 	secretObj, err := s.LoadTestVariablesSecret(test)
-	if err != nil {
+	if err != nil && !errors.IsNotFound(err) {
 		allErrors = append(allErrors, err)
 	}
 
 	// delete secret only if exists ignore otherwise
-	if err != nil && secretObj != nil {
+	if err == nil && secretObj != nil {
 		err = s.k8sClient.Delete(context.Background(), secretObj)
 		if err != nil {
 			allErrors = append(allErrors, err)
-		}
-	}
-
-	runSecrets, err := s.LoadTestRunSecrets(test)
-	runSecretsExists := !errors.IsNotFound(err)
-	if err != nil {
-		allErrors = append(allErrors, err)
-	}
-
-	if runSecretsExists && runSecrets != nil {
-		for _, secret := range runSecrets.Items {
-			if err := s.k8sClient.Delete(context.Background(), &secret); err != nil && !errors.IsNotFound(err) {
-				allErrors = append(allErrors, err)
-			}
 		}
 	}
 
@@ -390,12 +376,6 @@ func (s TestsClient) LoadTestVariablesSecret(test *testsv3.Test) (*corev1.Secret
 	}
 	secret := &corev1.Secret{}
 	err := s.k8sClient.Get(context.Background(), client.ObjectKey{Namespace: s.namespace, Name: secretName(test.Name)}, secret)
-	return secret, err
-}
-
-func (s TestsClient) LoadTestRunSecrets(test *testsv3.Test) (*corev1.SecretList, error) {
-	secret := &corev1.SecretList{}
-	err := s.k8sClient.List(context.Background(), secret, &client.ListOptions{Namespace: s.namespace, LabelSelector: labels.SelectorFromSet(labels.Set{"testName": test.Name})})
 	return secret, err
 }
 
