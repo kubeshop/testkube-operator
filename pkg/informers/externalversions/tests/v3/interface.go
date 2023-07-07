@@ -22,6 +22,8 @@ import "github.com/kubeshop/testkube-operator/pkg/informers/externalversions/int
 type Interface interface {
 	// Tests returns a TestInformer.
 	Tests() TestInformer
+	// TestSuites returns a TestSuiteInformer.
+	TestSuites() TestSuiteInformer
 }
 
 type version struct {
@@ -42,4 +44,9 @@ func New(
 // Tests returns a TestInformer.
 func (v *version) Tests() TestInformer {
 	return &testInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// TestSuites returns a TestSuiteInformer.
+func (v *version) TestSuites() TestSuiteInformer {
+	return &testSuiteInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

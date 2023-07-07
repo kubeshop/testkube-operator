@@ -18,8 +18,8 @@ package externalversions
 
 import (
 	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
-	testsv2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
-	testsv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
+	testsuitev3 "github.com/kubeshop/testkube-operator/apis/testsuite/v3"
+	testtriggersv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
 	"github.com/pkg/errors"
 
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -53,16 +53,16 @@ func (f *genericInformer) Lister() cache.GenericLister {
 func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource) (GenericInformer, error) {
 	switch resource {
 	// Group=tests.testkube.io, Version=v1
-	case testsv1.GroupVersionResource:
+	case testtriggersv1.GroupVersionResource:
 		return &genericInformer{
 			resource: resource.GroupResource(),
 			informer: f.Tests().V1().TestTriggers().Informer(),
 		}, nil
-		// Group=tests.testkube.io, Version=v2
-	case testsv2.GroupVersionResource:
+		// Group=tests.testkube.io, Version=v3
+	case testsuitev3.GroupVersionResource:
 		return &genericInformer{
 			resource: resource.GroupResource(),
-			informer: f.Tests().V2().TestSuites().Informer(),
+			informer: f.Tests().V3().TestSuites().Informer(),
 		}, nil
 		// Group=tests.testkube.io, Version=v3
 	case testsv3.GroupVersionResource:

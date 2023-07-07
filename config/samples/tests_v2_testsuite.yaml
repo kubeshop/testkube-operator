@@ -5,11 +5,9 @@ metadata:
 spec:
   steps: 
 
-    - type: delay
-      delay: 
+    - delay: 
         duration: 1000
 
-    - type: executeTest 
-      execute: 
+    - execute: 
         namespace: testkube 
         name: sanity

@@ -53,6 +53,19 @@ type Interface interface {
 	UpdateStatus(test *testsv3.Test) error
 }
 
+type DeleteDependenciesError struct {
+	testName  string
+	allErrors []error
+}
+
+func (e *DeleteDependenciesError) Error() string {
+	return fmt.Errorf("removing dependencies of test %s returned errors: %v", e.testName, e.allErrors).Error()
+}
+
+func NewDeleteDependenciesError(testName string, allErrors []error) error {
+	return &DeleteDependenciesError{testName: testName, allErrors: allErrors}
+}
+
 // Option contain test source options
 type Option struct {
 	Secrets map[string]string
@@ -217,27 +230,33 @@ func (s TestsClient) Delete(name string) error {
 		return err
 	}
 
-	secretObj, err := s.LoadTestVariablesSecret(test)
-	secretExists := !errors.IsNotFound(err)
-	if err != nil && secretExists {
+	err = s.k8sClient.Delete(context.Background(), test)
+	if err != nil {
 		return err
+	}
+
+	var allErrors []error
+
+	secretObj, err := s.LoadTestVariablesSecret(test)
+	if err != nil && !errors.IsNotFound(err) {
+		allErrors = append(allErrors, err)
 	}
 
 	// delete secret only if exists ignore otherwise
 	if err == nil && secretObj != nil {
-		if err = s.k8sClient.Delete(context.Background(), secretObj); err != nil {
-			return err
+		err = s.k8sClient.Delete(context.Background(), secretObj)
+		if err != nil {
+			allErrors = append(allErrors, err)
 		}
 	}
 
 	secretName := secret.GetMetadataName(test.Name, secretKind)
 	if err := s.secretClient.Delete(secretName); err != nil && !errors.IsNotFound(err) {
-		return err
+		allErrors = append(allErrors, err)
 	}
 
-	err = s.k8sClient.Delete(context.Background(), test)
-	if err != nil {
-		return err
+	if len(allErrors) != 0 {
+		return NewDeleteDependenciesError(name, allErrors)
 	}
 
 	return nil

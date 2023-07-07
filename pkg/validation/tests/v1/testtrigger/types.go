@@ -24,4 +24,12 @@ const (
 	CauseDeploymentImageUpdate        Cause     = "deployment-image-update"
 	CauseDeploymentEnvUpdate          Cause     = "deployment-env-update"
 	CauseDeploymentContainersModified Cause     = "deployment-containers-modified"
+	ConditionAvailable                          = "Available"
+	ConditionProgressing                        = "Progressing"
+	ConditionReplicaFailure                     = "ReplicaFailure"
+	ConditionPodScheduled                       = "PodScheduled"
+	ConditionPodHasNetwork                      = "PodHasNetwork"
+	ConditionContainersReady                    = "ContainersReady"
+	ConditionInitialized                        = "Initialized"
+	ConditionReady                              = "Ready"
 )
