@@ -51,6 +51,8 @@ type TestTriggerSpec struct {
 	Event TestTriggerEvent `json:"event"`
 	// What resource conditions should be matched
 	ConditionSpec *TestTriggerConditionSpec `json:"conditionSpec,omitempty"`
+	// What resource probes should be matched
+	ProbeSpec *TestTriggerProbeSpec `json:"probeSpec,omitempty"`
 	// Action represents what needs to be executed for selected Execution
 	Action TestTriggerAction `json:"action"`
 	// Execution identifies for which test execution should an Action be executed
@@ -158,6 +160,32 @@ type TestTriggerConditionSpec struct {
 	Conditions []TestTriggerCondition `json:"conditions,omitempty"`
 	// duration in seconds the test trigger waits for conditions, until its stopped
 	Timeout int32 `json:"timeout,omitempty"`
+	// duration in seconds the test trigger waits between condition check
+	Delay int32 `json:"delay,omitempty"`
+}
+
+// TestTriggerProbe is used for definition of the probe for test triggers
+type TestTriggerProbe struct {
+	// test trigger condition probe scheme to connect to host, default is http
+	Scheme string `json:"scheme,omitempty"`
+	// test trigger condition probe host, default is pod ip or service name
+	Host string `json:"host,omitempty"`
+	// test trigger condition probe path to check, default is /
+	Path string `json:"path,omitempty"`
+	// test trigger condition probe port to connect
+	Port int32 `json:"port,omitempty"`
+	// test trigger condition probe headers to submit
+	Headers map[string]string `json:"headers,omitempty"`
+}
+
+// TestTriggerProbeSpec defines the probe specification for TestTrigger
+type TestTriggerProbeSpec struct {
+	// list of test trigger probes
+	Probes []TestTriggerProbe `json:"probes,omitempty"`
+	// duration in seconds the test trigger waits for probes, until its stopped
+	Timeout int32 `json:"timeout,omitempty"`
+	// duration in seconds the test trigger waits between probes
+	Delay int32 `json:"delay,omitempty"`
 }
 
 //+kubebuilder:object:root=true
