@@ -215,6 +215,17 @@ func TestValidator_validateConditions(t *testing.T) {
 		assert.ErrorContains(t, verrs[0], "spec.conditionSpec.timeout: Invalid value: -100: timeout is negative")
 	})
 
+	t.Run("error for invalid delay", func(t *testing.T) {
+		t.Parallel()
+
+		verrs := v.validateConditions(&testtriggerv1.TestTriggerConditionSpec{
+			Delay: -1,
+		})
+
+		assert.Len(t, verrs, 1)
+		assert.ErrorContains(t, verrs[0], "spec.conditionSpec.delay: Invalid value: -1: delay is negative")
+	})
+
 	t.Run("error for invalid condition type", func(t *testing.T) {
 		t.Parallel()
 
@@ -251,5 +262,49 @@ func TestValidator_validateConditions(t *testing.T) {
 
 		assert.Len(t, verrs, 1)
 		assert.ErrorContains(t, verrs[0], "spec.conditionSpec.conditions.condition: Unsupported value: \"\": supported values: \"True\", \"False\", \"Unknown\"")
+	})
+}
+
+func TestValidator_validateProbes(t *testing.T) {
+	t.Parallel()
+
+	v := NewValidator(buildFakeK8sClient(t))
+
+	t.Run("no error for valid probe spec", func(t *testing.T) {
+		t.Parallel()
+
+		verrs := v.validateProbes(&testtriggerv1.TestTriggerProbeSpec{
+			Timeout: 50,
+			Probes: []testtriggerv1.TestTriggerProbe{
+				{
+					Host: "testkube-api-server",
+					Path: "/health",
+					Port: 8088,
+				},
+			}})
+
+		assert.Nil(t, verrs)
+	})
+
+	t.Run("error for invalid timeout", func(t *testing.T) {
+		t.Parallel()
+
+		verrs := v.validateProbes(&testtriggerv1.TestTriggerProbeSpec{
+			Timeout: -100,
+		})
+
+		assert.Len(t, verrs, 1)
+		assert.ErrorContains(t, verrs[0], "spec.probeSpec.timeout: Invalid value: -100: timeout is negative")
+	})
+
+	t.Run("error for invalid delay", func(t *testing.T) {
+		t.Parallel()
+
+		verrs := v.validateProbes(&testtriggerv1.TestTriggerProbeSpec{
+			Delay: -1,
+		})
+
+		assert.Len(t, verrs, 1)
+		assert.ErrorContains(t, verrs[0], "spec.probeSpec.delay: Invalid value: -1: delay is negative")
 	})
 }
