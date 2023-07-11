@@ -44,7 +44,8 @@ type TestTriggerSpec struct {
 	// For which Resource do we monitor Event which triggers an Action on certain conditions
 	Resource TestTriggerResource `json:"resource"`
 	// ResourceSelector identifies which Kubernetes Objects should be watched
-	ResourceSelector TestTriggerSelector `json:"resourceSelector"`
+	ResourceSelector TestTriggerSelector               `json:"resourceSelector"`
+	CustomResource   TestTriggerCRGroupVersionResource `json:"customResource,omitempty"`
 	// On which Event for a Resource should an Action be triggered
 	Event TestTriggerEvent `json:"event"`
 	// What resource conditions should be matched
@@ -63,20 +64,27 @@ type TestTriggerSpec struct {
 	Delay *metav1.Duration `json:"delay,omitempty"`
 }
 
+type TestTriggerCRGroupVersionResource struct {
+	Group    string `json:"group"`
+	Version  string `json:"version"`
+	Resource string `json:"resource"`
+}
+
 // TestTriggerResource defines resource for test triggers
-// +kubebuilder:validation:Enum=pod;deployment;statefulset;daemonset;service;ingress;event;configmap
+// +kubebuilder:validation:Enum=pod;deployment;statefulset;daemonset;service;ingress;event;configmap;custom-resource
 type TestTriggerResource string
 
 // List of TestTriggerResources
 const (
-	TestTriggerResourcePod         TestTriggerResource = "pod"
-	TestTriggerResourceDeployment  TestTriggerResource = "deployment"
-	TestTriggerResourceStatefulSet TestTriggerResource = "statefulset"
-	TestTriggerResourceDaemonSet   TestTriggerResource = "daemonset"
-	TestTriggerResourceService     TestTriggerResource = "service"
-	TestTriggerResourceIngress     TestTriggerResource = "ingress"
-	TestTriggerResourceEvent       TestTriggerResource = "event"
-	TestTriggerResourceConfigMap   TestTriggerResource = "configmap"
+	TestTriggerResourcePod            TestTriggerResource = "pod"
+	TestTriggerResourceDeployment     TestTriggerResource = "deployment"
+	TestTriggerResourceStatefulSet    TestTriggerResource = "statefulset"
+	TestTriggerResourceDaemonSet      TestTriggerResource = "daemonset"
+	TestTriggerResourceService        TestTriggerResource = "service"
+	TestTriggerResourceCustomResource TestTriggerResource = "custom-resource"
+	TestTriggerResourceIngress        TestTriggerResource = "ingress"
+	TestTriggerResourceEvent          TestTriggerResource = "event"
+	TestTriggerResourceConfigMap      TestTriggerResource = "configmap"
 )
 
 // TestTriggerEvent defines event for test triggers

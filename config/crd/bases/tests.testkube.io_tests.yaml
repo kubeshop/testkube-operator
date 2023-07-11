@@ -388,6 +388,9 @@ spec:
                           name:
                             description: object name
                             type: string
+                          namespace:
+                            description: object kubernetes namespace
+                            type: string
                         required:
                         - key
                         - name
@@ -407,6 +410,9 @@ spec:
                             type: string
                           name:
                             description: object name
+                            type: string
+                          namespace:
+                            description: object kubernetes namespace
                             type: string
                         required:
                         - key
@@ -593,6 +599,18 @@ spec:
                     description: script to run before test execution (not supported
                       for container executors)
                     type: string
+                  runningContext:
+                    description: running context for test or test suite execution
+                    properties:
+                      context:
+                        description: Context value depending from its type
+                        type: string
+                      type:
+                        description: One of possible context types
+                        type: string
+                    required:
+                    - type
+                    type: object
                   scraperTemplate:
                     description: scraper template extensions
                     type: string

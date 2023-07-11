@@ -356,6 +356,18 @@ spec:
                     description: test kubernetes namespace (\"testkube\" when not
                       set)
                     type: string
+                  runningContext:
+                    description: running context for test or test suite execution
+                    properties:
+                      context:
+                        description: Context value depending from its type
+                        type: string
+                      type:
+                        description: One of possible context types
+                        type: string
+                    required:
+                    - type
+                    type: object
                   secretUUID:
                     description: secret uuid
                     type: string
@@ -641,6 +653,18 @@ spec:
                     description: test kubernetes namespace (\"testkube\" when not
                       set)
                     type: string
+                  runningContext:
+                    description: running context for test or test suite execution
+                    properties:
+                      context:
+                        description: Context value depending from its type
+                        type: string
+                      type:
+                        description: One of possible context types
+                        type: string
+                    required:
+                    - type
+                    type: object
                   secretUUID:
                     description: secret uuid
                     type: string

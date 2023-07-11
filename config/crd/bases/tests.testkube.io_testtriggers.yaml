@@ -98,6 +98,19 @@ spec:
                     format: int32
                     type: integer
                 type: object
+              customResource:
+                properties:
+                  group:
+                    type: string
+                  resource:
+                    type: string
+                  version:
+                    type: string
+                required:
+                - group
+                - resource
+                - version
+                type: object
               delay:
                 description: Delay is a duration string which specifies how long should
                   the test be delayed after a trigger is matched
@@ -176,6 +189,7 @@ spec:
                 - ingress
                 - event
                 - configmap
+                - custom-resource
                 type: string
               resourceSelector:
                 description: ResourceSelector identifies which Kubernetes Objects

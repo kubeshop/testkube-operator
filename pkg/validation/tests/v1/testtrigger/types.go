@@ -13,6 +13,7 @@ const (
 	ResourceStatefulSet                         = "statefulset"
 	ResourceDaemonSet                           = "daemonset"
 	ResourceService                             = "service"
+	ResourceCustomResource                      = "custom-resource"
 	ResourceIngress                             = "ingress"
 	ResourceEvent                               = "event"
 	ResourceConfigMap                           = "configmap"
