@@ -41,6 +41,7 @@ import (
 	executorv1 "github.com/kubeshop/testkube-operator/apis/executor/v1"
 	testkubev1 "github.com/kubeshop/testkube-operator/apis/script/v1"
 	testkubev2 "github.com/kubeshop/testkube-operator/apis/script/v2"
+	testexecutionv1 "github.com/kubeshop/testkube-operator/apis/testexecution/v1"
 	testsv1 "github.com/kubeshop/testkube-operator/apis/tests/v1"
 	testsv2 "github.com/kubeshop/testkube-operator/apis/tests/v2"
 	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
@@ -50,6 +51,7 @@ import (
 	testsuitev3 "github.com/kubeshop/testkube-operator/apis/testsuite/v3"
 	executorcontrollers "github.com/kubeshop/testkube-operator/controllers/executor"
 	scriptcontrollers "github.com/kubeshop/testkube-operator/controllers/script"
+	testexecutioncontrollers "github.com/kubeshop/testkube-operator/controllers/testexecution"
 	testscontrollers "github.com/kubeshop/testkube-operator/controllers/tests"
 	testsourcecontrollers "github.com/kubeshop/testkube-operator/controllers/testsource"
 	testsuitecontrollers "github.com/kubeshop/testkube-operator/controllers/testsuite"
@@ -84,6 +86,7 @@ func init() {
 	utilruntime.Must(testtriggersv1.AddToScheme(scheme))
 	utilruntime.Must(testsourcev1.AddToScheme(scheme))
 	utilruntime.Must(testsuitev3.AddToScheme(scheme))
+	utilruntime.Must(testexecutionv1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -180,6 +183,13 @@ func main() {
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestTrigger")
+		os.Exit(1)
+	}
+	if err = (&testexecutioncontrollers.TestExecutionReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "TestExecution")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder
