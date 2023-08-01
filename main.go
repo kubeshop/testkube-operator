@@ -186,8 +186,10 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&testexecutioncontrollers.TestExecutionReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:      mgr.GetClient(),
+		Scheme:      mgr.GetScheme(),
+		ServiceName: httpConfig.Fullname,
+		ServicePort: httpConfig.Port,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestExecution")
 		os.Exit(1)

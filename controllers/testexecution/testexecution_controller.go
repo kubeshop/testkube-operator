@@ -17,8 +17,14 @@ limitations under the License.
 package testexecution
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+	"net/http"
 
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -30,7 +36,9 @@ import (
 // TestExecutionReconciler reconciles a TestExecution object
 type TestExecutionReconciler struct {
 	client.Client
-	Scheme *runtime.Scheme
+	Scheme      *runtime.Scheme
+	ServiceName string
+	ServicePort int
 }
 
 //+kubebuilder:rbac:groups=tests.testkube.io,resources=testexecutions,verbs=get;list;watch;create;update;patch;delete
@@ -49,7 +57,24 @@ type TestExecutionReconciler struct {
 func (r *TestExecutionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
-	// TODO(user): your logic here
+	var testExecution testexecutionv1.TestExecution
+	err := r.Get(ctx, req.NamespacedName, &testExecution)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			return ctrl.Result{}, nil
+		}
+
+		return ctrl.Result{}, err
+	}
+
+	jsonData, err := json.Marshal(testExecution.Spec.ExecutionRequest)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+
+	if _, err = r.executeTest(testExecution.Name, testExecution.Namespace, jsonData); err != nil {
+		return ctrl.Result{}, err
+	}
 
 	return ctrl.Result{}, nil
 }
@@ -59,4 +84,27 @@ func (r *TestExecutionReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&testexecutionv1.TestExecution{}).
 		Complete(r)
+}
+
+func (r *TestExecutionReconciler) executeTest(name, namespace string, jsonData []byte) (out string, err error) {
+	request, err := http.NewRequest(http.MethodPost,
+		fmt.Sprintf("http://%s:%d.%s.svc.cluster.local/v1/%s/%s/executions", r.ServiceName, r.ServicePort, namespace, "tests", name),
+		bytes.NewBuffer(jsonData))
+	if err != nil {
+		return out, err
+	}
+
+	request.Header.Set("Content-Type", "application/json")
+	resp, err := http.DefaultClient.Do(request)
+	if err != nil {
+		return out, err
+	}
+	defer resp.Body.Close()
+
+	b, err := io.ReadAll(resp.Body)
+	if resp.StatusCode > 300 {
+		return out, fmt.Errorf("could not POST, statusCode: %d", resp.StatusCode)
+	}
+
+	return fmt.Sprintf("status: %d - %s", resp.StatusCode, b), err
 }
