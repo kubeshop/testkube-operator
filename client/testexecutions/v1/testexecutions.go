@@ -39,8 +39,11 @@ type TestExecutionsClient struct {
 // Get gets test execution by name in given namespace
 func (s TestExecutionsClient) Get(name string) (*testexecutionv1.TestExecution, error) {
 	testExecution := &testexecutionv1.TestExecution{}
-	err := s.k8sClient.Get(context.Background(), client.ObjectKey{Namespace: s.namespace, Name: name}, testExecution)
-	return testExecution, err
+	if err := s.k8sClient.Get(context.Background(), client.ObjectKey{Namespace: s.namespace, Name: name}, testExecution); err != nil {
+		return nil, err
+	}
+
+	return testExecution, nil
 }
 
 // Create creates new test execution CRD
