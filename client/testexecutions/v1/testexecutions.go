@@ -14,6 +14,7 @@ type Interface interface {
 	Create(testExecution *testexecutionv1.TestExecution) (*testexecutionv1.TestExecution, error)
 	Update(testExecution *testexecutionv1.TestExecution) (*testexecutionv1.TestExecution, error)
 	Delete(name string) error
+	UpdateStatus(testЕxecution *testexecutionv1.TestExecution) error
 }
 
 // Option contain test execution options
@@ -71,4 +72,9 @@ func (s TestExecutionsClient) Delete(name string) error {
 
 	err := s.k8sClient.Delete(context.Background(), testExecution)
 	return err
+}
+
+// UpdateStatus updates existing test execution status
+func (s TestExecutionsClient) UpdateStatus(testExecution *testexecutionv1.TestExecution) error {
+	return s.k8sClient.Status().Update(context.Background(), testExecution)
 }
