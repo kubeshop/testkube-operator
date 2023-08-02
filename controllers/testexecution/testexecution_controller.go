@@ -67,12 +67,16 @@ func (r *TestExecutionReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		return ctrl.Result{}, err
 	}
 
+	if testExecution.Spec.Test == nil {
+		return ctrl.Result{}, nil
+	}
+
 	jsonData, err := json.Marshal(testExecution.Spec.ExecutionRequest)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
 
-	if _, err = r.executeTest(testExecution.Name, testExecution.Namespace, jsonData); err != nil {
+	if _, err = r.executeTest(testExecution.Spec.Test.Name, testExecution.Namespace, jsonData); err != nil {
 		return ctrl.Result{}, err
 	}
 
