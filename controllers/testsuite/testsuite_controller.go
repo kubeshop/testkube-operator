@@ -25,6 +25,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
+	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
 	testsuitev3 "github.com/kubeshop/testkube-operator/apis/testsuite/v3"
 	"github.com/kubeshop/testkube-operator/pkg/cronjob"
@@ -128,7 +129,9 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *TestSuiteReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	pred := predicate.GenerationChangedPredicate{}
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&testsuitev3.TestSuite{}).
+		WithEventFilter(pred).
 		Complete(r)
 }

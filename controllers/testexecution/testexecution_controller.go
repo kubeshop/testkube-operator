@@ -29,6 +29,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
+	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
 	testexecutionv1 "github.com/kubeshop/testkube-operator/apis/testexecution/v1"
 )
@@ -76,7 +77,7 @@ func (r *TestExecutionReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		return ctrl.Result{}, err
 	}
 
-	if _, err = r.executeTest(testExecution.Spec.Test.Name, testExecution.Namespace, jsonData); err != nil {
+	if _, err = r.executeTest(testExecution.Spec.Test.Name, testExecution.Name, testExecution.Namespace, jsonData); err != nil {
 		return ctrl.Result{}, err
 	}
 
@@ -85,14 +86,17 @@ func (r *TestExecutionReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 
 // SetupWithManager sets up the controller with the Manager.
 func (r *TestExecutionReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	pred := predicate.GenerationChangedPredicate{}
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&testexecutionv1.TestExecution{}).
+		WithEventFilter(pred).
 		Complete(r)
 }
 
-func (r *TestExecutionReconciler) executeTest(name, namespace string, jsonData []byte) (out string, err error) {
+func (r *TestExecutionReconciler) executeTest(testName, testExecutionName, namespace string, jsonData []byte) (out string, err error) {
 	request, err := http.NewRequest(http.MethodPost,
-		fmt.Sprintf("http://%s.%s.svc.cluster.local:%d/v1/%s/%s/executions", r.ServiceName, namespace, r.ServicePort, "tests", name),
+		fmt.Sprintf("http://%s.%s.svc.cluster.local:%d/v1/%s/%s/executions?testExecutionName=%s",
+			r.ServiceName, namespace, r.ServicePort, "tests", testName, testExecutionName),
 		bytes.NewBuffer(jsonData))
 	if err != nil {
 		return out, err
