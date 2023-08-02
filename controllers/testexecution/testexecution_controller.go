@@ -88,7 +88,7 @@ func (r *TestExecutionReconciler) SetupWithManager(mgr ctrl.Manager) error {
 
 func (r *TestExecutionReconciler) executeTest(name, namespace string, jsonData []byte) (out string, err error) {
 	request, err := http.NewRequest(http.MethodPost,
-		fmt.Sprintf("http://%s:%d.%s.svc.cluster.local/v1/%s/%s/executions", r.ServiceName, r.ServicePort, namespace, "tests", name),
+		fmt.Sprintf("http://%s.%s.svc.cluster.local:%d/v1/%s/%s/executions", r.ServiceName, namespace, r.ServicePort, "tests", name),
 		bytes.NewBuffer(jsonData))
 	if err != nil {
 		return out, err
