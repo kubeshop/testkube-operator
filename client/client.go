@@ -18,6 +18,7 @@ import (
 	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
 	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
 	testsuitev3 "github.com/kubeshop/testkube-operator/apis/testsuite/v3"
+	testsuiteexecutionv1 "github.com/kubeshop/testkube-operator/apis/testsuiteexecution/v1"
 )
 
 // GetClient returns kubernetes CRD client with registered schemes
@@ -36,6 +37,7 @@ func GetClient() (client.Client, error) {
 	testsuitev3.AddToScheme(scheme)
 	testsourcev1.AddToScheme(scheme)
 	testexecutionv1.AddToScheme(scheme)
+	testsuiteexecutionv1.AddToScheme(scheme)
 
 	kubeconfig, err := ctrl.GetConfig()
 	if err != nil {

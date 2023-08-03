@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package testexecution
+package testsuiteexecution
 
 import (
 	"bytes"
@@ -31,35 +31,35 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
-	testexecutionv1 "github.com/kubeshop/testkube-operator/apis/testexecution/v1"
+	testsuiteexecutionv1 "github.com/kubeshop/testkube-operator/apis/testsuiteexecution/v1"
 )
 
-// TestExecutionReconciler reconciles a TestExecution object
-type TestExecutionReconciler struct {
+// TestSuiteExecutionReconciler reconciles a TestSuiteExecution object
+type TestSuiteExecutionReconciler struct {
 	client.Client
 	Scheme      *runtime.Scheme
 	ServiceName string
 	ServicePort int
 }
 
-//+kubebuilder:rbac:groups=tests.testkube.io,resources=testexecutions,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=tests.testkube.io,resources=testexecutions/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=tests.testkube.io,resources=testexecutions/finalizers,verbs=update
+//+kubebuilder:rbac:groups=tests.testkube.io,resources=testsuiteexecutions,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=tests.testkube.io,resources=testsuiteexecutions/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=tests.testkube.io,resources=testsuiteexecutions/finalizers,verbs=update
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 // TODO(user): Modify the Reconcile function to compare the state specified by
-// the TestExecution object against the actual cluster state, and then
+// the TestSuiteExecution object against the actual cluster state, and then
 // perform operations to make the cluster state reflect the state specified by
 // the user.
 //
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.14.4/pkg/reconcile
-func (r *TestExecutionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *TestSuiteExecutionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
-	var testExecution testexecutionv1.TestExecution
-	err := r.Get(ctx, req.NamespacedName, &testExecution)
+	var testSuiteExecution testsuiteexecutionv1.TestSuiteExecution
+	err := r.Get(ctx, req.NamespacedName, &testSuiteExecution)
 	if err != nil {
 		if errors.IsNotFound(err) {
 			return ctrl.Result{}, nil
@@ -68,16 +68,16 @@ func (r *TestExecutionReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		return ctrl.Result{}, err
 	}
 
-	if testExecution.Spec.Test == nil {
+	if testSuiteExecution.Spec.TestSuite == nil {
 		return ctrl.Result{}, nil
 	}
 
-	jsonData, err := json.Marshal(testExecution.Spec.ExecutionRequest)
+	jsonData, err := json.Marshal(testSuiteExecution.Spec.ExecutionRequest)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
 
-	if _, err = r.executeTest(testExecution.Spec.Test.Name, testExecution.Name, testExecution.Namespace, jsonData); err != nil {
+	if _, err = r.executeTestSuite(testSuiteExecution.Spec.TestSuite.Name, testSuiteExecution.Name, testSuiteExecution.Namespace, jsonData); err != nil {
 		return ctrl.Result{}, err
 	}
 
@@ -85,18 +85,18 @@ func (r *TestExecutionReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *TestExecutionReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *TestSuiteExecutionReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	pred := predicate.GenerationChangedPredicate{}
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&testexecutionv1.TestExecution{}).
+		For(&testsuiteexecutionv1.TestSuiteExecution{}).
 		WithEventFilter(pred).
 		Complete(r)
 }
 
-func (r *TestExecutionReconciler) executeTest(testName, testExecutionName, namespace string, jsonData []byte) (out string, err error) {
+func (r *TestSuiteExecutionReconciler) executeTestSuite(testName, testSuiteExecutionName, namespace string, jsonData []byte) (out string, err error) {
 	request, err := http.NewRequest(http.MethodPost,
-		fmt.Sprintf("http://%s.%s.svc.cluster.local:%d/v1/tests/%s/executions?testExecutionName=%s",
-			r.ServiceName, namespace, r.ServicePort, testName, testExecutionName),
+		fmt.Sprintf("http://%s.%s.svc.cluster.local:%d/v1/testsuites/%s/executions?testSuiteExecutionName=%s",
+			r.ServiceName, namespace, r.ServicePort, testName, testSuiteExecutionName),
 		bytes.NewBuffer(jsonData))
 	if err != nil {
 		return out, err

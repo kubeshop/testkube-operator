@@ -117,4 +117,13 @@ resources:
   kind: TestExecution
   path: github.com/kubeshop/testkube-operator/apis/testexecution/v1
   version: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: testkube.io
+  group: tests
+  kind: TestSuiteExecution
+  path: github.com/kubeshop/testkube-operator/apis/testsuiteexecution/v1
+  version: v1
 version: "3"

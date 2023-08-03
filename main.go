@@ -49,12 +49,14 @@ import (
 	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
 	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
 	testsuitev3 "github.com/kubeshop/testkube-operator/apis/testsuite/v3"
+	testsuiteexecutionv1 "github.com/kubeshop/testkube-operator/apis/testsuiteexecution/v1"
 	executorcontrollers "github.com/kubeshop/testkube-operator/controllers/executor"
 	scriptcontrollers "github.com/kubeshop/testkube-operator/controllers/script"
 	testexecutioncontrollers "github.com/kubeshop/testkube-operator/controllers/testexecution"
 	testscontrollers "github.com/kubeshop/testkube-operator/controllers/tests"
 	testsourcecontrollers "github.com/kubeshop/testkube-operator/controllers/testsource"
 	testsuitecontrollers "github.com/kubeshop/testkube-operator/controllers/testsuite"
+	testsuiteexecutioncontrollers "github.com/kubeshop/testkube-operator/controllers/testsuiteexecution"
 	testtriggerscontrollers "github.com/kubeshop/testkube-operator/controllers/testtriggers"
 	"github.com/kubeshop/testkube-operator/pkg/cronjob"
 	//+kubebuilder:scaffold:imports
@@ -87,6 +89,7 @@ func init() {
 	utilruntime.Must(testsourcev1.AddToScheme(scheme))
 	utilruntime.Must(testsuitev3.AddToScheme(scheme))
 	utilruntime.Must(testexecutionv1.AddToScheme(scheme))
+	utilruntime.Must(testsuiteexecutionv1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -192,6 +195,15 @@ func main() {
 		ServicePort: httpConfig.Port,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestExecution")
+		os.Exit(1)
+	}
+	if err = (&testsuiteexecutioncontrollers.TestSuiteExecutionReconciler{
+		Client:      mgr.GetClient(),
+		Scheme:      mgr.GetScheme(),
+		ServiceName: httpConfig.Fullname,
+		ServicePort: httpConfig.Port,
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "TestSuiteExecution")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder
