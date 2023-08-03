@@ -126,9 +126,9 @@ type SuiteExecution struct {
 	// execution id
 	Id string `json:"id"`
 	// execution name
-	Name      string                    `json:"name"`
-	TestSuite *ObjectRef                `json:"testSuite"`
-	Status    *TestSuiteExecutionStatus `json:"status,omitempty"`
+	Name      string                `json:"name"`
+	TestSuite *ObjectRef            `json:"testSuite"`
+	Status    *SuiteExecutionStatus `json:"status,omitempty"`
 	// Environment variables passed to executor.
 	// Deprecated: use Basic Variables instead
 	Envs      map[string]string   `json:"envs,omitempty"`
@@ -408,6 +408,19 @@ type TestSuiteStepExecutionResult struct {
 	Test      *ObjectRef     `json:"test,omitempty"`
 	Execution *Execution     `json:"execution,omitempty"`
 }
+
+type SuiteExecutionStatus string
+
+// List of SuiteExecutionStatus
+const (
+	QUEUED_SuiteExecutionStatus   SuiteExecutionStatus = "queued"
+	RUNNING_SuiteExecutionStatus  SuiteExecutionStatus = "running"
+	PASSED_SuiteExecutionStatus   SuiteExecutionStatus = "passed"
+	FAILED_SuiteExecutionStatus   SuiteExecutionStatus = "failed"
+	ABORTING_SuiteExecutionStatus SuiteExecutionStatus = "aborting"
+	ABORTED_SuiteExecutionStatus  SuiteExecutionStatus = "aborted"
+	TIMEOUT_SuiteExecutionStatus  SuiteExecutionStatus = "timeout"
+)
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status

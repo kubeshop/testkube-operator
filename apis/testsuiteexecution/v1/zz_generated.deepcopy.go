@@ -332,8 +332,8 @@ func (in *SuiteExecution) DeepCopyInto(out *SuiteExecution) {
 	}
 	if in.Status != nil {
 		in, out := &in.Status, &out.Status
-		*out = new(TestSuiteExecutionStatus)
-		(*in).DeepCopyInto(*out)
+		*out = new(SuiteExecutionStatus)
+		**out = **in
 	}
 	if in.Envs != nil {
 		in, out := &in.Envs, &out.Envs

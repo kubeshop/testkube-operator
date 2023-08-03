@@ -735,7 +735,8 @@ spec:
                     description: test start time
                     format: date-time
                     type: string
-                  status: {}
+                  status:
+                    type: string
                   stepResults:
                     description: steps execution results
                     items:
