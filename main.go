@@ -68,6 +68,7 @@ type config struct {
 	Port            int
 	Fullname        string
 	TemplateCronjob string `split_words:"true"`
+	Registry        string
 }
 
 func init() {
@@ -147,7 +148,7 @@ func main() {
 	if err = (&testscontrollers.TestReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port, templateCronjob),
+		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port, templateCronjob, httpConfig.Registry),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Test")
 		os.Exit(1)
@@ -155,7 +156,7 @@ func main() {
 	if err = (&testsuitecontrollers.TestSuiteReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port, templateCronjob),
+		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port, templateCronjob, httpConfig.Registry),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestSuite")
 		os.Exit(1)
