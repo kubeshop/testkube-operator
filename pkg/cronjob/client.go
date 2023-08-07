@@ -29,6 +29,7 @@ type Client struct {
 	serviceName     string
 	servicePort     int
 	cronJobTemplate string
+	registry        string
 }
 
 type CronJobOptions struct {
@@ -51,15 +52,17 @@ type templateParameters struct {
 	CronJobTemplateExtensions string
 	Data                      string
 	Labels                    map[string]string
+	Registry                  string
 }
 
 // NewClient is a method to create new cron job client
-func NewClient(cli client.Client, serviceName string, servicePort int, cronJobTemplate string) *Client {
+func NewClient(cli client.Client, serviceName string, servicePort int, cronJobTemplate, registry string) *Client {
 	return &Client{
 		Client:          cli,
 		serviceName:     serviceName,
 		servicePort:     servicePort,
 		cronJobTemplate: cronJobTemplate,
+		registry:        registry,
 	}
 }
 
@@ -87,6 +90,7 @@ func (c *Client) Create(ctx context.Context, id, name, namespace string, options
 		CronJobTemplateExtensions: options.CronJobTemplateExtensions,
 		Data:                      options.Data,
 		Labels:                    options.Labels,
+		Registry:                  c.registry,
 	}
 
 	cronJobSpec, err := NewCronJobSpec(parameters)
@@ -115,6 +119,7 @@ func (c *Client) Update(ctx context.Context, cronJob *batchv1.CronJob, id, name,
 		CronJobTemplateExtensions: options.CronJobTemplateExtensions,
 		Data:                      options.Data,
 		Labels:                    options.Labels,
+		Registry:                  c.registry,
 	}
 
 	cronJobSpec, err := NewCronJobSpec(parameters)
