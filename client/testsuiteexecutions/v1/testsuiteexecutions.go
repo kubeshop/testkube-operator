@@ -18,11 +18,6 @@ type Interface interface {
 	UpdateStatus(testSuiteЕxecution *testsuiteexecutionv1.TestSuiteExecution) error
 }
 
-// Option contain test suite execution options
-type Option struct {
-	Secrets map[string]string
-}
-
 // NewClient returns new client instance, needs kubernetes client to be passed as dependecy
 func NewClient(client client.Client, namespace string) *TestSuiteExecutionsClient {
 	return &TestSuiteExecutionsClient{
