@@ -93,10 +93,10 @@ func (r *TestSuiteExecutionReconciler) SetupWithManager(mgr ctrl.Manager) error 
 		Complete(r)
 }
 
-func (r *TestSuiteExecutionReconciler) executeTestSuite(testName, testSuiteExecutionName, namespace string, jsonData []byte) (out string, err error) {
+func (r *TestSuiteExecutionReconciler) executeTestSuite(testSuiteName, testSuiteExecutionName, namespace string, jsonData []byte) (out string, err error) {
 	request, err := http.NewRequest(http.MethodPost,
-		fmt.Sprintf("http://%s.%s.svc.cluster.local:%d/v1/testsuites/%s/executions?testSuiteExecutionName=%s",
-			r.ServiceName, namespace, r.ServicePort, testName, testSuiteExecutionName),
+		fmt.Sprintf("http://%s.%s.svc.cluster.local:%d/v1/test-suites/%s/executions?testSuiteExecutionName=%s",
+			r.ServiceName, namespace, r.ServicePort, testSuiteName, testSuiteExecutionName),
 		bytes.NewBuffer(jsonData))
 	if err != nil {
 		return out, err
