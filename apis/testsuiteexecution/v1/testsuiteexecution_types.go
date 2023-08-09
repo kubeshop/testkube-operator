@@ -52,6 +52,8 @@ type RunningContext struct {
 	Context string `json:"context,omitempty"`
 }
 
+// RunningContextType defines running context type
+// +kubebuilder:validation:Enum=user-cli;user-ui;testsuite;testtrigger;scheduler;testexecution;testsuiteexecution
 type RunningContextType string
 
 const (
@@ -119,6 +121,8 @@ type TestSuiteExecutionStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 	LatestExecution *SuiteExecution `json:"latestExecution,omitempty"`
+	// test status execution generation
+	Generation int64 `json:"generation,omitempty"`
 }
 
 // SuiteExecutions data
@@ -409,6 +413,7 @@ type TestSuiteStepExecutionResult struct {
 	Execution *Execution     `json:"execution,omitempty"`
 }
 
+// +kubebuilder:validation:Enum=queued;running;passed;failed;aborting;aborted;timeout
 type SuiteExecutionStatus string
 
 // List of SuiteExecutionStatus

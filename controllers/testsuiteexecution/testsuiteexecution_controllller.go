@@ -84,6 +84,10 @@ func (r *TestSuiteExecutionReconciler) Reconcile(ctx context.Context, req ctrl.R
 		return ctrl.Result{}, err
 	}
 
+	if testSuiteExecution.Generation == testSuiteExecution.Status.Generation {
+		return ctrl.Result{}, nil
+	}
+
 	if _, err = r.executeTestSuite(testSuiteExecution.Spec.TestSuite.Name, testSuiteExecution.Name, testSuiteExecution.Namespace, jsonData); err != nil {
 		return ctrl.Result{}, err
 	}
