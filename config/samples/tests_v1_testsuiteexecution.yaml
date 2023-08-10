@@ -3,4 +3,12 @@ kind: TestSuiteExecution
 metadata:
   name: testsuiteexecution-sample
 spec:
-  # TODO(user): Add fields here
+  testSuite:
+    name: testsuite-example
+  executionRequest:
+    variables:
+      VAR_TEST:
+        name: VAR_TEST
+        value: "ANY"
+        type: basic
+

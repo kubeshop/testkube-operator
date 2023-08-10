@@ -3,4 +3,11 @@ kind: TestExecution
 metadata:
   name: testexecution-sample
 spec:
-  # TODO(user): Add fields here
+  test:
+    name: test-example
+  executionRequest:
+    variables:
+      VAR_TEST:
+        name: VAR_TEST
+        value: "ANY"
+        type: basic
