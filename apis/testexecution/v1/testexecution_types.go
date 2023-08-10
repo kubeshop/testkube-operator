@@ -189,7 +189,7 @@ type Execution struct {
 	// additional arguments/flags passed to executor binary
 	Args []string `json:"args,omitempty"`
 	// usage mode for arguments
-	ArgsMode  string              `json:"args_mode,omitempty"`
+	ArgsMode  ArgsModeType        `json:"args_mode,omitempty"`
 	Variables map[string]Variable `json:"variables,omitempty"`
 	// in case the variables file is too big, it will be uploaded to storage
 	IsVariablesFileUploaded bool `json:"isVariablesFileUploaded,omitempty"`
@@ -315,26 +315,6 @@ type ExecutionStepResult struct {
 
 // execution result data
 type AssertionResult struct {
-	Name         string `json:"name,omitempty"`
-	Status       string `json:"status,omitempty"`
-	ErrorMessage string `json:"errorMessage,omitempty"`
-}
-
-// execution result data
-type ExecutionResultStep struct {
-	// step name
-	Name string `json:"name,omitempty"`
-	// test execution start time
-	StartTime metav1.Time `json:"startTime,omitempty"`
-	// test execution start time
-	EndTime metav1.Time `json:"endTime,omitempty"`
-	// execution step status
-	Status     string                        `json:"status,omitempty"`
-	Assertions *ExecutionResultStepAssertion `json:"assertions,omitempty"`
-}
-
-// execution result data
-type ExecutionResultStepAssertion struct {
 	Name         string `json:"name,omitempty"`
 	Status       string `json:"status,omitempty"`
 	ErrorMessage string `json:"errorMessage,omitempty"`
