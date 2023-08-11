@@ -17,9 +17,10 @@ limitations under the License.
 package v3
 
 import (
-	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
