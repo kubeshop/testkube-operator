@@ -64,8 +64,8 @@ spec:
                         items:
                           type: string
                         type: array
-                      folderPerExecution:
-                        description: use a separate folder for execution artifacts
+                      omitFolderPerExecution:
+                        description: don't use a separate folder for execution artifacts
                         type: boolean
                       storageBucket:
                         description: artifact bucket storage
@@ -393,8 +393,8 @@ spec:
                         items:
                           type: string
                         type: array
-                      folderPerExecution:
-                        description: use a separate folder for execution artifacts
+                      omitFolderPerExecution:
+                        description: don't use a separate folder for execution artifacts
                         type: boolean
                       storageBucket:
                         description: artifact bucket storage

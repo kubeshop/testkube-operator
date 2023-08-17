@@ -266,8 +266,8 @@ type ArtifactRequest struct {
 	Dirs []string `json:"dirs,omitempty"`
 	// artifact bucket storage
 	StorageBucket string `json:"storageBucket,omitempty"`
-	// use a separate folder for execution artifacts
-	FolderPerExecution bool `json:"folderPerExecution,omitempty"`
+	// don't use a separate folder for execution artifacts
+	OmitFolderPerExecution bool `json:"omitFolderPerExecution,omitempty"`
 }
 
 // TestContent defines test content
