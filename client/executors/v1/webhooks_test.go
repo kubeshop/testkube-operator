@@ -65,7 +65,7 @@ func TestWebhooks(t *testing.T) {
 		assert.NotEmpty(t, wClient)
 		assert.Equal(t, testNamespace, wClient.Namespace)
 	})
-	t.Run("TestCreate", func(t *testing.T) {
+	t.Run("WebhookCreate", func(t *testing.T) {
 		t.Run("Create new webhooks", func(t *testing.T) {
 			for _, w := range testWebhooks {
 				created, err := wClient.Create(w)
@@ -93,14 +93,14 @@ func TestWebhooks(t *testing.T) {
 			assert.Error(t, err)
 		})
 	})
-	t.Run("TestList", func(t *testing.T) {
+	t.Run("WebhookList", func(t *testing.T) {
 		t.Run("List without selector", func(t *testing.T) {
 			l, err := wClient.List("")
 			assert.NoError(t, err)
 			assert.Equal(t, len(testWebhooks), len(l.Items))
 		})
 	})
-	t.Run("TestGet", func(t *testing.T) {
+	t.Run("WebhookGet", func(t *testing.T) {
 		t.Run("Get webhook with empty name", func(t *testing.T) {
 			t.Parallel()
 			_, err := wClient.Get("")
@@ -119,7 +119,7 @@ func TestWebhooks(t *testing.T) {
 			assert.Equal(t, testWebhooks[0].Name, res.Name)
 		})
 	})
-	t.Run("TestGetByEvent", func(t *testing.T) {
+	t.Run("WebhookGetByEvent", func(t *testing.T) {
 		t.Run("GetByEvent with non-existent event", func(t *testing.T) {
 			res, err := wClient.GetByEvent("no-event")
 			assert.NoError(t, err)
@@ -137,7 +137,7 @@ func TestWebhooks(t *testing.T) {
 			assert.Equal(t, 2, len(res.Items))
 		})
 	})
-	t.Run("TestDelete", func(t *testing.T) {
+	t.Run("WebhookDelete", func(t *testing.T) {
 		t.Run("Delete items", func(t *testing.T) {
 			for _, webhook := range testWebhooks {
 				w, err := wClient.Get(webhook.Name)

@@ -1,0 +1,24 @@
+# permissions for end users to edit testsuiteexecutions.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: testsuiteexecution-editor-role
+rules:
+- apiGroups:
+  - tests.testkube.io
+  resources:
+  - testsuiteexecutions
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - tests.testkube.io
+  resources:
+  - testsuiteexecutions/status
+  verbs:
+  - get

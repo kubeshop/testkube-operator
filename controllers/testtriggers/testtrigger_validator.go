@@ -53,6 +53,10 @@ func (v *Validator) ValidateCreate(ctx context.Context, t *testtriggerv1.TestTri
 		allErrs = append(allErrs, errs...)
 	}
 
+	if errs := v.validateProbes(t.Spec.ProbeSpec); errs != nil {
+		allErrs = append(allErrs, errs...)
+	}
+
 	if err := v.validateExecution(t.Spec.Execution); err != nil {
 		allErrs = append(allErrs, err)
 	}
@@ -91,6 +95,10 @@ func (v *Validator) ValidateUpdate(ctx context.Context, old runtime.Object, new 
 	}
 
 	if errs := v.validateConditions(new.Spec.ConditionSpec); errs != nil {
+		allErrs = append(allErrs, errs...)
+	}
+
+	if errs := v.validateProbes(new.Spec.ProbeSpec); errs != nil {
 		allErrs = append(allErrs, errs...)
 	}
 
@@ -212,6 +220,12 @@ func (v *Validator) validateConditions(conditionSpec *testtriggerv1.TestTriggerC
 		allErrs = append(allErrs, verr)
 	}
 
+	if conditionSpec.Delay < 0 {
+		fld := field.NewPath("spec").Child("conditionSpec").Child("delay")
+		verr := field.Invalid(fld, conditionSpec.Delay, "delay is negative")
+		allErrs = append(allErrs, verr)
+	}
+
 	for _, condition := range conditionSpec.Conditions {
 		if condition.Type_ == "" {
 			fld := field.NewPath("spec").Child("conditionSpec").Child("conditions").Child("condition")
@@ -230,6 +244,27 @@ func (v *Validator) validateConditions(conditionSpec *testtriggerv1.TestTriggerC
 			fld := field.NewPath("spec").Child("conditionSpec").Child("conditions").Child("condition")
 			allErrs = append(allErrs, field.NotSupported(fld, string(*condition.Status), testtrigger.GetSupportedConditionStatuses()))
 		}
+	}
+
+	return allErrs
+}
+
+func (v *Validator) validateProbes(probeSpec *testtriggerv1.TestTriggerProbeSpec) field.ErrorList {
+	var allErrs field.ErrorList
+	if probeSpec == nil {
+		return allErrs
+	}
+
+	if probeSpec.Timeout < 0 {
+		fld := field.NewPath("spec").Child("probeSpec").Child("timeout")
+		verr := field.Invalid(fld, probeSpec.Timeout, "timeout is negative")
+		allErrs = append(allErrs, verr)
+	}
+
+	if probeSpec.Delay < 0 {
+		fld := field.NewPath("spec").Child("probeSpec").Child("delay")
+		verr := field.Invalid(fld, probeSpec.Delay, "delay is negative")
+		allErrs = append(allErrs, verr)
 	}
 
 	return allErrs

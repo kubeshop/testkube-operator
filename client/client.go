@@ -1,9 +1,16 @@
 package client
 
 import (
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/runtime"
+	_ "k8s.io/client-go/plugin/pkg/client/auth"
+	ctrl "sigs.k8s.io/controller-runtime"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+
 	executorv1 "github.com/kubeshop/testkube-operator/apis/executor/v1"
 	scriptv1 "github.com/kubeshop/testkube-operator/apis/script/v1"
 	scriptv2 "github.com/kubeshop/testkube-operator/apis/script/v2"
+	testexecutionv1 "github.com/kubeshop/testkube-operator/apis/testexecution/v1"
 	testsv1 "github.com/kubeshop/testkube-operator/apis/tests/v1"
 	testsv2 "github.com/kubeshop/testkube-operator/apis/tests/v2"
 	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
@@ -11,11 +18,7 @@ import (
 	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
 	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
 	testsuitev3 "github.com/kubeshop/testkube-operator/apis/testsuite/v3"
-	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/runtime"
-	_ "k8s.io/client-go/plugin/pkg/client/auth"
-	ctrl "sigs.k8s.io/controller-runtime"
-	"sigs.k8s.io/controller-runtime/pkg/client"
+	testsuiteexecutionv1 "github.com/kubeshop/testkube-operator/apis/testsuiteexecution/v1"
 )
 
 // GetClient returns kubernetes CRD client with registered schemes
@@ -33,6 +36,8 @@ func GetClient() (client.Client, error) {
 	testsuitev2.AddToScheme(scheme)
 	testsuitev3.AddToScheme(scheme)
 	testsourcev1.AddToScheme(scheme)
+	testexecutionv1.AddToScheme(scheme)
+	testsuiteexecutionv1.AddToScheme(scheme)
 
 	kubeconfig, err := ctrl.GetConfig()
 	if err != nil {

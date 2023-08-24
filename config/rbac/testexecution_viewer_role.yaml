@@ -1,0 +1,20 @@
+# permissions for end users to view testexecutions.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: testexecution-viewer-role
+rules:
+- apiGroups:
+  - tests.testkube.io
+  resources:
+  - testexecutions
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - tests.testkube.io
+  resources:
+  - testexecutions/status
+  verbs:
+  - get

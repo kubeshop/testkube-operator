@@ -1,0 +1,14 @@
+apiVersion: tests.testkube.io/v1
+kind: TestSuiteExecution
+metadata:
+  name: testsuiteexecution-sample
+spec:
+  testSuite:
+    name: testsuite-example
+  executionRequest:
+    variables:
+      VAR_TEST:
+        name: VAR_TEST
+        value: "ANY"
+        type: basic
+
