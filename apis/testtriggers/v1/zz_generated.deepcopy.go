@@ -209,7 +209,7 @@ func (in *TestTriggerSpec) DeepCopyInto(out *TestTriggerSpec) {
 	if in.Delay != nil {
 		in, out := &in.Delay, &out.Delay
 		*out = new(metav1.Duration)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 }
 
