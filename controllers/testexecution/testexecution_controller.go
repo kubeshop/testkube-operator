@@ -74,7 +74,7 @@ func (r *TestExecutionReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 
 	if testExecution.Spec.ExecutionRequest != nil {
 		testExecution.Spec.ExecutionRequest.RunningContext = &testexecutionv1.RunningContext{
-			Type_:   testexecutionv1.RunningContextTypeTestSuiteExecution,
+			Type_:   testexecutionv1.RunningContextTypeTestExecution,
 			Context: testExecution.Name,
 		}
 	}
