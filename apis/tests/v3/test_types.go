@@ -35,6 +35,8 @@ type TestSpec struct {
 	Type_ string `json:"type,omitempty"`
 	// test name
 	Name string `json:"name,omitempty"`
+	// test description
+	Description string `json:"description,omitempty"`
 	// test content object
 	Content *TestContent `json:"content,omitempty"`
 	// reference to test source resource
