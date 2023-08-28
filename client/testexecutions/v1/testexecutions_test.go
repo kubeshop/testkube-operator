@@ -3,12 +3,13 @@ package testexecutions
 import (
 	"testing"
 
-	testexecutionv1 "github.com/kubeshop/testkube-operator/apis/testexecution/v1"
 	"github.com/stretchr/testify/assert"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"sigs.k8s.io/controller-runtime/pkg/scheme"
+
+	testexecutionv1 "github.com/kubeshop/testkube-operator/apis/testexecution/v1"
 )
 
 func TestTestExecutions(t *testing.T) {
@@ -61,27 +62,27 @@ func TestTestExecutions(t *testing.T) {
 	})
 	t.Run("TestExecutionCreate", func(t *testing.T) {
 		t.Run("Create new testexecutions", func(t *testing.T) {
-			for _, w := range testTestExecutions {
-				created, err := teClient.Create(w)
+			for _, te := range testTestExecutions {
+				created, err := teClient.Create(te)
 				assert.NoError(t, err)
-				assert.Equal(t, w.Name, created.Name)
+				assert.Equal(t, te.Name, created.Name)
 
-				res, err := teClient.Get(w.ObjectMeta.Name)
+				res, err := teClient.Get(te.ObjectMeta.Name)
 				assert.NoError(t, err)
-				assert.Equal(t, w.Name, res.Name)
+				assert.Equal(t, te.Name, res.Name)
 			}
 		})
 	})
 	t.Run("TestExecutionUpdate", func(t *testing.T) {
 		t.Run("Update new testexecutions", func(t *testing.T) {
-			for _, w := range testTestExecutions {
-				res, err := teClient.Get(w.ObjectMeta.Name)
+			for _, te := range testTestExecutions {
+				res, err := teClient.Get(te.ObjectMeta.Name)
 				assert.NoError(t, err)
-				assert.Equal(t, w.Name, res.Name)
+				assert.Equal(t, te.Name, res.Name)
 
-				updated, err := teClient.Update(w)
+				updated, err := teClient.Update(te)
 				assert.NoError(t, err)
-				assert.Equal(t, w.Name, updated.Name)
+				assert.Equal(t, te.Name, updated.Name)
 			}
 		})
 	})
@@ -107,9 +108,9 @@ func TestTestExecutions(t *testing.T) {
 	t.Run("TestExecutionDelete", func(t *testing.T) {
 		t.Run("Delete items", func(t *testing.T) {
 			for _, testexecution := range testTestExecutions {
-				w, err := teClient.Get(testexecution.Name)
+				te, err := teClient.Get(testexecution.Name)
 				assert.NoError(t, err)
-				assert.Equal(t, w.Name, testexecution.Name)
+				assert.Equal(t, te.Name, testexecution.Name)
 
 				err = teClient.Delete(testexecution.Name)
 				assert.NoError(t, err)

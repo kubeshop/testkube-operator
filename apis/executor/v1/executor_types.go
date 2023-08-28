@@ -55,6 +55,8 @@ type ExecutorSpec struct {
 
 	// Job template to launch executor
 	JobTemplate string `json:"job_template,omitempty"`
+	// name of the template resource
+	JobTemplateReference string `json:"jobTemplateReference,omitempty"`
 
 	// Meta data about executor
 	Meta *ExecutorMeta `json:"meta,omitempty"`

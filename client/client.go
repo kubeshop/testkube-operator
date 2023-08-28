@@ -10,6 +10,7 @@ import (
 	executorv1 "github.com/kubeshop/testkube-operator/apis/executor/v1"
 	scriptv1 "github.com/kubeshop/testkube-operator/apis/script/v1"
 	scriptv2 "github.com/kubeshop/testkube-operator/apis/script/v2"
+	templatev1 "github.com/kubeshop/testkube-operator/apis/template/v1"
 	testexecutionv1 "github.com/kubeshop/testkube-operator/apis/testexecution/v1"
 	testsv1 "github.com/kubeshop/testkube-operator/apis/tests/v1"
 	testsv2 "github.com/kubeshop/testkube-operator/apis/tests/v2"
@@ -38,6 +39,7 @@ func GetClient() (client.Client, error) {
 	testsourcev1.AddToScheme(scheme)
 	testexecutionv1.AddToScheme(scheme)
 	testsuiteexecutionv1.AddToScheme(scheme)
+	templatev1.AddToScheme(scheme)
 
 	kubeconfig, err := ctrl.GetConfig()
 	if err != nil {
