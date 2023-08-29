@@ -63,6 +63,20 @@ func (mr *MockInterfaceMockRecorder) Delete(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockInterface)(nil).Delete), arg0)
 }
 
+// DeleteByLabels mocks base method.
+func (m *MockInterface) DeleteByLabels(arg0 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteByLabels", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteByLabels indicates an expected call of DeleteByLabels.
+func (mr *MockInterfaceMockRecorder) DeleteByLabels(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteByLabels", reflect.TypeOf((*MockInterface)(nil).DeleteByLabels), arg0)
+}
+
 // Get mocks base method.
 func (m *MockInterface) Get(arg0 string) (*v1.Template, error) {
 	m.ctrl.T.Helper()

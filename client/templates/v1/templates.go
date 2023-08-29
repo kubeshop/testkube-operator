@@ -5,6 +5,7 @@ import (
 
 	templatev1 "github.com/kubeshop/testkube-operator/apis/template/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/labels"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -16,6 +17,7 @@ type Interface interface {
 	Create(template *templatev1.Template) (*templatev1.Template, error)
 	Update(template *templatev1.Template) (*templatev1.Template, error)
 	Delete(name string) error
+	DeleteByLabels(selector string) error
 }
 
 // NewClient returns new client instance, needs kubernetes client to be passed as dependecy
@@ -87,5 +89,20 @@ func (s TemplatesClient) Delete(name string) error {
 	}
 
 	err := s.k8sClient.Delete(context.Background(), template)
+	return err
+}
+
+// DeleteByLabels deletes templates by labels
+func (s TemplatesClient) DeleteByLabels(selector string) error {
+	reqs, err := labels.ParseToRequirements(selector)
+	if err != nil {
+		return err
+	}
+
+	u := &unstructured.Unstructured{}
+	u.SetKind("Template")
+	u.SetAPIVersion("tests.testkube.io/v1")
+	err = s.k8sClient.DeleteAllOf(context.Background(), u, client.InNamespace(s.namespace),
+		client.MatchingLabelsSelector{Selector: labels.NewSelector().Add(reqs...)})
 	return err
 }
