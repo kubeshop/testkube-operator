@@ -108,7 +108,7 @@ func (r *TestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 			if template.Spec.Type_ != nil && *template.Spec.Type_ == templatesv1.CRONJOB_TemplateType {
 				jobTemplate = template.Spec.Body
 			} else {
-				ctrl.Log.Info("not matching template type", "template", test.Spec.ExecutionRequest.CronJobTemplateReference)
+				ctrl.Log.Info("not matched template type", "template", test.Spec.ExecutionRequest.CronJobTemplateReference)
 			}
 		}
 	}
