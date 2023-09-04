@@ -108,6 +108,8 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 			if template.Spec.Type_ != nil && *template.Spec.Type_ == templatesv1.CRONJOB_TemplateType {
 				jobTemplate = template.Spec.Body
+			} else {
+				ctrl.Log.Info("not matching template type", "template", testSuite.Spec.ExecutionRequest.CronJobTemplateReference)
 			}
 		}
 	}
