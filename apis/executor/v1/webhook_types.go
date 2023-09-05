@@ -38,6 +38,8 @@ type WebhookSpec struct {
 	PayloadObjectField string `json:"payloadObjectField,omitempty"`
 	// golang based template for notification payload
 	PayloadTemplate string `json:"payloadTemplate,omitempty"`
+	// name of the template resource
+	PayloadTemplateReference string `json:"payloadTemplateReference,omitempty"`
 	// webhook headers
 	Headers map[string]string `json:"headers,omitempty"`
 }

@@ -22,11 +22,13 @@ import (
 
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
+	templatesv1 "github.com/kubeshop/testkube-operator/apis/template/v1"
 	testsuitev3 "github.com/kubeshop/testkube-operator/apis/testsuite/v3"
 	"github.com/kubeshop/testkube-operator/pkg/cronjob"
 )
@@ -91,9 +93,25 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		return ctrl.Result{}, err
 	}
 
-	jobTemplate := ""
+	var jobTemplate, jobTemplateExt string
 	if testSuite.Spec.ExecutionRequest != nil {
-		jobTemplate = testSuite.Spec.ExecutionRequest.CronJobTemplate
+		jobTemplateExt = testSuite.Spec.ExecutionRequest.CronJobTemplate
+		if testSuite.Spec.ExecutionRequest.CronJobTemplateReference != "" {
+			var template templatesv1.Template
+			object := types.NamespacedName{
+				Namespace: req.Namespace,
+				Name:      testSuite.Spec.ExecutionRequest.CronJobTemplateReference,
+			}
+			if err = r.Get(ctx, object, &template); err != nil {
+				return ctrl.Result{}, err
+			}
+
+			if template.Spec.Type_ != nil && *template.Spec.Type_ == templatesv1.CRONJOB_TemplateType {
+				jobTemplate = template.Spec.Body
+			} else {
+				ctrl.Log.Info("not matched template type", "template", testSuite.Spec.ExecutionRequest.CronJobTemplateReference)
+			}
+		}
 	}
 
 	options := cronjob.CronJobOptions{
@@ -101,7 +119,8 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		Resource:                  cronjob.TestSuiteResourceURI,
 		Data:                      string(data),
 		Labels:                    testSuite.Labels,
-		CronJobTemplateExtensions: jobTemplate,
+		CronJobTemplate:           jobTemplate,
+		CronJobTemplateExtensions: jobTemplateExt,
 	}
 
 	// Create CronJob if it was not created before for provided TestSuite schedule

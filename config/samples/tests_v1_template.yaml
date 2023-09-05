@@ -1,0 +1,7 @@
+apiVersion: tests.testkube.io/v1
+kind: Template
+metadata:
+  name: template-sample
+spec:
+  type: webhook
+  body: "{{ .Id }}"

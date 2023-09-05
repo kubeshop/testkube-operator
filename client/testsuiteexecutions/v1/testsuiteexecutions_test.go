@@ -3,12 +3,13 @@ package testsuiteexecutions
 import (
 	"testing"
 
-	testsuiteexecutionv1 "github.com/kubeshop/testkube-operator/apis/testsuiteexecution/v1"
 	"github.com/stretchr/testify/assert"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"sigs.k8s.io/controller-runtime/pkg/scheme"
+
+	testsuiteexecutionv1 "github.com/kubeshop/testkube-operator/apis/testsuiteexecution/v1"
 )
 
 func TestTestSuiteExecutions(t *testing.T) {
@@ -61,27 +62,27 @@ func TestTestSuiteExecutions(t *testing.T) {
 	})
 	t.Run("TestSuiteExecutionCreate", func(t *testing.T) {
 		t.Run("Create new testsuiteexecutions", func(t *testing.T) {
-			for _, w := range testTestSuiteExecutions {
-				created, err := tseClient.Create(w)
+			for _, te := range testTestSuiteExecutions {
+				created, err := tseClient.Create(te)
 				assert.NoError(t, err)
-				assert.Equal(t, w.Name, created.Name)
+				assert.Equal(t, te.Name, created.Name)
 
-				res, err := tseClient.Get(w.ObjectMeta.Name)
+				res, err := tseClient.Get(te.ObjectMeta.Name)
 				assert.NoError(t, err)
-				assert.Equal(t, w.Name, res.Name)
+				assert.Equal(t, te.Name, res.Name)
 			}
 		})
 	})
 	t.Run("TestSuiteExecutionUpdate", func(t *testing.T) {
 		t.Run("Update new testsuiteexecutions", func(t *testing.T) {
-			for _, w := range testTestSuiteExecutions {
-				res, err := tseClient.Get(w.ObjectMeta.Name)
+			for _, te := range testTestSuiteExecutions {
+				res, err := tseClient.Get(te.ObjectMeta.Name)
 				assert.NoError(t, err)
-				assert.Equal(t, w.Name, res.Name)
+				assert.Equal(t, te.Name, res.Name)
 
-				updated, err := tseClient.Update(w)
+				updated, err := tseClient.Update(te)
 				assert.NoError(t, err)
-				assert.Equal(t, w.Name, updated.Name)
+				assert.Equal(t, te.Name, updated.Name)
 			}
 		})
 	})
@@ -107,9 +108,9 @@ func TestTestSuiteExecutions(t *testing.T) {
 	t.Run("TestSuiteExecutionDelete", func(t *testing.T) {
 		t.Run("Delete items", func(t *testing.T) {
 			for _, testsuiteexecution := range testTestSuiteExecutions {
-				w, err := tseClient.Get(testsuiteexecution.Name)
+				te, err := tseClient.Get(testsuiteexecution.Name)
 				assert.NoError(t, err)
-				assert.Equal(t, w.Name, testsuiteexecution.Name)
+				assert.Equal(t, te.Name, testsuiteexecution.Name)
 
 				err = tseClient.Delete(testsuiteexecution.Name)
 				assert.NoError(t, err)
