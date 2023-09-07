@@ -40,7 +40,7 @@ type WebhookSpec struct {
 	PayloadTemplate string `json:"payloadTemplate,omitempty"`
 	// name of the template resource
 	PayloadTemplateReference string `json:"payloadTemplateReference,omitempty"`
-	// webhook headers
+	// webhook headers (golang template supported)
 	Headers map[string]string `json:"headers,omitempty"`
 }
 
