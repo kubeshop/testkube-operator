@@ -28,7 +28,7 @@ type WebhookSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Uri is address where webhook should be made
+	// Uri is address where webhook should be made (golang template supported)
 	Uri string `json:"uri,omitempty"`
 	// Events declare list if events on which webhook should be called
 	Events []EventType `json:"events,omitempty"`
@@ -40,7 +40,7 @@ type WebhookSpec struct {
 	PayloadTemplate string `json:"payloadTemplate,omitempty"`
 	// name of the template resource
 	PayloadTemplateReference string `json:"payloadTemplateReference,omitempty"`
-	// webhook headers
+	// webhook headers (golang template supported)
 	Headers map[string]string `json:"headers,omitempty"`
 }
 
