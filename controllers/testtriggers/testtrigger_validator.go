@@ -216,10 +216,10 @@ func (v *Validator) validateExecution(execution testtriggerv1.TestTriggerExecuti
 	return nil
 }
 
-func (v *Validator) validateConcurrencyPolicy(concurrencyPlociy testtriggerv1.TestTriggerConcurrencyPolicy) *field.Error {
-	if !utils.In(string(concurrencyPlociy), testtrigger.GetSupportedConcurrencyPolicies()) {
+func (v *Validator) validateConcurrencyPolicy(concurrencyPolicy testtriggerv1.TestTriggerConcurrencyPolicy) *field.Error {
+	if concurrencyPolicy != "" && !utils.In(string(concurrencyPolicy), testtrigger.GetSupportedConcurrencyPolicies()) {
 		fld := field.NewPath("spec").Child("concurrencyPolicy")
-		return field.NotSupported(fld, concurrencyPlociy, testtrigger.GetSupportedConcurrencyPolicies())
+		return field.NotSupported(fld, concurrencyPolicy, testtrigger.GetSupportedConcurrencyPolicies())
 	}
 	return nil
 }
