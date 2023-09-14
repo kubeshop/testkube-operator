@@ -301,7 +301,6 @@ spec:
                 type: object
             required:
             - action
-            - concurrencyPolicy
             - event
             - execution
             - resource
