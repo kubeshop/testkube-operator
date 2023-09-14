@@ -61,6 +61,10 @@ func (v *Validator) ValidateCreate(ctx context.Context, t *testtriggerv1.TestTri
 		allErrs = append(allErrs, err)
 	}
 
+	if err := v.validateConcurrencyPolicy(t.Spec.ConcurrencyPolicy); err != nil {
+		allErrs = append(allErrs, err)
+	}
+
 	if err := v.validateResourceSelector(t.Spec.ResourceSelector); err != nil {
 		allErrs = append(allErrs, err...)
 	}
@@ -103,6 +107,10 @@ func (v *Validator) ValidateUpdate(ctx context.Context, old runtime.Object, new 
 	}
 
 	if err := v.validateExecution(new.Spec.Execution); err != nil {
+		allErrs = append(allErrs, err)
+	}
+
+	if err := v.validateConcurrencyPolicy(new.Spec.ConcurrencyPolicy); err != nil {
 		allErrs = append(allErrs, err)
 	}
 
@@ -204,6 +212,14 @@ func (v *Validator) validateExecution(execution testtriggerv1.TestTriggerExecuti
 	if !utils.In(string(execution), testtrigger.GetSupportedExecutions()) {
 		fld := field.NewPath("spec").Child("execution")
 		return field.NotSupported(fld, execution, testtrigger.GetSupportedExecutions())
+	}
+	return nil
+}
+
+func (v *Validator) validateConcurrencyPolicy(concurrencyPlociy testtriggerv1.TestTriggerConcurrencyPolicy) *field.Error {
+	if !utils.In(string(concurrencyPlociy), testtrigger.GetSupportedConcurrencyPolicies()) {
+		fld := field.NewPath("spec").Child("concurrencyPolicy")
+		return field.NotSupported(fld, concurrencyPlociy, testtrigger.GetSupportedConcurrencyPolicies())
 	}
 	return nil
 }

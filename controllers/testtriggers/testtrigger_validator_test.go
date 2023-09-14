@@ -69,6 +69,26 @@ func TestValidator_validateExecution(t *testing.T) {
 	})
 }
 
+func TestValidator_validateConcurrencyPlocy(t *testing.T) {
+	t.Parallel()
+
+	v := NewValidator(buildFakeK8sClient(t))
+
+	t.Run("no error for valid concurrency policy", func(t *testing.T) {
+		t.Parallel()
+
+		err := v.validateConcurrencyPolicy("allow")
+		assert.Nil(t, err)
+	})
+
+	t.Run("error for invalid concurrency policy", func(t *testing.T) {
+		t.Parallel()
+
+		err := v.validateConcurrencyPolicy("skip")
+		assert.ErrorContains(t, err, "spec.concurrencyPolicy: Unsupported value: \"skip\"")
+	})
+}
+
 func TestValidator_validateResource(t *testing.T) {
 	t.Parallel()
 
