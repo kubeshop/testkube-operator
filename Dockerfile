@@ -1,5 +1,5 @@
 ARG ALPINE_IMAGE
-FROM ${ALPINE_IMAGE}
+FROM  alpine:3.18.0
 
-COPY testkube-operator /manager
+COPY ./bin/manager /manager
 ENTRYPOINT ["/manager"]

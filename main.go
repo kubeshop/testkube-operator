@@ -39,6 +39,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	executorv1 "github.com/kubeshop/testkube-operator/apis/executor/v1"
+	executorv2 "github.com/kubeshop/testkube-operator/apis/executor/v2"
 	testkubev1 "github.com/kubeshop/testkube-operator/apis/script/v1"
 	testkubev2 "github.com/kubeshop/testkube-operator/apis/script/v2"
 	templatev1 "github.com/kubeshop/testkube-operator/apis/template/v1"
@@ -94,6 +95,7 @@ func init() {
 	utilruntime.Must(testexecutionv1.AddToScheme(scheme))
 	utilruntime.Must(testsuiteexecutionv1.AddToScheme(scheme))
 	utilruntime.Must(templatev1.AddToScheme(scheme))
+	utilruntime.Must(executorv2.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 

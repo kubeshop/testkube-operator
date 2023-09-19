@@ -8,6 +8,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	executorv1 "github.com/kubeshop/testkube-operator/apis/executor/v1"
+	executorv2 "github.com/kubeshop/testkube-operator/apis/executor/v2"
 	scriptv1 "github.com/kubeshop/testkube-operator/apis/script/v1"
 	scriptv2 "github.com/kubeshop/testkube-operator/apis/script/v2"
 	templatev1 "github.com/kubeshop/testkube-operator/apis/template/v1"
@@ -29,6 +30,7 @@ func GetClient() (client.Client, error) {
 	scriptv1.AddToScheme(scheme)
 	scriptv2.AddToScheme(scheme)
 	executorv1.AddToScheme(scheme)
+	executorv2.AddToScheme(scheme)
 	testsv1.AddToScheme(scheme)
 	testsv2.AddToScheme(scheme)
 	testsv3.AddToScheme(scheme)

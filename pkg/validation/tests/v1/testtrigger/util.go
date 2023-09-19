@@ -25,6 +25,10 @@ func GetSupportedExecutions() []string {
 	return []string{ExecutionTest, ExecutionTestsuite}
 }
 
+func GetSupportedConcurrencyPolicies() []string {
+	return []string{ConcurrencyPolicyAllow, ConcurrencyPolicyForbid, ConcurrencyPolicyReplace}
+}
+
 func GetSupportedConditionStatuses() []string {
 	return []string{
 		string(testtriggerv1.TRUE_TestTriggerConditionStatuses),

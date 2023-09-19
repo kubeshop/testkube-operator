@@ -24,7 +24,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	executorv1 "github.com/kubeshop/testkube-operator/apis/executor/v1"
+	executorv2 "github.com/kubeshop/testkube-operator/apis/executor/v2"
 )
 
 // ExecutorReconciler reconciles a Executor object
@@ -57,6 +57,6 @@ func (r *ExecutorReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 // SetupWithManager sets up the controller with the Manager.
 func (r *ExecutorReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&executorv1.Executor{}).
+		For(&executorv2.Executor{}).
 		Complete(r)
 }
