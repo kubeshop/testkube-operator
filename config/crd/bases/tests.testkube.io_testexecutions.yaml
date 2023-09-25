@@ -181,6 +181,13 @@ spec:
                   jobTemplate:
                     description: job template extensions
                     type: string
+                  logAnalysisSearchStrings:
+                    description: log analysis search strings
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
                   name:
                     description: test execution custom name
                     type: string
