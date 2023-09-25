@@ -585,6 +585,13 @@ spec:
                   jobTemplateReference:
                     description: name of the template resource
                     type: string
+                  logAnalysisSearchStrings:
+                    description: log analysis search strings
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
                   name:
                     description: test execution custom name
                     type: string

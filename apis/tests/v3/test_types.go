@@ -225,6 +225,8 @@ type ExecutionRequest struct {
 	// secret references
 	EnvSecrets     []EnvReference  `json:"envSecrets,omitempty"`
 	RunningContext *RunningContext `json:"runningContext,omitempty"`
+	// log analysis search strings like {"error": ["read failed", "panic"], "warning": ["warning"]}
+	LogAnalysisSearchStrings map[string][]string `json:"logAnalysisSearchStrings,omitempty"`
 }
 
 // ArgsModeType defines args mode type
