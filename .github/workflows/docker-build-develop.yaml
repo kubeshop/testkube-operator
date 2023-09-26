@@ -5,7 +5,7 @@ on:
       - develop
 
 env:
-  ALPINE_IMAGE: alpine:3.18.0
+  ALPINE_IMAGE: alpine:3.18.3
 
 jobs:
   docker:
