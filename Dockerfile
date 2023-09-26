@@ -1,5 +1,6 @@
-ARG ALPINE_IMAGE=alpine:3.18.3
-FROM ${ALPINE_IMAGE}
+FROM gcr.io/distroless/static:nonroot
+
+WORKDIR /
 
 COPY testkube-operator /manager
 ENTRYPOINT ["/manager"]
