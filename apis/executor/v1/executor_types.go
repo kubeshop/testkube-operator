@@ -60,6 +60,13 @@ type ExecutorSpec struct {
 
 	// Meta data about executor
 	Meta *ExecutorMeta `json:"meta,omitempty"`
+
+	// Slaves data to run test in distributed environment
+	Slaves *SlavesMeta `json:"slaves,omitempty"`
+}
+
+type SlavesMeta struct {
+	Image string `json:"image"`
 }
 
 // +kubebuilder:validation:Enum=artifacts;junit-report

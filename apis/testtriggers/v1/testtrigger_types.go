@@ -58,7 +58,7 @@ type TestTriggerSpec struct {
 	// TestSelector identifies on which Testkube Kubernetes Objects an Action should be taken
 	TestSelector TestTriggerSelector `json:"testSelector"`
 	// ConcurrencyPolicy defines concurrency policy for selected Execution
-	ConcurrencyPolicy TestTriggerConcurrencyPolicy `json:"concurrencyPolicy, omitEmpty"`
+	ConcurrencyPolicy TestTriggerConcurrencyPolicy `json:"concurrencyPolicy,omitempty"`
 	// Delay is a duration string which specifies how long should the test be delayed after a trigger is matched
 	// +kubebuilder:validation:Type:=string
 	// +kubebuilder:validation:Format:=duration
