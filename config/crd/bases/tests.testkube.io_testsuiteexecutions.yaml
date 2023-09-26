@@ -305,8 +305,7 @@ spec:
                                           type: string
                                         type: array
                                       omitFolderPerExecution:
-                                        description: don't use a separate folder for
-                                          execution artifacts
+                                        description: don't use a separate folder for execution artifacts
                                         type: boolean
                                       storageBucket:
                                         description: artifact bucket storage
