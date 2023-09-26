@@ -58,10 +58,22 @@ test: manifests generate fmt vet ## Run tests.
 ##@ Build
 
 build: generate fmt vet ## Build manager binary.
-	go build -o bin/manager main.go
+	go build -o bin/manager cmd/main.go
+
+.PHONY: build-local-linux
+build-local-linux:
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o dist/manager cmd/main.go
+
+.PHONY: docker-build-local
+docker-build-local: build-local-linux
+	docker build -t controller:latest -f local.Dockerfile .
+
+.PHONY: kind-load-local
+kind-load-local: docker-build-local
+	kind load docker-image controller:latest --name testkube
 
 run: manifests generate fmt vet ## Run a controller from your host.
-	go run ./main.go
+	go run ./cmd/main.go
 
 docker-build: test ## Build docker image with the manager.
 	docker build -t ${IMG} .

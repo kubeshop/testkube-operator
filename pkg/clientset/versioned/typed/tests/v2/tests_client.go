@@ -21,7 +21,7 @@ import (
 
 	"github.com/kubeshop/testkube-operator/pkg/clientset/versioned/scheme"
 
-	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
+	testsuitev2 "github.com/kubeshop/testkube-operator/api/testsuite/v2"
 	"k8s.io/client-go/rest"
 )
 

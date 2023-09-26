@@ -17,7 +17,7 @@ limitations under the License.
 package v3
 
 import (
-	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
+	testsv3 "github.com/kubeshop/testkube-operator/api/tests/v3"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime/schema"

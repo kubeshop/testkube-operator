@@ -20,7 +20,7 @@ import (
 	"context"
 	"fmt"
 
-	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
+	testsv3 "github.com/kubeshop/testkube-operator/api/tests/v3"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
