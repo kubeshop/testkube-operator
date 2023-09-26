@@ -55,17 +55,17 @@ type TestSuiteStepSpec struct {
 	Delay metav1.Duration `json:"delay,omitempty"`
 }
 
-// set of steps run in parallel
+// TestSuiteBatchStep is set of steps run in parallel
 type TestSuiteBatchStep struct {
 	StopOnFailure bool                `json:"stopOnFailure"`
 	Execute       []TestSuiteStepSpec `json:"execute,omitempty"`
 }
 
-// running context for test or test suite execution
+// RunningContext for test or test suite execution
 type RunningContext struct {
 	// One of possible context types
 	Type_ RunningContextType `json:"type"`
-	// Context value depending from its type
+	// Context value which depends from its type
 	Context string `json:"context,omitempty"`
 }
 
@@ -101,7 +101,7 @@ type TestSuiteExecutionRequest struct {
 	HttpsProxy string `json:"httpsProxy,omitempty"`
 	// timeout for test suite execution
 	Timeout        int32           `json:"timeout,omitempty"`
-	RunningContext *RunningContext `json:"runningContext,omitempty"`
+	RunningContext *RunningContext `json:"-"`
 	// job template extensions
 	JobTemplate string `json:"jobTemplate,omitempty"`
 	// name of the template resource
@@ -133,7 +133,7 @@ const (
 	TIMEOUT_TestSuiteExecutionStatus  TestSuiteExecutionStatus = "timeout"
 )
 
-// test suite execution core
+// TestSuiteExecutionCore defines the observed state of TestSuiteExecution
 type TestSuiteExecutionCore struct {
 	// execution id
 	Id string `json:"id,omitempty"`

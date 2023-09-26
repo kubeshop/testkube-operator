@@ -328,7 +328,8 @@ spec:
               description:
                 type: string
               executionRequest:
-                description: test suite execution request body
+                description: TestSuiteExecutionRequest defines the execution request
+                  body
                 properties:
                   cronJobTemplate:
                     description: cron job template extensions
@@ -356,18 +357,6 @@ spec:
                     description: test kubernetes namespace (\"testkube\" when not
                       set)
                     type: string
-                  runningContext:
-                    description: running context for test or test suite execution
-                    properties:
-                      context:
-                        description: Context value depending from its type
-                        type: string
-                      type:
-                        description: One of possible context types
-                        type: string
-                    required:
-                    - type
-                    type: object
                   secretUUID:
                     description: secret uuid
                     type: string
@@ -574,7 +563,7 @@ spec:
                 description: After batch steps is list of batch tests which will be
                   sequentially orchestrated for parallel tests in each batch
                 items:
-                  description: set of steps run in parallel
+                  description: TestSuiteBatchStep is set of steps run in parallel
                   properties:
                     execute:
                       items:
@@ -600,7 +589,7 @@ spec:
                 description: Before batch steps is list of batch tests which will
                   be sequentially orchestrated for parallel tests in each batch
                 items:
-                  description: set of steps run in parallel
+                  description: TestSuiteBatchStep is set of steps run in parallel
                   properties:
                     execute:
                       items:
@@ -668,18 +657,6 @@ spec:
                   pvcTemplateReference:
                     description: name of the template resource
                     type: string
-                  runningContext:
-                    description: running context for test or test suite execution
-                    properties:
-                      context:
-                        description: Context value depending from its type
-                        type: string
-                      type:
-                        description: One of possible context types
-                        type: string
-                    required:
-                    - type
-                    type: object
                   scraperTemplate:
                     description: scraper template extensions
                     type: string
@@ -804,7 +781,7 @@ spec:
                 description: Batch steps is list of batch tests which will be sequentially
                   orchestrated for parallel tests in each batch
                 items:
-                  description: set of steps run in parallel
+                  description: TestSuiteBatchStep is set of steps run in parallel
                   properties:
                     execute:
                       items:

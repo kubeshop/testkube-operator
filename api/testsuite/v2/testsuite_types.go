@@ -74,7 +74,7 @@ type TestSuiteStepDelay struct {
 	Duration int32 `json:"duration,omitempty"`
 }
 
-// running context for test or test suite execution
+// RunningContext for test or test suite execution
 type RunningContext struct {
 	// One of possible context types
 	Type_ RunningContextType `json:"type"`
@@ -93,7 +93,7 @@ const (
 	RunningContextTypeEmpty       RunningContextType = ""
 )
 
-// test suite execution request body
+// TestSuiteExecutionRequest defines the execution request body
 type TestSuiteExecutionRequest struct {
 	// test execution custom name
 	Name string `json:"name,omitempty"`
@@ -114,7 +114,7 @@ type TestSuiteExecutionRequest struct {
 	HttpsProxy string `json:"httpsProxy,omitempty"`
 	// timeout for test suite execution
 	Timeout        int32           `json:"timeout,omitempty"`
-	RunningContext *RunningContext `json:"runningContext,omitempty"`
+	RunningContext *RunningContext `json:"-"`
 	// cron job template extensions
 	CronJobTemplate string `json:"cronJobTemplate,omitempty"`
 }

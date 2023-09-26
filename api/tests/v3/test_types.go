@@ -75,10 +75,10 @@ const (
 	TestContentTypeGit    TestContentType = "git"
 )
 
-// Testkube internal reference for secret storage in Kubernetes secrets
+// SecretRef is the Testkube internal reference for secret storage in Kubernetes secrets
 type SecretRef struct {
 	// object kubernetes namespace
-	Namespace string `json:"namespace,omitempty"`
+	Namespace string `json:"-"`
 	// object name
 	Name string `json:"name"`
 	// object key
@@ -132,7 +132,7 @@ type ArtifactRequest struct {
 	OmitFolderPerExecution bool `json:"omitFolderPerExecution,omitempty"`
 }
 
-// running context for test or test suite execution
+// RunningContext for test or test suite execution
 type RunningContext struct {
 	// One of possible context types
 	Type_ RunningContextType `json:"type"`
@@ -224,7 +224,7 @@ type ExecutionRequest struct {
 	EnvConfigMaps []EnvReference `json:"envConfigMaps,omitempty"`
 	// secret references
 	EnvSecrets     []EnvReference  `json:"envSecrets,omitempty"`
-	RunningContext *RunningContext `json:"runningContext,omitempty"`
+	RunningContext *RunningContext `json:"-"`
 }
 
 // ArgsModeType defines args mode type

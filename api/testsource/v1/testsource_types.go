@@ -50,10 +50,10 @@ const (
 	TestSourceTypeGit    TestSourceType = "git"
 )
 
-// Testkube internal reference for secret storage in Kubernetes secrets
+// SecretRef is the Testkube internal reference for secret storage in Kubernetes secrets
 type SecretRef struct {
 	// object kubernetes namespace
-	Namespace string `json:"namespace,omitempty"`
+	Namespace string `json:"-"`
 	// object name
 	Name string `json:"name"`
 	// object key
@@ -70,7 +70,7 @@ type Repository struct {
 	Branch string `json:"branch,omitempty"`
 	// commit id (sha) for checkout
 	Commit string `json:"commit,omitempty"`
-	// if needed we can checkout particular path (dir or file) in case of BIG/mono repositories
+	// If specified, does a sparse checkout of the repository at the given path
 	Path           string     `json:"path,omitempty"`
 	UsernameSecret *SecretRef `json:"usernameSecret,omitempty"`
 	TokenSecret    *SecretRef `json:"tokenSecret,omitempty"`
