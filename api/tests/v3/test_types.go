@@ -121,9 +121,9 @@ const (
 // artifact request body with test artifacts
 type ArtifactRequest struct {
 	// artifact storage class name for container executor
-	StorageClassName string `json:"storageClassName"`
+	StorageClassName string `json:"storageClassName,omitempty"`
 	// artifact volume mount path for container executor
-	VolumeMountPath string `json:"volumeMountPath"`
+	VolumeMountPath string `json:"volumeMountPath,omitempty"`
 	// artifact directories for scraping
 	Dirs []string `json:"dirs,omitempty"`
 	// artifact bucket storage
