@@ -21,7 +21,7 @@ const (
 	gitTokenSecretName = "git-token"
 )
 
-//go:generate mockgen -destination=./mock_testsources.go -package=testsources "github.com/kubeshop/testkube-operator/client/testsources/v1" Interface
+//go:generate mockgen -source=./testsources.go -destination=./mock_testsources.go -package=testsources "github.com/kubeshop/testkube-operator/pkg/client/testsources/v1" Interface
 type Interface interface {
 	List(selector string) (*testsourcev1.TestSourceList, error)
 	Get(name string) (*testsourcev1.TestSource, error)

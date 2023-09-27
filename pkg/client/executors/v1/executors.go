@@ -19,7 +19,7 @@ func NewClient(client client.Client, namespace string) *ExecutorsClient {
 	}
 }
 
-//go:generate mockgen -destination=./mock_executors.go -package=executors "github.com/kubeshop/testkube-operator/client/executors/v1" Interface
+//go:generate mockgen -destination=./mock_executors.go -package=executors "github.com/kubeshop/testkube-operator/pkg/client/executors/v1" Interface
 type Interface interface {
 	List(selector string) (*executorv1.ExecutorList, error)
 	Get(name string) (*executorv1.Executor, error)

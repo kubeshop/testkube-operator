@@ -34,7 +34,7 @@ var testSecretDefaultLabels = map[string]string{
 	"testkubeSecretType": "variables",
 }
 
-//go:generate mockgen -destination=./mock_tests.go -package=tests "github.com/kubeshop/testkube-operator/client/tests/v3" Interface
+//go:generate mockgen -source=./test.go -destination=./mock_tests.go -package=tests "github.com/kubeshop/testkube-operator/pkg/client/tests/v3" Interface
 type Interface interface {
 	List(selector string) (*testsv3.TestList, error)
 	ListLabels() (map[string][]string, error)

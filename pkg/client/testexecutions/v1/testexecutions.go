@@ -8,7 +8,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-//go:generate mockgen -destination=./mock_testexecutions.go -package=testexecutions "github.com/kubeshop/testkube-operator/client/testexecutions/v1" Interface
+//go:generate mockgen -destination=./mock_testexecutions.go -package=testexecutions "github.com/kubeshop/testkube-operator/pkg/client/testexecutions/v1" Interface
 type Interface interface {
 	Get(name string) (*testexecutionv1.TestExecution, error)
 	Create(testExecution *testexecutionv1.TestExecution) (*testexecutionv1.TestExecution, error)
