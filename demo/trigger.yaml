@@ -1,0 +1,17 @@
+apiVersion: tests.testkube.io/v1
+kind: TestTrigger
+metadata:
+  name: configmap-modified-trigger
+  namespace: testkube
+spec:
+  resource: configmap
+  resourceSelector:
+    name: testkube-triggers-example-config
+    namespace: testkube
+  event: modified
+  action: run
+  execution: test
+  delay: 30s
+  testSelector:
+    name: healthcheck-test
+    namespace: testkube

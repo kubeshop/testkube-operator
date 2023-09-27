@@ -51,9 +51,7 @@ spec:
                   enum:
                   - string
                   - file-uri
-                  # Deprecated: use git instead
                   - git-file
-                  # Deprecated: use git instead
                   - git-dir
                   - git
                   type: string

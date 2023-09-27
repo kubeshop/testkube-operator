@@ -17,7 +17,7 @@ limitations under the License.
 package v2
 
 import (
-	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
+	testsuitev2 "github.com/kubeshop/testkube-operator/api/testsuite/v2"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime/schema"

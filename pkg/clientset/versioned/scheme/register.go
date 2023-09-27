@@ -17,9 +17,9 @@ limitations under the License.
 package scheme
 
 import (
-	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
-	testsuitev3 "github.com/kubeshop/testkube-operator/apis/testsuite/v3"
-	testtriggersv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
+	testsv3 "github.com/kubeshop/testkube-operator/api/tests/v3"
+	testsuitev3 "github.com/kubeshop/testkube-operator/api/testsuite/v3"
+	testtriggersv1 "github.com/kubeshop/testkube-operator/api/testtriggers/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"

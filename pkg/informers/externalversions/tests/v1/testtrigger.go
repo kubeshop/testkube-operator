@@ -18,7 +18,7 @@ package v1
 
 import (
 	"context"
-	testtriggersv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
+	testtriggersv1 "github.com/kubeshop/testkube-operator/api/testtriggers/v1"
 	"github.com/kubeshop/testkube-operator/pkg/clientset/versioned"
 	"github.com/kubeshop/testkube-operator/pkg/informers/externalversions/internalinterfaces"
 	testtriggerslisterv1 "github.com/kubeshop/testkube-operator/pkg/listers/tests/v1"

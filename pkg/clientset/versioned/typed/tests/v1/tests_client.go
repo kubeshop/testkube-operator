@@ -20,7 +20,7 @@ import (
 	"github.com/kubeshop/testkube-operator/pkg/clientset/versioned/scheme"
 	"net/http"
 
-	testtriggersv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
+	testtriggersv1 "github.com/kubeshop/testkube-operator/api/testtriggers/v1"
 	"k8s.io/client-go/rest"
 )
 

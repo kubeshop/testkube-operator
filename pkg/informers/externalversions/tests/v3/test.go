@@ -20,7 +20,7 @@ import (
 	"context"
 	"time"
 
-	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
+	testsv3 "github.com/kubeshop/testkube-operator/api/tests/v3"
 	"github.com/kubeshop/testkube-operator/pkg/clientset/versioned"
 	"github.com/kubeshop/testkube-operator/pkg/informers/externalversions/internalinterfaces"
 	testslisterv3 "github.com/kubeshop/testkube-operator/pkg/listers/tests/v3"

@@ -1,12 +1,10 @@
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
-  creationTimestamp: null
   name: webhook-admission
 webhooks:
   - admissionReviewVersions:
       - v1
-      - v1beta1
     clientConfig:
       service:
         name: webhook-service
