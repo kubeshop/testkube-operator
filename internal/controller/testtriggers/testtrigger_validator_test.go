@@ -181,7 +181,7 @@ func TestValidator_validateSelector(t *testing.T) {
 		}
 		verrs := v.validateSelector(fld, selector)
 		assert.Len(t, verrs, 1)
-		assert.ErrorContains(t, verrs[0], "\"invalid\" is not a valid pod selector operator")
+		assert.ErrorContains(t, verrs[0], "\"invalid\" is not a valid label selector operator")
 	})
 }
 
