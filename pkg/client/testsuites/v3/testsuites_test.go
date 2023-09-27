@@ -9,7 +9,7 @@ import (
 
 	commonv1 "github.com/kubeshop/testkube-operator/api/common/v1"
 	testsuitev3 "github.com/kubeshop/testkube-operator/api/testsuite/v3"
-	kubeclient "github.com/kubeshop/testkube-operator/client"
+	kubeclient "github.com/kubeshop/testkube-operator/pkg/client"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

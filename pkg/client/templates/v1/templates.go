@@ -10,7 +10,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-//go:generate mockgen -destination=./mock_templates.go -package=templates "github.com/kubeshop/testkube-operator/client/templates/v1" Interface
+//go:generate mockgen -destination=./mock_templates.go -package=templates "github.com/kubeshop/testkube-operator/pkg/client/templates/v1" Interface
 type Interface interface {
 	List(selector string) (*templatev1.TemplateList, error)
 	Get(name string) (*templatev1.Template, error)
