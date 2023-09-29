@@ -7,7 +7,7 @@ package v2
 import (
 	reflect "reflect"
 
-	gomock "github.com/golang/mock/gomock"
+	gomock "go.uber.org/mock/gomock"
 	v2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
 	v1 "k8s.io/api/core/v1"
 )

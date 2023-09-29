@@ -3,13 +3,13 @@ module github.com/kubeshop/testkube-operator
 go 1.18
 
 require (
-	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.3.0
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.19.0
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.8.1
+	go.uber.org/mock v0.3.0
 	go.uber.org/zap v1.21.0
 	k8s.io/api v0.24.1
 	k8s.io/apimachinery v0.24.1

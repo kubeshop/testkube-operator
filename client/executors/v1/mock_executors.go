@@ -7,7 +7,7 @@ package executors
 import (
 	reflect "reflect"
 
-	gomock "github.com/golang/mock/gomock"
+	gomock "go.uber.org/mock/gomock"
 	v1 "github.com/kubeshop/testkube-operator/apis/executor/v1"
 )
 
