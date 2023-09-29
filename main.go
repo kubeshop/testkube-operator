@@ -41,6 +41,7 @@ import (
 	executorv1 "github.com/kubeshop/testkube-operator/apis/executor/v1"
 	testkubev1 "github.com/kubeshop/testkube-operator/apis/script/v1"
 	testkubev2 "github.com/kubeshop/testkube-operator/apis/script/v2"
+	testexecutionv1 "github.com/kubeshop/testkube-operator/apis/testexecution/v1"
 	testsv1 "github.com/kubeshop/testkube-operator/apis/tests/v1"
 	testsv2 "github.com/kubeshop/testkube-operator/apis/tests/v2"
 	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
@@ -48,11 +49,14 @@ import (
 	testsuitev1 "github.com/kubeshop/testkube-operator/apis/testsuite/v1"
 	testsuitev2 "github.com/kubeshop/testkube-operator/apis/testsuite/v2"
 	testsuitev3 "github.com/kubeshop/testkube-operator/apis/testsuite/v3"
+	testsuiteexecutionv1 "github.com/kubeshop/testkube-operator/apis/testsuiteexecution/v1"
 	executorcontrollers "github.com/kubeshop/testkube-operator/controllers/executor"
 	scriptcontrollers "github.com/kubeshop/testkube-operator/controllers/script"
+	testexecutioncontrollers "github.com/kubeshop/testkube-operator/controllers/testexecution"
 	testscontrollers "github.com/kubeshop/testkube-operator/controllers/tests"
 	testsourcecontrollers "github.com/kubeshop/testkube-operator/controllers/testsource"
 	testsuitecontrollers "github.com/kubeshop/testkube-operator/controllers/testsuite"
+	testsuiteexecutioncontrollers "github.com/kubeshop/testkube-operator/controllers/testsuiteexecution"
 	testtriggerscontrollers "github.com/kubeshop/testkube-operator/controllers/testtriggers"
 	"github.com/kubeshop/testkube-operator/pkg/cronjob"
 	//+kubebuilder:scaffold:imports
@@ -68,6 +72,7 @@ type config struct {
 	Port            int
 	Fullname        string
 	TemplateCronjob string `split_words:"true"`
+	Registry        string
 }
 
 func init() {
@@ -84,6 +89,8 @@ func init() {
 	utilruntime.Must(testtriggersv1.AddToScheme(scheme))
 	utilruntime.Must(testsourcev1.AddToScheme(scheme))
 	utilruntime.Must(testsuitev3.AddToScheme(scheme))
+	utilruntime.Must(testexecutionv1.AddToScheme(scheme))
+	utilruntime.Must(testsuiteexecutionv1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -147,7 +154,7 @@ func main() {
 	if err = (&testscontrollers.TestReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port, templateCronjob),
+		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port, templateCronjob, httpConfig.Registry),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Test")
 		os.Exit(1)
@@ -155,7 +162,7 @@ func main() {
 	if err = (&testsuitecontrollers.TestSuiteReconciler{
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
-		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port, templateCronjob),
+		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port, templateCronjob, httpConfig.Registry),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestSuite")
 		os.Exit(1)
@@ -180,6 +187,24 @@ func main() {
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestTrigger")
+		os.Exit(1)
+	}
+	if err = (&testexecutioncontrollers.TestExecutionReconciler{
+		Client:      mgr.GetClient(),
+		Scheme:      mgr.GetScheme(),
+		ServiceName: httpConfig.Fullname,
+		ServicePort: httpConfig.Port,
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "TestExecution")
+		os.Exit(1)
+	}
+	if err = (&testsuiteexecutioncontrollers.TestSuiteExecutionReconciler{
+		Client:      mgr.GetClient(),
+		Scheme:      mgr.GetScheme(),
+		ServiceName: httpConfig.Fullname,
+		ServicePort: httpConfig.Port,
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "TestSuiteExecution")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

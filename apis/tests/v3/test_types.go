@@ -17,9 +17,10 @@ limitations under the License.
 package v3
 
 import (
-	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	commonv1 "github.com/kubeshop/testkube-operator/apis/common/v1"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -197,9 +198,9 @@ type ExecutionRequest struct {
 	JobTemplate string `json:"jobTemplate,omitempty"`
 	// cron job template extensions
 	CronJobTemplate string `json:"cronJobTemplate,omitempty"`
-	// script to run before test execution (not supported for container executors).
+	// script to run before test execution
 	PreRunScript string `json:"preRunScript,omitempty"`
-	// script to run after test execution (not supported for container executors).
+	// script to run after test execution
 	PostRunScript string `json:"postRunScript,omitempty"`
 	// scraper template extensions
 	ScraperTemplate string `json:"scraperTemplate,omitempty"`
