@@ -122,6 +122,8 @@ type ExecutionRequest struct {
 	PreRunScript string `json:"preRunScript,omitempty"`
 	// script to run after test execution
 	PostRunScript string `json:"postRunScript,omitempty"`
+	// execute post run script before scraping (prebuilt executor only)
+	ExecutePostRunScriptBeforeScraping bool `json:"executePostRunScriptBeforeScraping,omitempty"`
 	// scraper template extensions
 	ScraperTemplate string `json:"scraperTemplate,omitempty"`
 	// config map references
@@ -223,8 +225,10 @@ type Execution struct {
 	// script to run before test execution
 	PreRunScript string `json:"preRunScript,omitempty"`
 	// script to run after test execution
-	PostRunScript  string          `json:"postRunScript,omitempty"`
-	RunningContext *RunningContext `json:"runningContext,omitempty"`
+	PostRunScript string `json:"postRunScript,omitempty"`
+	// execute post run script before scraping (prebuilt executor only)
+	ExecutePostRunScriptBeforeScraping bool            `json:"executePostRunScriptBeforeScraping,omitempty"`
+	RunningContext                     *RunningContext `json:"runningContext,omitempty"`
 	// shell used in container executor
 	ContainerShell string `json:"containerShell,omitempty"`
 }
