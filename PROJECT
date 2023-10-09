@@ -135,4 +135,56 @@ resources:
   kind: Template
   path: github.com/kubeshop/testkube-operator/api/template/v1
   version: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: testkube.io
+  group: tests
+  kind: Test
+  path: github.com/kubeshop/testkube-operator/apis/tests/v2
+  version: v2
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: testkube.io
+  group: tests
+  kind: TestSuite
+  path: github.com/kubeshop/testkube-operator/apis/testsuite/v3
+  version: v3
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: testkube.io
+  group: tests
+  kind: TestExecution
+  path: github.com/kubeshop/testkube-operator/apis/testexecution/v1
+  version: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: testkube.io
+  group: tests
+  kind: TestSuiteExecution
+  path: github.com/kubeshop/testkube-operator/apis/testsuiteexecution/v1
+  version: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: testkube.io
+  group: tests
+  kind: Test
+  path: github.com/kubeshop/testkube-operator/apis/tests/v2
+  version: v2
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: testkube.io
+  group: tests
+  kind: TestSuite
+  path: github.com/kubeshop/testkube-operator/apis/testsuite/v3
+  version: v3
 version: "3"
