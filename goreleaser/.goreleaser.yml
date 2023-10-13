@@ -14,6 +14,7 @@ project_name: testkube-operator
 builds:
   - id: "linux"
     env: [CGO_ENABLED=0]
+    main: cmd/main.go
     goos:
       - linux
     goarch:

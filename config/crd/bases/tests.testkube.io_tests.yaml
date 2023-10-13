@@ -379,8 +379,8 @@ spec:
                           or file) in case of BIG/mono repositories
                         type: string
                       tokenSecret:
-                        description: Testkube internal reference for secret storage
-                          in Kubernetes secrets
+                        description: SecretRef is the Testkube internal reference
+                          for secret storage in Kubernetes secrets
                         properties:
                           key:
                             description: object key
@@ -399,8 +399,8 @@ spec:
                         description: uri of content file or git directory
                         type: string
                       usernameSecret:
-                        description: Testkube internal reference for secret storage
-                          in Kubernetes secrets
+                        description: SecretRef is the Testkube internal reference
+                          for secret storage in Kubernetes secrets
                         properties:
                           key:
                             description: object key
@@ -430,6 +430,9 @@ spec:
                     description: uri of test content
                     type: string
                 type: object
+              description:
+                description: test description
+                type: string
               executionRequest:
                 description: test execution request body
                 properties:
@@ -459,15 +462,18 @@ spec:
                         items:
                           type: string
                         type: array
+                      omitFolderPerExecution:
+                        description: don't use a separate folder for execution artifacts
+                        type: boolean
+                      storageBucket:
+                        description: artifact bucket storage
+                        type: string
                       storageClassName:
                         description: artifact storage class name for container executor
                         type: string
                       volumeMountPath:
                         description: artifact volume mount path for container executor
                         type: string
-                    required:
-                    - storageClassName
-                    - volumeMountPath
                     type: object
                   command:
                     description: executor binary command
@@ -476,6 +482,9 @@ spec:
                     type: array
                   cronJobTemplate:
                     description: cron job template extensions
+                    type: string
+                  cronJobTemplateReference:
+                    description: name of the template resource
                     type: string
                   envConfigMaps:
                     description: config map references
@@ -539,6 +548,10 @@ spec:
                     description: 'Environment variables passed to executor. Deprecated:
                       use Basic Variables instead'
                     type: object
+                  executePostRunScriptBeforeScraping:
+                    description: execute post run script before scraping (prebuilt
+                      executor only)
+                    type: boolean
                   executionLabels:
                     additionalProperties:
                       type: string
@@ -570,6 +583,9 @@ spec:
                   jobTemplate:
                     description: job template extensions
                     type: string
+                  jobTemplateReference:
+                    description: name of the template resource
+                    type: string
                   name:
                     description: test execution custom name
                     type: string
@@ -591,8 +607,17 @@ spec:
                   preRunScript:
                     description: script to run before test execution
                     type: string
+                  pvcTemplate:
+                    description: pvc template extensions
+                    type: string
+                  pvcTemplateReference:
+                    description: name of the template resource
+                    type: string
                   scraperTemplate:
                     description: scraper template extensions
+                    type: string
+                  scraperTemplateReference:
+                    description: name of the template resource
                     type: string
                   secretEnvs:
                     additionalProperties:

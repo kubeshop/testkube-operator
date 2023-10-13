@@ -4,7 +4,7 @@
 # More info: https://book.kubebuilder.io/reference/project-config.html
 domain: testkube.io
 layout:
-- go.kubebuilder.io/v3
+- go.kubebuilder.io/v4
 multigroup: true
 projectName: testkube
 repo: github.com/kubeshop/testkube-operator
@@ -16,7 +16,7 @@ resources:
   domain: testkube.io
   group: tests
   kind: Script
-  path: github.com/kubeshop/testkube-operator/apis/script/v1
+  path: github.com/kubeshop/testkube-operator/api/script/v1
   version: v1
 - api:
     crdVersion: v1
@@ -25,7 +25,7 @@ resources:
   domain: testkube.io
   group: executor
   kind: Executor
-  path: github.com/kubeshop/testkube-operator/apis/executor/v1
+  path: github.com/kubeshop/testkube-operator/api/executor/v1
   version: v1
 - api:
     crdVersion: v1
@@ -34,7 +34,7 @@ resources:
   domain: testkube.io
   group: tests
   kind: Test
-  path: github.com/kubeshop/testkube-operator/apis/tests/v1
+  path: github.com/kubeshop/testkube-operator/api/tests/v1
   version: v1
 - api:
     crdVersion: v1
@@ -43,7 +43,7 @@ resources:
   domain: testkube.io
   group: tests
   kind: TestSuite
-  path: github.com/kubeshop/testkube-operator/apis/testsuite/v1
+  path: github.com/kubeshop/testkube-operator/api/testsuite/v1
   version: v1
 - api:
     crdVersion: v1
@@ -52,7 +52,7 @@ resources:
   domain: testkube.io
   group: executor
   kind: Webhook
-  path: github.com/kubeshop/testkube-operator/apis/executor/v1
+  path: github.com/kubeshop/testkube-operator/api/executor/v1
   version: v1
 - api:
     crdVersion: v1
@@ -60,7 +60,7 @@ resources:
   domain: testkube.io
   group: tests
   kind: Test
-  path: github.com/kubeshop/testkube-operator/apis/tests/v3
+  path: github.com/kubeshop/testkube-operator/api/tests/v3
   version: v3
 - api:
     crdVersion: v1
@@ -68,7 +68,7 @@ resources:
   domain: testkube.io
   group: tests
   kind: TestSuite
-  path: github.com/kubeshop/testkube-operator/apis/testsuite/v2
+  path: github.com/kubeshop/testkube-operator/api/testsuite/v2
   version: v2
 - api:
     crdVersion: v1
@@ -77,7 +77,7 @@ resources:
   domain: testkube.io
   group: tests
   kind: TestTrigger
-  path: github.com/kubeshop/testkube-operator/apis/testtriggers/v1
+  path: github.com/kubeshop/testkube-operator/api/testtriggers/v1
   version: v1
   webhooks:
     validation: true
@@ -89,7 +89,51 @@ resources:
   domain: testkube.io
   group: tests
   kind: TestSource
-  path: github.com/kubeshop/testkube-operator/apis/testsource/v1
+  path: github.com/kubeshop/testkube-operator/api/testsource/v1
+  version: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: testkube.io
+  group: tests
+  kind: Test
+  path: github.com/kubeshop/testkube-operator/api/tests/v2
+  version: v2
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: testkube.io
+  group: tests
+  kind: TestSuite
+  path: github.com/kubeshop/testkube-operator/api/testsuite/v3
+  version: v3
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: testkube.io
+  group: tests
+  kind: TestExecution
+  path: github.com/kubeshop/testkube-operator/api/testexecution/v1
+  version: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: testkube.io
+  group: tests
+  kind: TestSuiteExecution
+  path: github.com/kubeshop/testkube-operator/api/testsuiteexecution/v1
+  version: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: testkube.io
+  group: tests
+  kind: Template
+  path: github.com/kubeshop/testkube-operator/api/template/v1
   version: v1
 - api:
     crdVersion: v1

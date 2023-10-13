@@ -51,9 +51,7 @@ spec:
                   enum:
                   - string
                   - file-uri
-                  # Deprecated: use git instead
                   - git-file
-                  # Deprecated: use git instead
                   - git-dir
                   - git
                   type: string
@@ -92,6 +90,9 @@ spec:
               job_template:
                 description: Job template to launch executor
                 type: string
+              jobTemplateReference:
+                description: name of the template resource
+                type: string
               meta:
                 description: Meta data about executor
                 properties:
@@ -106,6 +107,14 @@ spec:
                       type: string
                     description: executor tooltips
                     type: object
+                type: object
+              slaves:
+                description: Slaves data to run test in distributed environment
+                properties:
+                  image:
+                    type: string
+                required:
+                - image
                 type: object
               types:
                 description: Types defines what types can be handled by executor e.g.

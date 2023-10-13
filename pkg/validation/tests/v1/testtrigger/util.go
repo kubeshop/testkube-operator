@@ -1,7 +1,7 @@
 package testtrigger
 
 import (
-	testtriggerv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
+	testtriggerv1 "github.com/kubeshop/testkube-operator/api/testtriggers/v1"
 )
 
 func GetSupportedResources() []string {
@@ -23,6 +23,10 @@ func GetSupportedActions() []string {
 
 func GetSupportedExecutions() []string {
 	return []string{ExecutionTest, ExecutionTestsuite}
+}
+
+func GetSupportedConcurrencyPolicies() []string {
+	return []string{ConcurrencyPolicyAllow, ConcurrencyPolicyForbid, ConcurrencyPolicyReplace}
 }
 
 func GetSupportedConditionStatuses() []string {

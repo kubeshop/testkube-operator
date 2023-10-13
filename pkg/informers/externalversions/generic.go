@@ -17,9 +17,9 @@ limitations under the License.
 package externalversions
 
 import (
-	testsv3 "github.com/kubeshop/testkube-operator/apis/tests/v3"
-	testsuitev3 "github.com/kubeshop/testkube-operator/apis/testsuite/v3"
-	testtriggersv1 "github.com/kubeshop/testkube-operator/apis/testtriggers/v1"
+	testsv3 "github.com/kubeshop/testkube-operator/api/tests/v3"
+	testsuitev3 "github.com/kubeshop/testkube-operator/api/testsuite/v3"
+	testtriggersv1 "github.com/kubeshop/testkube-operator/api/testtriggers/v1"
 	"github.com/pkg/errors"
 
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
