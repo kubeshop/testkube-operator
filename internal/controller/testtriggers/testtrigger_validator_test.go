@@ -142,14 +142,14 @@ func TestValidator_validateSelector(t *testing.T) {
 		assert.Empty(t, verrs)
 	})
 
-	t.Run("error when neither name nor label selector are specified", func(t *testing.T) {
+	t.Run("error when neither name, name regex nor label selector are specified", func(t *testing.T) {
 		t.Parallel()
 
 		fld := field.NewPath("spec").Child("testSelector")
 		selector := testtriggerv1.TestTriggerSelector{LabelSelector: &metav1.LabelSelector{}}
 		verrs := v.validateSelector(fld, selector)
 		assert.Len(t, verrs, 1)
-		assert.ErrorContains(t, verrs[0], "neither name nor label selector is specified")
+		assert.ErrorContains(t, verrs[0], "neither name, name regex nor label selector is specified")
 	})
 
 	t.Run("error when invalid labels are specified", func(t *testing.T) {
