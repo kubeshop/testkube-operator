@@ -169,13 +169,14 @@ func (v *Validator) validateSelector(fld *field.Path, selector testtriggerv1.Tes
 		isLabelSelectorEmpty = isEmpty
 	}
 
-	if selector.Name != "" && selector.LabelSelector != nil {
-		verr := field.Duplicate(fld, "either name or label selector can be used")
+	if (selector.Name != "" && selector.LabelSelector != nil) || (selector.NameRegex != "" && selector.LabelSelector != nil) ||
+		(selector.Name != "" && selector.NameRegex != "") {
+		verr := field.Duplicate(fld, "either name, name regex or label selector can be used")
 		allErrs = append(allErrs, verr)
 	}
 
-	if selector.Name == "" && isLabelSelectorEmpty {
-		verr := field.Invalid(fld, selector, "neither name nor label selector is specified")
+	if selector.Name == "" && selector.NameRegex == "" && isLabelSelectorEmpty {
+		verr := field.Invalid(fld, selector, "neither name, name regex nor label selector is specified")
 		allErrs = append(allErrs, verr)
 	}
 
