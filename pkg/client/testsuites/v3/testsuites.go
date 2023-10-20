@@ -25,6 +25,7 @@ const (
 var testsuiteSecretDefaultLabels = map[string]string{
 	"testkube":           testkubeTestsuiteSecretLabel,
 	"testkubeSecretType": "variables",
+	"visibility":         "testkube",
 }
 
 //go:generate mockgen -destination=./mock_testsuites.go -package=v3 "github.com/kubeshop/testkube-operator/pkg/client/testsuites/v3" Interface
