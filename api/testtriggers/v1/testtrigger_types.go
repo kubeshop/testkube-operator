@@ -130,6 +130,8 @@ const (
 type TestTriggerSelector struct {
 	// Name selector is used to identify a Kubernetes Object based on the metadata name
 	Name string `json:"name,omitempty"`
+	// kubernetes resource name regex
+	NameRegex string `json:"nameRegex,omitempty"`
 	// Namespace of the Kubernetes object
 	Namespace string `json:"namespace,omitempty"`
 	// LabelSelector is used to identify a group of Kubernetes Objects based on their metadata labels
