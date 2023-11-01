@@ -63,6 +63,9 @@ type ExecutorSpec struct {
 
 	// Slaves data to run test in distributed environment
 	Slaves *SlavesMeta `json:"slaves,omitempty"`
+
+	// use data dir as working dir for executor
+	UseDataDirAsWorkingDir bool `json:"useDataDirAsWorkingDir,omitempty"`
 }
 
 type SlavesMeta struct {
