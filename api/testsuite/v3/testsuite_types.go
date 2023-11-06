@@ -55,10 +55,17 @@ type TestSuiteStepSpec struct {
 	Delay metav1.Duration `json:"delay,omitempty"`
 }
 
+// options to download artifacts from previous steps
+type DownloadArtifactOptions struct {
+	AllPreviousSteps    bool    `json:"allPreviousSteps,omitempty"`
+	PreviousStepNumbers []int32 `json:"previousStepNumbers,omitempty"`
+}
+
 // TestSuiteBatchStep is set of steps run in parallel
 type TestSuiteBatchStep struct {
-	StopOnFailure bool                `json:"stopOnFailure"`
-	Execute       []TestSuiteStepSpec `json:"execute,omitempty"`
+	StopOnFailure     bool                     `json:"stopOnFailure"`
+	DownloadArtifacts *DownloadArtifactOptions `json:"downloadArtifacts,omitempty"`
+	Execute           []TestSuiteStepSpec      `json:"execute,omitempty"`
 }
 
 // RunningContext for test or test suite execution
