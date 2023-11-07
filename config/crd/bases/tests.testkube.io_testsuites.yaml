@@ -571,6 +571,7 @@ spec:
                         allPreviousSteps:
                           type: boolean
                         previousStepNumbers:
+                          description: previous step numbers starting from 1
                           items:
                             format: int32
                             type: integer
@@ -608,6 +609,7 @@ spec:
                         allPreviousSteps:
                           type: boolean
                         previousStepNumbers:
+                          description: previous step numbers starting from 1
                           items:
                             format: int32
                             type: integer
@@ -811,6 +813,7 @@ spec:
                         allPreviousSteps:
                           type: boolean
                         previousStepNumbers:
+                          description: previous step numbers starting from 1
                           items:
                             format: int32
                             type: integer
