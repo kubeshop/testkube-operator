@@ -9,7 +9,7 @@ import (
 	errs "github.com/pkg/errors"
 	ctrl "sigs.k8s.io/controller-runtime"
 
-	"github.com/kubeshop/testkube-operator/pkg/client/events/v1"
+	"github.com/kubeshop/testkube-operator/api/events/v1"
 )
 
 var (

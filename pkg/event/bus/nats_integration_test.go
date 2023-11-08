@@ -1,3 +1,5 @@
+//go:build integration
+
 package bus
 
 import (
@@ -7,14 +9,12 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/kubeshop/testkube-operator/pkg/client/events/v1"
+	"github.com/kubeshop/testkube-operator/api/events/v1"
 	"github.com/nats-io/nats.go"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestMultipleMessages_Integration(t *testing.T) {
-	// test.IntegrationTest(t)
-
 	// given NATS connection
 	nc, err := nats.Connect("localhost")
 	assert.NoError(t, err)
@@ -69,8 +69,6 @@ func TestMultipleMessages_Integration(t *testing.T) {
 }
 
 func TestNATS_Integration(t *testing.T) {
-	// test.IntegrationTest(t)
-
 	// given event
 
 	event := events.Event{}

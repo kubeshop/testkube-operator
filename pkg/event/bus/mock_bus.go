@@ -3,7 +3,7 @@ package bus
 import (
 	"sync"
 
-	"github.com/kubeshop/testkube-operator/pkg/client/events/v1"
+	"github.com/kubeshop/testkube-operator/api/events/v1"
 )
 
 var _ Bus = (*EventBusMock)(nil)

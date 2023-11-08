@@ -47,3 +47,11 @@ func EventTypesFromSlice(types []string) []EventType {
 	}
 	return t
 }
+
+type EventOperationType string
+
+const (
+	CREATED EventOperationType = "created"
+	UPDATED EventOperationType = "updated"
+	DELETED EventOperationType = "deleted"
+)
