@@ -38,6 +38,8 @@ var (
 	EventCreated             = EventTypePtr(CREATED_EventType)
 	EventDeleted             = EventTypePtr(DELETED_EventType)
 	EventUpdated             = EventTypePtr(UPDATED_EventType)
+	EventTestUpdated         = EventTypePtr(TEST_UPDATE_EventType)
+	EventTestSuiteUpdated    = EventTypePtr(TESTSUITE_UPDATE_EventType)
 )
 
 func EventTypesFromSlice(types []string) []EventType {

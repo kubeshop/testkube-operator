@@ -26,4 +26,6 @@ const (
 	CREATED_EventType               EventType = "created"
 	UPDATED_EventType               EventType = "updated"
 	DELETED_EventType               EventType = "deleted"
+	TEST_UPDATE_EventType           EventType = "events.test.updated"
+	TESTSUITE_UPDATE_EventType      EventType = "events.testsuite.updated"
 )

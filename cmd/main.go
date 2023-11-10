@@ -19,8 +19,10 @@ package main
 import (
 	"encoding/base64"
 	"flag"
-	testtriggersv1 "github.com/kubeshop/testkube-operator/api/testtriggers/v1"
 	"os"
+
+	testtriggersv1 "github.com/kubeshop/testkube-operator/api/testtriggers/v1"
+	"github.com/pkg/errors"
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
@@ -61,6 +63,8 @@ import (
 	testsuiteexecutioncontrollers "github.com/kubeshop/testkube-operator/internal/controller/testsuiteexecution"
 	testtriggerscontrollers "github.com/kubeshop/testkube-operator/internal/controller/testtriggers"
 	"github.com/kubeshop/testkube-operator/pkg/cronjob"
+	"github.com/kubeshop/testkube-operator/pkg/event"
+	"github.com/kubeshop/testkube-operator/pkg/event/bus"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -127,8 +131,14 @@ func main() {
 		templateCronjob = string(data)
 	}
 
-	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
+	// TODO add cluster-name
+	emitter, err := setUpNATS("cluster-name")
+	if err != nil {
+		setupLog.Error(err, "unable to start nats")
+		os.Exit(1)
+	}
 
+	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,
 		Metrics:                metricsserver.Options{BindAddress: metricsAddr},
 		HealthProbeBindAddress: probeAddr,
@@ -193,19 +203,21 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&testexecutioncontrollers.TestExecutionReconciler{
-		Client:      mgr.GetClient(),
-		Scheme:      mgr.GetScheme(),
-		ServiceName: httpConfig.Fullname,
-		ServicePort: httpConfig.Port,
+		Client:       mgr.GetClient(),
+		Scheme:       mgr.GetScheme(),
+		ServiceName:  httpConfig.Fullname,
+		ServicePort:  httpConfig.Port,
+		EventEmitter: emitter,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestExecution")
 		os.Exit(1)
 	}
 	if err = (&testsuiteexecutioncontrollers.TestSuiteExecutionReconciler{
-		Client:      mgr.GetClient(),
-		Scheme:      mgr.GetScheme(),
-		ServiceName: httpConfig.Fullname,
-		ServicePort: httpConfig.Port,
+		Client:       mgr.GetClient(),
+		Scheme:       mgr.GetScheme(),
+		ServiceName:  httpConfig.Fullname,
+		ServicePort:  httpConfig.Port,
+		EventEmitter: emitter,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestSuiteExecution")
 		os.Exit(1)
@@ -303,4 +315,21 @@ func setLogger() {
 	opts.ZapOpts = append(opts.ZapOpts, zapUber.WrapCore(updateZapcore))
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
+}
+
+func setUpNATS(clusterName string) (*event.Emitter, error) {
+	uri := os.Getenv("NATS_URI")
+	if uri == "" {
+		return nil, errors.New("NATS_URI environment variable is empty")
+	}
+	nc, err := bus.NewNATSConnection(uri)
+	if err != nil {
+		return nil, errors.Wrap(err, "could not set up nats connection")
+	}
+	eventBus := bus.NewNATSBus(nc)
+
+	// TODO check if envs are needed, otherwise remove them
+	eventsEmitter := event.NewEmitter(eventBus, clusterName, map[string]string{})
+
+	return eventsEmitter, nil
 }

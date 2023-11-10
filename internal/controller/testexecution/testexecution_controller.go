@@ -24,6 +24,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/google/uuid"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -31,15 +32,18 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
+	"github.com/kubeshop/testkube-operator/api/events/v1"
 	testexecutionv1 "github.com/kubeshop/testkube-operator/api/testexecution/v1"
+	"github.com/kubeshop/testkube-operator/pkg/event"
 )
 
 // TestExecutionReconciler reconciles a TestExecution object
 type TestExecutionReconciler struct {
 	client.Client
-	Scheme      *runtime.Scheme
-	ServiceName string
-	ServicePort int
+	Scheme       *runtime.Scheme
+	ServiceName  string
+	ServicePort  int
+	EventEmitter *event.Emitter
 }
 
 //+kubebuilder:rbac:groups=tests.testkube.io,resources=testexecutions,verbs=get;list;watch;create;update;patch;delete
@@ -91,6 +95,11 @@ func (r *TestExecutionReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	if _, err = r.executeTest(testExecution.Spec.Test.Name, testExecution.Name, testExecution.Namespace, jsonData); err != nil {
 		return ctrl.Result{}, err
 	}
+	r.EventEmitter.Notify(events.Event{
+		Id:            uuid.NewString(),
+		Type_:         events.EventTestUpdated,
+		TestExecution: &testExecution,
+	})
 
 	return ctrl.Result{}, nil
 }
@@ -122,7 +131,6 @@ func (r *TestExecutionReconciler) executeTest(testName, testExecutionName, names
 
 	b, err := io.ReadAll(resp.Body)
 	if resp.StatusCode > 300 {
-		return out, fmt.Errorf("could not POST, statusCode: %d", resp.StatusCode)
 	}
 
 	return fmt.Sprintf("status: %d - %s", resp.StatusCode, b), err
