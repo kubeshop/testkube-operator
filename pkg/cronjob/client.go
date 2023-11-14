@@ -30,7 +30,7 @@ type Client struct {
 	servicePort     int
 	cronJobTemplate string
 	registry        string
-	argocdSync      bool
+	argoCDSync      bool
 }
 
 type CronJobOptions struct {
@@ -57,20 +57,20 @@ type templateParameters struct {
 	Data                      string
 	Labels                    map[string]string
 	Registry                  string
-	ArgocdSync                bool
+	ArgoCDSync                bool
 	UUID                      string
 }
 
 // NewClient is a method to create new cron job client
 func NewClient(cli client.Client, serviceName string, servicePort int, cronJobTemplate, registry string,
-	argocdSync bool) *Client {
+	argoCDSync bool) *Client {
 	return &Client{
 		Client:          cli,
 		serviceName:     serviceName,
 		servicePort:     servicePort,
 		cronJobTemplate: cronJobTemplate,
 		registry:        registry,
-		argocdSync:      argocdSync,
+		argoCDSync:      argoCDSync,
 	}
 }
 
@@ -105,7 +105,7 @@ func (c *Client) Create(ctx context.Context, id, name, namespace, uuid string, o
 		Data:                      options.Data,
 		Labels:                    options.Labels,
 		Registry:                  c.registry,
-		ArgocdSync:                c.argocdSync,
+		ArgoCDSync:                c.argoCDSync,
 		UUID:                      uuid,
 	}
 
@@ -142,7 +142,7 @@ func (c *Client) Update(ctx context.Context, cronJob *batchv1.CronJob, id, name,
 		Data:                      options.Data,
 		Labels:                    options.Labels,
 		Registry:                  c.registry,
-		ArgocdSync:                c.argocdSync,
+		ArgoCDSync:                c.argoCDSync,
 		UUID:                      uuid,
 	}
 
