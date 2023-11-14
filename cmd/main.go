@@ -19,8 +19,9 @@ package main
 import (
 	"encoding/base64"
 	"flag"
-	testtriggersv1 "github.com/kubeshop/testkube-operator/api/testtriggers/v1"
 	"os"
+
+	testtriggersv1 "github.com/kubeshop/testkube-operator/api/testtriggers/v1"
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
@@ -75,6 +76,7 @@ type config struct {
 	Fullname        string
 	TemplateCronjob string `split_words:"true"`
 	Registry        string
+	ArgocdSync      bool `split_words:"true"`
 }
 
 func init() {
@@ -128,7 +130,6 @@ func main() {
 	}
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
-
 		Scheme:                 scheme,
 		Metrics:                metricsserver.Options{BindAddress: metricsAddr},
 		HealthProbeBindAddress: probeAddr,
@@ -155,17 +156,19 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&testscontrollers.TestReconciler{
-		Client:        mgr.GetClient(),
-		Scheme:        mgr.GetScheme(),
-		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port, templateCronjob, httpConfig.Registry),
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port,
+			templateCronjob, httpConfig.Registry, httpConfig.ArgocdSync),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Test")
 		os.Exit(1)
 	}
 	if err = (&testsuitecontrollers.TestSuiteReconciler{
-		Client:        mgr.GetClient(),
-		Scheme:        mgr.GetScheme(),
-		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port, templateCronjob, httpConfig.Registry),
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port,
+			templateCronjob, httpConfig.Registry, httpConfig.ArgocdSync),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestSuite")
 		os.Exit(1)
