@@ -76,7 +76,7 @@ type config struct {
 	Fullname        string
 	TemplateCronjob string `split_words:"true"`
 	Registry        string
-	ArgocdSync      bool `split_words:"true"`
+	UseArgocdSync   bool `split_words:"true"`
 }
 
 func init() {
@@ -159,7 +159,7 @@ func main() {
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port,
-			templateCronjob, httpConfig.Registry, httpConfig.ArgocdSync),
+			templateCronjob, httpConfig.Registry, httpConfig.UseArgocdSync),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Test")
 		os.Exit(1)
@@ -168,7 +168,7 @@ func main() {
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port,
-			templateCronjob, httpConfig.Registry, httpConfig.ArgocdSync),
+			templateCronjob, httpConfig.Registry, httpConfig.UseArgocdSync),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestSuite")
 		os.Exit(1)
