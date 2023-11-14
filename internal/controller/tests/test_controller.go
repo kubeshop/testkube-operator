@@ -116,6 +116,7 @@ func (r *TestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 	options := cronjob.CronJobOptions{
 		Schedule:                  test.Spec.Schedule,
 		Resource:                  testsv3.Resource,
+		Version:                   testsv3.Version,
 		ResourceURI:               cronjob.TestResourceURI,
 		Data:                      string(data),
 		Labels:                    test.Labels,

@@ -36,6 +36,7 @@ type Client struct {
 type CronJobOptions struct {
 	Schedule                  string
 	Resource                  string
+	Version                   string
 	ResourceURI               string
 	Data                      string
 	Labels                    map[string]string
@@ -51,6 +52,7 @@ type templateParameters struct {
 	ServicePort               int
 	Schedule                  string
 	Resource                  string
+	Version                   string
 	ResourceURI               string
 	CronJobTemplate           string
 	CronJobTemplateExtensions string
@@ -99,6 +101,7 @@ func (c *Client) Create(ctx context.Context, id, name, namespace, uuid string, o
 		ServicePort:               c.servicePort,
 		Schedule:                  options.Schedule,
 		Resource:                  options.Resource,
+		Version:                   options.Version,
 		ResourceURI:               options.ResourceURI,
 		CronJobTemplate:           template,
 		CronJobTemplateExtensions: options.CronJobTemplateExtensions,
@@ -136,6 +139,7 @@ func (c *Client) Update(ctx context.Context, cronJob *batchv1.CronJob, id, name,
 		ServicePort:               c.servicePort,
 		Schedule:                  options.Schedule,
 		Resource:                  options.Resource,
+		Version:                   options.Version,
 		ResourceURI:               options.ResourceURI,
 		CronJobTemplate:           template,
 		CronJobTemplateExtensions: options.CronJobTemplateExtensions,
