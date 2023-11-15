@@ -10,6 +10,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/scheme"
 
 	testexecutionv1 "github.com/kubeshop/testkube-operator/api/testexecution/v1"
+	"github.com/kubeshop/testkube-operator/pkg/event"
+	"github.com/kubeshop/testkube-operator/pkg/event/bus"
 )
 
 func TestTestExecutions(t *testing.T) {
@@ -56,7 +58,8 @@ func TestTestExecutions(t *testing.T) {
 
 		kClient := clientBuilder.Build()
 		testNamespace := "test-ns"
-		teClient = NewClient(kClient, testNamespace)
+		emitter := event.NewEmitter(bus.NewEventBusMock(), "test-cluster", map[string]string{})
+		teClient = NewClient(kClient, testNamespace, emitter)
 		assert.NotEmpty(t, teClient)
 		assert.Equal(t, testNamespace, teClient.namespace)
 	})

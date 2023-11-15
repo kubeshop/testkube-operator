@@ -25,10 +25,11 @@ type Option struct {
 }
 
 // NewClient returns new client instance, needs kubernetes client to be passed as dependecy
-func NewClient(client client.Client, namespace string) *TestExecutionsClient {
+func NewClient(client client.Client, namespace string, emitter *event.Emitter) *TestExecutionsClient {
 	return &TestExecutionsClient{
-		k8sClient: client,
-		namespace: namespace,
+		k8sClient:    client,
+		namespace:    namespace,
+		EventEmitter: emitter,
 	}
 }
 
