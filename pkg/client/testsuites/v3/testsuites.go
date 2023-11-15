@@ -14,7 +14,9 @@ import (
 
 	"github.com/google/uuid"
 	commonv1 "github.com/kubeshop/testkube-operator/api/common/v1"
+	"github.com/kubeshop/testkube-operator/api/events/v1"
 	testsuitev3 "github.com/kubeshop/testkube-operator/api/testsuite/v3"
+	"github.com/kubeshop/testkube-operator/pkg/event"
 )
 
 const (
@@ -47,17 +49,19 @@ type Interface interface {
 }
 
 // NewClient creates new TestSuite client
-func NewClient(client client.Client, namespace string) *TestSuitesClient {
+func NewClient(client client.Client, namespace string, eventEmitter *event.Emitter) *TestSuitesClient {
 	return &TestSuitesClient{
-		Client:    client,
-		Namespace: namespace,
+		Client:       client,
+		Namespace:    namespace,
+		EventEmitter: eventEmitter,
 	}
 }
 
 // TestSuitesClient implements methods to work with TestSuites
 type TestSuitesClient struct {
-	Client    client.Client
-	Namespace string
+	Client       client.Client
+	Namespace    string
+	EventEmitter *event.Emitter
 }
 
 // List lists TestSuites
@@ -144,6 +148,9 @@ func (s TestSuitesClient) Create(testsuite *testsuitev3.TestSuite) (*testsuitev3
 	}
 
 	err = s.Client.Create(context.Background(), testsuite)
+	if err == nil {
+		s.EventEmitter.Notify(events.NewEventCreatedTestSuite(testsuite))
+	}
 	return testsuite, err
 }
 
@@ -155,6 +162,9 @@ func (s TestSuitesClient) Update(testsuite *testsuitev3.TestSuite) (*testsuitev3
 	}
 
 	err = s.Client.Update(context.Background(), testsuite)
+	if err == nil {
+		s.EventEmitter.Notify(events.NewEventCreatedTestSuite(testsuite))
+	}
 	return testsuite, err
 }
 
@@ -178,11 +188,10 @@ func (s TestSuitesClient) Delete(name string) error {
 	}
 
 	err = s.Client.Delete(context.Background(), testsuite)
-	if err != nil {
-		return err
+	if err == nil {
+		s.EventEmitter.Notify(events.NewEventDeletedTestSuite(testsuite))
 	}
-
-	return nil
+	return err
 }
 
 // DeleteAll delete all TestSuites
@@ -194,6 +203,7 @@ func (s TestSuitesClient) DeleteAll() error {
 	if err != nil {
 		return err
 	}
+	s.EventEmitter.Notify(events.NewEventDeletedAllTestSuites())
 
 	u = &unstructured.Unstructured{}
 	u.SetKind("Secret")
@@ -330,7 +340,11 @@ func (s TestSuitesClient) GetSecretTestSuiteVars(testsuiteName, secretUUID strin
 
 // UpdateStatus updates existing TestSuite status
 func (s TestSuitesClient) UpdateStatus(testsuite *testsuitev3.TestSuite) error {
-	return s.Client.Status().Update(context.Background(), testsuite)
+	err := s.Client.Status().Update(context.Background(), testsuite)
+	if err != nil {
+		s.EventEmitter.Notify(events.NewEventUpdatedTestSuite(testsuite))
+	}
+	return err
 }
 
 // testsuiteVarsToSecret loads secrets data passed into TestSuite CRD and remove plain text data
@@ -431,5 +445,8 @@ func (s TestSuitesClient) DeleteByLabels(selector string) error {
 	u.SetAPIVersion("tests.testkube.io/v3")
 	err = s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace),
 		client.MatchingLabelsSelector{Selector: labels.NewSelector().Add(reqs...)})
+	if err == nil {
+		s.EventEmitter.Notify(events.NewEventDeletedFilteredTestSuites())
+	}
 	return err
 }

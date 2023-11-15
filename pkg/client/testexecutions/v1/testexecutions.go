@@ -3,7 +3,9 @@ package testexecutions
 import (
 	"context"
 
+	"github.com/kubeshop/testkube-operator/api/events/v1"
 	testexecutionv1 "github.com/kubeshop/testkube-operator/api/testexecution/v1"
+	"github.com/kubeshop/testkube-operator/pkg/event"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -32,8 +34,9 @@ func NewClient(client client.Client, namespace string) *TestExecutionsClient {
 
 // TestExecutionsClient client for getting test executions CRs
 type TestExecutionsClient struct {
-	k8sClient client.Client
-	namespace string
+	k8sClient    client.Client
+	namespace    string
+	EventEmitter *event.Emitter
 }
 
 // Get gets test execution by name in given namespace
@@ -48,20 +51,20 @@ func (s TestExecutionsClient) Get(name string) (*testexecutionv1.TestExecution, 
 
 // Create creates new test execution CRD
 func (s TestExecutionsClient) Create(testExecution *testexecutionv1.TestExecution) (*testexecutionv1.TestExecution, error) {
-	if err := s.k8sClient.Create(context.Background(), testExecution); err != nil {
-		return nil, err
+	err := s.k8sClient.Create(context.Background(), testExecution)
+	if err == nil {
+		s.EventEmitter.Notify(events.NewEventCreatedTestExecution(testExecution))
 	}
-
-	return testExecution, nil
+	return testExecution, err
 }
 
 // Update updates test execution
 func (s TestExecutionsClient) Update(testExecution *testexecutionv1.TestExecution) (*testexecutionv1.TestExecution, error) {
-	if err := s.k8sClient.Update(context.Background(), testExecution); err != nil {
-		return nil, err
+	err := s.k8sClient.Update(context.Background(), testExecution)
+	if err == nil {
+		s.EventEmitter.Notify(events.NewEventUpdatedTestExecution(testExecution))
 	}
-
-	return testExecution, nil
+	return testExecution, err
 }
 
 // Delete deletes test execution by name
@@ -74,10 +77,17 @@ func (s TestExecutionsClient) Delete(name string) error {
 	}
 
 	err := s.k8sClient.Delete(context.Background(), testExecution)
+	if err == nil {
+		s.EventEmitter.Notify(events.NewEventDeletedTestExecution(testExecution))
+	}
 	return err
 }
 
 // UpdateStatus updates existing test execution status
 func (s TestExecutionsClient) UpdateStatus(testExecution *testexecutionv1.TestExecution) error {
-	return s.k8sClient.Status().Update(context.Background(), testExecution)
+	err := s.k8sClient.Status().Update(context.Background(), testExecution)
+	if err == nil {
+		s.EventEmitter.Notify(events.NewEventUpdatedTestExecution(testExecution))
+	}
+	return err
 }

@@ -26,6 +26,24 @@ const (
 	CREATED_EventType               EventType = "created"
 	UPDATED_EventType               EventType = "updated"
 	DELETED_EventType               EventType = "deleted"
-	TEST_UPDATE_EventType           EventType = "events.test.updated"
-	TESTSUITE_UPDATE_EventType      EventType = "events.testsuite.updated"
+
+	TEST_EXECUTION_CREATED_EventType EventType = "test.execution.created"
+	TEST_EXECUTION_UPDATED_EventType EventType = "test.execution.updated"
+	TEST_EXECUTION_DELETED_EventType EventType = "test.execution.deleted"
+
+	TEST_CREATED_EventType          EventType = "test.created"
+	TEST_UPDATED_EventType          EventType = "test.updated"
+	TEST_DELETED_EventType          EventType = "test.deleted"
+	TEST_DELETED_ALL_EventType      EventType = "test.deleted.all"
+	TEST_DELETED_FILTERED_EventType EventType = "test.deleted.filtered"
+
+	TESTSUITE_EXECUTION_CREATED_EventType EventType = "testsuite.execution.created"
+	TESTSUITE_EXECUTION_UPDATED_EventType EventType = "testsuite.execution.updated"
+	TESTSUITE_EXECUTION_DELETED_EventType EventType = "testsuite.execution.deleted"
+
+	TESTSUITE_CREATED_EventType          EventType = "testsuite.created"
+	TESTSUITE_UPDATED_EventType          EventType = "testsuite.updated"
+	TESTSUITE_DELETED_EventType          EventType = "testsuite.deleted"
+	TESTSUITE_DELETED_ALL_EventType      EventType = "testsuite.deleted.all"
+	TESTSUITE_DELETED_FILTERED_EventType EventType = "testsuite.deleted.filtered"
 )

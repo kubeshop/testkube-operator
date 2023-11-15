@@ -131,13 +131,6 @@ func main() {
 		templateCronjob = string(data)
 	}
 
-	// TODO add cluster-name
-	emitter, err := setUpNATS("cluster-name")
-	if err != nil {
-		setupLog.Error(err, "unable to start nats")
-		os.Exit(1)
-	}
-
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,
 		Metrics:                metricsserver.Options{BindAddress: metricsAddr},
@@ -203,21 +196,19 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&testexecutioncontrollers.TestExecutionReconciler{
-		Client:       mgr.GetClient(),
-		Scheme:       mgr.GetScheme(),
-		ServiceName:  httpConfig.Fullname,
-		ServicePort:  httpConfig.Port,
-		EventEmitter: emitter,
+		Client:      mgr.GetClient(),
+		Scheme:      mgr.GetScheme(),
+		ServiceName: httpConfig.Fullname,
+		ServicePort: httpConfig.Port,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestExecution")
 		os.Exit(1)
 	}
 	if err = (&testsuiteexecutioncontrollers.TestSuiteExecutionReconciler{
-		Client:       mgr.GetClient(),
-		Scheme:       mgr.GetScheme(),
-		ServiceName:  httpConfig.Fullname,
-		ServicePort:  httpConfig.Port,
-		EventEmitter: emitter,
+		Client:      mgr.GetClient(),
+		Scheme:      mgr.GetScheme(),
+		ServiceName: httpConfig.Fullname,
+		ServicePort: httpConfig.Port,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestSuiteExecution")
 		os.Exit(1)

@@ -38,8 +38,26 @@ var (
 	EventCreated             = EventTypePtr(CREATED_EventType)
 	EventDeleted             = EventTypePtr(DELETED_EventType)
 	EventUpdated             = EventTypePtr(UPDATED_EventType)
-	EventTestUpdated         = EventTypePtr(TEST_UPDATE_EventType)
-	EventTestSuiteUpdated    = EventTypePtr(TESTSUITE_UPDATE_EventType)
+
+	EventTestExecutionCreated = EventTypePtr(TEST_EXECUTION_CREATED_EventType)
+	EventTestExecutionUpdated = EventTypePtr(TEST_EXECUTION_UPDATED_EventType)
+	EventTestExecutionDeleted = EventTypePtr(TEST_EXECUTION_DELETED_EventType)
+
+	EventTestCreated          = EventTypePtr(TEST_CREATED_EventType)
+	EventTestUpdated          = EventTypePtr(TEST_UPDATED_EventType)
+	EventTestDeleted          = EventTypePtr(TEST_DELETED_EventType)
+	EventTestsDeletedAll      = EventTypePtr(TEST_DELETED_ALL_EventType)
+	EventTestsDeletedFiltered = EventTypePtr(TEST_DELETED_FILTERED_EventType)
+
+	EventTestSuiteExecutionCreated = EventTypePtr(TESTSUITE_EXECUTION_CREATED_EventType)
+	EventTestSuiteExecutionUpdated = EventTypePtr(TESTSUITE_EXECUTION_UPDATED_EventType)
+	EventTestSuiteExecutionDeleted = EventTypePtr(TESTSUITE_EXECUTION_DELETED_EventType)
+
+	EventTestSuiteCreated          = EventTypePtr(TESTSUITE_CREATED_EventType)
+	EventTestSuiteUpdated          = EventTypePtr(TESTSUITE_UPDATED_EventType)
+	EventTestSuiteDeleted          = EventTypePtr(TESTSUITE_DELETED_EventType)
+	EventTestSuitesDeletedAll      = EventTypePtr(TESTSUITE_DELETED_ALL_EventType)
+	EventTestSuitesDeletedFiltered = EventTypePtr(TESTSUITE_DELETED_FILTERED_EventType)
 )
 
 func EventTypesFromSlice(types []string) []EventType {

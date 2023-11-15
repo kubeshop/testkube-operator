@@ -27,6 +27,7 @@ import (
 	"github.com/google/uuid"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
@@ -44,6 +45,7 @@ type TestExecutionReconciler struct {
 	ServiceName  string
 	ServicePort  int
 	EventEmitter *event.Emitter
+	Recorder     record.EventRecorder
 }
 
 //+kubebuilder:rbac:groups=tests.testkube.io,resources=testexecutions,verbs=get;list;watch;create;update;patch;delete
@@ -95,9 +97,10 @@ func (r *TestExecutionReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 	if _, err = r.executeTest(testExecution.Spec.Test.Name, testExecution.Name, testExecution.Namespace, jsonData); err != nil {
 		return ctrl.Result{}, err
 	}
+	// this will not be called as the execution is not a CRD
 	r.EventEmitter.Notify(events.Event{
 		Id:            uuid.NewString(),
-		Type_:         events.EventTestUpdated,
+		Type_:         events.EventTestExecutionUpdated,
 		TestExecution: &testExecution,
 	})
 

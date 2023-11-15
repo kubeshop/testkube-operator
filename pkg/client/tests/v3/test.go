@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/kubeshop/testkube-operator/pkg/event"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -13,6 +14,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	commonv1 "github.com/kubeshop/testkube-operator/api/common/v1"
+	"github.com/kubeshop/testkube-operator/api/events/v1"
 	testsv3 "github.com/kubeshop/testkube-operator/api/tests/v3"
 	"github.com/kubeshop/testkube-operator/pkg/secret"
 	"k8s.io/apimachinery/pkg/labels"
@@ -73,11 +75,12 @@ type Option struct {
 }
 
 // NewClient creates new Test client
-func NewClient(client client.Client, namespace string) *TestsClient {
+func NewClient(client client.Client, namespace string, eventEmitter *event.Emitter) *TestsClient {
 	return &TestsClient{
 		k8sClient:    client,
 		namespace:    namespace,
 		secretClient: secret.NewClient(client, namespace, secret.TestkubeTestSecretLabel),
+		EventEmitter: eventEmitter,
 	}
 }
 
@@ -86,6 +89,7 @@ type TestsClient struct {
 	k8sClient    client.Client
 	namespace    string
 	secretClient *secret.Client
+	EventEmitter *event.Emitter
 }
 
 // List lists Tests
@@ -186,6 +190,9 @@ func (s TestsClient) Create(test *testsv3.Test, options ...Option) (*testsv3.Tes
 	}
 
 	err = s.k8sClient.Create(context.Background(), test)
+	if err == nil {
+		s.EventEmitter.Notify(events.NewEventCreatedTest(test))
+	}
 	return test, err
 }
 
@@ -221,6 +228,9 @@ func (s TestsClient) Update(test *testsv3.Test, options ...Option) (*testsv3.Tes
 	}
 
 	err = s.k8sClient.Update(context.Background(), test)
+	if err == nil {
+		s.EventEmitter.Notify(events.NewEventCreatedTest(test))
+	}
 	return test, err
 }
 
@@ -235,6 +245,7 @@ func (s TestsClient) Delete(name string) error {
 	if err != nil {
 		return err
 	}
+	s.EventEmitter.Notify(events.NewEventDeletedTest(test))
 
 	var allErrors []error
 
@@ -273,6 +284,7 @@ func (s TestsClient) DeleteAll() error {
 	if err != nil {
 		return err
 	}
+	s.EventEmitter.Notify(events.NewEventDeletedAllTests())
 
 	if err := s.secretClient.DeleteAll(""); err != nil {
 		return err
@@ -436,7 +448,11 @@ func (s TestsClient) ListByNames(names []string) ([]testsv3.Test, error) {
 
 // UpdateStatus updates existing Test status
 func (s TestsClient) UpdateStatus(test *testsv3.Test) error {
-	return s.k8sClient.Status().Update(context.Background(), test)
+	err := s.k8sClient.Status().Update(context.Background(), test)
+	if err == nil {
+		s.EventEmitter.Notify(events.NewEventUpdatedTest(test))
+	}
+	return err
 }
 
 // testVarsToSecret loads secrets data passed into Test CRD and remove plain text data
@@ -568,6 +584,9 @@ func (s TestsClient) DeleteByLabels(selector string) error {
 	u.SetAPIVersion("tests.testkube.io/v3")
 	err = s.k8sClient.DeleteAllOf(context.Background(), u, client.InNamespace(s.namespace),
 		client.MatchingLabelsSelector{Selector: labels.NewSelector().Add(reqs...)})
+	if err == nil {
+		s.EventEmitter.Notify(events.NewEventDeletedFilteredTests())
+	}
 	return err
 }
 

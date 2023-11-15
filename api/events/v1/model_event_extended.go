@@ -5,6 +5,8 @@ import (
 
 	"github.com/google/uuid"
 	testexecutionv1 "github.com/kubeshop/testkube-operator/api/testexecution/v1"
+	testv3 "github.com/kubeshop/testkube-operator/api/tests/v3"
+	testsuitev3 "github.com/kubeshop/testkube-operator/api/testsuite/v3"
 	testsuiteexecutionv1 "github.com/kubeshop/testkube-operator/api/testsuiteexecution/v1"
 
 	"k8s.io/apimachinery/pkg/labels"
@@ -16,6 +18,122 @@ func NewEvent(t *EventType, resource *EventResource, id string) Event {
 		ResourceId: id,
 		Resource:   resource,
 		Type_:      t,
+	}
+}
+
+// Test Executions
+func NewEventCreatedTestExecution(execution *testexecutionv1.TestExecution) Event {
+	return Event{
+		Id:            uuid.NewString(),
+		Type_:         EventTestExecutionCreated,
+		TestExecution: execution,
+	}
+}
+func NewEventUpdatedTestExecution(execution *testexecutionv1.TestExecution) Event {
+	return Event{
+		Id:            uuid.NewString(),
+		Type_:         EventTestExecutionUpdated,
+		TestExecution: execution,
+	}
+}
+func NewEventDeletedTestExecution(execution *testexecutionv1.TestExecution) Event {
+	return Event{
+		Id:            uuid.NewString(),
+		Type_:         EventTestExecutionDeleted,
+		TestExecution: execution,
+	}
+}
+
+// Tests
+func NewEventCreatedTest(test *testv3.Test) Event {
+	return Event{
+		Id:         uuid.NewString(),
+		Type_:      EventTestCreated,
+		ResourceId: test.Name,
+	}
+}
+func NewEventUpdatedTest(test *testv3.Test) Event {
+	return Event{
+		Id:         uuid.NewString(),
+		Type_:      EventTestUpdated,
+		ResourceId: test.Name,
+	}
+}
+func NewEventDeletedTest(test *testv3.Test) Event {
+	return Event{
+		Id:         uuid.NewString(),
+		Type_:      EventTestDeleted,
+		ResourceId: test.Name,
+	}
+}
+func NewEventDeletedAllTests() Event {
+	return Event{
+		Id:    uuid.NewString(),
+		Type_: EventTestsDeletedAll,
+	}
+}
+func NewEventDeletedFilteredTests() Event {
+	return Event{
+		Id:    uuid.NewString(),
+		Type_: EventTestsDeletedFiltered,
+	}
+}
+
+// Test Suite Executions
+func NewEventCreatedTestSuiteExecution(execution *testsuiteexecutionv1.TestSuiteExecution) Event {
+	return Event{
+		Id:                 uuid.NewString(),
+		Type_:              EventTestSuiteExecutionCreated,
+		TestSuiteExecution: execution,
+	}
+}
+func NewEventUpdatedTestSuiteExecution(execution *testsuiteexecutionv1.TestSuiteExecution) Event {
+	return Event{
+		Id:                 uuid.NewString(),
+		Type_:              EventTestSuiteExecutionUpdated,
+		TestSuiteExecution: execution,
+	}
+}
+func NewEventDeletedTestSuiteExecution(execution *testsuiteexecutionv1.TestSuiteExecution) Event {
+	return Event{
+		Id:                 uuid.NewString(),
+		Type_:              EventTestSuiteExecutionDeleted,
+		TestSuiteExecution: execution,
+	}
+}
+
+// Test Suites
+func NewEventCreatedTestSuite(testsuite *testsuitev3.TestSuite) Event {
+	return Event{
+		Id:         uuid.NewString(),
+		Type_:      EventTestCreated,
+		ResourceId: testsuite.Name,
+	}
+}
+func NewEventUpdatedTestSuite(testsuite *testsuitev3.TestSuite) Event {
+	return Event{
+		Id:         uuid.NewString(),
+		Type_:      EventTestUpdated,
+		ResourceId: testsuite.Name,
+	}
+}
+func NewEventDeletedTestSuite(testsuite *testsuitev3.TestSuite) Event {
+	return Event{
+		Id:         uuid.NewString(),
+		Type_:      EventTestDeleted,
+		ResourceId: testsuite.Name,
+	}
+}
+func NewEventDeletedAllTestSuites() Event {
+	return Event{
+		Id:    uuid.NewString(),
+		Type_: EventTestSuitesDeletedAll,
+	}
+}
+func NewEventDeletedFilteredTestSuites() Event {
+	return Event{
+		Id:    uuid.NewString(),
+		Type_: EventTestSuitesDeletedFiltered,
 	}
 }
 

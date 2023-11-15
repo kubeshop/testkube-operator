@@ -99,9 +99,10 @@ func (r *TestSuiteExecutionReconciler) Reconcile(ctx context.Context, req ctrl.R
 	if _, err = r.executeTestSuite(testSuiteExecution.Spec.TestSuite.Name, testSuiteExecution.Name, testSuiteExecution.Namespace, jsonData); err != nil {
 		return ctrl.Result{}, err
 	}
+	// this will not be called as the execution is not a CRD
 	r.EventEmitter.Notify(events.Event{
 		Id:                 uuid.NewString(),
-		Type_:              events.EventTestSuiteUpdated,
+		Type_:              events.EventTestSuiteExecutionUpdated,
 		TestSuiteExecution: &testSuiteExecution,
 	})
 
