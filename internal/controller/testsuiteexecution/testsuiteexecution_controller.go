@@ -31,19 +31,15 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
-	"github.com/google/uuid"
-	"github.com/kubeshop/testkube-operator/api/events/v1"
 	testsuiteexecutionv1 "github.com/kubeshop/testkube-operator/api/testsuiteexecution/v1"
-	"github.com/kubeshop/testkube-operator/pkg/event"
 )
 
 // TestSuiteExecutionReconciler reconciles a TestSuiteExecution object
 type TestSuiteExecutionReconciler struct {
 	client.Client
-	Scheme       *runtime.Scheme
-	ServiceName  string
-	ServicePort  int
-	EventEmitter *event.Emitter
+	Scheme      *runtime.Scheme
+	ServiceName string
+	ServicePort int
 }
 
 //+kubebuilder:rbac:groups=tests.testkube.io,resources=testsuiteexecutions,verbs=get;list;watch;create;update;patch;delete
@@ -92,19 +88,9 @@ func (r *TestSuiteExecutionReconciler) Reconcile(ctx context.Context, req ctrl.R
 		return ctrl.Result{}, nil
 	}
 
-	r.EventEmitter.Notify(events.Event{
-		Type_:              events.EventStartTest,
-		TestSuiteExecution: &testSuiteExecution,
-	})
 	if _, err = r.executeTestSuite(testSuiteExecution.Spec.TestSuite.Name, testSuiteExecution.Name, testSuiteExecution.Namespace, jsonData); err != nil {
 		return ctrl.Result{}, err
 	}
-	// this will not be called as the execution is not a CRD
-	r.EventEmitter.Notify(events.Event{
-		Id:                 uuid.NewString(),
-		Type_:              events.EventTestSuiteExecutionUpdated,
-		TestSuiteExecution: &testSuiteExecution,
-	})
 
 	return ctrl.Result{}, nil
 }

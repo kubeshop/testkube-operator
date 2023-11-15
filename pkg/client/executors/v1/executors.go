@@ -50,9 +50,6 @@ func (s ExecutorsClient) List(selector string) (*executorv1.ExecutorList, error)
 	}
 
 	err = s.Client.List(context.Background(), list, options)
-	if err != nil {
-		return nil, err
-	}
 	return list, err
 }
 

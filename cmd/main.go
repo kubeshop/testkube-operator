@@ -22,7 +22,6 @@ import (
 	"os"
 
 	testtriggersv1 "github.com/kubeshop/testkube-operator/api/testtriggers/v1"
-	"github.com/pkg/errors"
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
@@ -63,8 +62,6 @@ import (
 	testsuiteexecutioncontrollers "github.com/kubeshop/testkube-operator/internal/controller/testsuiteexecution"
 	testtriggerscontrollers "github.com/kubeshop/testkube-operator/internal/controller/testtriggers"
 	"github.com/kubeshop/testkube-operator/pkg/cronjob"
-	"github.com/kubeshop/testkube-operator/pkg/event"
-	"github.com/kubeshop/testkube-operator/pkg/event/bus"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -132,6 +129,7 @@ func main() {
 	}
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
+
 		Scheme:                 scheme,
 		Metrics:                metricsserver.Options{BindAddress: metricsAddr},
 		HealthProbeBindAddress: probeAddr,
@@ -306,21 +304,4 @@ func setLogger() {
 	opts.ZapOpts = append(opts.ZapOpts, zapUber.WrapCore(updateZapcore))
 
 	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
-}
-
-func setUpNATS(clusterName string) (*event.Emitter, error) {
-	uri := os.Getenv("NATS_URI")
-	if uri == "" {
-		return nil, errors.New("NATS_URI environment variable is empty")
-	}
-	nc, err := bus.NewNATSConnection(uri)
-	if err != nil {
-		return nil, errors.Wrap(err, "could not set up nats connection")
-	}
-	eventBus := bus.NewNATSBus(nc)
-
-	// TODO check if envs are needed, otherwise remove them
-	eventsEmitter := event.NewEmitter(eventBus, clusterName, map[string]string{})
-
-	return eventsEmitter, nil
 }
