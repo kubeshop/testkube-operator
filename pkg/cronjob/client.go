@@ -30,11 +30,14 @@ type Client struct {
 	servicePort     int
 	cronJobTemplate string
 	registry        string
+	argoCDSync      bool
 }
 
 type CronJobOptions struct {
 	Schedule                  string
 	Resource                  string
+	Version                   string
+	ResourceURI               string
 	Data                      string
 	Labels                    map[string]string
 	CronJobTemplate           string
@@ -49,21 +52,27 @@ type templateParameters struct {
 	ServicePort               int
 	Schedule                  string
 	Resource                  string
+	Version                   string
+	ResourceURI               string
 	CronJobTemplate           string
 	CronJobTemplateExtensions string
 	Data                      string
 	Labels                    map[string]string
 	Registry                  string
+	ArgoCDSync                bool
+	UID                       string
 }
 
 // NewClient is a method to create new cron job client
-func NewClient(cli client.Client, serviceName string, servicePort int, cronJobTemplate, registry string) *Client {
+func NewClient(cli client.Client, serviceName string, servicePort int, cronJobTemplate, registry string,
+	argoCDSync bool) *Client {
 	return &Client{
 		Client:          cli,
 		serviceName:     serviceName,
 		servicePort:     servicePort,
 		cronJobTemplate: cronJobTemplate,
 		registry:        registry,
+		argoCDSync:      argoCDSync,
 	}
 }
 
@@ -78,7 +87,7 @@ func (c *Client) Get(ctx context.Context, name, namespace string) (*batchv1.Cron
 }
 
 // Create is a method to create a cron job
-func (c *Client) Create(ctx context.Context, id, name, namespace string, options CronJobOptions) error {
+func (c *Client) Create(ctx context.Context, id, name, namespace, uid string, options CronJobOptions) error {
 	template := c.cronJobTemplate
 	if options.CronJobTemplate != "" {
 		template = options.CronJobTemplate
@@ -92,11 +101,15 @@ func (c *Client) Create(ctx context.Context, id, name, namespace string, options
 		ServicePort:               c.servicePort,
 		Schedule:                  options.Schedule,
 		Resource:                  options.Resource,
+		Version:                   options.Version,
+		ResourceURI:               options.ResourceURI,
 		CronJobTemplate:           template,
 		CronJobTemplateExtensions: options.CronJobTemplateExtensions,
 		Data:                      options.Data,
 		Labels:                    options.Labels,
 		Registry:                  c.registry,
+		ArgoCDSync:                c.argoCDSync,
+		UID:                       uid,
 	}
 
 	cronJobSpec, err := NewCronJobSpec(parameters)
@@ -112,7 +125,7 @@ func (c *Client) Create(ctx context.Context, id, name, namespace string, options
 }
 
 // Update is a method to update an existing cron job
-func (c *Client) Update(ctx context.Context, cronJob *batchv1.CronJob, id, name, namespace string, options CronJobOptions) error {
+func (c *Client) Update(ctx context.Context, cronJob *batchv1.CronJob, id, name, namespace, uid string, options CronJobOptions) error {
 	template := c.cronJobTemplate
 	if options.CronJobTemplate != "" {
 		template = options.CronJobTemplate
@@ -126,11 +139,15 @@ func (c *Client) Update(ctx context.Context, cronJob *batchv1.CronJob, id, name,
 		ServicePort:               c.servicePort,
 		Schedule:                  options.Schedule,
 		Resource:                  options.Resource,
+		Version:                   options.Version,
+		ResourceURI:               options.ResourceURI,
 		CronJobTemplate:           template,
 		CronJobTemplateExtensions: options.CronJobTemplateExtensions,
 		Data:                      options.Data,
 		Labels:                    options.Labels,
 		Registry:                  c.registry,
+		ArgoCDSync:                c.argoCDSync,
+		UID:                       uid,
 	}
 
 	cronJobSpec, err := NewCronJobSpec(parameters)
