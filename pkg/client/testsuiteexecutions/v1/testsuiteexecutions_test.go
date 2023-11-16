@@ -58,7 +58,7 @@ func TestTestSuiteExecutions(t *testing.T) {
 
 		kClient := clientBuilder.Build()
 		testNamespace := "test-ns"
-		emitter := event.NewEmitter(bus.NewEventBusMock(), "test-cluster", map[string]string{})
+		emitter := event.NewEmitter(bus.NewEventBusMock(), "test-cluster")
 		tseClient = NewClient(kClient, testNamespace, emitter)
 		assert.NotEmpty(t, tseClient)
 		assert.Equal(t, testNamespace, tseClient.namespace)

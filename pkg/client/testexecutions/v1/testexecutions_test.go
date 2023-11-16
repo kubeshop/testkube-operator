@@ -58,7 +58,7 @@ func TestTestExecutions(t *testing.T) {
 
 		kClient := clientBuilder.Build()
 		testNamespace := "test-ns"
-		emitter := event.NewEmitter(bus.NewEventBusMock(), "test-cluster", map[string]string{})
+		emitter := event.NewEmitter(bus.NewEventBusMock(), "test-cluster")
 		teClient = NewClient(kClient, testNamespace, emitter)
 		assert.NotEmpty(t, teClient)
 		assert.Equal(t, testNamespace, teClient.namespace)

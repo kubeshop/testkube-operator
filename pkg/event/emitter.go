@@ -19,14 +19,13 @@ const (
 )
 
 // NewEmitter returns new emitter instance
-func NewEmitter(eventBus bus.Bus, clusterName string, envs map[string]string) *Emitter {
+func NewEmitter(eventBus bus.Bus, clusterName string) *Emitter {
 	return &Emitter{
 		Results:     make(chan events.EventResult, eventsBuffer),
 		Loader:      NewLoader(),
 		Bus:         eventBus,
 		Listeners:   make(common.Listeners, 0),
 		ClusterName: clusterName,
-		Envs:        envs,
 	}
 }
 
@@ -38,7 +37,6 @@ type Emitter struct {
 	mutex       sync.Mutex
 	Bus         bus.Bus
 	ClusterName string
-	Envs        map[string]string
 }
 
 // Register adds new listener
