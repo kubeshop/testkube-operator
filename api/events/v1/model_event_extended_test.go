@@ -120,7 +120,7 @@ func TestEvent_Topic(t *testing.T) {
 
 	t.Run("should return events topic if not resource set", func(t *testing.T) {
 		evt := Event{Type_: EventStartTest, Resource: nil}
-		assert.Equal(t, "events.all", evt.Topic())
+		assert.Equal(t, "events", evt.Topic())
 	})
 
 	t.Run("should return event topic with resource name and id if set", func(t *testing.T) {

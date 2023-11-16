@@ -21,119 +21,151 @@ func NewEvent(t *EventType, resource *EventResource, id string) Event {
 	}
 }
 
-// Test Executions
 func NewEventCreatedTestExecution(execution *testexecutionv1.TestExecution) Event {
 	return Event{
 		Id:            uuid.NewString(),
 		Type_:         EventTestExecutionCreated,
-		TestExecution: execution,
-	}
-}
-func NewEventUpdatedTestExecution(execution *testexecutionv1.TestExecution) Event {
-	return Event{
-		Id:            uuid.NewString(),
-		Type_:         EventTestExecutionUpdated,
-		TestExecution: execution,
-	}
-}
-func NewEventDeletedTestExecution(execution *testexecutionv1.TestExecution) Event {
-	return Event{
-		Id:            uuid.NewString(),
-		Type_:         EventTestExecutionDeleted,
+		ResourceId:    execution.Name,
+		Resource:      EventResourceTestexecution,
 		TestExecution: execution,
 	}
 }
 
-// Tests
+func NewEventUpdatedTestExecution(execution *testexecutionv1.TestExecution) Event {
+	return Event{
+		Id:            uuid.NewString(),
+		Type_:         EventTestExecutionUpdated,
+		ResourceId:    execution.Name,
+		Resource:      EventResourceTestexecution,
+		TestExecution: execution,
+	}
+}
+
+func NewEventDeletedTestExecution(execution *testexecutionv1.TestExecution) Event {
+	return Event{
+		Id:            uuid.NewString(),
+		Type_:         EventTestExecutionDeleted,
+		ResourceId:    execution.Name,
+		Resource:      EventResourceTestexecution,
+		TestExecution: execution,
+	}
+}
+
 func NewEventCreatedTest(test *testv3.Test) Event {
 	return Event{
 		Id:         uuid.NewString(),
 		Type_:      EventTestCreated,
 		ResourceId: test.Name,
+		Resource:   EventResourceTest,
 	}
 }
+
 func NewEventUpdatedTest(test *testv3.Test) Event {
 	return Event{
 		Id:         uuid.NewString(),
 		Type_:      EventTestUpdated,
 		ResourceId: test.Name,
+		Resource:   EventResourceTest,
 	}
 }
+
 func NewEventDeletedTest(test *testv3.Test) Event {
 	return Event{
 		Id:         uuid.NewString(),
 		Type_:      EventTestDeleted,
 		ResourceId: test.Name,
-	}
-}
-func NewEventDeletedAllTests() Event {
-	return Event{
-		Id:    uuid.NewString(),
-		Type_: EventTestsDeletedAll,
-	}
-}
-func NewEventDeletedFilteredTests() Event {
-	return Event{
-		Id:    uuid.NewString(),
-		Type_: EventTestsDeletedFiltered,
+		Resource:   EventResourceTest,
 	}
 }
 
-// Test Suite Executions
+func NewEventDeletedAllTests() Event {
+	return Event{
+		Id:         uuid.NewString(),
+		Type_:      EventTestsDeletedAll,
+		ResourceId: "all",
+		Resource:   EventResourceTest,
+	}
+}
+
+func NewEventDeletedFilteredTests() Event {
+	return Event{
+		Id:         uuid.NewString(),
+		Type_:      EventTestsDeletedFiltered,
+		ResourceId: "filtered",
+		Resource:   EventResourceTest,
+	}
+}
+
 func NewEventCreatedTestSuiteExecution(execution *testsuiteexecutionv1.TestSuiteExecution) Event {
 	return Event{
 		Id:                 uuid.NewString(),
 		Type_:              EventTestSuiteExecutionCreated,
 		TestSuiteExecution: execution,
+		ResourceId:         execution.Name,
+		Resource:           EventResourceTestsuiteexecution,
 	}
 }
+
 func NewEventUpdatedTestSuiteExecution(execution *testsuiteexecutionv1.TestSuiteExecution) Event {
 	return Event{
 		Id:                 uuid.NewString(),
 		Type_:              EventTestSuiteExecutionUpdated,
 		TestSuiteExecution: execution,
+		ResourceId:         execution.Name,
+		Resource:           EventResourceTestsuiteexecution,
 	}
 }
+
 func NewEventDeletedTestSuiteExecution(execution *testsuiteexecutionv1.TestSuiteExecution) Event {
 	return Event{
 		Id:                 uuid.NewString(),
 		Type_:              EventTestSuiteExecutionDeleted,
 		TestSuiteExecution: execution,
+		ResourceId:         execution.Name,
+		Resource:           EventResourceTestsuiteexecution,
 	}
 }
 
-// Test Suites
 func NewEventCreatedTestSuite(testsuite *testsuitev3.TestSuite) Event {
 	return Event{
 		Id:         uuid.NewString(),
 		Type_:      EventTestCreated,
 		ResourceId: testsuite.Name,
+		Resource:   EventResourceTestsuite,
 	}
 }
+
 func NewEventUpdatedTestSuite(testsuite *testsuitev3.TestSuite) Event {
 	return Event{
 		Id:         uuid.NewString(),
 		Type_:      EventTestUpdated,
 		ResourceId: testsuite.Name,
+		Resource:   EventResourceTestsuite,
 	}
 }
+
 func NewEventDeletedTestSuite(testsuite *testsuitev3.TestSuite) Event {
 	return Event{
 		Id:         uuid.NewString(),
 		Type_:      EventTestDeleted,
 		ResourceId: testsuite.Name,
+		Resource:   EventResourceTestsuite,
 	}
 }
+
 func NewEventDeletedAllTestSuites() Event {
 	return Event{
-		Id:    uuid.NewString(),
-		Type_: EventTestSuitesDeletedAll,
+		Id:       uuid.NewString(),
+		Type_:    EventTestSuitesDeletedAll,
+		Resource: EventResourceTestsuite,
 	}
 }
+
 func NewEventDeletedFilteredTestSuites() Event {
 	return Event{
-		Id:    uuid.NewString(),
-		Type_: EventTestSuitesDeletedFiltered,
+		Id:       uuid.NewString(),
+		Type_:    EventTestSuitesDeletedFiltered,
+		Resource: EventResourceTestsuite,
 	}
 }
 
@@ -303,7 +335,7 @@ func (e Event) Valid(selector string, types []EventType) (valid bool) {
 // or fallback to global "events" topic
 func (e Event) Topic() string {
 	if e.Resource == nil {
-		return "events.all"
+		return "events"
 	}
 
 	if e.ResourceId == "" {
