@@ -138,7 +138,7 @@ func NewSpec(id, namespace, label string, labels, stringData map[string]string) 
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      id,
 			Namespace: namespace,
-			Labels:    map[string]string{"testkube": label, "visibility": "testkube"},
+			Labels:    map[string]string{"testkube": label, "createdBy": "testkube"},
 		},
 		Type:       v1.SecretTypeOpaque,
 		StringData: stringData,
