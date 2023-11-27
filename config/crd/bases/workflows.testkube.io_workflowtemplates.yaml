@@ -493,11 +493,11 @@ spec:
                         count:
                           format: int32
                           type: integer
-                        strategy:
+                        success:
+                          default: any
                           enum:
-                          - on-success
-                          - on-failure
-                          - always
+                          - any
+                          - all
                           type: string
                       type: object
                     run:
