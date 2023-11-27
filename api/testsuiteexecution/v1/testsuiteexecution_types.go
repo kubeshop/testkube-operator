@@ -194,6 +194,29 @@ const (
 	ArgsModeTypeOverride ArgsModeType = "override"
 )
 
+// pod request body
+type PodRequest struct {
+	Resources *PodResourcesRequest `json:"resources,omitempty"`
+	// pod template extensions
+	PodTemplate string `json:"podTemplate,omitempty"`
+	// name of the template resource
+	PodTemplateReference string `json:"podTemplateReference,omitempty"`
+}
+
+// pod resources request specification
+type PodResourcesRequest struct {
+	Requests *ResourceRequest `json:"requests,omitempty"`
+	Limits   *ResourceRequest `json:"limits,omitempty"`
+}
+
+// resource request specification
+type ResourceRequest struct {
+	// requested cpu units
+	Cpu string `json:"cpu,omitempty"`
+	// requested memory units
+	Memory string `json:"memory,omitempty"`
+}
+
 // test execution
 type Execution struct {
 	// execution id
@@ -255,7 +278,8 @@ type Execution struct {
 	// shell used in container executor
 	ContainerShell string `json:"containerShell,omitempty"`
 	// test execution name started the test execution
-	TestExecutionName string `json:"testExecutionName,omitempty"`
+	TestExecutionName string      `json:"testExecutionName,omitempty"`
+	SlavePodRequest   *PodRequest `json:"slavePodRequest,omitempty"`
 }
 
 // artifact request body with test artifacts

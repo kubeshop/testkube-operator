@@ -129,8 +129,9 @@ type ExecutionRequest struct {
 	// config map references
 	EnvConfigMaps []EnvReference `json:"envConfigMaps,omitempty"`
 	// secret references
-	EnvSecrets     []EnvReference  `json:"envSecrets,omitempty"`
-	RunningContext *RunningContext `json:"runningContext,omitempty"`
+	EnvSecrets      []EnvReference  `json:"envSecrets,omitempty"`
+	RunningContext  *RunningContext `json:"runningContext,omitempty"`
+	SlavePodRequest *PodRequest     `json:"slavePodRequest,omitempty"`
 }
 
 // ArgsModeType defines args mode type
@@ -169,6 +170,29 @@ type TestExecutionSpec struct {
 
 	Test             *ObjectRef        `json:"test"`
 	ExecutionRequest *ExecutionRequest `json:"executionRequest,omitempty"`
+}
+
+// pod request body
+type PodRequest struct {
+	Resources *PodResourcesRequest `json:"resources,omitempty"`
+	// pod template extensions
+	PodTemplate string `json:"podTemplate,omitempty"`
+	// name of the template resource
+	PodTemplateReference string `json:"podTemplateReference,omitempty"`
+}
+
+// pod resources request specification
+type PodResourcesRequest struct {
+	Requests *ResourceRequest `json:"requests,omitempty"`
+	Limits   *ResourceRequest `json:"limits,omitempty"`
+}
+
+// resource request specification
+type ResourceRequest struct {
+	// requested cpu units
+	Cpu string `json:"cpu,omitempty"`
+	// requested memory units
+	Memory string `json:"memory,omitempty"`
 }
 
 // test execution
@@ -230,7 +254,8 @@ type Execution struct {
 	ExecutePostRunScriptBeforeScraping bool            `json:"executePostRunScriptBeforeScraping,omitempty"`
 	RunningContext                     *RunningContext `json:"runningContext,omitempty"`
 	// shell used in container executor
-	ContainerShell string `json:"containerShell,omitempty"`
+	ContainerShell  string      `json:"containerShell,omitempty"`
+	SlavePodRequest *PodRequest `json:"slavePodRequest,omitempty"`
 }
 
 // TestContent defines test content
