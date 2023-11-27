@@ -12,6 +12,8 @@ resources:
 - bases/tests.testkube.io_testexecutions.yaml
 - bases/tests.testkube.io_testsuiteexecutions.yaml
 - bases/tests.testkube.io_templates.yaml
+- bases/tests.testkube.io_workflows.yaml
+- bases/tests.testkube.io_workflowtemplates.yaml
 #+kubebuilder:scaffold:crdkustomizeresource
 
 patchesStrategicMerge:
