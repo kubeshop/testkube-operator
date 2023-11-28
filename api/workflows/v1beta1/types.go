@@ -32,11 +32,11 @@ type Parameter struct {
 	// +kubebuilder:default=false
 	Required bool `json:"required,omitempty"`
 	// +kubebuilder:validation:Schemaless
-	Const *json.RawMessage `json:"const,omitempty"`
+	Const json.RawMessage `json:"const,omitempty"`
 	// +kubebuilder:validation:Schemaless
-	Default *json.RawMessage `json:"default,omitempty"`
+	Default json.RawMessage `json:"default,omitempty"`
 	// +kubebuilder:validation:Schemaless
-	Enum *[]json.RawMessage `json:"enum,omitempty"`
+	Enum []json.RawMessage `json:"enum,omitempty"`
 
 	// String modifiers
 
@@ -146,6 +146,20 @@ type StepJunit struct {
 	Paths    []string `json:"paths"`
 }
 
+type StepExecuteWorkflow struct {
+	Name string `json:"name,omitempty"`
+}
+
+type StepExecuteDuration struct {
+	// +kubebuilder:validation:Pattern=^((0|[1-9][0-9]+)h)?((0|[1-9][0-9]+)m)?((0|[1-9][0-9]+)s)?((0|[1-9][0-9]+)ms)?$
+	Minimum string `json:"minimum,omitempty"`
+}
+
+type StepExecute struct {
+	Duration  StepExecuteDuration   `json:"duration,omitempty"`
+	Workflows []StepExecuteWorkflow `json:"workflows,omitempty"`
+}
+
 type RetryConfig struct {
 	Count int32 `json:"count,omitempty"`
 	// +kubebuilder:default=any
@@ -175,11 +189,13 @@ type Step struct {
 	Retry         *RetryConfig `json:"retry,omitempty"`
 	IgnoreFailure bool         `json:"ignoreFailure,omitempty"`
 	Timeout       string       `json:"timeout,omitempty"`
-	Delay         int32        `json:"delay,omitempty"`
+	// +kubebuilder:validation:Pattern=^((0|[1-9][0-9]+)h)?((0|[1-9][0-9]+)m)?((0|[1-9][0-9]+)s)?((0|[1-9][0-9]+)ms)?$
+	Delay string `json:"delay,omitempty"`
 
 	Spawn     *map[string]StepSpawn `json:"spawn,omitempty"`
 	Run       *StepRun              `json:"run,omitempty"`
 	Cache     *StepCache            `json:"cache,omitempty"`
 	ReadCache *StepReadCache        `json:"readCache,omitempty"`
 	Junit     *StepJunit            `json:"junit,omitempty"`
+	Execute   *StepExecute          `json:"execute,omitempty"`
 }

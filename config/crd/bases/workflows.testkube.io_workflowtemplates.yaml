@@ -462,8 +462,24 @@ spec:
                       - name
                       type: object
                     delay:
-                      format: int32
-                      type: integer
+                      pattern: ^((0|[1-9][0-9]+)h)?((0|[1-9][0-9]+)m)?((0|[1-9][0-9]+)s)?((0|[1-9][0-9]+)ms)?$
+                      type: string
+                    execute:
+                      properties:
+                        duration:
+                          properties:
+                            minimum:
+                              pattern: ^((0|[1-9][0-9]+)h)?((0|[1-9][0-9]+)m)?((0|[1-9][0-9]+)s)?((0|[1-9][0-9]+)ms)?$
+                              type: string
+                          type: object
+                        workflows:
+                          items:
+                            properties:
+                              name:
+                                type: string
+                            type: object
+                          type: array
+                      type: object
                     ignoreFailure:
                       type: boolean
                     junit:

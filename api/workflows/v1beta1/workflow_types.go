@@ -27,7 +27,7 @@ import (
 type WorkflowTemplateRef struct {
 	Name string `json:"name"`
 	// +kubebuilder:validation:Schemaless
-	Config map[string]*json.RawMessage `json:"config,omitempty"`
+	Config map[string]json.RawMessage `json:"config,omitempty"`
 }
 
 // WorkflowSpec defines the desired state of Workflow
