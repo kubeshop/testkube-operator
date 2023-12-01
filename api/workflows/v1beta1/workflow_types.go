@@ -27,6 +27,7 @@ import (
 type WorkflowTemplateRef struct {
 	Name string `json:"name"`
 	// +kubebuilder:validation:Schemaless
+	// +kubebuilder:validation:Type=object
 	Config map[string]json.RawMessage `json:"config,omitempty"`
 }
 

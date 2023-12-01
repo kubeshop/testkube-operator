@@ -12,11 +12,10 @@ resources:
 - bases/tests.testkube.io_testexecutions.yaml
 - bases/tests.testkube.io_testsuiteexecutions.yaml
 - bases/tests.testkube.io_templates.yaml
-- bases/tests.testkube.io_workflows.yaml
-- bases/tests.testkube.io_workflowtemplates.yaml
+- bases/workflows.testkube.io_workflows.yaml
+- bases/workflows.testkube.io_workflowtemplates.yaml
 #+kubebuilder:scaffold:crdkustomizeresource
 
-patchesStrategicMerge:
 # [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix.
 # patches here are for enabling the conversion webhook for each CRD
 #- patches/webhook_in_scripts.yaml
@@ -24,7 +23,6 @@ patchesStrategicMerge:
 #- patches/webhook_in_tests.yaml
 #- patches/webhook_in_testsuites.yaml
 #- patches/webhook_in_webhooks.yaml
-- patches/webhook_in_testtriggers.yaml
 #- patches/webhook_in_testsources.yaml
 #- patches/webhook_in_testexecutions.yaml
 #- patches/webhook_in_testsuiteexecutions.yaml
@@ -34,3 +32,7 @@ patchesStrategicMerge:
 # the following config is for teaching kustomize how to do kustomization for CRDs.
 configurations:
 - kustomizeconfig.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+patches:
+- path: patches/webhook_in_testtriggers.yaml

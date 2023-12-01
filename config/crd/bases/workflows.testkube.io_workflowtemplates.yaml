@@ -52,11 +52,28 @@ spec:
                   description: Parameter is similar to JSON Schema - includes `required`
                     property directly like OpenAPI parameters
                   properties:
-                    const: {}
-                    default: {}
+                    const:
+                      description: RawMessage is a raw encoded JSON value. It implements
+                        Marshaler and Unmarshaler and can be used to delay JSON decoding
+                        or precompute a JSON encoding.
+                      format: byte
+                      type: string
+                    default:
+                      description: RawMessage is a raw encoded JSON value. It implements
+                        Marshaler and Unmarshaler and can be used to delay JSON decoding
+                        or precompute a JSON encoding.
+                      format: byte
+                      type: string
                     description:
                       type: string
-                    enum: {}
+                    enum:
+                      items:
+                        description: RawMessage is a raw encoded JSON value. It implements
+                          Marshaler and Unmarshaler and can be used to delay JSON
+                          decoding or precompute a JSON encoding.
+                        format: byte
+                        type: string
+                      type: array
                     exclusiveMaximum:
                       format: int64
                       type: integer
@@ -96,6 +113,7 @@ spec:
                       - boolean
                       type: string
                   type: object
+                  x-kubernetes-preserve-unknown-fields: true
                 description: 'TODO: Consider just having an actual json schema (with
                   forced type: object)'
                 type: object

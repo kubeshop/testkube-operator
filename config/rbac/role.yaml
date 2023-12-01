@@ -263,3 +263,55 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - workflows.testkube.io
+  resources:
+  - workflows
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - workflows.testkube.io
+  resources:
+  - workflows/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - workflows.testkube.io
+  resources:
+  - workflows/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - workflows.testkube.io
+  resources:
+  - workflowtemplates
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - workflows.testkube.io
+  resources:
+  - workflowtemplates/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - workflows.testkube.io
+  resources:
+  - workflowtemplates/status
+  verbs:
+  - get
+  - patch
+  - update

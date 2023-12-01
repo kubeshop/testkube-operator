@@ -61,6 +61,7 @@ import (
 	testsuitecontrollers "github.com/kubeshop/testkube-operator/internal/controller/testsuite"
 	testsuiteexecutioncontrollers "github.com/kubeshop/testkube-operator/internal/controller/testsuiteexecution"
 	testtriggerscontrollers "github.com/kubeshop/testkube-operator/internal/controller/testtriggers"
+	workflowscontrollers "github.com/kubeshop/testkube-operator/internal/controller/workflows"
 	"github.com/kubeshop/testkube-operator/pkg/cronjob"
 	//+kubebuilder:scaffold:imports
 )
@@ -218,6 +219,21 @@ func main() {
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Template")
+		os.Exit(1)
+	}
+
+	if err = (&workflowscontrollers.WorkflowReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "Workflow")
+		os.Exit(1)
+	}
+	if err = (&workflowscontrollers.WorkflowTemplateReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "WorkflowTemplate")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

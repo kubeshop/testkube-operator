@@ -24,19 +24,23 @@ const (
 	RetrySuccessAll RetrySuccess = "all"
 )
 
+// +kubebuilder:validation:Type=string
+type Any json.RawMessage
+
+// TODO: Consider `any` somehow for `const`, `default` and `enum`
+
 // Parameter is similar to JSON Schema - includes `required` property directly like OpenAPI parameters
+// +kubebuilder:pruning:PreserveUnknownFields
+// +kubebuilder:validation:XPreserveUnknownFields
 type Parameter struct {
 	Description string `json:"description,omitempty"`
 	// +kubebuilder:default=string
 	Type ParameterType `json:"type,omitempty"`
 	// +kubebuilder:default=false
-	Required bool `json:"required,omitempty"`
-	// +kubebuilder:validation:Schemaless
-	Const json.RawMessage `json:"const,omitempty"`
-	// +kubebuilder:validation:Schemaless
-	Default json.RawMessage `json:"default,omitempty"`
-	// +kubebuilder:validation:Schemaless
-	Enum []json.RawMessage `json:"enum,omitempty"`
+	Required bool  `json:"required,omitempty"`
+	Const    Any   `json:"const,omitempty"`
+	Default  Any   `json:"default,omitempty"`
+	Enum     []Any `json:"enum,omitempty"`
 
 	// String modifiers
 
