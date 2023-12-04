@@ -72,17 +72,19 @@ docker-build-local: build-local-linux
 kind-load-local: docker-build-local
 	kind load docker-image controller:latest --name testkube
 
-run: manifests generate fmt vet ## Run a controller from your host.
-	go run ./cmd/main.go
-
-run-no-webhook: manifests generate fmt vet ## Run a controller from your host.
-	ENABLE_WEBHOOKS=false go run ./cmd/main.go
-
 docker-build: test ## Build docker image with the manager.
 	docker build -t ${IMG} .
 
 docker-push: ## Push docker image with the manager.
 	docker push ${IMG}
+
+##@ Build
+
+run: manifests generate fmt vet ## Run a controller from your host.
+	go run ./cmd/main.go
+
+run-no-webhook: manifests generate fmt vet ## Run a controller from your host.
+	ENABLE_WEBHOOKS=false go run ./cmd/main.go
 
 ##@ Deployment
 
@@ -99,10 +101,11 @@ deploy: manifests kustomize ## Deploy controller to the K8s cluster specified in
 undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/config.
 	$(KUSTOMIZE) build config/default | kubectl delete -f -
 
+##@ Setup
 
 CONTROLLER_GEN = $(shell pwd)/bin/controller-gen
 controller-gen: ## Download controller-gen locally if necessary.
-	$(call go-get-tool,$(CONTROLLER_GEN),sigs.k8s.io/controller-tools/cmd/controller-gen@v0.4.1)
+	$(call go-get-tool,$(CONTROLLER_GEN),sigs.k8s.io/controller-tools/cmd/controller-gen@v0.8.0)
 
 KUSTOMIZE = $(shell pwd)/bin/kustomize
 kustomize: ## Download kustomize locally if necessary.
