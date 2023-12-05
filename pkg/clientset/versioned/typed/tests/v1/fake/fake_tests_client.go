@@ -30,6 +30,10 @@ func (c *FakeTestsV1) TestTriggers(namespace string) v1.TestTriggerInterface {
 	return &FakeTestTriggers{c, namespace}
 }
 
+func (c *FakeTestsV1) TestSource(namespace string) v1.TestSourceInterface {
+	return &FakeTestSource{c, namespace}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeTestsV1) RESTClient() rest.Interface {

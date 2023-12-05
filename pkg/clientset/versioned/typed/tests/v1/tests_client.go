@@ -17,16 +17,19 @@ limitations under the License.
 package v1
 
 import (
-	"github.com/kubeshop/testkube-operator/pkg/clientset/versioned/scheme"
 	"net/http"
 
+	"github.com/kubeshop/testkube-operator/pkg/clientset/versioned/scheme"
+
 	testtriggersv1 "github.com/kubeshop/testkube-operator/api/testtriggers/v1"
+
 	"k8s.io/client-go/rest"
 )
 
 type TestsV1Interface interface {
 	RESTClient() rest.Interface
 	TestTriggersGetter
+	TestSourceGetter
 }
 
 // TestsV1Client is used to interact with features provided by the tests.testkube.io group.
@@ -36,6 +39,10 @@ type TestsV1Client struct {
 
 func (c *TestsV1Client) TestTriggers(namespace string) TestTriggerInterface {
 	return newTestTriggers(c, namespace)
+}
+
+func (c *TestsV1Client) TestSource(namespace string) TestSourceInterface {
+	return newTestSource(c, namespace)
 }
 
 // NewForConfig creates a new TestsV1Client for the given config.

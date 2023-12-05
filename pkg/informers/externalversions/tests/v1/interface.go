@@ -22,6 +22,8 @@ import "github.com/kubeshop/testkube-operator/pkg/informers/externalversions/int
 type Interface interface {
 	// TestTriggers returns a TestTriggerInformer.
 	TestTriggers() TestTriggerInformer
+	// TestSource returns a TestSourceInformer.
+	TestSource() TestSourceInformer
 }
 
 type version struct {
@@ -42,4 +44,9 @@ func New(
 // TestTriggers returns a TestTriggerInformer.
 func (v *version) TestTriggers() TestTriggerInformer {
 	return &testTriggerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// TestSource returns a TestTriggerInformer.
+func (v *version) TestSource() TestSourceInformer {
+	return &testSourceInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
