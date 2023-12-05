@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"net/http"
 
+	executorv1 "github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/executor/v1"
 	v1 "github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/tests/v1"
 	v2 "github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/tests/v2"
 	v3 "github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/tests/v3"
@@ -34,14 +35,16 @@ type Interface interface {
 	TestsV1() v1.TestsV1Interface
 	TestsV2() v2.TestsV2Interface
 	TestsV3() v3.TestsV3Interface
+	ExecutorV1() executorv1.ExecutorV1Interface
 }
 
 // Clientset contains the clients for groups. Each group has exactly one version included in a Clientset.
 type Clientset struct {
 	*discovery.DiscoveryClient
-	testsV1 *v1.TestsV1Client
-	testsV2 *v2.TestsV2Client
-	testsV3 *v3.TestsV3Client
+	testsV1    *v1.TestsV1Client
+	testsV2    *v2.TestsV2Client
+	testsV3    *v3.TestsV3Client
+	executorV1 *executorv1.ExecutorV1Client
 }
 
 // TestsV1 retrieves the TestsV1Client
@@ -57,6 +60,11 @@ func (c *Clientset) TestsV2() v2.TestsV2Interface {
 // TestsV3 retrieves the TestsV3Client
 func (c *Clientset) TestsV3() v3.TestsV3Interface {
 	return c.testsV3
+}
+
+// ExecutorV1 retrieves the ExecutorV1Client
+func (c *Clientset) ExecutorV1() executorv1.ExecutorV1Interface {
+	return c.executorV1
 }
 
 // Discovery retrieves the DiscoveryClient
@@ -118,6 +126,11 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 		return nil, err
 	}
 
+	cs.executorV1, err = executorv1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	if err != nil {
+		return nil, err
+	}
+
 	cs.DiscoveryClient, err = discovery.NewDiscoveryClientForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
 		return nil, err
@@ -141,6 +154,7 @@ func New(c rest.Interface) *Clientset {
 	cs.testsV1 = v1.New(c)
 	cs.testsV2 = v2.New(c)
 	cs.testsV3 = v3.New(c)
+	cs.executorV1 = executorv1.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)
 	return &cs
