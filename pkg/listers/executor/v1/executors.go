@@ -93,7 +93,7 @@ func (s executorNamespaceLister) Get(name string) (*executorv1.Executor, error) 
 	}
 	if !exists {
 		return nil, errors.NewNotFound(
-			schema.GroupResource{Group: executorv1.GroupVersion.Group, Resource: executorv1.Resource},
+			schema.GroupResource{Group: executorv1.GroupVersion.Group, Resource: executorv1.ExecutorResource},
 			name,
 		)
 	}

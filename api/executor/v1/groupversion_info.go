@@ -31,14 +31,20 @@ var (
 	// Version represents the Resource version
 	Version = "v1"
 
-	// Resource corresponds to the CRD Kind
-	Resource = "Executor"
+	// ExecutorResource corresponds to the CRD Kind
+	ExecutorResource = "Executor"
+
+	// WebhookResource corresponds to the CRD Kind
+	WebhookResource = "Webhook"
 
 	// GroupVersion is group version used to register these objects
 	GroupVersion = schema.GroupVersion{Group: Group, Version: Version}
 
-	// GroupVersionResource is group, version and resource used to register these objects
-	GroupVersionResource = schema.GroupVersionResource{Group: Group, Version: Version, Resource: Resource}
+	// ExecutorGroupVersionResource is group, version and resource used to register these objects
+	ExecutorGroupVersionResource = schema.GroupVersionResource{Group: Group, Version: Version, Resource: ExecutorResource}
+
+	// WebhookGroupVersionResource is group, version and resource used to register these objects
+	WebhookGroupVersionResource = schema.GroupVersionResource{Group: Group, Version: Version, Resource: WebhookResource}
 
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme
 	SchemeBuilder = &scheme.Builder{GroupVersion: GroupVersion}
