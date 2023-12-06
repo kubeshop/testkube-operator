@@ -17,12 +17,14 @@ limitations under the License.
 package externalversions
 
 import (
-	"github.com/kubeshop/testkube-operator/pkg/clientset/versioned"
-	"github.com/kubeshop/testkube-operator/pkg/informers/externalversions/internalinterfaces"
-	"github.com/kubeshop/testkube-operator/pkg/informers/externalversions/tests"
 	reflect "reflect"
 	sync "sync"
 	time "time"
+
+	"github.com/kubeshop/testkube-operator/pkg/clientset/versioned"
+	"github.com/kubeshop/testkube-operator/pkg/informers/externalversions/executor"
+	"github.com/kubeshop/testkube-operator/pkg/informers/externalversions/internalinterfaces"
+	"github.com/kubeshop/testkube-operator/pkg/informers/externalversions/tests"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -169,8 +171,13 @@ type SharedInformerFactory interface {
 	WaitForCacheSync(stopCh <-chan struct{}) map[reflect.Type]bool
 
 	Tests() tests.Interface
+	Executor() executor.Interface
 }
 
 func (f *sharedInformerFactory) Tests() tests.Interface {
 	return tests.New(f, f.namespace, f.tweakListOptions)
+}
+
+func (f *sharedInformerFactory) Executor() executor.Interface {
+	return executor.New(f, f.namespace, f.tweakListOptions)
 }

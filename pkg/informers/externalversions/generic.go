@@ -17,9 +17,12 @@ limitations under the License.
 package externalversions
 
 import (
+	executorv1 "github.com/kubeshop/testkube-operator/api/executor/v1"
 	testsv3 "github.com/kubeshop/testkube-operator/api/tests/v3"
+	testsourcev1 "github.com/kubeshop/testkube-operator/api/testsource/v1"
 	testsuitev3 "github.com/kubeshop/testkube-operator/api/testsuite/v3"
 	testtriggersv1 "github.com/kubeshop/testkube-operator/api/testtriggers/v1"
+
 	"github.com/pkg/errors"
 
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -69,6 +72,24 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{
 			resource: resource.GroupResource(),
 			informer: f.Tests().V3().Tests().Informer(),
+		}, nil
+		// Group=executor.testkube.io, Version=v1
+	case executorv1.ExecutorGroupVersionResource:
+		return &genericInformer{
+			resource: resource.GroupResource(),
+			informer: f.Executor().V1().Executor().Informer(),
+		}, nil
+		// Group=executor.testkube.io, Version=v1
+	case executorv1.WebhookGroupVersionResource:
+		return &genericInformer{
+			resource: resource.GroupResource(),
+			informer: f.Executor().V1().Webhook().Informer(),
+		}, nil
+		// Group=tests.testkube.io, Version=v1
+	case testsourcev1.GroupVersionResource:
+		return &genericInformer{
+			resource: resource.GroupResource(),
+			informer: f.Tests().V1().TestSource().Informer(),
 		}, nil
 	}
 

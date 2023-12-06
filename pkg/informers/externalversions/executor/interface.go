@@ -14,19 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1
+package executor
 
-import "github.com/kubeshop/testkube-operator/pkg/informers/externalversions/internalinterfaces"
+import (
+	v1 "github.com/kubeshop/testkube-operator/pkg/informers/externalversions/executor/v1"
+	"github.com/kubeshop/testkube-operator/pkg/informers/externalversions/internalinterfaces"
+)
 
-// Interface provides access to all the informers in this group version.
+// Interface provides access to each of this group's versions.
 type Interface interface {
-	// TestTriggers returns a TestTriggerInformer.
-	TestTriggers() TestTriggerInformer
-	// TestSource returns a TestSourceInformer.
-	TestSource() TestSourceInformer
+	// V1 provides access to shared informers for resources in V1 version.
+	V1() v1.Interface
 }
 
-type version struct {
+type group struct {
 	factory          internalinterfaces.SharedInformerFactory
 	namespace        string
 	tweakListOptions internalinterfaces.TweakListOptionsFunc
@@ -38,15 +39,10 @@ func New(
 	namespace string,
 	tweakListOptions internalinterfaces.TweakListOptionsFunc,
 ) Interface {
-	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
+	return &group{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
-// TestTriggers returns a TestTriggerInformer.
-func (v *version) TestTriggers() TestTriggerInformer {
-	return &testTriggerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// TestSource returns a TestTriggerInformer.
-func (v *version) TestSource() TestSourceInformer {
-	return &testSourceInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+// V1 returns a new v1.Interface.
+func (g *group) V1() v1.Interface {
+	return v1.New(g.factory, g.namespace, g.tweakListOptions)
 }

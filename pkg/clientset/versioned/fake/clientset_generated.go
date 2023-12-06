@@ -18,8 +18,10 @@ package fake
 
 import (
 	"github.com/kubeshop/testkube-operator/pkg/clientset/versioned"
-	v1 "github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/tests/v1"
-	fakev1 "github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/tests/v1/fake"
+	executorv1 "github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/executor/v1"
+	fakeexecutorv1 "github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/executor/v1/fake"
+	testsv1 "github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/tests/v1"
+	faketestsv1 "github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/tests/v1/fake"
 	v2 "github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/tests/v2"
 	fakev2 "github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/tests/v2/fake"
 	v3 "github.com/kubeshop/testkube-operator/pkg/clientset/versioned/typed/tests/v3"
@@ -82,8 +84,8 @@ var (
 )
 
 // TestsV1 retrieves the TestsV1Client
-func (c *Clientset) TestsV1() v1.TestsV1Interface {
-	return &fakev1.FakeTestsV1{Fake: &c.Fake}
+func (c *Clientset) TestsV1() testsv1.TestsV1Interface {
+	return &faketestsv1.FakeTestsV1{Fake: &c.Fake}
 }
 
 // TestsV2 retrieves the TestsV2Client
@@ -94,4 +96,9 @@ func (c *Clientset) TestsV2() v2.TestsV2Interface {
 // TestsV3 retrieves the TestsV3Client
 func (c *Clientset) TestsV3() v3.TestsV3Interface {
 	return &fakev3.FakeTestsV3{Fake: &c.Fake}
+}
+
+// ExecutorV1 retrieves the ExecutorV1Client
+func (c *Clientset) ExecutorV1() executorv1.ExecutorV1Interface {
+	return &fakeexecutorv1.FakeExecutorV1{Fake: &c.Fake}
 }
