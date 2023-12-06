@@ -68,7 +68,7 @@ func (c *testSource) Get(ctx context.Context, name string, options v1.GetOptions
 	result = &testsourcev1.TestSource{}
 	err = c.client.Get().
 		Namespace(c.ns).
-		Resource("testsource").
+		Resource("testsources").
 		Name(name).
 		VersionedParams(&options, scheme.ParameterCodec).
 		Do(ctx).
@@ -85,7 +85,7 @@ func (c *testSource) List(ctx context.Context, opts v1.ListOptions) (result *tes
 	result = &testsourcev1.TestSourceList{}
 	err = c.client.Get().
 		Namespace(c.ns).
-		Resource("testsource").
+		Resource("testsources").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
 		Do(ctx).
@@ -102,7 +102,7 @@ func (c *testSource) Watch(ctx context.Context, opts v1.ListOptions) (watch.Inte
 	opts.Watch = true
 	return c.client.Get().
 		Namespace(c.ns).
-		Resource("testsource").
+		Resource("testsources").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Timeout(timeout).
 		Watch(ctx)
@@ -113,7 +113,7 @@ func (c *testSource) Create(ctx context.Context, testSource *testsourcev1.TestSo
 	result = &testsourcev1.TestSource{}
 	err = c.client.Post().
 		Namespace(c.ns).
-		Resource("testsource").
+		Resource("testsources").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(testSource).
 		Do(ctx).
@@ -126,7 +126,7 @@ func (c *testSource) Update(ctx context.Context, testSource *testsourcev1.TestSo
 	result = &testsourcev1.TestSource{}
 	err = c.client.Put().
 		Namespace(c.ns).
-		Resource("testsource").
+		Resource("testsources").
 		Name(testSource.Name).
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(testSource).
@@ -141,7 +141,7 @@ func (c *testSource) UpdateStatus(ctx context.Context, testSource *testsourcev1.
 	result = &testsourcev1.TestSource{}
 	err = c.client.Put().
 		Namespace(c.ns).
-		Resource("testsource").
+		Resource("testsources").
 		Name(testSource.Name).
 		SubResource("status").
 		VersionedParams(&opts, scheme.ParameterCodec).
@@ -155,7 +155,7 @@ func (c *testSource) UpdateStatus(ctx context.Context, testSource *testsourcev1.
 func (c *testSource) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	return c.client.Delete().
 		Namespace(c.ns).
-		Resource("testsource").
+		Resource("testsources").
 		Name(name).
 		Body(&opts).
 		Do(ctx).
@@ -170,7 +170,7 @@ func (c *testSource) DeleteCollection(ctx context.Context, opts v1.DeleteOptions
 	}
 	return c.client.Delete().
 		Namespace(c.ns).
-		Resource("testsource").
+		Resource("testsources").
 		VersionedParams(&listOpts, scheme.ParameterCodec).
 		Timeout(timeout).
 		Body(&opts).
@@ -183,7 +183,7 @@ func (c *testSource) Patch(ctx context.Context, name string, pt types.PatchType,
 	result = &testsourcev1.TestSource{}
 	err = c.client.Patch(pt).
 		Namespace(c.ns).
-		Resource("testsource").
+		Resource("testsources").
 		Name(name).
 		SubResource(subresources...).
 		VersionedParams(&opts, scheme.ParameterCodec).
