@@ -412,6 +412,12 @@ const (
 type TestSuiteBatchStepExecutionResult struct {
 	Step    *TestSuiteBatchStep            `json:"step,omitempty"`
 	Execute []TestSuiteStepExecutionResult `json:"execute,omitempty"`
+	// step start time
+	StartTime metav1.Time `json:"startTime,omitempty"`
+	// step end time
+	EndTime metav1.Time `json:"endTime,omitempty"`
+	// step duration
+	Duration string `json:"duration,omitempty"`
 }
 
 // set of steps run in parallel
