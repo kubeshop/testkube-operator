@@ -21,6 +21,7 @@ import (
 	testsuitev2 "github.com/kubeshop/testkube-operator/api/testsuite/v2"
 	testsuitev3 "github.com/kubeshop/testkube-operator/api/testsuite/v3"
 	testsuiteexecutionv1 "github.com/kubeshop/testkube-operator/api/testsuiteexecution/v1"
+	workflowsv1beta1 "github.com/kubeshop/testkube-operator/api/workflows/v1beta1"
 )
 
 // GetClient returns kubernetes CRD client with registered schemes
@@ -41,6 +42,7 @@ func GetClient() (client.Client, error) {
 	utilruntime.Must(testexecutionv1.AddToScheme(scheme))
 	utilruntime.Must(testsuiteexecutionv1.AddToScheme(scheme))
 	utilruntime.Must(templatev1.AddToScheme(scheme))
+	utilruntime.Must(workflowsv1beta1.AddToScheme(scheme))
 
 	kubeconfig, err := ctrl.GetConfig()
 	if err != nil {
