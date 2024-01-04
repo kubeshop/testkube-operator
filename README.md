@@ -1,6 +1,6 @@
 ![Known Vulnerabilities](https://snyk.io/test/github/kubeshop/testkube-operator/badge.svg)
 
-# testkube operator 
+# Testkube operator 
 
 This is the k8s operator for [testkube](https://github.com/kubeshop/testkube/) - your friendly Kubernetes testing framework!
 
