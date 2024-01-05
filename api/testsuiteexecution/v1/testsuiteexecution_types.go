@@ -290,10 +290,14 @@ type ArtifactRequest struct {
 	VolumeMountPath string `json:"volumeMountPath"`
 	// artifact directories for scraping
 	Dirs []string `json:"dirs,omitempty"`
+	// regexp to filter scraped artifacts, single or comma separated
+	Masks []string `json:"masks,omitempty"`
 	// artifact bucket storage
 	StorageBucket string `json:"storageBucket,omitempty"`
 	// don't use a separate folder for execution artifacts
 	OmitFolderPerExecution bool `json:"omitFolderPerExecution,omitempty"`
+	// whether to share volume between pods
+	SharedBetweenPods bool `json:"sharedBetweenPods,omitempty"`
 }
 
 // TestContent defines test content
@@ -412,6 +416,12 @@ const (
 type TestSuiteBatchStepExecutionResult struct {
 	Step    *TestSuiteBatchStep            `json:"step,omitempty"`
 	Execute []TestSuiteStepExecutionResult `json:"execute,omitempty"`
+	// step start time
+	StartTime metav1.Time `json:"startTime,omitempty"`
+	// step end time
+	EndTime metav1.Time `json:"endTime,omitempty"`
+	// step duration
+	Duration string `json:"duration,omitempty"`
 }
 
 // set of steps run in parallel

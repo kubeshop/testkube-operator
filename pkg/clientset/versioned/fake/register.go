@@ -17,6 +17,7 @@ limitations under the License.
 package fake
 
 import (
+	executorv1 "github.com/kubeshop/testkube-operator/api/executor/v1"
 	testsv3 "github.com/kubeshop/testkube-operator/api/tests/v3"
 	testsuitev3 "github.com/kubeshop/testkube-operator/api/testsuite/v3"
 	testtriggersv1 "github.com/kubeshop/testkube-operator/api/testtriggers/v1"
@@ -34,6 +35,7 @@ var localSchemeBuilder = runtime.SchemeBuilder{
 	testtriggersv1.AddToScheme,
 	testsuitev3.AddToScheme,
 	testsv3.AddToScheme,
+	executorv1.AddToScheme,
 }
 
 // AddToScheme adds all types of this clientset into the given scheme. This allows composition

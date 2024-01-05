@@ -20,10 +20,10 @@ import "github.com/kubeshop/testkube-operator/pkg/informers/externalversions/int
 
 // Interface provides access to all the informers in this group version.
 type Interface interface {
-	// TestTriggers returns a TestTriggerInformer.
-	TestTriggers() TestTriggerInformer
-	// TestSource returns a TestSourceInformer.
-	TestSource() TestSourceInformer
+	// Executor returns an ExecutorInformer.
+	Executor() ExecutorInformer
+	// Webhook returns a WebhookInformer.
+	Webhook() WebhookInformer
 }
 
 type version struct {
@@ -41,12 +41,12 @@ func New(
 	return &version{factory: f, namespace: namespace, tweakListOptions: tweakListOptions}
 }
 
-// TestTriggers returns a TestTriggerInformer.
-func (v *version) TestTriggers() TestTriggerInformer {
-	return &testTriggerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+// Executor returns an ExecutorInformer.
+func (v *version) Executor() ExecutorInformer {
+	return &executorInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
-// TestSource returns a TestTriggerInformer.
-func (v *version) TestSource() TestSourceInformer {
-	return &testSourceInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+// Webhook returns a WebhookInformer.
+func (v *version) Webhook() WebhookInformer {
+	return &webhookInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

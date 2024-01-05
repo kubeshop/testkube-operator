@@ -60,6 +60,8 @@ type DownloadArtifactOptions struct {
 	AllPreviousSteps bool `json:"allPreviousSteps,omitempty"`
 	// previous step numbers starting from 1
 	PreviousStepNumbers []int32 `json:"previousStepNumbers,omitempty"`
+	// previous test names
+	PreviousTestNames []string `json:"previousTestNames,omitempty"`
 }
 
 // TestSuiteBatchStep is set of steps run in parallel
