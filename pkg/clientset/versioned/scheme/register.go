@@ -19,7 +19,6 @@ package scheme
 import (
 	executorv1 "github.com/kubeshop/testkube-operator/api/executor/v1"
 	testsv3 "github.com/kubeshop/testkube-operator/api/tests/v3"
-	testsourcev1 "github.com/kubeshop/testkube-operator/api/testsource/v1"
 	testsuitev3 "github.com/kubeshop/testkube-operator/api/testsuite/v3"
 	testtriggersv1 "github.com/kubeshop/testkube-operator/api/testtriggers/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -37,7 +36,6 @@ var localSchemeBuilder = runtime.SchemeBuilder{
 	testsuitev3.AddToScheme,
 	testsv3.AddToScheme,
 	executorv1.AddToScheme,
-	testsourcev1.AddToScheme,
 }
 
 // AddToScheme adds all types of this clientset into the given scheme. This allows composition
