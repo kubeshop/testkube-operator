@@ -87,7 +87,7 @@ type Step struct {
 }
 
 type StepRun struct {
-	Container ContainerConfig `json:",inline"`
+	ContainerConfig `json:",inline"`
 }
 
 type StepExecute struct {
