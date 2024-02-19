@@ -293,12 +293,8 @@ func (in *ParameterSchema) DeepCopyInto(out *ParameterSchema) {
 	*out = *in
 	if in.Enum != nil {
 		in, out := &in.Enum, &out.Enum
-		*out = new([]string)
-		if **in != nil {
-			in, out := *in, *out
-			*out = make([]string, len(*in))
-			copy(*out, *in)
-		}
+		*out = make([]string, len(*in))
+		copy(*out, *in)
 	}
 	if in.Example != nil {
 		in, out := &in.Example, &out.Example
