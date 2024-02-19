@@ -28,7 +28,7 @@ type TestWorkflowTemplateSpec struct {
 
 	// steps to execute in the workflow
 	// +kubebuilder:validation:MinItems=1
-	Steps []IndependentStep `json:"steps,omitempty"`
+	Steps []IndependentStep `json:"steps"`
 
 	// steps to run at the end of the workflow
 	After []IndependentStep `json:"after,omitempty"`

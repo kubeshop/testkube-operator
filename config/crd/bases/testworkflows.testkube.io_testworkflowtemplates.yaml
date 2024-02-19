@@ -4369,6 +4369,8 @@ spec:
                   type: object
                 minItems: 1
                 type: array
+            required:
+            - steps
             type: object
         required:
         - spec

@@ -30,7 +30,7 @@ type ContainerConfig struct {
 	Args *[]string `json:"args,omitempty"`
 
 	// expected resources for the container
-	Resources *Resources `json:"resources,omitempty"`
+	Resources Resources `json:"resources,omitempty"`
 
 	// security context for the container
 	SecurityContext *corev1.SecurityContext `json:"securityContext,omitempty"`
