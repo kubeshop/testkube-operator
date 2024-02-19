@@ -15,14 +15,14 @@ const (
 )
 
 type ParameterStringSchema struct {
-	// minimum length for the string
-	MinLength *int64 `json:"minLength,omitempty"`
-	// maximum length for the string
-	MaxLength *int64 `json:"maxLength,omitempty"`
 	// predefined format for the string
 	Format string `json:"format,omitempty"`
 	// regular expression to match
 	Pattern string `json:"pattern,omitempty"`
+	// minimum length for the string
+	MinLength *int64 `json:"minLength,omitempty"`
+	// maximum length for the string
+	MaxLength *int64 `json:"maxLength,omitempty"`
 }
 
 type ParameterNumberSchema struct {

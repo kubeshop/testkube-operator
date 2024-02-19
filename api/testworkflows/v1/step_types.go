@@ -40,12 +40,6 @@ type StepBase struct {
 	// +kubebuilder:validation:Pattern=^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
 	Delay string `json:"delay,omitempty"`
 
-	// working directory to use for this step
-	WorkingDir *string `json:"workingDir,omitempty"`
-
-	// defaults for the containers in this step
-	Container *ContainerConfig `json:"container,omitempty"`
-
 	// content that should be fetched for this step
 	Content *Content `json:"content,omitempty"`
 
@@ -54,6 +48,12 @@ type StepBase struct {
 
 	// run specific container in the current step
 	Run *StepRun `json:"run,omitempty"`
+
+	// working directory to use for this step
+	WorkingDir *string `json:"workingDir,omitempty"`
+
+	// defaults for the containers in this step
+	Container *ContainerConfig `json:"container,omitempty"`
 
 	// execute other Testkube resources
 	Execute *StepExecute `json:"execute,omitempty"`
@@ -117,10 +117,10 @@ type StepExecuteWorkflow struct {
 }
 
 type StepArtifacts struct {
-	// paths to fetch from the container
-	Paths []string `json:"paths,omitempty"`
 	// compression options for the artifacts
 	Compress *ArtifactCompression `json:"compress,omitempty"`
+	// paths to fetch from the container
+	Paths []string `json:"paths,omitempty"`
 }
 
 type ArtifactCompression struct {

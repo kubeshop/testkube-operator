@@ -61,6 +61,9 @@ type PodConfig struct {
 	// annotations added to the scheduled pod
 	Annotations map[string]string `json:"annotations,omitempty"`
 
+	// references to secrets with credentials for pulling the images from registry
+	ImagePullSecrets []corev1.LocalObjectReference `json:"imagePullSecrets,omitempty"`
+
 	// default service account name for the scheduled pod
 	ServiceAccountName string `json:"serviceAccountName,omitempty"`
 

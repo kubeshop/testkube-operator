@@ -22,10 +22,20 @@ import (
 type TestWorkflowSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
-	TestWorkflowSpecBase `json:",inline"`
-
 	// templates to include at a top-level of workflow
 	Use []TemplateRef `json:"use,omitempty"`
+
+	TestWorkflowSpecBase `json:",inline"`
+
+	// steps for setting up the workflow
+	Setup []Step `json:"setup,omitempty"`
+
+	// steps to execute in the workflow
+	// +kubebuilder:validation:MinItems=1
+	Steps []Step `json:"steps,omitempty"`
+
+	// steps to run at the end of the workflow
+	After []Step `json:"after,omitempty"`
 }
 
 // TemplateRef is the reference for the template inclusion

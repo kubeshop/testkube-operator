@@ -21,10 +21,10 @@ type ContentGit struct {
 	TokenFrom *corev1.EnvVarSource `json:"tokenFrom,omitempty"`
 	// authorization type for the credentials
 	AuthType testsv3.GitAuthType `json:"authType,omitempty"`
-	// paths to fetch for the sparse checkout
-	Paths []string `json:"paths,omitempty"`
 	// where to mount the fetched repository contents (defaults to "repo" directory in the data volume)
 	MountPath string `json:"mountPath,omitempty"`
+	// paths to fetch for the sparse checkout
+	Paths []string `json:"paths,omitempty"`
 }
 
 type ContentFile struct {
