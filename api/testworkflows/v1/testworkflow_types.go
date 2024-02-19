@@ -43,7 +43,7 @@ type TemplateRef struct {
 	// name of the template to include
 	Name string `json:"name"`
 	// trait configuration values if needed
-	Config *map[string]intstr.IntOrString `json:"config,omitempty"`
+	Config map[string]intstr.IntOrString `json:"config,omitempty"`
 }
 
 // +kubebuilder:object:root=true

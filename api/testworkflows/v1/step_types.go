@@ -78,7 +78,7 @@ type Step struct {
 	Use []TemplateRef `json:"use,omitempty"`
 
 	// single template to run in this step
-	Template TemplateRef `json:"template,omitempty"`
+	Template *TemplateRef `json:"template,omitempty"`
 
 	// sub-steps to run
 	// +kubebuilder:pruning:PreserveUnknownFields
@@ -113,7 +113,7 @@ type StepExecuteWorkflow struct {
 	// workflow name to run
 	Name string `json:"name,omitempty"`
 	// configuration to pass for the workflow
-	Config *map[string]intstr.IntOrString `json:"config,omitempty"`
+	Config map[string]intstr.IntOrString `json:"config,omitempty"`
 }
 
 type StepArtifacts struct {

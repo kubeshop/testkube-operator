@@ -423,7 +423,11 @@ func (in *Step) DeepCopyInto(out *Step) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
-	in.Template.DeepCopyInto(&out.Template)
+	if in.Template != nil {
+		in, out := &in.Template, &out.Template
+		*out = new(TemplateRef)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Steps != nil {
 		in, out := &in.Steps, &out.Steps
 		*out = make([]Step, len(*in))
@@ -557,13 +561,9 @@ func (in *StepExecuteWorkflow) DeepCopyInto(out *StepExecuteWorkflow) {
 	*out = *in
 	if in.Config != nil {
 		in, out := &in.Config, &out.Config
-		*out = new(map[string]intstr.IntOrString)
-		if **in != nil {
-			in, out := *in, *out
-			*out = make(map[string]intstr.IntOrString, len(*in))
-			for key, val := range *in {
-				(*out)[key] = val
-			}
+		*out = make(map[string]intstr.IntOrString, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
 		}
 	}
 }
@@ -599,13 +599,9 @@ func (in *TemplateRef) DeepCopyInto(out *TemplateRef) {
 	*out = *in
 	if in.Config != nil {
 		in, out := &in.Config, &out.Config
-		*out = new(map[string]intstr.IntOrString)
-		if **in != nil {
-			in, out := *in, *out
-			*out = make(map[string]intstr.IntOrString, len(*in))
-			for key, val := range *in {
-				(*out)[key] = val
-			}
+		*out = make(map[string]intstr.IntOrString, len(*in))
+		for key, val := range *in {
+			(*out)[key] = val
 		}
 	}
 }
