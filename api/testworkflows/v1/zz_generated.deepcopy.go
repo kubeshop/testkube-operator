@@ -50,11 +50,6 @@ func (in *ContainerConfig) DeepCopyInto(out *ContainerConfig) {
 		*out = new(string)
 		**out = **in
 	}
-	if in.Resources != nil {
-		in, out := &in.Resources, &out.Resources
-		*out = new(Resources)
-		(*in).DeepCopyInto(*out)
-	}
 	if in.Env != nil {
 		in, out := &in.Env, &out.Env
 		*out = make([]corev1.EnvVar, len(*in))
@@ -86,6 +81,11 @@ func (in *ContainerConfig) DeepCopyInto(out *ContainerConfig) {
 			*out = make([]string, len(*in))
 			copy(*out, *in)
 		}
+	}
+	if in.Resources != nil {
+		in, out := &in.Resources, &out.Resources
+		*out = new(Resources)
+		(*in).DeepCopyInto(*out)
 	}
 	if in.SecurityContext != nil {
 		in, out := &in.SecurityContext, &out.SecurityContext

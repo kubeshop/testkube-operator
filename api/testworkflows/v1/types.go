@@ -17,9 +17,6 @@ type ContainerConfig struct {
 	// pulling policy for the image
 	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy,omitempty"`
 
-	// expected resources for the container
-	Resources *Resources `json:"resources,omitempty"`
-
 	// environment variables to append to the container
 	Env []corev1.EnvVar `json:"env,omitempty"`
 
@@ -31,6 +28,9 @@ type ContainerConfig struct {
 
 	// override default command in the image (empty string to default CMD of the image)
 	Args *[]string `json:"args,omitempty"`
+
+	// expected resources for the container
+	Resources *Resources `json:"resources,omitempty"`
 
 	// security context for the container
 	SecurityContext *corev1.SecurityContext `json:"securityContext,omitempty"`
