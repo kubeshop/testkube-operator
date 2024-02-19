@@ -12,11 +12,11 @@ type ContentGit struct {
 	// branch, commit or a tag name to fetch
 	Revision string `json:"revision,omitempty"`
 	// plain text username to fetch with
-	Username *string `json:"username,omitempty"`
+	Username string `json:"username,omitempty"`
 	// external username to fetch with
 	UsernameFrom *corev1.EnvVarSource `json:"usernameFrom,omitempty"`
 	// plain text token to fetch with
-	Token *string `json:"token,omitempty"`
+	Token string `json:"token,omitempty"`
 	// external token to fetch with
 	TokenFrom *corev1.EnvVarSource `json:"tokenFrom,omitempty"`
 	// authorization type for the credentials
