@@ -55,18 +55,18 @@ type JobConfig struct {
 }
 
 type PodConfig struct {
+	// default service account name for the scheduled pod
+	ServiceAccountName string `json:"serviceAccountName,omitempty"`
+
+	// references to secrets with credentials for pulling the images from registry
+	ImagePullSecrets []corev1.LocalObjectReference `json:"imagePullSecrets,omitempty"`
+
+	// node selector to define on which node the pod should land
+	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+
 	// labels added to the scheduled pod
 	Labels map[string]string `json:"labels,omitempty"`
 
 	// annotations added to the scheduled pod
 	Annotations map[string]string `json:"annotations,omitempty"`
-
-	// references to secrets with credentials for pulling the images from registry
-	ImagePullSecrets []corev1.LocalObjectReference `json:"imagePullSecrets,omitempty"`
-
-	// default service account name for the scheduled pod
-	ServiceAccountName string `json:"serviceAccountName,omitempty"`
-
-	// node selector to define on which node the pod should land
-	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
 }
