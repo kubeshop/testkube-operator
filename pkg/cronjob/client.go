@@ -229,5 +229,11 @@ func NewCronJobSpec(parameters templateParameters) (*batchv1.CronJob, error) {
 
 // GetMetadataName returns cron job metadata name
 func GetMetadataName(name, resource string) string {
-	return fmt.Sprintf("%s-%s", name, resource)
+	result := fmt.Sprintf("%s-%s", name, resource)
+
+	if len(result) > 52 {
+		return result[:52]
+	}
+
+	return result
 }
