@@ -41,7 +41,7 @@ type StepBase struct {
 	Delay string `json:"delay,omitempty"`
 
 	// content that should be fetched for this step
-	Content Content `json:"content,omitempty"`
+	Content *Content `json:"content,omitempty"`
 
 	// script to run in a default shell for the container
 	Shell string `json:"shell,omitempty"`
@@ -53,7 +53,7 @@ type StepBase struct {
 	WorkingDir *string `json:"workingDir,omitempty"`
 
 	// defaults for the containers in this step
-	Container ContainerConfig `json:"container,omitempty"`
+	Container *ContainerConfig `json:"container,omitempty"`
 
 	// execute other Testkube resources
 	Execute *StepExecute `json:"execute,omitempty"`
