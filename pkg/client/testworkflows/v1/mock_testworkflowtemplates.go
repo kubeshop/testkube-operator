@@ -136,6 +136,21 @@ func (mr *MockTestWorkflowTemplatesInterfaceMockRecorder) ListLabels() *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListLabels", reflect.TypeOf((*MockTestWorkflowTemplatesInterface)(nil).ListLabels))
 }
 
+// Patch mocks base method.
+func (m *MockTestWorkflowTemplatesInterface) Patch(arg0 *v1.TestWorkflowTemplate) (*v1.TestWorkflowTemplate, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Patch", arg0)
+	ret0, _ := ret[0].(*v1.TestWorkflowTemplate)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Patch indicates an expected call of Patch.
+func (mr *MockTestWorkflowTemplatesInterfaceMockRecorder) Patch(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Patch", reflect.TypeOf((*MockTestWorkflowTemplatesInterface)(nil).Patch), arg0)
+}
+
 // Update mocks base method.
 func (m *MockTestWorkflowTemplatesInterface) Update(arg0 *v1.TestWorkflowTemplate) (*v1.TestWorkflowTemplate, error) {
 	m.ctrl.T.Helper()

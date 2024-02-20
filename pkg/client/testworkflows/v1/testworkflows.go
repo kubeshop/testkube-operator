@@ -17,6 +17,7 @@ type Interface interface {
 	Get(name string) (*testworkflowsv1.TestWorkflow, error)
 	Create(workflow *testworkflowsv1.TestWorkflow) (*testworkflowsv1.TestWorkflow, error)
 	Update(workflow *testworkflowsv1.TestWorkflow) (*testworkflowsv1.TestWorkflow, error)
+	Patch(workflow *testworkflowsv1.TestWorkflow) (*testworkflowsv1.TestWorkflow, error)
 	Delete(name string) error
 	DeleteAll() error
 	DeleteByLabels(selector string) error
@@ -104,6 +105,15 @@ func (s TestWorkflowsClient) Update(workflow *testworkflowsv1.TestWorkflow) (*te
 	return workflow, s.Client.Update(context.Background(), workflow)
 }
 
+// Patch updates existing TestWorkflow partially
+func (s TestWorkflowsClient) Patch(workflow *testworkflowsv1.TestWorkflow) (*testworkflowsv1.TestWorkflow, error) {
+	data, err := s.Get(workflow.Name)
+	if err != nil {
+		return workflow, err
+	}
+	return workflow, s.Client.Patch(context.Background(), workflow, client.MergeFrom(data))
+}
+
 // Delete deletes existing TestWorkflow
 func (s TestWorkflowsClient) Delete(name string) error {
 	workflow, err := s.Get(name)
@@ -116,8 +126,8 @@ func (s TestWorkflowsClient) Delete(name string) error {
 // DeleteAll delete all TestWorkflows
 func (s TestWorkflowsClient) DeleteAll() error {
 	u := &unstructured.Unstructured{}
-	u.SetKind("Workflow")
-	u.SetAPIVersion("testworkflows.testkube.io/v1")
+	u.SetKind("TestWorkflow")
+	u.SetAPIVersion(testworkflowsv1.GroupVersion.String())
 	return s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace))
 }
 
@@ -134,8 +144,8 @@ func (s TestWorkflowsClient) DeleteByLabels(selector string) error {
 	}
 
 	u := &unstructured.Unstructured{}
-	u.SetKind("Workflow")
-	u.SetAPIVersion("testworkflows.testkube.io/v1")
+	u.SetKind("TestWorkflow")
+	u.SetAPIVersion(testworkflowsv1.GroupVersion.String())
 	err = s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace),
 		client.MatchingLabelsSelector{Selector: labels.NewSelector().Add(reqs...)})
 	return err

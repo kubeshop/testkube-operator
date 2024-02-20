@@ -15,12 +15,13 @@ type TestWorkflowTemplatesInterface interface {
 	List(selector string) (*testworkflowsv1.TestWorkflowTemplateList, error)
 	ListLabels() (map[string][]string, error)
 	Get(name string) (*testworkflowsv1.TestWorkflowTemplate, error)
-	Create(workflow *testworkflowsv1.TestWorkflowTemplate) (*testworkflowsv1.TestWorkflowTemplate, error)
-	Update(workflow *testworkflowsv1.TestWorkflowTemplate) (*testworkflowsv1.TestWorkflowTemplate, error)
+	Create(template *testworkflowsv1.TestWorkflowTemplate) (*testworkflowsv1.TestWorkflowTemplate, error)
+	Update(template *testworkflowsv1.TestWorkflowTemplate) (*testworkflowsv1.TestWorkflowTemplate, error)
+	Patch(template *testworkflowsv1.TestWorkflowTemplate) (*testworkflowsv1.TestWorkflowTemplate, error)
 	Delete(name string) error
 	DeleteAll() error
 	DeleteByLabels(selector string) error
-	UpdateStatus(workflow *testworkflowsv1.TestWorkflowTemplate) error
+	UpdateStatus(template *testworkflowsv1.TestWorkflowTemplate) error
 }
 
 // NewTestWorkflowTemplatesClient creates new TestWorkflowTemplate client
@@ -66,8 +67,8 @@ func (s TestWorkflowTemplatesClient) ListLabels() (map[string][]string, error) {
 		return labels, err
 	}
 
-	for _, workflow := range list.Items {
-		for key, value := range workflow.Labels {
+	for _, template := range list.Items {
+		for key, value := range template.Labels {
 			if values, ok := labels[key]; !ok {
 				labels[key] = []string{value}
 			} else {
@@ -86,44 +87,53 @@ func (s TestWorkflowTemplatesClient) ListLabels() (map[string][]string, error) {
 
 // Get returns TestWorkflowTemplate
 func (s TestWorkflowTemplatesClient) Get(name string) (*testworkflowsv1.TestWorkflowTemplate, error) {
-	workflow := &testworkflowsv1.TestWorkflowTemplate{}
-	err := s.Client.Get(context.Background(), client.ObjectKey{Namespace: s.Namespace, Name: name}, workflow)
+	template := &testworkflowsv1.TestWorkflowTemplate{}
+	err := s.Client.Get(context.Background(), client.ObjectKey{Namespace: s.Namespace, Name: name}, template)
 	if err != nil {
 		return nil, err
 	}
-	return workflow, nil
+	return template, nil
 }
 
 // Create creates new TestWorkflowTemplate
-func (s TestWorkflowTemplatesClient) Create(workflow *testworkflowsv1.TestWorkflowTemplate) (*testworkflowsv1.TestWorkflowTemplate, error) {
-	return workflow, s.Client.Create(context.Background(), workflow)
+func (s TestWorkflowTemplatesClient) Create(template *testworkflowsv1.TestWorkflowTemplate) (*testworkflowsv1.TestWorkflowTemplate, error) {
+	return template, s.Client.Create(context.Background(), template)
 }
 
 // Update updates existing TestWorkflowTemplate
-func (s TestWorkflowTemplatesClient) Update(workflow *testworkflowsv1.TestWorkflowTemplate) (*testworkflowsv1.TestWorkflowTemplate, error) {
-	return workflow, s.Client.Update(context.Background(), workflow)
+func (s TestWorkflowTemplatesClient) Update(template *testworkflowsv1.TestWorkflowTemplate) (*testworkflowsv1.TestWorkflowTemplate, error) {
+	return template, s.Client.Update(context.Background(), template)
+}
+
+// Patch updates existing TestWorkflowTemplate partially
+func (s TestWorkflowTemplatesClient) Patch(template *testworkflowsv1.TestWorkflowTemplate) (*testworkflowsv1.TestWorkflowTemplate, error) {
+	data, err := s.Get(template.Name)
+	if err != nil {
+		return template, err
+	}
+	return template, s.Client.Patch(context.Background(), template, client.MergeFrom(data))
 }
 
 // Delete deletes existing TestWorkflowTemplate
 func (s TestWorkflowTemplatesClient) Delete(name string) error {
-	workflow, err := s.Get(name)
+	template, err := s.Get(name)
 	if err != nil {
 		return err
 	}
-	return s.Client.Delete(context.Background(), workflow)
+	return s.Client.Delete(context.Background(), template)
 }
 
 // DeleteAll delete all TestWorkflowTemplates
 func (s TestWorkflowTemplatesClient) DeleteAll() error {
 	u := &unstructured.Unstructured{}
 	u.SetKind("TestWorkflowTemplate")
-	u.SetAPIVersion("testworkflows.testkube.io/v1")
+	u.SetAPIVersion(testworkflowsv1.GroupVersion.String())
 	return s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace))
 }
 
 // UpdateStatus updates existing TestWorkflowTemplate status
-func (s TestWorkflowTemplatesClient) UpdateStatus(workflow *testworkflowsv1.TestWorkflowTemplate) error {
-	return s.Client.Status().Update(context.Background(), workflow)
+func (s TestWorkflowTemplatesClient) UpdateStatus(template *testworkflowsv1.TestWorkflowTemplate) error {
+	return s.Client.Status().Update(context.Background(), template)
 }
 
 // DeleteByLabels deletes TestWorkflowTemplates by labels
@@ -135,7 +145,7 @@ func (s TestWorkflowTemplatesClient) DeleteByLabels(selector string) error {
 
 	u := &unstructured.Unstructured{}
 	u.SetKind("TestWorkflowTemplate")
-	u.SetAPIVersion("testworkflows.testkube.io/v1")
+	u.SetAPIVersion(testworkflowsv1.GroupVersion.String())
 	err = s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace),
 		client.MatchingLabelsSelector{Selector: labels.NewSelector().Add(reqs...)})
 	return err
