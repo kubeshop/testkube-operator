@@ -111,6 +111,8 @@ func (s TestWorkflowTemplatesClient) Patch(template *testworkflowsv1.TestWorkflo
 	if err != nil {
 		return template, err
 	}
+	template = template.DeepCopy()
+	template.ResourceVersion = data.ResourceVersion
 	return template, s.Client.Patch(context.Background(), template, client.MergeFrom(data))
 }
 
