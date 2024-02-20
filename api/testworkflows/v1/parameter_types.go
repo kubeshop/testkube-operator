@@ -47,7 +47,7 @@ type ParameterSchema struct {
 	// the list of allowed values, when limited
 	Enum []string `json:"enum,omitempty"`
 	// exemplary value
-	Example intstr.IntOrString `json:"example,omitempty"`
+	Example *intstr.IntOrString `json:"example,omitempty"`
 	// default value - if not provided, the parameter is required
 	// +kubebuilder:validation:XIntOrString
 	Default *intstr.IntOrString `json:"default,omitempty"`

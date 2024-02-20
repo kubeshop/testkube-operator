@@ -286,7 +286,11 @@ func (in *ParameterSchema) DeepCopyInto(out *ParameterSchema) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
-	out.Example = in.Example
+	if in.Example != nil {
+		in, out := &in.Example, &out.Example
+		*out = new(intstr.IntOrString)
+		**out = **in
+	}
 	if in.Default != nil {
 		in, out := &in.Default, &out.Default
 		*out = new(intstr.IntOrString)
