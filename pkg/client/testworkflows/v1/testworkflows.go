@@ -17,7 +17,7 @@ type Interface interface {
 	Get(name string) (*testworkflowsv1.TestWorkflow, error)
 	Create(workflow *testworkflowsv1.TestWorkflow) (*testworkflowsv1.TestWorkflow, error)
 	Update(workflow *testworkflowsv1.TestWorkflow) (*testworkflowsv1.TestWorkflow, error)
-	Patch(workflow *testworkflowsv1.TestWorkflow) (*testworkflowsv1.TestWorkflow, error)
+	Apply(workflow *testworkflowsv1.TestWorkflow) error
 	Delete(name string) error
 	DeleteAll() error
 	DeleteByLabels(selector string) error
@@ -105,15 +105,11 @@ func (s TestWorkflowsClient) Update(workflow *testworkflowsv1.TestWorkflow) (*te
 	return workflow, s.Client.Update(context.Background(), workflow)
 }
 
-// Patch updates existing TestWorkflow partially
-func (s TestWorkflowsClient) Patch(workflow *testworkflowsv1.TestWorkflow) (*testworkflowsv1.TestWorkflow, error) {
-	data, err := s.Get(workflow.Name)
-	if err != nil {
-		return workflow, err
-	}
-	workflow = workflow.DeepCopy()
-	workflow.ResourceVersion = data.ResourceVersion
-	return workflow, s.Client.Patch(context.Background(), workflow, client.MergeFrom(data))
+// Apply applies changes to the existing TestWorkflow
+func (s TestWorkflowsClient) Apply(workflow *testworkflowsv1.TestWorkflow) error {
+	return s.Client.Patch(context.Background(), workflow, client.Apply, &client.PatchOptions{
+		FieldManager: "application/apply-patch",
+	})
 }
 
 // Delete deletes existing TestWorkflow

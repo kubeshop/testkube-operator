@@ -34,6 +34,20 @@ func (m *MockTestWorkflowTemplatesInterface) EXPECT() *MockTestWorkflowTemplates
 	return m.recorder
 }
 
+// Apply mocks base method.
+func (m *MockTestWorkflowTemplatesInterface) Apply(arg0 *v1.TestWorkflowTemplate) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Apply", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Apply indicates an expected call of Apply.
+func (mr *MockTestWorkflowTemplatesInterfaceMockRecorder) Apply(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Apply", reflect.TypeOf((*MockTestWorkflowTemplatesInterface)(nil).Apply), arg0)
+}
+
 // Create mocks base method.
 func (m *MockTestWorkflowTemplatesInterface) Create(arg0 *v1.TestWorkflowTemplate) (*v1.TestWorkflowTemplate, error) {
 	m.ctrl.T.Helper()
@@ -134,21 +148,6 @@ func (m *MockTestWorkflowTemplatesInterface) ListLabels() (map[string][]string, 
 func (mr *MockTestWorkflowTemplatesInterfaceMockRecorder) ListLabels() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListLabels", reflect.TypeOf((*MockTestWorkflowTemplatesInterface)(nil).ListLabels))
-}
-
-// Patch mocks base method.
-func (m *MockTestWorkflowTemplatesInterface) Patch(arg0 *v1.TestWorkflowTemplate) (*v1.TestWorkflowTemplate, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Patch", arg0)
-	ret0, _ := ret[0].(*v1.TestWorkflowTemplate)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Patch indicates an expected call of Patch.
-func (mr *MockTestWorkflowTemplatesInterfaceMockRecorder) Patch(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Patch", reflect.TypeOf((*MockTestWorkflowTemplatesInterface)(nil).Patch), arg0)
 }
 
 // Update mocks base method.

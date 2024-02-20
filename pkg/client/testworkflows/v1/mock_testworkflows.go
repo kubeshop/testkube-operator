@@ -34,6 +34,20 @@ func (m *MockInterface) EXPECT() *MockInterfaceMockRecorder {
 	return m.recorder
 }
 
+// Apply mocks base method.
+func (m *MockInterface) Apply(arg0 *v1.TestWorkflow) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Apply", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Apply indicates an expected call of Apply.
+func (mr *MockInterfaceMockRecorder) Apply(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Apply", reflect.TypeOf((*MockInterface)(nil).Apply), arg0)
+}
+
 // Create mocks base method.
 func (m *MockInterface) Create(arg0 *v1.TestWorkflow) (*v1.TestWorkflow, error) {
 	m.ctrl.T.Helper()
@@ -134,21 +148,6 @@ func (m *MockInterface) ListLabels() (map[string][]string, error) {
 func (mr *MockInterfaceMockRecorder) ListLabels() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListLabels", reflect.TypeOf((*MockInterface)(nil).ListLabels))
-}
-
-// Patch mocks base method.
-func (m *MockInterface) Patch(arg0 *v1.TestWorkflow) (*v1.TestWorkflow, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Patch", arg0)
-	ret0, _ := ret[0].(*v1.TestWorkflow)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// Patch indicates an expected call of Patch.
-func (mr *MockInterfaceMockRecorder) Patch(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Patch", reflect.TypeOf((*MockInterface)(nil).Patch), arg0)
 }
 
 // Update mocks base method.

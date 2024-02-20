@@ -17,7 +17,7 @@ type TestWorkflowTemplatesInterface interface {
 	Get(name string) (*testworkflowsv1.TestWorkflowTemplate, error)
 	Create(template *testworkflowsv1.TestWorkflowTemplate) (*testworkflowsv1.TestWorkflowTemplate, error)
 	Update(template *testworkflowsv1.TestWorkflowTemplate) (*testworkflowsv1.TestWorkflowTemplate, error)
-	Patch(template *testworkflowsv1.TestWorkflowTemplate) (*testworkflowsv1.TestWorkflowTemplate, error)
+	Apply(template *testworkflowsv1.TestWorkflowTemplate) error
 	Delete(name string) error
 	DeleteAll() error
 	DeleteByLabels(selector string) error
@@ -105,15 +105,11 @@ func (s TestWorkflowTemplatesClient) Update(template *testworkflowsv1.TestWorkfl
 	return template, s.Client.Update(context.Background(), template)
 }
 
-// Patch updates existing TestWorkflowTemplate partially
-func (s TestWorkflowTemplatesClient) Patch(template *testworkflowsv1.TestWorkflowTemplate) (*testworkflowsv1.TestWorkflowTemplate, error) {
-	data, err := s.Get(template.Name)
-	if err != nil {
-		return template, err
-	}
-	template = template.DeepCopy()
-	template.ResourceVersion = data.ResourceVersion
-	return template, s.Client.Patch(context.Background(), template, client.MergeFrom(data))
+// Apply applies changes to the existing TestWorkflowTemplate
+func (s TestWorkflowTemplatesClient) Apply(template *testworkflowsv1.TestWorkflowTemplate) error {
+	return s.Client.Patch(context.Background(), template, client.Apply, &client.PatchOptions{
+		FieldManager: "application/apply-patch",
+	})
 }
 
 // Delete deletes existing TestWorkflowTemplate
