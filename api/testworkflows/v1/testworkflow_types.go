@@ -31,8 +31,7 @@ type TestWorkflowSpec struct {
 	Setup []Step `json:"setup,omitempty"`
 
 	// steps to execute in the workflow
-	// +kubebuilder:validation:MinItems=1
-	Steps []Step `json:"steps"`
+	Steps []Step `json:"steps,omitempty"`
 
 	// steps to run at the end of the workflow
 	After []Step `json:"after,omitempty"`

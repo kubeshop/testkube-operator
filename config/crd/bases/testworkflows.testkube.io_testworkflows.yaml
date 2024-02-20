@@ -254,7 +254,6 @@ spec:
                                 x-kubernetes-int-or-string: true
                               description: resource limits for the container
                               type: object
-                              x-kubernetes-int-or-string: true
                             requests:
                               additionalProperties:
                                 anyOf:
@@ -263,7 +262,6 @@ spec:
                                 x-kubernetes-int-or-string: true
                               description: resource requests for the container
                               type: object
-                              x-kubernetes-int-or-string: true
                           type: object
                         securityContext:
                           description: security context for the container
@@ -441,8 +439,6 @@ spec:
                           description: override default working directory in the image
                             (empty string to default WORKDIR for the image)
                           type: string
-                      required:
-                      - workingDir
                       type: object
                     content:
                       description: content that should be fetched for this step
@@ -1012,7 +1008,6 @@ spec:
                                 x-kubernetes-int-or-string: true
                               description: resource limits for the container
                               type: object
-                              x-kubernetes-int-or-string: true
                             requests:
                               additionalProperties:
                                 anyOf:
@@ -1021,7 +1016,6 @@ spec:
                                 x-kubernetes-int-or-string: true
                               description: resource requests for the container
                               type: object
-                              x-kubernetes-int-or-string: true
                           type: object
                         securityContext:
                           description: security context for the container
@@ -1199,8 +1193,6 @@ spec:
                           description: override default working directory in the image
                             (empty string to default WORKDIR for the image)
                           type: string
-                      required:
-                      - workingDir
                       type: object
                     shell:
                       description: script to run in a default shell for the container
@@ -1506,7 +1498,6 @@ spec:
                           x-kubernetes-int-or-string: true
                         description: resource limits for the container
                         type: object
-                        x-kubernetes-int-or-string: true
                       requests:
                         additionalProperties:
                           anyOf:
@@ -1515,7 +1506,6 @@ spec:
                           x-kubernetes-int-or-string: true
                         description: resource requests for the container
                         type: object
-                        x-kubernetes-int-or-string: true
                     type: object
                   securityContext:
                     description: security context for the container
@@ -1687,8 +1677,6 @@ spec:
                     description: override default working directory in the image (empty
                       string to default WORKDIR for the image)
                     type: string
-                required:
-                - workingDir
                 type: object
               content:
                 description: global content that should be fetched into all containers
@@ -2258,7 +2246,6 @@ spec:
                                 x-kubernetes-int-or-string: true
                               description: resource limits for the container
                               type: object
-                              x-kubernetes-int-or-string: true
                             requests:
                               additionalProperties:
                                 anyOf:
@@ -2267,7 +2254,6 @@ spec:
                                 x-kubernetes-int-or-string: true
                               description: resource requests for the container
                               type: object
-                              x-kubernetes-int-or-string: true
                           type: object
                         securityContext:
                           description: security context for the container
@@ -2445,8 +2431,6 @@ spec:
                           description: override default working directory in the image
                             (empty string to default WORKDIR for the image)
                           type: string
-                      required:
-                      - workingDir
                       type: object
                     content:
                       description: content that should be fetched for this step
@@ -3016,7 +3000,6 @@ spec:
                                 x-kubernetes-int-or-string: true
                               description: resource limits for the container
                               type: object
-                              x-kubernetes-int-or-string: true
                             requests:
                               additionalProperties:
                                 anyOf:
@@ -3025,7 +3008,6 @@ spec:
                                 x-kubernetes-int-or-string: true
                               description: resource requests for the container
                               type: object
-                              x-kubernetes-int-or-string: true
                           type: object
                         securityContext:
                           description: security context for the container
@@ -3203,8 +3185,6 @@ spec:
                           description: override default working directory in the image
                             (empty string to default WORKDIR for the image)
                           type: string
-                      required:
-                      - workingDir
                       type: object
                     shell:
                       description: script to run in a default shell for the container
@@ -3478,7 +3458,6 @@ spec:
                                 x-kubernetes-int-or-string: true
                               description: resource limits for the container
                               type: object
-                              x-kubernetes-int-or-string: true
                             requests:
                               additionalProperties:
                                 anyOf:
@@ -3487,7 +3466,6 @@ spec:
                                 x-kubernetes-int-or-string: true
                               description: resource requests for the container
                               type: object
-                              x-kubernetes-int-or-string: true
                           type: object
                         securityContext:
                           description: security context for the container
@@ -3665,8 +3643,6 @@ spec:
                           description: override default working directory in the image
                             (empty string to default WORKDIR for the image)
                           type: string
-                      required:
-                      - workingDir
                       type: object
                     content:
                       description: content that should be fetched for this step
@@ -4236,7 +4212,6 @@ spec:
                                 x-kubernetes-int-or-string: true
                               description: resource limits for the container
                               type: object
-                              x-kubernetes-int-or-string: true
                             requests:
                               additionalProperties:
                                 anyOf:
@@ -4245,7 +4220,6 @@ spec:
                                 x-kubernetes-int-or-string: true
                               description: resource requests for the container
                               type: object
-                              x-kubernetes-int-or-string: true
                           type: object
                         securityContext:
                           description: security context for the container
@@ -4423,8 +4397,6 @@ spec:
                           description: override default working directory in the image
                             (empty string to default WORKDIR for the image)
                           type: string
-                      required:
-                      - workingDir
                       type: object
                     shell:
                       description: script to run in a default shell for the container
@@ -4481,7 +4453,6 @@ spec:
                       description: working directory to use for this step
                       type: string
                   type: object
-                minItems: 1
                 type: array
               use:
                 description: templates to include at a top-level of workflow
@@ -4503,8 +4474,6 @@ spec:
                   - name
                   type: object
                 type: array
-            required:
-            - steps
             type: object
         required:
         - spec

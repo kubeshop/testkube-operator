@@ -9,7 +9,7 @@ type Expression string
 
 type ContainerConfig struct {
 	// override default working directory in the image (empty string to default WORKDIR for the image)
-	WorkingDir *string `json:"workingDir"`
+	WorkingDir *string `json:"workingDir,omitempty"`
 
 	// image to be used for the container
 	Image string `json:"image,omitempty"`
@@ -37,11 +37,9 @@ type ContainerConfig struct {
 }
 
 type Resources struct {
-	// +kubebuilder:validation:XIntOrString
 	// resource limits for the container
 	Limits map[corev1.ResourceName]intstr.IntOrString `json:"limits,omitempty"`
 
-	// +kubebuilder:validation:XIntOrString
 	// resource requests for the container
 	Requests map[corev1.ResourceName]intstr.IntOrString `json:"requests,omitempty"`
 }
