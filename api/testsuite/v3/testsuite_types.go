@@ -18,6 +18,7 @@ package v3
 
 import (
 	commonv1 "github.com/kubeshop/testkube-operator/api/common/v1"
+	"github.com/kubeshop/testkube-operator/pkg/tcl/testsuitestcl"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -52,7 +53,8 @@ type TestSuiteStepSpec struct {
 	// delay duration in time units
 	// +kubebuilder:validation:Type:=string
 	// +kubebuilder:validation:Format:=duration
-	Delay metav1.Duration `json:"delay,omitempty"`
+	Delay            metav1.Duration                              `json:"delay,omitempty"`
+	ExecutionRequest *testsuitestcl.TestSuiteStepExecutionRequest `json:"executionRequest,omitempty"`
 }
 
 // options to download artifacts from previous steps
