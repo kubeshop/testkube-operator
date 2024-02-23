@@ -24,13 +24,9 @@ type ArgsModeType commonv1.ArgsModeType
 // values coming from Test Suites, Tests, and Test Executions.
 // +kubebuilder:object:generate=true
 type TestSuiteStepExecutionRequest struct {
-	// test execution custom name
-	Name string `json:"name,omitempty"`
 	// test execution labels
-	ExecutionLabels map[string]string `json:"executionLabels,omitempty"`
-	// test kubernetes namespace (\"testkube\" when not set)
-	Namespace string              `json:"namespace,omitempty"`
-	Variables map[string]Variable `json:"variables,omitempty"`
+	ExecutionLabels map[string]string   `json:"executionLabels,omitempty"`
+	Variables       map[string]Variable `json:"variables,omitempty"`
 	// additional executor binary arguments
 	Args []string `json:"args,omitempty"`
 	// usage mode for arguments
