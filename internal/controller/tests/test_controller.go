@@ -28,6 +28,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/predicate"
 
+	commonv1 "github.com/kubeshop/testkube-operator/api/common/v1"
 	templatesv1 "github.com/kubeshop/testkube-operator/api/template/v1"
 	testsv3 "github.com/kubeshop/testkube-operator/api/tests/v3"
 	"github.com/kubeshop/testkube-operator/pkg/cronjob"
@@ -84,7 +85,7 @@ func (r *TestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 
 	data, err := json.Marshal(testsv3.ExecutionRequest{
 		RunningContext: &testsv3.RunningContext{
-			Type_:   testsv3.RunningContextTypeScheduler,
+			Type_:   commonv1.RunningContextTypeScheduler,
 			Context: test.Spec.Schedule,
 		},
 	})
