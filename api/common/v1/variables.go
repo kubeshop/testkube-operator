@@ -4,6 +4,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 )
 
+// +kubebuilder:object:generate=true
 type Variable struct {
 	// variable type
 	Type_ string `json:"type,omitempty"`
