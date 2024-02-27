@@ -84,29 +84,16 @@ spec:
                         env:
                           description: environment variables to append to the container
                           items:
-                            description: EnvVar represents an environment variable
-                              present in a Container.
                             properties:
                               name:
-                                description: Name of the environment variable. Must
+                                description: name of the environment variable. Must
                                   be a C_IDENTIFIER.
                                 type: string
                               value:
-                                description: 'Variable references $(VAR_NAME) are
-                                  expanded using the previously defined environment
-                                  variables in the container and any service environment
-                                  variables. If a variable cannot be resolved, the
-                                  reference in the input string will be unchanged.
-                                  Double $$ are reduced to a single $, which allows
-                                  for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)"
-                                  will produce the string literal "$(VAR_NAME)". Escaped
-                                  references will never be expanded, regardless of
-                                  whether the variable exists or not. Defaults to
-                                  "".'
+                                description: value for the environment variable
                                 type: string
                               valueFrom:
-                                description: Source for the environment variable's
-                                  value. Cannot be used if value is not empty.
+                                description: external value for the environment variable
                                 properties:
                                   configMapKeyRef:
                                     description: Selects a key of a ConfigMap.
@@ -192,8 +179,6 @@ spec:
                                     - key
                                     type: object
                                 type: object
-                            required:
-                            - name
                             type: object
                           type: array
                         envFrom:
@@ -838,29 +823,16 @@ spec:
                         env:
                           description: environment variables to append to the container
                           items:
-                            description: EnvVar represents an environment variable
-                              present in a Container.
                             properties:
                               name:
-                                description: Name of the environment variable. Must
+                                description: name of the environment variable. Must
                                   be a C_IDENTIFIER.
                                 type: string
                               value:
-                                description: 'Variable references $(VAR_NAME) are
-                                  expanded using the previously defined environment
-                                  variables in the container and any service environment
-                                  variables. If a variable cannot be resolved, the
-                                  reference in the input string will be unchanged.
-                                  Double $$ are reduced to a single $, which allows
-                                  for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)"
-                                  will produce the string literal "$(VAR_NAME)". Escaped
-                                  references will never be expanded, regardless of
-                                  whether the variable exists or not. Defaults to
-                                  "".'
+                                description: value for the environment variable
                                 type: string
                               valueFrom:
-                                description: Source for the environment variable's
-                                  value. Cannot be used if value is not empty.
+                                description: external value for the environment variable
                                 properties:
                                   configMapKeyRef:
                                     description: Selects a key of a ConfigMap.
@@ -946,8 +918,6 @@ spec:
                                     - key
                                     type: object
                                 type: object
-                            required:
-                            - name
                             type: object
                           type: array
                         envFrom:
@@ -1340,27 +1310,16 @@ spec:
                   env:
                     description: environment variables to append to the container
                     items:
-                      description: EnvVar represents an environment variable present
-                        in a Container.
                       properties:
                         name:
-                          description: Name of the environment variable. Must be a
+                          description: name of the environment variable. Must be a
                             C_IDENTIFIER.
                           type: string
                         value:
-                          description: 'Variable references $(VAR_NAME) are expanded
-                            using the previously defined environment variables in
-                            the container and any service environment variables. If
-                            a variable cannot be resolved, the reference in the input
-                            string will be unchanged. Double $$ are reduced to a single
-                            $, which allows for escaping the $(VAR_NAME) syntax: i.e.
-                            "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
-                            Escaped references will never be expanded, regardless
-                            of whether the variable exists or not. Defaults to "".'
+                          description: value for the environment variable
                           type: string
                         valueFrom:
-                          description: Source for the environment variable's value.
-                            Cannot be used if value is not empty.
+                          description: external value for the environment variable
                           properties:
                             configMapKeyRef:
                               description: Selects a key of a ConfigMap.
@@ -1443,8 +1402,6 @@ spec:
                               - key
                               type: object
                           type: object
-                      required:
-                      - name
                       type: object
                     type: array
                   envFrom:
@@ -2076,29 +2033,16 @@ spec:
                         env:
                           description: environment variables to append to the container
                           items:
-                            description: EnvVar represents an environment variable
-                              present in a Container.
                             properties:
                               name:
-                                description: Name of the environment variable. Must
+                                description: name of the environment variable. Must
                                   be a C_IDENTIFIER.
                                 type: string
                               value:
-                                description: 'Variable references $(VAR_NAME) are
-                                  expanded using the previously defined environment
-                                  variables in the container and any service environment
-                                  variables. If a variable cannot be resolved, the
-                                  reference in the input string will be unchanged.
-                                  Double $$ are reduced to a single $, which allows
-                                  for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)"
-                                  will produce the string literal "$(VAR_NAME)". Escaped
-                                  references will never be expanded, regardless of
-                                  whether the variable exists or not. Defaults to
-                                  "".'
+                                description: value for the environment variable
                                 type: string
                               valueFrom:
-                                description: Source for the environment variable's
-                                  value. Cannot be used if value is not empty.
+                                description: external value for the environment variable
                                 properties:
                                   configMapKeyRef:
                                     description: Selects a key of a ConfigMap.
@@ -2184,8 +2128,6 @@ spec:
                                     - key
                                     type: object
                                 type: object
-                            required:
-                            - name
                             type: object
                           type: array
                         envFrom:
@@ -2830,29 +2772,16 @@ spec:
                         env:
                           description: environment variables to append to the container
                           items:
-                            description: EnvVar represents an environment variable
-                              present in a Container.
                             properties:
                               name:
-                                description: Name of the environment variable. Must
+                                description: name of the environment variable. Must
                                   be a C_IDENTIFIER.
                                 type: string
                               value:
-                                description: 'Variable references $(VAR_NAME) are
-                                  expanded using the previously defined environment
-                                  variables in the container and any service environment
-                                  variables. If a variable cannot be resolved, the
-                                  reference in the input string will be unchanged.
-                                  Double $$ are reduced to a single $, which allows
-                                  for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)"
-                                  will produce the string literal "$(VAR_NAME)". Escaped
-                                  references will never be expanded, regardless of
-                                  whether the variable exists or not. Defaults to
-                                  "".'
+                                description: value for the environment variable
                                 type: string
                               valueFrom:
-                                description: Source for the environment variable's
-                                  value. Cannot be used if value is not empty.
+                                description: external value for the environment variable
                                 properties:
                                   configMapKeyRef:
                                     description: Selects a key of a ConfigMap.
@@ -2938,8 +2867,6 @@ spec:
                                     - key
                                     type: object
                                 type: object
-                            required:
-                            - name
                             type: object
                           type: array
                         envFrom:
@@ -3288,29 +3215,16 @@ spec:
                         env:
                           description: environment variables to append to the container
                           items:
-                            description: EnvVar represents an environment variable
-                              present in a Container.
                             properties:
                               name:
-                                description: Name of the environment variable. Must
+                                description: name of the environment variable. Must
                                   be a C_IDENTIFIER.
                                 type: string
                               value:
-                                description: 'Variable references $(VAR_NAME) are
-                                  expanded using the previously defined environment
-                                  variables in the container and any service environment
-                                  variables. If a variable cannot be resolved, the
-                                  reference in the input string will be unchanged.
-                                  Double $$ are reduced to a single $, which allows
-                                  for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)"
-                                  will produce the string literal "$(VAR_NAME)". Escaped
-                                  references will never be expanded, regardless of
-                                  whether the variable exists or not. Defaults to
-                                  "".'
+                                description: value for the environment variable
                                 type: string
                               valueFrom:
-                                description: Source for the environment variable's
-                                  value. Cannot be used if value is not empty.
+                                description: external value for the environment variable
                                 properties:
                                   configMapKeyRef:
                                     description: Selects a key of a ConfigMap.
@@ -3396,8 +3310,6 @@ spec:
                                     - key
                                     type: object
                                 type: object
-                            required:
-                            - name
                             type: object
                           type: array
                         envFrom:
@@ -4042,29 +3954,16 @@ spec:
                         env:
                           description: environment variables to append to the container
                           items:
-                            description: EnvVar represents an environment variable
-                              present in a Container.
                             properties:
                               name:
-                                description: Name of the environment variable. Must
+                                description: name of the environment variable. Must
                                   be a C_IDENTIFIER.
                                 type: string
                               value:
-                                description: 'Variable references $(VAR_NAME) are
-                                  expanded using the previously defined environment
-                                  variables in the container and any service environment
-                                  variables. If a variable cannot be resolved, the
-                                  reference in the input string will be unchanged.
-                                  Double $$ are reduced to a single $, which allows
-                                  for escaping the $(VAR_NAME) syntax: i.e. "$$(VAR_NAME)"
-                                  will produce the string literal "$(VAR_NAME)". Escaped
-                                  references will never be expanded, regardless of
-                                  whether the variable exists or not. Defaults to
-                                  "".'
+                                description: value for the environment variable
                                 type: string
                               valueFrom:
-                                description: Source for the environment variable's
-                                  value. Cannot be used if value is not empty.
+                                description: external value for the environment variable
                                 properties:
                                   configMapKeyRef:
                                     description: Selects a key of a ConfigMap.
@@ -4150,8 +4049,6 @@ spec:
                                     - key
                                     type: object
                                 type: object
-                            required:
-                            - name
                             type: object
                           type: array
                         envFrom:
