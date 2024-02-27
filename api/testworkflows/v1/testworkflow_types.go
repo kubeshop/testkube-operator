@@ -23,18 +23,18 @@ type TestWorkflowSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// templates to include at a top-level of workflow
-	Use []TemplateRef `json:"use,omitempty"`
+	Use []TemplateRef `json:"use,omitempty" expr:"include"`
 
-	TestWorkflowSpecBase `json:",inline"`
+	TestWorkflowSpecBase `json:",inline" expr:"include"`
 
 	// steps for setting up the workflow
-	Setup []Step `json:"setup,omitempty"`
+	Setup []Step `json:"setup,omitempty" expr:"include"`
 
 	// steps to execute in the workflow
-	Steps []Step `json:"steps,omitempty"`
+	Steps []Step `json:"steps,omitempty" expr:"include"`
 
 	// steps to run at the end of the workflow
-	After []Step `json:"after,omitempty"`
+	After []Step `json:"after,omitempty" expr:"include"`
 }
 
 // TemplateRef is the reference for the template inclusion
@@ -42,7 +42,7 @@ type TemplateRef struct {
 	// name of the template to include
 	Name string `json:"name"`
 	// trait configuration values if needed
-	Config map[string]intstr.IntOrString `json:"config,omitempty"`
+	Config map[string]intstr.IntOrString `json:"config,omitempty" expr:"template"`
 }
 
 // +kubebuilder:object:root=true
@@ -56,7 +56,7 @@ type TestWorkflow struct {
 	Description string `json:"description,omitempty"`
 
 	// TestWorkflow specification
-	Spec TestWorkflowSpec `json:"spec"`
+	Spec TestWorkflowSpec `json:"spec" expr:"include"`
 }
 
 //+kubebuilder:object:root=true
@@ -65,7 +65,7 @@ type TestWorkflow struct {
 type TestWorkflowList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []TestWorkflow `json:"items"`
+	Items           []TestWorkflow `json:"items" expr:"include"`
 }
 
 func init() {

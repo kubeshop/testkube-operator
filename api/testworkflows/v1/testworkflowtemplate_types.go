@@ -21,16 +21,16 @@ import (
 type TestWorkflowTemplateSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
-	TestWorkflowSpecBase `json:",inline"`
+	TestWorkflowSpecBase `json:",inline" expr:"include"`
 
 	// steps for setting up the workflow
-	Setup []IndependentStep `json:"setup,omitempty"`
+	Setup []IndependentStep `json:"setup,omitempty" expr:"include"`
 
 	// steps to execute in the workflow
-	Steps []IndependentStep `json:"steps,omitempty"`
+	Steps []IndependentStep `json:"steps,omitempty" expr:"include"`
 
 	// steps to run at the end of the workflow
-	After []IndependentStep `json:"after,omitempty"`
+	After []IndependentStep `json:"after,omitempty" expr:"include"`
 }
 
 // +kubebuilder:object:root=true
@@ -44,7 +44,7 @@ type TestWorkflowTemplate struct {
 	Description string `json:"description,omitempty"`
 
 	// TestWorkflowTemplate specification
-	Spec TestWorkflowTemplateSpec `json:"spec"`
+	Spec TestWorkflowTemplateSpec `json:"spec" expr:"include"`
 }
 
 //+kubebuilder:object:root=true
@@ -53,7 +53,7 @@ type TestWorkflowTemplate struct {
 type TestWorkflowTemplateList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []TestWorkflowTemplate `json:"items"`
+	Items           []TestWorkflowTemplate `json:"items" expr:"include"`
 }
 
 func init() {

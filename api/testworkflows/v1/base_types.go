@@ -7,14 +7,14 @@ type TestWorkflowSpecBase struct {
 	Config map[string]ParameterSchema `json:"config,omitempty"`
 
 	// global content that should be fetched into all containers
-	Content *Content `json:"content,omitempty"`
+	Content *Content `json:"content,omitempty" expr:"include"`
 
 	// defaults for the containers for all the TestWorkflow steps
-	Container *ContainerConfig `json:"container,omitempty"`
+	Container *ContainerConfig `json:"container,omitempty" expr:"include"`
 
 	// configuration for the scheduled job
-	Job *JobConfig `json:"job,omitempty"`
+	Job *JobConfig `json:"job,omitempty" expr:"include"`
 
 	// configuration for the scheduled pod
-	Pod *PodConfig `json:"pod,omitempty"`
+	Pod *PodConfig `json:"pod,omitempty" expr:"include"`
 }
