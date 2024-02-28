@@ -14,11 +14,11 @@ type ContentGit struct {
 	// plain text username to fetch with
 	Username string `json:"username,omitempty" expr:"template"`
 	// external username to fetch with
-	UsernameFrom *corev1.EnvVarSource `json:"usernameFrom,omitempty"`
+	UsernameFrom *corev1.EnvVarSource `json:"usernameFrom,omitempty" expr:"force"`
 	// plain text token to fetch with
 	Token string `json:"token,omitempty" expr:"template"`
 	// external token to fetch with
-	TokenFrom *corev1.EnvVarSource `json:"tokenFrom,omitempty"`
+	TokenFrom *corev1.EnvVarSource `json:"tokenFrom,omitempty" expr:"force"`
 	// authorization type for the credentials
 	AuthType testsv3.GitAuthType `json:"authType,omitempty" expr:"template"`
 	// where to mount the fetched repository contents (defaults to "repo" directory in the data volume)
@@ -34,7 +34,7 @@ type ContentFile struct {
 	// plain-text content to put inside
 	Content string `json:"content,omitempty" expr:"template"`
 	// external source to use
-	ContentFrom *corev1.EnvVarSource `json:"contentFrom,omitempty"`
+	ContentFrom *corev1.EnvVarSource `json:"contentFrom,omitempty" expr:"force"`
 	// mode to use for the file
 	Mode *int32 `json:"mode,omitempty"`
 }
