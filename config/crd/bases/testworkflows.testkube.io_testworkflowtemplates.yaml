@@ -1204,9 +1204,6 @@ spec:
                       description: maximum time this step may take
                       pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                       type: string
-                    virtualGroup:
-                      description: should not display it as a nested group
-                      type: boolean
                     workingDir:
                       description: working directory to use for this step
                       type: string
@@ -3158,9 +3155,6 @@ spec:
                       description: maximum time this step may take
                       pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                       type: string
-                    virtualGroup:
-                      description: should not display it as a nested group
-                      type: boolean
                     workingDir:
                       description: working directory to use for this step
                       type: string
@@ -4332,9 +4326,6 @@ spec:
                       description: maximum time this step may take
                       pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                       type: string
-                    virtualGroup:
-                      description: should not display it as a nested group
-                      type: boolean
                     workingDir:
                       description: working directory to use for this step
                       type: string

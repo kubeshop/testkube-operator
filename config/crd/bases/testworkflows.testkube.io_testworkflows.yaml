@@ -1242,9 +1242,6 @@ spec:
                         - name
                         type: object
                       type: array
-                    virtualGroup:
-                      description: should not display it as a nested group
-                      type: boolean
                     workingDir:
                       description: working directory to use for this step
                       type: string
@@ -3234,9 +3231,6 @@ spec:
                         - name
                         type: object
                       type: array
-                    virtualGroup:
-                      description: should not display it as a nested group
-                      type: boolean
                     workingDir:
                       description: working directory to use for this step
                       type: string
@@ -4446,9 +4440,6 @@ spec:
                         - name
                         type: object
                       type: array
-                    virtualGroup:
-                      description: should not display it as a nested group
-                      type: boolean
                     workingDir:
                       description: working directory to use for this step
                       type: string
