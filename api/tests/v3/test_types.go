@@ -136,24 +136,7 @@ type ArtifactRequest struct {
 	SharedBetweenPods bool `json:"sharedBetweenPods,omitempty"`
 }
 
-// RunningContext for test or test suite execution
-type RunningContext struct {
-	// One of possible context types
-	Type_ RunningContextType `json:"type"`
-	// Context value depending from its type
-	Context string `json:"context,omitempty"`
-}
-
-type RunningContextType string
-
-const (
-	RunningContextTypeUserCLI     RunningContextType = "user-cli"
-	RunningContextTypeUserUI      RunningContextType = "user-ui"
-	RunningContextTypeTestSuite   RunningContextType = "testsuite"
-	RunningContextTypeTestTrigger RunningContextType = "testtrigger"
-	RunningContextTypeScheduler   RunningContextType = "scheduler"
-	RunningContextTypeEmpty       RunningContextType = ""
-)
+type RunningContext commonv1.RunningContext
 
 // pod request body
 type PodRequest struct {
@@ -257,20 +240,12 @@ type ExecutionRequest struct {
 	EnvSecrets      []EnvReference  `json:"envSecrets,omitempty"`
 	RunningContext  *RunningContext `json:"-"`
 	SlavePodRequest *PodRequest     `json:"slavePodRequest,omitempty"`
+	// namespace for test execution (Pro edition only)
+	ExecutionNamespace string `json:"executionNamespace,omitempty"`
 }
 
 // ArgsModeType defines args mode type
-// +kubebuilder:validation:Enum=append;override;replace
-type ArgsModeType string
-
-const (
-	// ArgsModeTypeAppend for append args mode
-	ArgsModeTypeAppend ArgsModeType = "append"
-	// ArgsModeTypeOverride for override args mode
-	ArgsModeTypeOverride ArgsModeType = "override"
-	// ArgsModeTypeReplace for replace args mode
-	ArgsModeTypeReplace ArgsModeType = "replace"
-)
+type ArgsModeType commonv1.ArgsModeType
 
 // Reference to env resource
 type EnvReference struct {

@@ -284,6 +284,8 @@ type Execution struct {
 	// test execution name started the test execution
 	TestExecutionName string      `json:"testExecutionName,omitempty"`
 	SlavePodRequest   *PodRequest `json:"slavePodRequest,omitempty"`
+	// namespace for test execution (Pro edition only)
+	ExecutionNamespace string `json:"executionNamespace,omitempty"`
 }
 
 // artifact request body with test artifacts

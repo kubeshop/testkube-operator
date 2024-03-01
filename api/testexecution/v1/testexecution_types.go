@@ -138,6 +138,8 @@ type ExecutionRequest struct {
 	EnvSecrets      []EnvReference  `json:"envSecrets,omitempty"`
 	RunningContext  *RunningContext `json:"runningContext,omitempty"`
 	SlavePodRequest *PodRequest     `json:"slavePodRequest,omitempty"`
+	// namespace for test execution (Pro edition only)
+	ExecutionNamespace string `json:"executionNamespace,omitempty"`
 }
 
 // ArgsModeType defines args mode type
@@ -266,6 +268,8 @@ type Execution struct {
 	// shell used in container executor
 	ContainerShell  string      `json:"containerShell,omitempty"`
 	SlavePodRequest *PodRequest `json:"slavePodRequest,omitempty"`
+	// namespace for test execution (Pro edition only)
+	ExecutionNamespace string `json:"executionNamespace,omitempty"`
 }
 
 // TestContent defines test content
