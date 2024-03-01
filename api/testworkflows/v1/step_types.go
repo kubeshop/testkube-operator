@@ -26,9 +26,6 @@ type StepBase struct {
 	// is the step optional, so its failure won't affect the TestWorkflow result
 	Optional bool `json:"optional,omitempty"`
 
-	// should not display it as a nested group
-	VirtualGroup bool `json:"virtualGroup,omitempty"`
-
 	// policy for retrying the step
 	Retry *RetryPolicy `json:"retry,omitempty" expr:"include"`
 
