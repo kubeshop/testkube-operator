@@ -50,7 +50,7 @@ type ParameterSchema struct {
 	Example *intstr.IntOrString `json:"example,omitempty"`
 	// default value - if not provided, the parameter is required
 	// +kubebuilder:validation:XIntOrString
-	Default *intstr.IntOrString `json:"default,omitempty"`
+	Default *intstr.IntOrString `json:"default,omitempty" expr:"template"`
 
 	ParameterStringSchema `json:",inline"`
 	ParameterNumberSchema `json:",inline"`

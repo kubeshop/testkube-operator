@@ -4,7 +4,7 @@ type TestWorkflowSpecBase struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// make the instance configurable with some input data for scheduling it
-	Config map[string]ParameterSchema `json:"config,omitempty"`
+	Config map[string]ParameterSchema `json:"config,omitempty" expr:"include"`
 
 	// global content that should be fetched into all containers
 	Content *Content `json:"content,omitempty" expr:"include"`

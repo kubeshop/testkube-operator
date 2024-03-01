@@ -5,17 +5,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
-type EnvVar struct {
-	// name of the environment variable. Must be a C_IDENTIFIER.
-	Name string `json:"name,omitempty" expr:"template"`
-
-	// value for the environment variable
-	Value string `json:"value,omitempty" expr:"template"`
-
-	// external value for the environment variable
-	ValueFrom *corev1.EnvVarSource `json:"valueFrom,omitempty"`
-}
-
 type ContainerConfig struct {
 	// override default working directory in the image (empty string to default WORKDIR for the image)
 	WorkingDir *string `json:"workingDir,omitempty" expr:"template"`
@@ -27,10 +16,10 @@ type ContainerConfig struct {
 	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy,omitempty" expr:"template"`
 
 	// environment variables to append to the container
-	Env []EnvVar `json:"env,omitempty" expr:"include"`
+	Env []corev1.EnvVar `json:"env,omitempty" expr:"force"`
 
 	// external environment variables to append to the container
-	EnvFrom []corev1.EnvFromSource `json:"envFrom,omitempty"`
+	EnvFrom []corev1.EnvFromSource `json:"envFrom,omitempty" expr:"force"`
 
 	// override default command in the image (empty string to default ENTRYPOINT of the image)
 	Command *[]string `json:"command,omitempty" expr:"template"`
@@ -42,7 +31,7 @@ type ContainerConfig struct {
 	Resources *Resources `json:"resources,omitempty" expr:"include"`
 
 	// security context for the container
-	SecurityContext *corev1.SecurityContext `json:"securityContext,omitempty"`
+	SecurityContext *corev1.SecurityContext `json:"securityContext,omitempty" expr:"force"`
 }
 
 type Resources struct {
@@ -66,7 +55,7 @@ type PodConfig struct {
 	ServiceAccountName string `json:"serviceAccountName,omitempty" expr:"template"`
 
 	// references to secrets with credentials for pulling the images from registry
-	ImagePullSecrets []corev1.LocalObjectReference `json:"imagePullSecrets,omitempty"`
+	ImagePullSecrets []corev1.LocalObjectReference `json:"imagePullSecrets,omitempty" expr:"force"`
 
 	// node selector to define on which node the pod should land
 	NodeSelector map[string]string `json:"nodeSelector,omitempty" expr:"template,template"`
