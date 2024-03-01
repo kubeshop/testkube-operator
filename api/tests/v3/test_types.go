@@ -238,6 +238,8 @@ type ExecutionRequest struct {
 	EnvSecrets      []EnvReference  `json:"envSecrets,omitempty"`
 	RunningContext  *RunningContext `json:"-"`
 	SlavePodRequest *PodRequest     `json:"slavePodRequest,omitempty"`
+	// namespace for test execution (Pro edition only)
+	ExecutionNamespace string `json:"executionNamespace,omitempty"`
 }
 
 // ArgsModeType defines args mode type
