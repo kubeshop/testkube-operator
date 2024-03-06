@@ -18,7 +18,6 @@ package v3
 
 import (
 	commonv1 "github.com/kubeshop/testkube-operator/api/common/v1"
-	"github.com/kubeshop/testkube-operator/pkg/tcl/testsuitestcl"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -53,8 +52,8 @@ type TestSuiteStepSpec struct {
 	// delay duration in time units
 	// +kubebuilder:validation:Type:=string
 	// +kubebuilder:validation:Format:=duration
-	Delay            metav1.Duration                              `json:"delay,omitempty"`
-	ExecutionRequest *testsuitestcl.TestSuiteStepExecutionRequest `json:"executionRequest,omitempty"`
+	Delay            metav1.Duration                `json:"delay,omitempty"`
+	ExecutionRequest *TestSuiteStepExecutionRequest `json:"executionRequest,omitempty"`
 }
 
 // options to download artifacts from previous steps
@@ -189,4 +188,48 @@ type TestSuiteList struct {
 
 func init() {
 	SchemeBuilder.Register(&TestSuite{}, &TestSuiteList{})
+}
+
+type ArgsModeType commonv1.ArgsModeType
+
+// TestSuiteStepExecutionRequest contains parameters to be used by the executions.
+// These fields will be passed to the execution when a Test Suite is queued for execution.
+// TestSuiteStepExecutionRequest parameters have the highest priority. They override the
+// values coming from Test Suites, Tests, and Test Executions.
+// +kubebuilder:object:generate=true
+type TestSuiteStepExecutionRequest struct {
+	// test execution labels
+	ExecutionLabels map[string]string   `json:"executionLabels,omitempty"`
+	Variables       map[string]Variable `json:"variables,omitempty"`
+	// additional executor binary arguments
+	Args []string `json:"args,omitempty"`
+	// usage mode for arguments
+	ArgsMode ArgsModeType `json:"argsMode,omitempty"`
+	// executor binary command
+	Command []string `json:"command,omitempty"`
+	// whether to start execution sync or async
+	Sync bool `json:"sync,omitempty"`
+	// http proxy for executor containers
+	HttpProxy string `json:"httpProxy,omitempty"`
+	// https proxy for executor containers
+	HttpsProxy string `json:"httpsProxy,omitempty"`
+	// negative test will fail the execution if it is a success and it will succeed if it is a failure
+	NegativeTest bool `json:"negativeTest,omitempty"`
+	// job template extensions
+	JobTemplate string `json:"jobTemplate,omitempty"`
+	// job template extensions reference
+	JobTemplateReference string `json:"jobTemplateReference,omitempty"`
+	// cron job template extensions
+	CronJobTemplate string `json:"cronJobTemplate,omitempty"`
+	// cron job template extensions reference
+	CronJobTemplateReference string `json:"cronJobTemplateReference,omitempty"`
+	// scraper template extensions
+	ScraperTemplate string `json:"scraperTemplate,omitempty"`
+	// scraper template extensions reference
+	ScraperTemplateReference string `json:"scraperTemplateReference,omitempty"`
+	// pvc template extensions
+	PvcTemplate string `json:"pvcTemplate,omitempty"`
+	// pvc template extensions reference
+	PvcTemplateReference string                   `json:"pvcTemplateReference,omitempty"`
+	RunningContext       *commonv1.RunningContext `json:"runningContext,omitempty"`
 }
