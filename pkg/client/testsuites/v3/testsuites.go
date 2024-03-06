@@ -215,6 +215,10 @@ func (s TestSuitesClient) CreateTestsuiteSecrets(testsuite *testsuitev3.TestSuit
 		StringData: map[string]string{},
 	}
 
+	for key, value := range testsuite.Labels {
+		secret.Labels[key] = value
+	}
+
 	if err := testsuiteVarsToSecret(testsuite, secret); err != nil {
 		return err
 	}
@@ -247,11 +251,15 @@ func (s TestSuitesClient) UpdateTestsuiteSecrets(testsuite *testsuitev3.TestSuit
 		secret.Type = corev1.SecretTypeOpaque
 	}
 
+	for key, value := range testsuite.Labels {
+		secret.Labels[key] = value
+	}
+
 	if err = testsuiteVarsToSecret(testsuite, secret); err != nil {
 		return err
 	}
 
-	if secretExists && len(secret.StringData) > 0 {
+	if len(secret.StringData) > 0 {
 		if !secretExists {
 			err = s.Client.Create(context.Background(), secret)
 		} else {
