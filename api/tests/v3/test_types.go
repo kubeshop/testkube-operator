@@ -224,6 +224,8 @@ type ExecutionRequest struct {
 	PostRunScript string `json:"postRunScript,omitempty"`
 	// execute post run script before scraping (prebuilt executor only)
 	ExecutePostRunScriptBeforeScraping bool `json:"executePostRunScriptBeforeScraping,omitempty"`
+	// run scripts using source command (container executor only)
+	SourceScripts bool `json:"sourceScripts,omitempty"`
 	// scraper template extensions
 	ScraperTemplate string `json:"scraperTemplate,omitempty"`
 	// name of the template resource
@@ -238,6 +240,8 @@ type ExecutionRequest struct {
 	EnvSecrets      []EnvReference  `json:"envSecrets,omitempty"`
 	RunningContext  *RunningContext `json:"-"`
 	SlavePodRequest *PodRequest     `json:"slavePodRequest,omitempty"`
+	// namespace for test execution (Pro edition only)
+	ExecutionNamespace string `json:"executionNamespace,omitempty"`
 }
 
 // ArgsModeType defines args mode type

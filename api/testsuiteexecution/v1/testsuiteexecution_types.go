@@ -275,13 +275,17 @@ type Execution struct {
 	// script to run after test execution
 	PostRunScript string `json:"postRunScript,omitempty"`
 	// execute post run script before scraping (prebuilt executor only)
-	ExecutePostRunScriptBeforeScraping bool            `json:"executePostRunScriptBeforeScraping,omitempty"`
-	RunningContext                     *RunningContext `json:"runningContext,omitempty"`
+	ExecutePostRunScriptBeforeScraping bool `json:"executePostRunScriptBeforeScraping,omitempty"`
+	// run scripts using source command (container executor only)
+	SourceScripts  bool            `json:"sourceScripts,omitempty"`
+	RunningContext *RunningContext `json:"runningContext,omitempty"`
 	// shell used in container executor
 	ContainerShell string `json:"containerShell,omitempty"`
 	// test execution name started the test execution
 	TestExecutionName string      `json:"testExecutionName,omitempty"`
 	SlavePodRequest   *PodRequest `json:"slavePodRequest,omitempty"`
+	// namespace for test execution (Pro edition only)
+	ExecutionNamespace string `json:"executionNamespace,omitempty"`
 }
 
 // artifact request body with test artifacts
