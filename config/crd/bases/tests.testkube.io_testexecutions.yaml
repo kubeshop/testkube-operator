@@ -169,6 +169,9 @@ spec:
                       type: string
                     description: test execution labels
                     type: object
+                  executionNamespace:
+                    description: namespace for test execution (Pro edition only)
+                    type: string
                   httpProxy:
                     description: http proxy for executor containers
                     type: string
@@ -279,6 +282,9 @@ spec:
                             type: object
                         type: object
                     type: object
+                  sourceScripts:
+                    description: run scripts using source command (container executor only)
+                    type: boolean
                   sync:
                     description: whether to start execution sync or async
                     type: boolean
@@ -585,6 +591,9 @@ spec:
                     description: execute post run script before scraping (prebuilt
                       executor only)
                     type: boolean
+                  executionNamespace:
+                    description: namespace for test execution (Pro edition only)
+                    type: string
                   executionResult:
                     description: execution result returned from executor
                     properties:
@@ -718,6 +727,9 @@ spec:
                             type: object
                         type: object
                     type: object
+                  sourceScripts:
+                    description: run scripts using source command (container executor only)
+                    type: boolean
                   startTime:
                     description: test start time
                     format: date-time
