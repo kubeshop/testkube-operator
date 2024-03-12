@@ -207,6 +207,8 @@ type TestSuiteStepExecutionRequest struct {
 	ArgsMode ArgsModeType `json:"argsMode,omitempty"`
 	// executor binary command
 	Command []string `json:"command,omitempty"`
+	// whether to start execution sync or async
+	Sync bool `json:"sync,omitempty"`
 	// http proxy for executor containers
 	HttpProxy string `json:"httpProxy,omitempty"`
 	// https proxy for executor containers
