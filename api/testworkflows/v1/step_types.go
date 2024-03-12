@@ -62,6 +62,11 @@ type StepBase struct {
 type IndependentStep struct {
 	StepBase `json:",inline" expr:"include"`
 
+	// steps to run before other operations in this step
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Setup []IndependentStep `json:"setup,omitempty" expr:"include"`
+
 	// sub-steps to run
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
@@ -76,6 +81,11 @@ type Step struct {
 
 	// single template to run in this step
 	Template *TemplateRef `json:"template,omitempty" expr:"include"`
+
+	// steps to run before other operations in this step
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Setup []Step `json:"setup,omitempty" expr:"include"`
 
 	// sub-steps to run
 	// +kubebuilder:pruning:PreserveUnknownFields
