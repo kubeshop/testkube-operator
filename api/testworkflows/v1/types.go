@@ -32,6 +32,9 @@ type ContainerConfig struct {
 
 	// security context for the container
 	SecurityContext *corev1.SecurityContext `json:"securityContext,omitempty" expr:"force"`
+
+	// volume mounts to append to the container
+	VolumeMounts []corev1.VolumeMount `json:"volumeMounts,omitempty" expr:"force"`
 }
 
 type Resources struct {
@@ -65,4 +68,7 @@ type PodConfig struct {
 
 	// annotations added to the scheduled pod
 	Annotations map[string]string `json:"annotations,omitempty" expr:"template,template"`
+
+	// volumes to include in the pod
+	Volumes []corev1.Volume `json:"volumes,omitempty" expr:"force"`
 }
