@@ -124,6 +124,8 @@ type StepExecuteWorkflow struct {
 }
 
 type StepArtifacts struct {
+	// working directory to override, so it will be used as a base dir
+	WorkingDir *string `json:"workingDir,omitempty" expr:"template"`
 	// compression options for the artifacts
 	Compress *ArtifactCompression `json:"compress,omitempty" expr:"include"`
 	// paths to fetch from the container
