@@ -21,8 +21,10 @@ import (
 	"flag"
 	"os"
 
-	testtriggersv1 "github.com/kubeshop/testkube-operator/api/testtriggers/v1"
 	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
+
+	testtriggersv1 "github.com/kubeshop/testkube-operator/api/testtriggers/v1"
+	testworkflowsv1 "github.com/kubeshop/testkube-operator/api/testworkflows/v1"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
@@ -61,6 +63,7 @@ import (
 	testsuitecontrollers "github.com/kubeshop/testkube-operator/internal/controller/testsuite"
 	testsuiteexecutioncontrollers "github.com/kubeshop/testkube-operator/internal/controller/testsuiteexecution"
 	testtriggerscontrollers "github.com/kubeshop/testkube-operator/internal/controller/testtriggers"
+	testworkflowscontrollers "github.com/kubeshop/testkube-operator/internal/controller/testworkflows"
 	"github.com/kubeshop/testkube-operator/pkg/cronjob"
 	//+kubebuilder:scaffold:imports
 )
@@ -96,6 +99,7 @@ func init() {
 	utilruntime.Must(testexecutionv1.AddToScheme(scheme))
 	utilruntime.Must(testsuiteexecutionv1.AddToScheme(scheme))
 	utilruntime.Must(templatev1.AddToScheme(scheme))
+	utilruntime.Must(testworkflowsv1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 
@@ -218,6 +222,13 @@ func main() {
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Template")
+		os.Exit(1)
+	}
+	if err = (&testworkflowscontrollers.TestWorkflowReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "TestWorkflow")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder
