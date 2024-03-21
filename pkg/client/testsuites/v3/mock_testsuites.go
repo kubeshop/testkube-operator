@@ -36,23 +36,18 @@ func (m *MockInterface) EXPECT() *MockInterfaceMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockInterface) Create(arg0 *v3.TestSuite, arg1 ...Option) (*v3.TestSuite, error) {
+func (m *MockInterface) Create(arg0 *v3.TestSuite, arg1 bool) (*v3.TestSuite, error) {
 	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0}
-	for _, a := range arg1 {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Create", varargs...)
+	ret := m.ctrl.Call(m, "Create", arg0, arg1)
 	ret0, _ := ret[0].(*v3.TestSuite)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Create indicates an expected call of Create.
-func (mr *MockInterfaceMockRecorder) Create(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
+func (mr *MockInterfaceMockRecorder) Create(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0}, arg1...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockInterface)(nil).Create), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockInterface)(nil).Create), arg0, arg1)
 }
 
 // CreateTestsuiteSecrets mocks base method.
@@ -202,23 +197,18 @@ func (mr *MockInterfaceMockRecorder) LoadTestsuiteVariablesSecret(arg0 interface
 }
 
 // Update mocks base method.
-func (m *MockInterface) Update(arg0 *v3.TestSuite, arg1 ...Option) (*v3.TestSuite, error) {
+func (m *MockInterface) Update(arg0 *v3.TestSuite, arg1 bool) (*v3.TestSuite, error) {
 	m.ctrl.T.Helper()
-	varargs := []interface{}{arg0}
-	for _, a := range arg1 {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Update", varargs...)
+	ret := m.ctrl.Call(m, "Update", arg0, arg1)
 	ret0, _ := ret[0].(*v3.TestSuite)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Update indicates an expected call of Update.
-func (mr *MockInterfaceMockRecorder) Update(arg0 interface{}, arg1 ...interface{}) *gomock.Call {
+func (mr *MockInterfaceMockRecorder) Update(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{arg0}, arg1...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockInterface)(nil).Update), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockInterface)(nil).Update), arg0, arg1)
 }
 
 // UpdateStatus mocks base method.

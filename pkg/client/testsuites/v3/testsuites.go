@@ -33,8 +33,8 @@ type Interface interface {
 	List(selector string) (*testsuitev3.TestSuiteList, error)
 	ListLabels() (map[string][]string, error)
 	Get(name string) (*testsuitev3.TestSuite, error)
-	Create(testsuite *testsuitev3.TestSuite, options ...Option) (*testsuitev3.TestSuite, error)
-	Update(testsuite *testsuitev3.TestSuite, options ...Option) (*testsuitev3.TestSuite, error)
+	Create(testsuite *testsuitev3.TestSuite, disableSecretCreation bool) (*testsuitev3.TestSuite, error)
+	Update(testsuite *testsuitev3.TestSuite, disableSecretCreation bool) (*testsuitev3.TestSuite, error)
 	Delete(name string) error
 	DeleteAll() error
 	CreateTestsuiteSecrets(testsuite *testsuitev3.TestSuite, disableSecretCreation bool) error
@@ -44,11 +44,6 @@ type Interface interface {
 	GetSecretTestSuiteVars(testsuiteName, secretUUID string) (map[string]string, error)
 	DeleteByLabels(selector string) error
 	UpdateStatus(testsuite *testsuitev3.TestSuite) error
-}
-
-// Option contain TestSuite options
-type Option struct {
-	DisableSecretCreation bool
 }
 
 // NewClient creates new TestSuite client
@@ -142,14 +137,7 @@ func (s TestSuitesClient) Get(name string) (*testsuitev3.TestSuite, error) {
 }
 
 // Create creates new TestSuite
-func (s TestSuitesClient) Create(testsuite *testsuitev3.TestSuite, options ...Option) (*testsuitev3.TestSuite, error) {
-	disableSecretCreation := false
-	for _, option := range options {
-		if option.DisableSecretCreation {
-			disableSecretCreation = option.DisableSecretCreation
-		}
-	}
-
+func (s TestSuitesClient) Create(testsuite *testsuitev3.TestSuite, disableSecretCreation bool) (*testsuitev3.TestSuite, error) {
 	err := s.CreateTestsuiteSecrets(testsuite, disableSecretCreation)
 	if err != nil {
 		return nil, err
@@ -160,14 +148,7 @@ func (s TestSuitesClient) Create(testsuite *testsuitev3.TestSuite, options ...Op
 }
 
 // Update updates existing TestSuite
-func (s TestSuitesClient) Update(testsuite *testsuitev3.TestSuite, options ...Option) (*testsuitev3.TestSuite, error) {
-	disableSecretCreation := false
-	for _, option := range options {
-		if option.DisableSecretCreation {
-			disableSecretCreation = option.DisableSecretCreation
-		}
-	}
-
+func (s TestSuitesClient) Update(testsuite *testsuitev3.TestSuite, disableSecretCreation bool) (*testsuitev3.TestSuite, error) {
 	err := s.UpdateTestsuiteSecrets(testsuite, disableSecretCreation)
 	if err != nil {
 		return nil, err

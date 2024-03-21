@@ -40,8 +40,8 @@ type Interface interface {
 	List(selector string) (*testsv3.TestList, error)
 	ListLabels() (map[string][]string, error)
 	Get(name string) (*testsv3.Test, error)
-	Create(test *testsv3.Test, options ...Option) (*testsv3.Test, error)
-	Update(test *testsv3.Test, options ...Option) (*testsv3.Test, error)
+	Create(test *testsv3.Test, disableSecretCreation bool, options ...Option) (*testsv3.Test, error)
+	Update(test *testsv3.Test, disableSecretCreation bool, options ...Option) (*testsv3.Test, error)
 	Delete(name string) error
 	DeleteAll() error
 	CreateTestSecrets(test *testsv3.Test, disableSecretCreation bool) error
@@ -69,8 +69,7 @@ func NewDeleteDependenciesError(testName string, allErrors []error) error {
 
 // Option contain test options
 type Option struct {
-	Secrets               map[string]string
-	DisableSecretCreation bool
+	Secrets map[string]string
 }
 
 // NewClient creates new Test client
@@ -162,31 +161,28 @@ func (s TestsClient) Get(name string) (*testsv3.Test, error) {
 }
 
 // Create creates new Test and coupled resources
-func (s TestsClient) Create(test *testsv3.Test, options ...Option) (*testsv3.Test, error) {
-	disableSecretCreation := false
-	secrets := make(map[string]string, 0)
-	for _, option := range options {
-		for key, value := range option.Secrets {
-			secrets[key] = value
-		}
-
-		if option.DisableSecretCreation {
-			disableSecretCreation = option.DisableSecretCreation
-		}
-	}
-
+func (s TestsClient) Create(test *testsv3.Test, disableSecretCreation bool, options ...Option) (*testsv3.Test, error) {
 	err := s.CreateTestSecrets(test, disableSecretCreation)
 	if err != nil {
 		return nil, err
 	}
 
-	if len(secrets) != 0 {
-		secretName := secret.GetMetadataName(test.Name, secretKind)
-		if err := s.secretClient.Create(secretName, test.Labels, secrets); err != nil {
-			return nil, err
+	if len(options) != 0 {
+		secrets := make(map[string]string, 0)
+		for _, option := range options {
+			for key, value := range option.Secrets {
+				secrets[key] = value
+			}
 		}
 
-		updateTestSecrets(test, secretName, secrets)
+		if len(secrets) != 0 {
+			secretName := secret.GetMetadataName(test.Name, secretKind)
+			if err := s.secretClient.Create(secretName, test.Labels, secrets); err != nil {
+				return nil, err
+			}
+
+			updateTestSecrets(test, secretName, secrets)
+		}
 	}
 
 	err = s.k8sClient.Create(context.Background(), test)
@@ -194,25 +190,20 @@ func (s TestsClient) Create(test *testsv3.Test, options ...Option) (*testsv3.Tes
 }
 
 // Update updates existing Test and coupled resources
-func (s TestsClient) Update(test *testsv3.Test, options ...Option) (*testsv3.Test, error) {
-	disableSecretCreation := false
-	secrets := make(map[string]string, 0)
-	for _, option := range options {
-		for key, value := range option.Secrets {
-			secrets[key] = value
-		}
-
-		if option.DisableSecretCreation {
-			disableSecretCreation = option.DisableSecretCreation
-		}
-	}
-
+func (s TestsClient) Update(test *testsv3.Test, disableSecretCreation bool, options ...Option) (*testsv3.Test, error) {
 	err := s.UpdateTestSecrets(test, disableSecretCreation)
 	if err != nil {
 		return nil, err
 	}
 
 	if len(options) != 0 {
+		secrets := make(map[string]string, 0)
+		for _, option := range options {
+			for key, value := range option.Secrets {
+				secrets[key] = value
+			}
+		}
+
 		secretName := secret.GetMetadataName(test.Name, secretKind)
 		if len(secrets) != 0 {
 			if err := s.secretClient.Apply(secretName, test.Labels, secrets); err != nil {
