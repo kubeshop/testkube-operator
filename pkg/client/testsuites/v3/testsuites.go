@@ -33,17 +33,22 @@ type Interface interface {
 	List(selector string) (*testsuitev3.TestSuiteList, error)
 	ListLabels() (map[string][]string, error)
 	Get(name string) (*testsuitev3.TestSuite, error)
-	Create(testsuite *testsuitev3.TestSuite) (*testsuitev3.TestSuite, error)
-	Update(testsuite *testsuitev3.TestSuite) (*testsuitev3.TestSuite, error)
+	Create(testsuite *testsuitev3.TestSuite, options ...Option) (*testsuitev3.TestSuite, error)
+	Update(testsuite *testsuitev3.TestSuite, options ...Option) (*testsuitev3.TestSuite, error)
 	Delete(name string) error
 	DeleteAll() error
-	CreateTestsuiteSecrets(testsuite *testsuitev3.TestSuite) error
-	UpdateTestsuiteSecrets(testsuite *testsuitev3.TestSuite) error
+	CreateTestsuiteSecrets(testsuite *testsuitev3.TestSuite, disableSecretCreation bool) error
+	UpdateTestsuiteSecrets(testsuite *testsuitev3.TestSuite, disableSecretCreation bool) error
 	LoadTestsuiteVariablesSecret(testsuite *testsuitev3.TestSuite) (*corev1.Secret, error)
 	GetCurrentSecretUUID(testsuiteName string) (string, error)
 	GetSecretTestSuiteVars(testsuiteName, secretUUID string) (map[string]string, error)
 	DeleteByLabels(selector string) error
 	UpdateStatus(testsuite *testsuitev3.TestSuite) error
+}
+
+// Option contain TestSuite options
+type Option struct {
+	DisableSecretCreation bool
 }
 
 // NewClient creates new TestSuite client
@@ -137,8 +142,15 @@ func (s TestSuitesClient) Get(name string) (*testsuitev3.TestSuite, error) {
 }
 
 // Create creates new TestSuite
-func (s TestSuitesClient) Create(testsuite *testsuitev3.TestSuite) (*testsuitev3.TestSuite, error) {
-	err := s.CreateTestsuiteSecrets(testsuite)
+func (s TestSuitesClient) Create(testsuite *testsuitev3.TestSuite, options ...Option) (*testsuitev3.TestSuite, error) {
+	disableSecretCreation := false
+	for _, option := range options {
+		if option.DisableSecretCreation {
+			disableSecretCreation = option.DisableSecretCreation
+		}
+	}
+
+	err := s.CreateTestsuiteSecrets(testsuite, disableSecretCreation)
 	if err != nil {
 		return nil, err
 	}
@@ -148,8 +160,15 @@ func (s TestSuitesClient) Create(testsuite *testsuitev3.TestSuite) (*testsuitev3
 }
 
 // Update updates existing TestSuite
-func (s TestSuitesClient) Update(testsuite *testsuitev3.TestSuite) (*testsuitev3.TestSuite, error) {
-	err := s.UpdateTestsuiteSecrets(testsuite)
+func (s TestSuitesClient) Update(testsuite *testsuitev3.TestSuite, options ...Option) (*testsuitev3.TestSuite, error) {
+	disableSecretCreation := false
+	for _, option := range options {
+		if option.DisableSecretCreation {
+			disableSecretCreation = option.DisableSecretCreation
+		}
+	}
+
+	err := s.UpdateTestsuiteSecrets(testsuite, disableSecretCreation)
 	if err != nil {
 		return nil, err
 	}
@@ -203,7 +222,7 @@ func (s TestSuitesClient) DeleteAll() error {
 }
 
 // CreateTestsuiteSecrets creates corresponding TestSuite vars secrets
-func (s TestSuitesClient) CreateTestsuiteSecrets(testsuite *testsuitev3.TestSuite) error {
+func (s TestSuitesClient) CreateTestsuiteSecrets(testsuite *testsuitev3.TestSuite, disableSecretCreation bool) error {
 	secretName := secretName(testsuite.Name)
 	secret := &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
@@ -219,7 +238,7 @@ func (s TestSuitesClient) CreateTestsuiteSecrets(testsuite *testsuitev3.TestSuit
 		secret.Labels[key] = value
 	}
 
-	if err := testsuiteVarsToSecret(testsuite, secret); err != nil {
+	if err := testsuiteVarsToSecret(testsuite, secret, disableSecretCreation); err != nil {
 		return err
 	}
 
@@ -233,7 +252,7 @@ func (s TestSuitesClient) CreateTestsuiteSecrets(testsuite *testsuitev3.TestSuit
 	return nil
 }
 
-func (s TestSuitesClient) UpdateTestsuiteSecrets(testsuite *testsuitev3.TestSuite) error {
+func (s TestSuitesClient) UpdateTestsuiteSecrets(testsuite *testsuitev3.TestSuite, disableSecretCreation bool) error {
 	secret, err := s.LoadTestsuiteVariablesSecret(testsuite)
 	secretExists := !errors.IsNotFound(err)
 	if err != nil && secretExists {
@@ -255,7 +274,7 @@ func (s TestSuitesClient) UpdateTestsuiteSecrets(testsuite *testsuitev3.TestSuit
 		secret.Labels[key] = value
 	}
 
-	if err = testsuiteVarsToSecret(testsuite, secret); err != nil {
+	if err = testsuiteVarsToSecret(testsuite, secret, disableSecretCreation); err != nil {
 		return err
 	}
 
@@ -342,7 +361,7 @@ func (s TestSuitesClient) UpdateStatus(testsuite *testsuitev3.TestSuite) error {
 }
 
 // testsuiteVarsToSecret loads secrets data passed into TestSuite CRD and remove plain text data
-func testsuiteVarsToSecret(testsuite *testsuitev3.TestSuite, secret *corev1.Secret) error {
+func testsuiteVarsToSecret(testsuite *testsuitev3.TestSuite, secret *corev1.Secret, disableSecretCreation bool) error {
 	if secret == nil {
 		return nil
 	}
@@ -369,18 +388,22 @@ func testsuiteVarsToSecret(testsuite *testsuitev3.TestSuite, secret *corev1.Secr
 					},
 				}
 			} else {
-				secret.StringData[v.Name] = v.Value
-				secretMap[v.Name] = v.Value
-				// clear passed test suite variable secret value and save as reference o secret
-				v.Value = ""
-				v.ValueFrom = corev1.EnvVarSource{
-					SecretKeyRef: &corev1.SecretKeySelector{
-						Key: v.Name,
-						LocalObjectReference: corev1.LocalObjectReference{
-							Name: secret.Name,
+				if !disableSecretCreation {
+					// save as reference to secret
+					secret.StringData[v.Name] = v.Value
+					secretMap[v.Name] = v.Value
+					v.ValueFrom = corev1.EnvVarSource{
+						SecretKeyRef: &corev1.SecretKeySelector{
+							Key: v.Name,
+							LocalObjectReference: corev1.LocalObjectReference{
+								Name: secret.Name,
+							},
 						},
-					},
+					}
 				}
+
+				// clear passed test suite variable secret value
+				v.Value = ""
 			}
 
 			testsuite.Spec.ExecutionRequest.Variables[k] = v
