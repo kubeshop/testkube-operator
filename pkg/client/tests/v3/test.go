@@ -40,12 +40,12 @@ type Interface interface {
 	List(selector string) (*testsv3.TestList, error)
 	ListLabels() (map[string][]string, error)
 	Get(name string) (*testsv3.Test, error)
-	Create(test *testsv3.Test, options ...Option) (*testsv3.Test, error)
-	Update(test *testsv3.Test, options ...Option) (*testsv3.Test, error)
+	Create(test *testsv3.Test, disableSecretCreation bool, options ...Option) (*testsv3.Test, error)
+	Update(test *testsv3.Test, disableSecretCreation bool, options ...Option) (*testsv3.Test, error)
 	Delete(name string) error
 	DeleteAll() error
-	CreateTestSecrets(test *testsv3.Test) error
-	UpdateTestSecrets(test *testsv3.Test) error
+	CreateTestSecrets(test *testsv3.Test, disableSecretCreation bool) error
+	UpdateTestSecrets(test *testsv3.Test, disableSecretCreation bool) error
 	LoadTestVariablesSecret(test *testsv3.Test) (*corev1.Secret, error)
 	GetCurrentSecretUUID(testName string) (string, error)
 	GetSecretTestVars(testName, secretUUID string) (map[string]string, error)
@@ -67,7 +67,7 @@ func NewDeleteDependenciesError(testName string, allErrors []error) error {
 	return &DeleteDependenciesError{testName: testName, allErrors: allErrors}
 }
 
-// Option contain test source options
+// Option contain test options
 type Option struct {
 	Secrets map[string]string
 }
@@ -161,8 +161,8 @@ func (s TestsClient) Get(name string) (*testsv3.Test, error) {
 }
 
 // Create creates new Test and coupled resources
-func (s TestsClient) Create(test *testsv3.Test, options ...Option) (*testsv3.Test, error) {
-	err := s.CreateTestSecrets(test)
+func (s TestsClient) Create(test *testsv3.Test, disableSecretCreation bool, options ...Option) (*testsv3.Test, error) {
+	err := s.CreateTestSecrets(test, disableSecretCreation)
 	if err != nil {
 		return nil, err
 	}
@@ -175,8 +175,8 @@ func (s TestsClient) Create(test *testsv3.Test, options ...Option) (*testsv3.Tes
 			}
 		}
 
-		secretName := secret.GetMetadataName(test.Name, secretKind)
 		if len(secrets) != 0 {
+			secretName := secret.GetMetadataName(test.Name, secretKind)
 			if err := s.secretClient.Create(secretName, test.Labels, secrets); err != nil {
 				return nil, err
 			}
@@ -190,8 +190,8 @@ func (s TestsClient) Create(test *testsv3.Test, options ...Option) (*testsv3.Tes
 }
 
 // Update updates existing Test and coupled resources
-func (s TestsClient) Update(test *testsv3.Test, options ...Option) (*testsv3.Test, error) {
-	err := s.UpdateTestSecrets(test)
+func (s TestsClient) Update(test *testsv3.Test, disableSecretCreation bool, options ...Option) (*testsv3.Test, error) {
+	err := s.UpdateTestSecrets(test, disableSecretCreation)
 	if err != nil {
 		return nil, err
 	}
@@ -285,7 +285,7 @@ func (s TestsClient) DeleteAll() error {
 }
 
 // CreateTestSecrets creates corresponding test vars secrets
-func (s TestsClient) CreateTestSecrets(test *testsv3.Test) error {
+func (s TestsClient) CreateTestSecrets(test *testsv3.Test, disableSecretCreation bool) error {
 	secretName := secretName(test.Name)
 	secret := &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
@@ -301,7 +301,7 @@ func (s TestsClient) CreateTestSecrets(test *testsv3.Test) error {
 		secret.Labels[key] = value
 	}
 
-	if err := testVarsToSecret(test, secret); err != nil {
+	if err := testVarsToSecret(test, secret, disableSecretCreation); err != nil {
 		return err
 	}
 
@@ -315,7 +315,7 @@ func (s TestsClient) CreateTestSecrets(test *testsv3.Test) error {
 	return nil
 }
 
-func (s TestsClient) UpdateTestSecrets(test *testsv3.Test) error {
+func (s TestsClient) UpdateTestSecrets(test *testsv3.Test, disableSecretCreation bool) error {
 	secret, err := s.LoadTestVariablesSecret(test)
 	secretExists := !errors.IsNotFound(err)
 	if err != nil && secretExists {
@@ -337,7 +337,7 @@ func (s TestsClient) UpdateTestSecrets(test *testsv3.Test) error {
 		secret.Labels[key] = value
 	}
 
-	if err = testVarsToSecret(test, secret); err != nil {
+	if err = testVarsToSecret(test, secret, disableSecretCreation); err != nil {
 		return err
 	}
 
@@ -440,7 +440,7 @@ func (s TestsClient) UpdateStatus(test *testsv3.Test) error {
 }
 
 // testVarsToSecret loads secrets data passed into Test CRD and remove plain text data
-func testVarsToSecret(test *testsv3.Test, secret *corev1.Secret) error {
+func testVarsToSecret(test *testsv3.Test, secret *corev1.Secret, disablesecretCreation bool) error {
 	if secret.StringData == nil {
 		secret.StringData = map[string]string{}
 	}
@@ -463,18 +463,22 @@ func testVarsToSecret(test *testsv3.Test, secret *corev1.Secret) error {
 					},
 				}
 			} else {
-				secret.StringData[v.Name] = v.Value
-				secretMap[v.Name] = v.Value
-				// clear passed test variable secret value and save as reference o secret
-				v.Value = ""
-				v.ValueFrom = corev1.EnvVarSource{
-					SecretKeyRef: &corev1.SecretKeySelector{
-						Key: v.Name,
-						LocalObjectReference: corev1.LocalObjectReference{
-							Name: secret.Name,
+				if !disablesecretCreation {
+					// save as reference to secret
+					secret.StringData[v.Name] = v.Value
+					secretMap[v.Name] = v.Value
+					v.ValueFrom = corev1.EnvVarSource{
+						SecretKeyRef: &corev1.SecretKeySelector{
+							Key: v.Name,
+							LocalObjectReference: corev1.LocalObjectReference{
+								Name: secret.Name,
+							},
 						},
-					},
+					}
 				}
+
+				// clear passed test variable secret value
+				v.Value = ""
 			}
 
 			test.Spec.ExecutionRequest.Variables[k] = v

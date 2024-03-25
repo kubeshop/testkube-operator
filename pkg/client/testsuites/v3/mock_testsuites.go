@@ -36,32 +36,32 @@ func (m *MockInterface) EXPECT() *MockInterfaceMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockInterface) Create(arg0 *v3.TestSuite) (*v3.TestSuite, error) {
+func (m *MockInterface) Create(arg0 *v3.TestSuite, arg1 bool) (*v3.TestSuite, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", arg0)
+	ret := m.ctrl.Call(m, "Create", arg0, arg1)
 	ret0, _ := ret[0].(*v3.TestSuite)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Create indicates an expected call of Create.
-func (mr *MockInterfaceMockRecorder) Create(arg0 interface{}) *gomock.Call {
+func (mr *MockInterfaceMockRecorder) Create(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockInterface)(nil).Create), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockInterface)(nil).Create), arg0, arg1)
 }
 
 // CreateTestsuiteSecrets mocks base method.
-func (m *MockInterface) CreateTestsuiteSecrets(arg0 *v3.TestSuite) error {
+func (m *MockInterface) CreateTestsuiteSecrets(arg0 *v3.TestSuite, arg1 bool) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateTestsuiteSecrets", arg0)
+	ret := m.ctrl.Call(m, "CreateTestsuiteSecrets", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CreateTestsuiteSecrets indicates an expected call of CreateTestsuiteSecrets.
-func (mr *MockInterfaceMockRecorder) CreateTestsuiteSecrets(arg0 interface{}) *gomock.Call {
+func (mr *MockInterfaceMockRecorder) CreateTestsuiteSecrets(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTestsuiteSecrets", reflect.TypeOf((*MockInterface)(nil).CreateTestsuiteSecrets), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTestsuiteSecrets", reflect.TypeOf((*MockInterface)(nil).CreateTestsuiteSecrets), arg0, arg1)
 }
 
 // Delete mocks base method.
@@ -197,18 +197,18 @@ func (mr *MockInterfaceMockRecorder) LoadTestsuiteVariablesSecret(arg0 interface
 }
 
 // Update mocks base method.
-func (m *MockInterface) Update(arg0 *v3.TestSuite) (*v3.TestSuite, error) {
+func (m *MockInterface) Update(arg0 *v3.TestSuite, arg1 bool) (*v3.TestSuite, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Update", arg0)
+	ret := m.ctrl.Call(m, "Update", arg0, arg1)
 	ret0, _ := ret[0].(*v3.TestSuite)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Update indicates an expected call of Update.
-func (mr *MockInterfaceMockRecorder) Update(arg0 interface{}) *gomock.Call {
+func (mr *MockInterfaceMockRecorder) Update(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockInterface)(nil).Update), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockInterface)(nil).Update), arg0, arg1)
 }
 
 // UpdateStatus mocks base method.
@@ -226,15 +226,15 @@ func (mr *MockInterfaceMockRecorder) UpdateStatus(arg0 interface{}) *gomock.Call
 }
 
 // UpdateTestsuiteSecrets mocks base method.
-func (m *MockInterface) UpdateTestsuiteSecrets(arg0 *v3.TestSuite) error {
+func (m *MockInterface) UpdateTestsuiteSecrets(arg0 *v3.TestSuite, arg1 bool) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateTestsuiteSecrets", arg0)
+	ret := m.ctrl.Call(m, "UpdateTestsuiteSecrets", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateTestsuiteSecrets indicates an expected call of UpdateTestsuiteSecrets.
-func (mr *MockInterfaceMockRecorder) UpdateTestsuiteSecrets(arg0 interface{}) *gomock.Call {
+func (mr *MockInterfaceMockRecorder) UpdateTestsuiteSecrets(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateTestsuiteSecrets", reflect.TypeOf((*MockInterface)(nil).UpdateTestsuiteSecrets), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateTestsuiteSecrets", reflect.TypeOf((*MockInterface)(nil).UpdateTestsuiteSecrets), arg0, arg1)
 }

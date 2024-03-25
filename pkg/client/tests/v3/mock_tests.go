@@ -36,9 +36,9 @@ func (m *MockInterface) EXPECT() *MockInterfaceMockRecorder {
 }
 
 // Create mocks base method.
-func (m *MockInterface) Create(test *v3.Test, options ...Option) (*v3.Test, error) {
+func (m *MockInterface) Create(test *v3.Test, disableSecretCreation bool, options ...Option) (*v3.Test, error) {
 	m.ctrl.T.Helper()
-	varargs := []interface{}{test}
+	varargs := []interface{}{test, disableSecretCreation}
 	for _, a := range options {
 		varargs = append(varargs, a)
 	}
@@ -49,24 +49,24 @@ func (m *MockInterface) Create(test *v3.Test, options ...Option) (*v3.Test, erro
 }
 
 // Create indicates an expected call of Create.
-func (mr *MockInterfaceMockRecorder) Create(test interface{}, options ...interface{}) *gomock.Call {
+func (mr *MockInterfaceMockRecorder) Create(test, disableSecretCreation interface{}, options ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{test}, options...)
+	varargs := append([]interface{}{test, disableSecretCreation}, options...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockInterface)(nil).Create), varargs...)
 }
 
 // CreateTestSecrets mocks base method.
-func (m *MockInterface) CreateTestSecrets(test *v3.Test) error {
+func (m *MockInterface) CreateTestSecrets(test *v3.Test, disableSecretCreation bool) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateTestSecrets", test)
+	ret := m.ctrl.Call(m, "CreateTestSecrets", test, disableSecretCreation)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // CreateTestSecrets indicates an expected call of CreateTestSecrets.
-func (mr *MockInterfaceMockRecorder) CreateTestSecrets(test interface{}) *gomock.Call {
+func (mr *MockInterfaceMockRecorder) CreateTestSecrets(test, disableSecretCreation interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTestSecrets", reflect.TypeOf((*MockInterface)(nil).CreateTestSecrets), test)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTestSecrets", reflect.TypeOf((*MockInterface)(nil).CreateTestSecrets), test, disableSecretCreation)
 }
 
 // Delete mocks base method.
@@ -217,9 +217,9 @@ func (mr *MockInterfaceMockRecorder) LoadTestVariablesSecret(test interface{}) *
 }
 
 // Update mocks base method.
-func (m *MockInterface) Update(test *v3.Test, options ...Option) (*v3.Test, error) {
+func (m *MockInterface) Update(test *v3.Test, disableSecretCreation bool, options ...Option) (*v3.Test, error) {
 	m.ctrl.T.Helper()
-	varargs := []interface{}{test}
+	varargs := []interface{}{test, disableSecretCreation}
 	for _, a := range options {
 		varargs = append(varargs, a)
 	}
@@ -230,9 +230,9 @@ func (m *MockInterface) Update(test *v3.Test, options ...Option) (*v3.Test, erro
 }
 
 // Update indicates an expected call of Update.
-func (mr *MockInterfaceMockRecorder) Update(test interface{}, options ...interface{}) *gomock.Call {
+func (mr *MockInterfaceMockRecorder) Update(test, disableSecretCreation interface{}, options ...interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]interface{}{test}, options...)
+	varargs := append([]interface{}{test, disableSecretCreation}, options...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockInterface)(nil).Update), varargs...)
 }
 
@@ -251,15 +251,15 @@ func (mr *MockInterfaceMockRecorder) UpdateStatus(test interface{}) *gomock.Call
 }
 
 // UpdateTestSecrets mocks base method.
-func (m *MockInterface) UpdateTestSecrets(test *v3.Test) error {
+func (m *MockInterface) UpdateTestSecrets(test *v3.Test, disableSecretCreation bool) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UpdateTestSecrets", test)
+	ret := m.ctrl.Call(m, "UpdateTestSecrets", test, disableSecretCreation)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // UpdateTestSecrets indicates an expected call of UpdateTestSecrets.
-func (mr *MockInterfaceMockRecorder) UpdateTestSecrets(test interface{}) *gomock.Call {
+func (mr *MockInterfaceMockRecorder) UpdateTestSecrets(test, disableSecretCreation interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateTestSecrets", reflect.TypeOf((*MockInterface)(nil).UpdateTestSecrets), test)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateTestSecrets", reflect.TypeOf((*MockInterface)(nil).UpdateTestSecrets), test, disableSecretCreation)
 }
