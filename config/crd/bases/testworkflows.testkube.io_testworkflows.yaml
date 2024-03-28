@@ -1854,6 +1854,10 @@ spec:
                           pod:
                             description: pod template to spawn
                             x-kubernetes-preserve-unknown-fields: true
+                          ready:
+                            description: expression that determines if the pod initialization
+                              has completed successfully
+                            type: string
                           shardExpressions:
                             additionalProperties:
                               type: string
@@ -1871,10 +1875,6 @@ spec:
                             description: parameters that should be distributed across
                               sharded instances (static)
                             type: object
-                          success:
-                            description: expression that determines if the pod initialization
-                              has completed successfully
-                            type: string
                           timeout:
                             description: how long we should wait for successful initialization
                             pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
@@ -6215,6 +6215,10 @@ spec:
                           pod:
                             description: pod template to spawn
                             x-kubernetes-preserve-unknown-fields: true
+                          ready:
+                            description: expression that determines if the pod initialization
+                              has completed successfully
+                            type: string
                           shardExpressions:
                             additionalProperties:
                               type: string
@@ -6232,10 +6236,6 @@ spec:
                             description: parameters that should be distributed across
                               sharded instances (static)
                             type: object
-                          success:
-                            description: expression that determines if the pod initialization
-                              has completed successfully
-                            type: string
                           timeout:
                             description: how long we should wait for successful initialization
                             pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
@@ -6451,6 +6451,10 @@ spec:
                     pod:
                       description: pod template to spawn
                       x-kubernetes-preserve-unknown-fields: true
+                    ready:
+                      description: expression that determines if the pod initialization
+                        has completed successfully
+                      type: string
                     shardExpressions:
                       additionalProperties:
                         type: string
@@ -6468,10 +6472,6 @@ spec:
                       description: parameters that should be distributed across sharded
                         instances (static)
                       type: object
-                    success:
-                      description: expression that determines if the pod initialization
-                        has completed successfully
-                      type: string
                     timeout:
                       description: how long we should wait for successful initialization
                       pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
@@ -8295,6 +8295,10 @@ spec:
                           pod:
                             description: pod template to spawn
                             x-kubernetes-preserve-unknown-fields: true
+                          ready:
+                            description: expression that determines if the pod initialization
+                              has completed successfully
+                            type: string
                           shardExpressions:
                             additionalProperties:
                               type: string
@@ -8312,10 +8316,6 @@ spec:
                             description: parameters that should be distributed across
                               sharded instances (static)
                             type: object
-                          success:
-                            description: expression that determines if the pod initialization
-                              has completed successfully
-                            type: string
                           timeout:
                             description: how long we should wait for successful initialization
                             pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$

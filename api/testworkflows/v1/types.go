@@ -86,7 +86,7 @@ type SpawnInstructionBase struct {
 	Parallelism *intstr.IntOrString `json:"parallelism,omitempty" expr:"expression"`
 
 	// expression that determines if the pod initialization has completed successfully
-	Success string `json:"success,omitempty" expr:"expression"`
+	Ready string `json:"ready,omitempty" expr:"expression"`
 
 	// expression that determines if the pod initialization has failed
 	Error string `json:"error,omitempty" expr:"expression"`
