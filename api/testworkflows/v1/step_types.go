@@ -57,6 +57,9 @@ type StepBase struct {
 
 	// scrape artifacts from the volumes
 	Artifacts *StepArtifacts `json:"artifacts,omitempty" expr:"include"`
+
+	// accompanying pods to create for the step
+	Spawn map[string]SpawnInstruction `json:"spawn,omitempty" expr:"template,include"`
 }
 
 type IndependentStep struct {

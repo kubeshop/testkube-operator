@@ -45,3 +45,8 @@ type Content struct {
 	// files to load
 	Files []ContentFile `json:"files,omitempty" expr:"include"`
 }
+
+type SpawnContent struct {
+	// files to load
+	Files []ContentFile `json:"files,omitempty" expr:"include"`
+}

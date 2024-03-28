@@ -12,6 +12,9 @@ type TestWorkflowSpecBase struct {
 	// defaults for the containers for all the TestWorkflow steps
 	Container *ContainerConfig `json:"container,omitempty" expr:"include"`
 
+	// accompanying pods to create for the TestWorkflow
+	Spawn map[string]SpawnInstruction `json:"spawn,omitempty" expr:"template,include"`
+
 	// configuration for the scheduled job
 	Job *JobConfig `json:"job,omitempty" expr:"include"`
 
