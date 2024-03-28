@@ -75,6 +75,59 @@ type PodConfig struct {
 	Volumes []corev1.Volume `json:"volumes,omitempty" expr:"force"`
 }
 
+type SpawnInstructionBase struct {
+	// static number of sharded instances to spawn
+	Count *intstr.IntOrString `json:"count,omitempty" expr:"expression"`
+
+	// dynamic number of sharded instances to spawn - it will be lowered if there is not enough sharded values
+	MaxCount *intstr.IntOrString `json:"maxCount,omitempty" expr:"expression"`
+
+	// how many pods can be initializing at once
+	Parallelism *intstr.IntOrString `json:"parallelism,omitempty" expr:"expression"`
+
+	// expression that determines if the pod initialization has completed successfully
+	Success string `json:"success,omitempty" expr:"expression"`
+
+	// expression that determines if the pod initialization has failed
+	Error string `json:"error,omitempty" expr:"expression"`
+
+	// how long we should wait for successful initialization
+	// +kubebuilder:validation:Pattern=^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
+	Timeout string `json:"timeout,omitempty"`
+
+	// matrix of parameters to spawn instances (static)
+	Matrix map[string][]intstr.IntOrString `json:"matrix,omitempty" expr:"ignore,template"`
+
+	// matrix of parameters to spawn instances (expressions)
+	MatrixExpressions map[string]string `json:"matrixExpressions,omitempty" expr:"ignore,expression"`
+
+	// parameters that should be distributed across sharded instances (static)
+	Shards map[string][]intstr.IntOrString `json:"shards,omitempty" expr:"ignore,template"`
+
+	// parameters that should be distributed across sharded instances (expressions)
+	ShardExpressions map[string]string `json:"shardExpressions,omitempty" expr:"ignore,expression"`
+
+	// content to provide for the spawned pods
+	Content *SpawnContent `json:"content,omitempty" expr:"include"`
+
+	// pod template to spawn
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Pod corev1.PodTemplateSpec `json:"pod,omitempty" expr:"force"`
+}
+
+type SpawnInstructionAliases struct {
+	// container definition for simplicity
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Container *corev1.Container `json:"container,omitempty" expr:"force"`
+}
+
+type SpawnInstruction struct {
+	SpawnInstructionBase    `json:",inline" expr:"include"`
+	SpawnInstructionAliases `json:",inline" expr:"include"`
+}
+
 type DynamicList struct {
 	Dynamic    bool     `expr:"ignore"`
 	Static     []string `expr:"template"`
