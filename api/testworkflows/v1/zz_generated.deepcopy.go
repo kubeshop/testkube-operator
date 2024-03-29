@@ -762,6 +762,13 @@ func (in *StepBase) DeepCopyInto(out *StepBase) {
 		*out = new(Content)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Services != nil {
+		in, out := &in.Services, &out.Services
+		*out = make(map[string]SpawnInstruction, len(*in))
+		for key, val := range *in {
+			(*out)[key] = *val.DeepCopy()
+		}
+	}
 	if in.Run != nil {
 		in, out := &in.Run, &out.Run
 		*out = new(StepRun)
@@ -777,6 +784,13 @@ func (in *StepBase) DeepCopyInto(out *StepBase) {
 		*out = new(ContainerConfig)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Distribute != nil {
+		in, out := &in.Distribute, &out.Distribute
+		*out = make(map[string]SpawnInstruction, len(*in))
+		for key, val := range *in {
+			(*out)[key] = *val.DeepCopy()
+		}
+	}
 	if in.Execute != nil {
 		in, out := &in.Execute, &out.Execute
 		*out = new(StepExecute)
@@ -786,13 +800,6 @@ func (in *StepBase) DeepCopyInto(out *StepBase) {
 		in, out := &in.Artifacts, &out.Artifacts
 		*out = new(StepArtifacts)
 		(*in).DeepCopyInto(*out)
-	}
-	if in.Spawn != nil {
-		in, out := &in.Spawn, &out.Spawn
-		*out = make(map[string]SpawnInstruction, len(*in))
-		for key, val := range *in {
-			(*out)[key] = *val.DeepCopy()
-		}
 	}
 }
 
@@ -1176,8 +1183,8 @@ func (in *TestWorkflowSpecBase) DeepCopyInto(out *TestWorkflowSpecBase) {
 		*out = new(ContainerConfig)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Spawn != nil {
-		in, out := &in.Spawn, &out.Spawn
+	if in.Services != nil {
+		in, out := &in.Services, &out.Services
 		*out = make(map[string]SpawnInstruction, len(*in))
 		for key, val := range *in {
 			(*out)[key] = *val.DeepCopy()

@@ -45,6 +45,9 @@ type StepBase struct {
 	// content that should be fetched for this step
 	Content *Content `json:"content,omitempty" expr:"include"`
 
+	// accompanying pods to create for the step
+	Services map[string]SpawnInstruction `json:"services,omitempty" expr:"template,include"`
+
 	// script to run in a default shell for the container
 	Shell string `json:"shell,omitempty" expr:"template"`
 
@@ -57,14 +60,14 @@ type StepBase struct {
 	// defaults for the containers in this step
 	Container *ContainerConfig `json:"container,omitempty" expr:"include"`
 
+	// run multiple pods with specification and wait until finish
+	Distribute map[string]SpawnInstruction `json:"distribute,omitempty" expr:"template,include"`
+
 	// execute other Testkube resources
 	Execute *StepExecute `json:"execute,omitempty" expr:"include"`
 
 	// scrape artifacts from the volumes
 	Artifacts *StepArtifacts `json:"artifacts,omitempty" expr:"include"`
-
-	// accompanying pods to create for the step
-	Spawn map[string]SpawnInstruction `json:"spawn,omitempty" expr:"template,include"`
 }
 
 type IndependentStep struct {
