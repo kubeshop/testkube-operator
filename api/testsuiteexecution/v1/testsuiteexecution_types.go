@@ -291,9 +291,9 @@ type Execution struct {
 // artifact request body with test artifacts
 type ArtifactRequest struct {
 	// artifact storage class name for container executor
-	StorageClassName string `json:"storageClassName"`
+	StorageClassName string `json:"storageClassName,omitempty"`
 	// artifact volume mount path for container executor
-	VolumeMountPath string `json:"volumeMountPath"`
+	VolumeMountPath string `json:"volumeMountPath,omitempty"`
 	// artifact directories for scraping
 	Dirs []string `json:"dirs,omitempty"`
 	// regexp to filter scraped artifacts, single or comma separated
@@ -304,6 +304,8 @@ type ArtifactRequest struct {
 	OmitFolderPerExecution bool `json:"omitFolderPerExecution,omitempty"`
 	// whether to share volume between pods
 	SharedBetweenPods bool `json:"sharedBetweenPods,omitempty"`
+	// whether to use default storage class name
+	UseDefaultStorageClassName bool `json:"useDefaultStorageClassName,omitempty"`
 }
 
 // TestContent defines test content
