@@ -113,14 +113,14 @@ type SpawnInstructionBase struct {
 	// pod template to spawn
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
-	Pod corev1.PodTemplateSpec `json:"pod,omitempty" expr:"force"`
+	Pod corev1.PodTemplateSpec `json:"pod,omitempty" expr:"force"` // TODO: Consider custom PodTemplateSpec
 }
 
 type SpawnInstructionAliases struct {
 	// container definition for simplicity
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
-	Container *corev1.Container `json:"container,omitempty" expr:"force"`
+	Container *corev1.Container `json:"container,omitempty" expr:"force"` // TODO: Consider ContainerConfig
 }
 
 type SpawnInstruction struct {

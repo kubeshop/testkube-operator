@@ -784,13 +784,7 @@ func (in *StepBase) DeepCopyInto(out *StepBase) {
 		*out = new(ContainerConfig)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Distribute != nil {
-		in, out := &in.Distribute, &out.Distribute
-		*out = make(map[string]SpawnInstruction, len(*in))
-		for key, val := range *in {
-			(*out)[key] = *val.DeepCopy()
-		}
-	}
+	in.Distribute.DeepCopyInto(&out.Distribute)
 	if in.Execute != nil {
 		in, out := &in.Execute, &out.Execute
 		*out = new(StepExecute)

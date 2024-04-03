@@ -61,7 +61,7 @@ type StepBase struct {
 	Container *ContainerConfig `json:"container,omitempty" expr:"include"`
 
 	// run multiple pods with specification and wait until finish
-	Distribute map[string]SpawnInstruction `json:"distribute,omitempty" expr:"template,include"`
+	Distribute SpawnInstruction `json:"distribute,omitempty" expr:"template,include"`
 
 	// execute other Testkube resources
 	Execute *StepExecute `json:"execute,omitempty" expr:"include"`
