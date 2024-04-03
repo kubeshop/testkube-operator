@@ -784,7 +784,11 @@ func (in *StepBase) DeepCopyInto(out *StepBase) {
 		*out = new(ContainerConfig)
 		(*in).DeepCopyInto(*out)
 	}
-	in.Distribute.DeepCopyInto(&out.Distribute)
+	if in.Distribute != nil {
+		in, out := &in.Distribute, &out.Distribute
+		*out = new(SpawnInstruction)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Execute != nil {
 		in, out := &in.Execute, &out.Execute
 		*out = new(StepExecute)
