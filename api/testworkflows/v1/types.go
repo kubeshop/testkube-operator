@@ -107,20 +107,20 @@ type SpawnInstructionBase struct {
 	// parameters that should be distributed across sharded instances (expressions)
 	ShardExpressions map[string]string `json:"shardExpressions,omitempty" expr:"ignore,expression"`
 
-	// content to provide for the spawned pods
-	Content *SpawnContent `json:"content,omitempty" expr:"include"`
+	// files to load into spawned pods
+	Files []ContentFile `json:"files,omitempty" expr:"include"`
 
 	// pod template to spawn
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
-	Pod corev1.PodTemplateSpec `json:"pod,omitempty" expr:"force"` // TODO: Consider custom PodTemplateSpec
+	Pod corev1.PodTemplateSpec `json:"pod,omitempty" expr:"force"`
 }
 
 type SpawnInstructionAliases struct {
 	// container definition for simplicity
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
-	Container *corev1.Container `json:"container,omitempty" expr:"force"` // TODO: Consider ContainerConfig
+	Container *corev1.Container `json:"container,omitempty" expr:"force"`
 }
 
 type SpawnInstruction struct {

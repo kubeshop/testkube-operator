@@ -56,8 +56,3 @@ type Content struct {
 	// tarballs to unpack
 	Tarball []ContentTarball `json:"tarball,omitempty" expr:"include"`
 }
-
-type SpawnContent struct {
-	// files to load
-	Files []ContentFile `json:"files,omitempty" expr:"include"`
-}
