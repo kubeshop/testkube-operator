@@ -947,6 +947,9 @@ spec:
                             - path
                             type: object
                           type: array
+                        logs:
+                          description: should it fetch logs as artifact
+                          type: boolean
                         matrix:
                           additionalProperties:
                             items:
@@ -1990,6 +1993,9 @@ spec:
                               - path
                               type: object
                             type: array
+                          logs:
+                            description: should it fetch logs as artifact
+                            type: boolean
                           matrix:
                             additionalProperties:
                               items:
@@ -4696,6 +4702,9 @@ spec:
                         - path
                         type: object
                       type: array
+                    logs:
+                      description: should it fetch logs as artifact
+                      type: boolean
                     matrix:
                       additionalProperties:
                         items:
@@ -5664,6 +5673,9 @@ spec:
                             - path
                             type: object
                           type: array
+                        logs:
+                          description: should it fetch logs as artifact
+                          type: boolean
                         matrix:
                           additionalProperties:
                             items:
@@ -6707,6 +6719,9 @@ spec:
                               - path
                               type: object
                             type: array
+                          logs:
+                            description: should it fetch logs as artifact
+                            type: boolean
                           matrix:
                             additionalProperties:
                               items:
@@ -7732,6 +7747,9 @@ spec:
                             - path
                             type: object
                           type: array
+                        logs:
+                          description: should it fetch logs as artifact
+                          type: boolean
                         matrix:
                           additionalProperties:
                             items:
@@ -8775,6 +8793,9 @@ spec:
                               - path
                               type: object
                             type: array
+                          logs:
+                            description: should it fetch logs as artifact
+                            type: boolean
                           matrix:
                             additionalProperties:
                               items:

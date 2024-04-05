@@ -593,6 +593,11 @@ func (in *SpawnInstructionBase) DeepCopyInto(out *SpawnInstructionBase) {
 		*out = new(intstr.IntOrString)
 		**out = **in
 	}
+	if in.Logs != nil {
+		in, out := &in.Logs, &out.Logs
+		*out = new(bool)
+		**out = **in
+	}
 	if in.Matrix != nil {
 		in, out := &in.Matrix, &out.Matrix
 		*out = make(map[string][]intstr.IntOrString, len(*in))

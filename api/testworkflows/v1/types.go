@@ -95,6 +95,9 @@ type SpawnInstructionBase struct {
 	// +kubebuilder:validation:Pattern=^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
 	Timeout string `json:"timeout,omitempty"`
 
+	// should it fetch logs as artifact
+	Logs *bool `json:"logs,omitempty"`
+
 	// matrix of parameters to spawn instances (static)
 	Matrix map[string][]intstr.IntOrString `json:"matrix,omitempty" expr:"ignore,template"`
 
