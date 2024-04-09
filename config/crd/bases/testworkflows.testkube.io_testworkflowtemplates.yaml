@@ -836,7 +836,7 @@ spec:
                           - type: string
                           description: static number of sharded instances to spawn
                           x-kubernetes-int-or-string: true
-                        displayName:
+                        description:
                           description: name to display in the interface
                           type: string
                         error:
@@ -1884,7 +1884,7 @@ spec:
                             - type: string
                             description: static number of sharded instances to spawn
                             x-kubernetes-int-or-string: true
-                          displayName:
+                          description:
                             description: name to display in the interface
                             type: string
                           error:
@@ -4559,7 +4559,7 @@ spec:
                       - type: string
                       description: static number of sharded instances to spawn
                       x-kubernetes-int-or-string: true
-                    displayName:
+                    description:
                       description: name to display in the interface
                       type: string
                     error:
@@ -5533,7 +5533,7 @@ spec:
                           - type: string
                           description: static number of sharded instances to spawn
                           x-kubernetes-int-or-string: true
-                        displayName:
+                        description:
                           description: name to display in the interface
                           type: string
                         error:
@@ -6581,7 +6581,7 @@ spec:
                             - type: string
                             description: static number of sharded instances to spawn
                             x-kubernetes-int-or-string: true
-                          displayName:
+                          description:
                             description: name to display in the interface
                             type: string
                           error:
@@ -7575,7 +7575,7 @@ spec:
                           - type: string
                           description: static number of sharded instances to spawn
                           x-kubernetes-int-or-string: true
-                        displayName:
+                        description:
                           description: name to display in the interface
                           type: string
                         error:
@@ -8623,7 +8623,7 @@ spec:
                             - type: string
                             description: static number of sharded instances to spawn
                             x-kubernetes-int-or-string: true
-                          displayName:
+                          description:
                             description: name to display in the interface
                             type: string
                           error:
