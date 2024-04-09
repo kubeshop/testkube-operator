@@ -75,9 +75,19 @@ type PodConfig struct {
 	Volumes []corev1.Volume `json:"volumes,omitempty" expr:"force"`
 }
 
+// +kubebuilder:validation:Enum=even
+type SpawnStrategy string
+
+const (
+	SpawnStrategyEven SpawnStrategy = "string"
+)
+
 type SpawnInstructionBase struct {
 	// name to display in the interface
 	Description string `json:"description,omitempty" expr:"template"`
+
+	// configure common distribution strategy
+	Strategy SpawnStrategy `json:"strategy,omitempty" expr:"template"`
 
 	// static number of sharded instances to spawn
 	Count *intstr.IntOrString `json:"count,omitempty" expr:"expression"`

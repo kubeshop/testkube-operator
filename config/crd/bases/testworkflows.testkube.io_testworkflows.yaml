@@ -1005,6 +1005,11 @@ spec:
                           description: parameters that should be distributed across
                             sharded instances (static)
                           type: object
+                        strategy:
+                          description: configure common distribution strategy
+                          enum:
+                          - even
+                          type: string
                         timeout:
                           description: how long we should wait for successful initialization
                           pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
@@ -2055,6 +2060,11 @@ spec:
                             description: parameters that should be distributed across
                               sharded instances (static)
                             type: object
+                          strategy:
+                            description: configure common distribution strategy
+                            enum:
+                            - even
+                            type: string
                           timeout:
                             description: how long we should wait for successful initialization
                             pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
@@ -4766,6 +4776,11 @@ spec:
                       description: parameters that should be distributed across sharded
                         instances (static)
                       type: object
+                    strategy:
+                      description: configure common distribution strategy
+                      enum:
+                      - even
+                      type: string
                     timeout:
                       description: how long we should wait for successful initialization
                       pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
@@ -5740,6 +5755,11 @@ spec:
                           description: parameters that should be distributed across
                             sharded instances (static)
                           type: object
+                        strategy:
+                          description: configure common distribution strategy
+                          enum:
+                          - even
+                          type: string
                         timeout:
                           description: how long we should wait for successful initialization
                           pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
@@ -6790,6 +6810,11 @@ spec:
                             description: parameters that should be distributed across
                               sharded instances (static)
                             type: object
+                          strategy:
+                            description: configure common distribution strategy
+                            enum:
+                            - even
+                            type: string
                           timeout:
                             description: how long we should wait for successful initialization
                             pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
@@ -7820,6 +7845,11 @@ spec:
                           description: parameters that should be distributed across
                             sharded instances (static)
                           type: object
+                        strategy:
+                          description: configure common distribution strategy
+                          enum:
+                          - even
+                          type: string
                         timeout:
                           description: how long we should wait for successful initialization
                           pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
@@ -8870,6 +8900,11 @@ spec:
                             description: parameters that should be distributed across
                               sharded instances (static)
                             type: object
+                          strategy:
+                            description: configure common distribution strategy
+                            enum:
+                            - even
+                            type: string
                           timeout:
                             description: how long we should wait for successful initialization
                             pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
