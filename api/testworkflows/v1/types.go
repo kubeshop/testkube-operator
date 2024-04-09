@@ -129,7 +129,7 @@ type SpawnInstructionBase struct {
 	// pod template to spawn
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
-	Pod corev1.PodTemplateSpec `json:"pod,omitempty" expr:"force"`
+	Pod *corev1.PodTemplateSpec `json:"pod,omitempty" expr:"force"`
 }
 
 type SpawnInstructionAliases struct {
