@@ -95,6 +95,9 @@ type Step struct {
 
 type StepRun struct {
 	ContainerConfig `json:",inline"`
+
+	// script to run in a default shell for the container
+	Shell *string `json:"shell,omitempty" expr:"template"`
 }
 
 type StepExecute struct {
