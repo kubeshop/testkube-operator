@@ -76,6 +76,9 @@ type PodConfig struct {
 }
 
 type SpawnInstructionBase struct {
+	// name to display in the interface
+	DisplayName string `json:"displayName,omitempty" expr:"template"`
+
 	// static number of sharded instances to spawn
 	Count *intstr.IntOrString `json:"count,omitempty" expr:"expression"`
 

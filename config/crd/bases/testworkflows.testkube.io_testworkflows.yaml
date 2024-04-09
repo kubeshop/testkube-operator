@@ -836,6 +836,9 @@ spec:
                           - type: string
                           description: static number of sharded instances to spawn
                           x-kubernetes-int-or-string: true
+                        displayName:
+                          description: name to display in the interface
+                          type: string
                         error:
                           description: expression that determines if the pod initialization
                             has failed
@@ -1881,6 +1884,9 @@ spec:
                             - type: string
                             description: static number of sharded instances to spawn
                             x-kubernetes-int-or-string: true
+                          displayName:
+                            description: name to display in the interface
+                            type: string
                           error:
                             description: expression that determines if the pod initialization
                               has failed
@@ -4591,6 +4597,9 @@ spec:
                       - type: string
                       description: static number of sharded instances to spawn
                       x-kubernetes-int-or-string: true
+                    displayName:
+                      description: name to display in the interface
+                      type: string
                     error:
                       description: expression that determines if the pod initialization
                         has failed
@@ -5562,6 +5571,9 @@ spec:
                           - type: string
                           description: static number of sharded instances to spawn
                           x-kubernetes-int-or-string: true
+                        displayName:
+                          description: name to display in the interface
+                          type: string
                         error:
                           description: expression that determines if the pod initialization
                             has failed
@@ -6607,6 +6619,9 @@ spec:
                             - type: string
                             description: static number of sharded instances to spawn
                             x-kubernetes-int-or-string: true
+                          displayName:
+                            description: name to display in the interface
+                            type: string
                           error:
                             description: expression that determines if the pod initialization
                               has failed
@@ -7636,6 +7651,9 @@ spec:
                           - type: string
                           description: static number of sharded instances to spawn
                           x-kubernetes-int-or-string: true
+                        displayName:
+                          description: name to display in the interface
+                          type: string
                         error:
                           description: expression that determines if the pod initialization
                             has failed
@@ -8681,6 +8699,9 @@ spec:
                             - type: string
                             description: static number of sharded instances to spawn
                             x-kubernetes-int-or-string: true
+                          displayName:
+                            description: name to display in the interface
+                            type: string
                           error:
                             description: expression that determines if the pod initialization
                               has failed
