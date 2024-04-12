@@ -72,3 +72,18 @@ type PodConfig struct {
 	// volumes to include in the pod
 	Volumes []corev1.Volume `json:"volumes,omitempty" expr:"force"`
 }
+
+// event responsible for triggering a test workflow
+type Event struct {
+	Cronjob *CronJobConfig `json:"cronjob,omitempty"`
+}
+
+// cron job configuration
+type CronJobConfig struct {
+	// cron schedule to run a test workflow
+	Cron string `json:"cron"`
+	// labels to attach to the cron job
+	Labels map[string]string `json:"labels,omitempty"`
+	// annotations to attach to the cron job
+	Annotations map[string]string `json:"annotations,omitempty"`
+}
