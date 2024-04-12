@@ -1285,16 +1285,12 @@ spec:
                       type: object
                     setup:
                       description: steps to run before other operations in this step
-                      items: {}
-                      type: array
                       x-kubernetes-preserve-unknown-fields: true
                     shell:
                       description: script to run in a default shell for the container
                       type: string
                     steps:
                       description: sub-steps to run
-                      items: {}
-                      type: array
                       x-kubernetes-preserve-unknown-fields: true
                     timeout:
                       description: maximum time this step may take
@@ -5002,16 +4998,12 @@ spec:
                       type: object
                     setup:
                       description: steps to run before other operations in this step
-                      items: {}
-                      type: array
                       x-kubernetes-preserve-unknown-fields: true
                     shell:
                       description: script to run in a default shell for the container
                       type: string
                     steps:
                       description: sub-steps to run
-                      items: {}
-                      type: array
                       x-kubernetes-preserve-unknown-fields: true
                     timeout:
                       description: maximum time this step may take
@@ -6269,16 +6261,12 @@ spec:
                       type: object
                     setup:
                       description: steps to run before other operations in this step
-                      items: {}
-                      type: array
                       x-kubernetes-preserve-unknown-fields: true
                     shell:
                       description: script to run in a default shell for the container
                       type: string
                     steps:
                       description: sub-steps to run
-                      items: {}
-                      type: array
                       x-kubernetes-preserve-unknown-fields: true
                     timeout:
                       description: maximum time this step may take
