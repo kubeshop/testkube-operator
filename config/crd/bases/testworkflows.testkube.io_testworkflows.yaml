@@ -844,7 +844,7 @@ spec:
                             has failed
                           type: string
                         files:
-                          description: files to load into spawned pods
+                          description: static files to load into spawned pods
                           items:
                             properties:
                               content:
@@ -1014,6 +1014,28 @@ spec:
                           description: how long we should wait for successful initialization
                           pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                           type: string
+                        transfer:
+                          description: local files to transfer into spawned pods
+                          items:
+                            properties:
+                              files:
+                                description: file patterns to filter the files in
+                                  'from' path
+                                items:
+                                  type: string
+                                type: array
+                              from:
+                                description: dir path to fetch files from
+                                type: string
+                              mountPath:
+                                description: dir path to mount these files to
+                                type: string
+                            required:
+                            - files
+                            - from
+                            - mountPath
+                            type: object
+                          type: array
                       type: object
                     execute:
                       description: execute other Testkube resources
@@ -1897,7 +1919,7 @@ spec:
                               has failed
                             type: string
                           files:
-                            description: files to load into spawned pods
+                            description: static files to load into spawned pods
                             items:
                               properties:
                                 content:
@@ -2069,6 +2091,28 @@ spec:
                             description: how long we should wait for successful initialization
                             pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                             type: string
+                          transfer:
+                            description: local files to transfer into spawned pods
+                            items:
+                              properties:
+                                files:
+                                  description: file patterns to filter the files in
+                                    'from' path
+                                  items:
+                                    type: string
+                                  type: array
+                                from:
+                                  description: dir path to fetch files from
+                                  type: string
+                                mountPath:
+                                  description: dir path to mount these files to
+                                  type: string
+                              required:
+                              - files
+                              - from
+                              - mountPath
+                              type: object
+                            type: array
                         type: object
                       description: accompanying pods to create for the step
                       type: object
@@ -4615,7 +4659,7 @@ spec:
                         has failed
                       type: string
                     files:
-                      description: files to load into spawned pods
+                      description: static files to load into spawned pods
                       items:
                         properties:
                           content:
@@ -4785,6 +4829,28 @@ spec:
                       description: how long we should wait for successful initialization
                       pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                       type: string
+                    transfer:
+                      description: local files to transfer into spawned pods
+                      items:
+                        properties:
+                          files:
+                            description: file patterns to filter the files in 'from'
+                              path
+                            items:
+                              type: string
+                            type: array
+                          from:
+                            description: dir path to fetch files from
+                            type: string
+                          mountPath:
+                            description: dir path to mount these files to
+                            type: string
+                        required:
+                        - files
+                        - from
+                        - mountPath
+                        type: object
+                      type: array
                   type: object
                 description: accompanying pods to create for the TestWorkflow
                 type: object
@@ -5594,7 +5660,7 @@ spec:
                             has failed
                           type: string
                         files:
-                          description: files to load into spawned pods
+                          description: static files to load into spawned pods
                           items:
                             properties:
                               content:
@@ -5764,6 +5830,28 @@ spec:
                           description: how long we should wait for successful initialization
                           pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                           type: string
+                        transfer:
+                          description: local files to transfer into spawned pods
+                          items:
+                            properties:
+                              files:
+                                description: file patterns to filter the files in
+                                  'from' path
+                                items:
+                                  type: string
+                                type: array
+                              from:
+                                description: dir path to fetch files from
+                                type: string
+                              mountPath:
+                                description: dir path to mount these files to
+                                type: string
+                            required:
+                            - files
+                            - from
+                            - mountPath
+                            type: object
+                          type: array
                       type: object
                     execute:
                       description: execute other Testkube resources
@@ -6647,7 +6735,7 @@ spec:
                               has failed
                             type: string
                           files:
-                            description: files to load into spawned pods
+                            description: static files to load into spawned pods
                             items:
                               properties:
                                 content:
@@ -6819,6 +6907,28 @@ spec:
                             description: how long we should wait for successful initialization
                             pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                             type: string
+                          transfer:
+                            description: local files to transfer into spawned pods
+                            items:
+                              properties:
+                                files:
+                                  description: file patterns to filter the files in
+                                    'from' path
+                                  items:
+                                    type: string
+                                  type: array
+                                from:
+                                  description: dir path to fetch files from
+                                  type: string
+                                mountPath:
+                                  description: dir path to mount these files to
+                                  type: string
+                              required:
+                              - files
+                              - from
+                              - mountPath
+                              type: object
+                            type: array
                         type: object
                       description: accompanying pods to create for the step
                       type: object
@@ -7684,7 +7794,7 @@ spec:
                             has failed
                           type: string
                         files:
-                          description: files to load into spawned pods
+                          description: static files to load into spawned pods
                           items:
                             properties:
                               content:
@@ -7854,6 +7964,28 @@ spec:
                           description: how long we should wait for successful initialization
                           pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                           type: string
+                        transfer:
+                          description: local files to transfer into spawned pods
+                          items:
+                            properties:
+                              files:
+                                description: file patterns to filter the files in
+                                  'from' path
+                                items:
+                                  type: string
+                                type: array
+                              from:
+                                description: dir path to fetch files from
+                                type: string
+                              mountPath:
+                                description: dir path to mount these files to
+                                type: string
+                            required:
+                            - files
+                            - from
+                            - mountPath
+                            type: object
+                          type: array
                       type: object
                     execute:
                       description: execute other Testkube resources
@@ -8737,7 +8869,7 @@ spec:
                               has failed
                             type: string
                           files:
-                            description: files to load into spawned pods
+                            description: static files to load into spawned pods
                             items:
                               properties:
                                 content:
@@ -8909,6 +9041,28 @@ spec:
                             description: how long we should wait for successful initialization
                             pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                             type: string
+                          transfer:
+                            description: local files to transfer into spawned pods
+                            items:
+                              properties:
+                                files:
+                                  description: file patterns to filter the files in
+                                    'from' path
+                                  items:
+                                    type: string
+                                  type: array
+                                from:
+                                  description: dir path to fetch files from
+                                  type: string
+                                mountPath:
+                                  description: dir path to mount these files to
+                                  type: string
+                              required:
+                              - files
+                              - from
+                              - mountPath
+                              type: object
+                            type: array
                         type: object
                       description: accompanying pods to create for the step
                       type: object

@@ -123,8 +123,11 @@ type SpawnInstructionBase struct {
 	// parameters that should be distributed across sharded instances (expressions)
 	ShardExpressions map[string]string `json:"shardExpressions,omitempty" expr:"ignore,expression"`
 
-	// files to load into spawned pods
+	// static files to load into spawned pods
 	Files []ContentFile `json:"files,omitempty" expr:"include"`
+
+	// local files to transfer into spawned pods
+	Transfer []ContentTransfer `json:"transfer,omitempty" expr:"include"`
 
 	// pod template to spawn
 	// +kubebuilder:pruning:PreserveUnknownFields

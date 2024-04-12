@@ -56,3 +56,14 @@ type Content struct {
 	// tarballs to unpack
 	Tarball []ContentTarball `json:"tarball,omitempty" expr:"include"`
 }
+
+type ContentTransfer struct {
+	// dir path to fetch files from
+	From string `json:"from" expr:"template"`
+
+	// file patterns to filter the files in 'from' path
+	Files []string `json:"files" expr:"template"`
+
+	// dir path to mount these files to
+	MountPath string `json:"mountPath" expr:"template"`
+}
