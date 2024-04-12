@@ -2074,7 +2074,6 @@ spec:
               events:
                 description: events triggering execution of the test workflow
                 items:
-                  description: event responsible for triggering a test workflow
                   properties:
                     cronjob:
                       description: cron job configuration

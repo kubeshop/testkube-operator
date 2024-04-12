@@ -73,7 +73,6 @@ type PodConfig struct {
 	Volumes []corev1.Volume `json:"volumes,omitempty" expr:"force"`
 }
 
-// event responsible for triggering a test workflow
 type Event struct {
 	Cronjob *CronJobConfig `json:"cronjob,omitempty"`
 }
