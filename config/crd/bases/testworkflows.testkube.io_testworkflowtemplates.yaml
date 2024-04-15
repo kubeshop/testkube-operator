@@ -954,20 +954,9 @@ spec:
                           description: should it fetch logs as artifact
                           type: boolean
                         matrix:
-                          additionalProperties:
-                            items:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              x-kubernetes-int-or-string: true
-                            type: array
                           description: matrix of parameters to spawn instances (static)
                           type: object
-                        matrixExpressions:
-                          additionalProperties:
-                            type: string
-                          description: matrix of parameters to spawn instances (expressions)
-                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
                         maxCount:
                           anyOf:
                           - type: integer
@@ -988,23 +977,11 @@ spec:
                           description: expression that determines if the pod initialization
                             has completed successfully
                           type: string
-                        shardExpressions:
-                          additionalProperties:
-                            type: string
-                          description: parameters that should be distributed across
-                            sharded instances (expressions)
-                          type: object
                         shards:
-                          additionalProperties:
-                            items:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              x-kubernetes-int-or-string: true
-                            type: array
                           description: parameters that should be distributed across
-                            sharded instances (static)
+                            sharded instances
                           type: object
+                          x-kubernetes-preserve-unknown-fields: true
                         strategy:
                           description: configure common distribution strategy
                           enum:
@@ -2030,20 +2007,9 @@ spec:
                             description: should it fetch logs as artifact
                             type: boolean
                           matrix:
-                            additionalProperties:
-                              items:
-                                anyOf:
-                                - type: integer
-                                - type: string
-                                x-kubernetes-int-or-string: true
-                              type: array
                             description: matrix of parameters to spawn instances (static)
                             type: object
-                          matrixExpressions:
-                            additionalProperties:
-                              type: string
-                            description: matrix of parameters to spawn instances (expressions)
-                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
                           maxCount:
                             anyOf:
                             - type: integer
@@ -2065,23 +2031,11 @@ spec:
                             description: expression that determines if the pod initialization
                               has completed successfully
                             type: string
-                          shardExpressions:
-                            additionalProperties:
-                              type: string
-                            description: parameters that should be distributed across
-                              sharded instances (expressions)
-                            type: object
                           shards:
-                            additionalProperties:
-                              items:
-                                anyOf:
-                                - type: integer
-                                - type: string
-                                x-kubernetes-int-or-string: true
-                              type: array
                             description: parameters that should be distributed across
-                              sharded instances (static)
+                              sharded instances
                             type: object
+                            x-kubernetes-preserve-unknown-fields: true
                           strategy:
                             description: configure common distribution strategy
                             enum:
@@ -4731,20 +4685,9 @@ spec:
                       description: should it fetch logs as artifact
                       type: boolean
                     matrix:
-                      additionalProperties:
-                        items:
-                          anyOf:
-                          - type: integer
-                          - type: string
-                          x-kubernetes-int-or-string: true
-                        type: array
                       description: matrix of parameters to spawn instances (static)
                       type: object
-                    matrixExpressions:
-                      additionalProperties:
-                        type: string
-                      description: matrix of parameters to spawn instances (expressions)
-                      type: object
+                      x-kubernetes-preserve-unknown-fields: true
                     maxCount:
                       anyOf:
                       - type: integer
@@ -4765,23 +4708,11 @@ spec:
                       description: expression that determines if the pod initialization
                         has completed successfully
                       type: string
-                    shardExpressions:
-                      additionalProperties:
-                        type: string
-                      description: parameters that should be distributed across sharded
-                        instances (expressions)
-                      type: object
                     shards:
-                      additionalProperties:
-                        items:
-                          anyOf:
-                          - type: integer
-                          - type: string
-                          x-kubernetes-int-or-string: true
-                        type: array
                       description: parameters that should be distributed across sharded
-                        instances (static)
+                        instances
                       type: object
+                      x-kubernetes-preserve-unknown-fields: true
                     strategy:
                       description: configure common distribution strategy
                       enum:
@@ -5732,20 +5663,9 @@ spec:
                           description: should it fetch logs as artifact
                           type: boolean
                         matrix:
-                          additionalProperties:
-                            items:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              x-kubernetes-int-or-string: true
-                            type: array
                           description: matrix of parameters to spawn instances (static)
                           type: object
-                        matrixExpressions:
-                          additionalProperties:
-                            type: string
-                          description: matrix of parameters to spawn instances (expressions)
-                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
                         maxCount:
                           anyOf:
                           - type: integer
@@ -5766,23 +5686,11 @@ spec:
                           description: expression that determines if the pod initialization
                             has completed successfully
                           type: string
-                        shardExpressions:
-                          additionalProperties:
-                            type: string
-                          description: parameters that should be distributed across
-                            sharded instances (expressions)
-                          type: object
                         shards:
-                          additionalProperties:
-                            items:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              x-kubernetes-int-or-string: true
-                            type: array
                           description: parameters that should be distributed across
-                            sharded instances (static)
+                            sharded instances
                           type: object
+                          x-kubernetes-preserve-unknown-fields: true
                         strategy:
                           description: configure common distribution strategy
                           enum:
@@ -6808,20 +6716,9 @@ spec:
                             description: should it fetch logs as artifact
                             type: boolean
                           matrix:
-                            additionalProperties:
-                              items:
-                                anyOf:
-                                - type: integer
-                                - type: string
-                                x-kubernetes-int-or-string: true
-                              type: array
                             description: matrix of parameters to spawn instances (static)
                             type: object
-                          matrixExpressions:
-                            additionalProperties:
-                              type: string
-                            description: matrix of parameters to spawn instances (expressions)
-                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
                           maxCount:
                             anyOf:
                             - type: integer
@@ -6843,23 +6740,11 @@ spec:
                             description: expression that determines if the pod initialization
                               has completed successfully
                             type: string
-                          shardExpressions:
-                            additionalProperties:
-                              type: string
-                            description: parameters that should be distributed across
-                              sharded instances (expressions)
-                            type: object
                           shards:
-                            additionalProperties:
-                              items:
-                                anyOf:
-                                - type: integer
-                                - type: string
-                                x-kubernetes-int-or-string: true
-                              type: array
                             description: parameters that should be distributed across
-                              sharded instances (static)
+                              sharded instances
                             type: object
+                            x-kubernetes-preserve-unknown-fields: true
                           strategy:
                             description: configure common distribution strategy
                             enum:
@@ -7828,20 +7713,9 @@ spec:
                           description: should it fetch logs as artifact
                           type: boolean
                         matrix:
-                          additionalProperties:
-                            items:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              x-kubernetes-int-or-string: true
-                            type: array
                           description: matrix of parameters to spawn instances (static)
                           type: object
-                        matrixExpressions:
-                          additionalProperties:
-                            type: string
-                          description: matrix of parameters to spawn instances (expressions)
-                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
                         maxCount:
                           anyOf:
                           - type: integer
@@ -7862,23 +7736,11 @@ spec:
                           description: expression that determines if the pod initialization
                             has completed successfully
                           type: string
-                        shardExpressions:
-                          additionalProperties:
-                            type: string
-                          description: parameters that should be distributed across
-                            sharded instances (expressions)
-                          type: object
                         shards:
-                          additionalProperties:
-                            items:
-                              anyOf:
-                              - type: integer
-                              - type: string
-                              x-kubernetes-int-or-string: true
-                            type: array
                           description: parameters that should be distributed across
-                            sharded instances (static)
+                            sharded instances
                           type: object
+                          x-kubernetes-preserve-unknown-fields: true
                         strategy:
                           description: configure common distribution strategy
                           enum:
@@ -8904,20 +8766,9 @@ spec:
                             description: should it fetch logs as artifact
                             type: boolean
                           matrix:
-                            additionalProperties:
-                              items:
-                                anyOf:
-                                - type: integer
-                                - type: string
-                                x-kubernetes-int-or-string: true
-                              type: array
                             description: matrix of parameters to spawn instances (static)
                             type: object
-                          matrixExpressions:
-                            additionalProperties:
-                              type: string
-                            description: matrix of parameters to spawn instances (expressions)
-                            type: object
+                            x-kubernetes-preserve-unknown-fields: true
                           maxCount:
                             anyOf:
                             - type: integer
@@ -8939,23 +8790,11 @@ spec:
                             description: expression that determines if the pod initialization
                               has completed successfully
                             type: string
-                          shardExpressions:
-                            additionalProperties:
-                              type: string
-                            description: parameters that should be distributed across
-                              sharded instances (expressions)
-                            type: object
                           shards:
-                            additionalProperties:
-                              items:
-                                anyOf:
-                                - type: integer
-                                - type: string
-                                x-kubernetes-int-or-string: true
-                              type: array
                             description: parameters that should be distributed across
-                              sharded instances (static)
+                              sharded instances
                             type: object
+                            x-kubernetes-preserve-unknown-fields: true
                           strategy:
                             description: configure common distribution strategy
                             enum:

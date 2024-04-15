@@ -112,16 +112,16 @@ type SpawnInstructionBase struct {
 	Logs *bool `json:"logs,omitempty"`
 
 	// matrix of parameters to spawn instances (static)
-	Matrix map[string][]intstr.IntOrString `json:"matrix,omitempty" expr:"ignore,template"`
+	// +kubebuilder:validation:Schemaless
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Type="object"
+	Matrix map[string]DynamicList `json:"matrix,omitempty" expr:"force"`
 
-	// matrix of parameters to spawn instances (expressions)
-	MatrixExpressions map[string]string `json:"matrixExpressions,omitempty" expr:"ignore,expression"`
-
-	// parameters that should be distributed across sharded instances (static)
-	Shards map[string][]intstr.IntOrString `json:"shards,omitempty" expr:"ignore,template"`
-
-	// parameters that should be distributed across sharded instances (expressions)
-	ShardExpressions map[string]string `json:"shardExpressions,omitempty" expr:"ignore,expression"`
+	// parameters that should be distributed across sharded instances
+	// +kubebuilder:validation:Schemaless
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Type="object"
+	Shards map[string]DynamicList `json:"shards,omitempty" expr:"force"`
 
 	// static files to load into spawned pods
 	Files []ContentFile `json:"files,omitempty" expr:"include"`
