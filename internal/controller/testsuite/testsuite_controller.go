@@ -58,8 +58,7 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	// Delete CronJob if it was created for deleted TestSuite
 	var testSuite testsuitev3.TestSuite
-	err := r.Get(ctx, req.NamespacedName, &testSuite)
-	if err != nil {
+	if err := r.Get(ctx, req.NamespacedName, &testSuite); err != nil {
 		if errors.IsNotFound(err) {
 			if err = r.CronJobClient.Delete(ctx,
 				cronjob.GetMetadataName(req.NamespacedName.Name, cronjob.TestSuiteResourceURI), req.NamespacedName.Namespace); err != nil {

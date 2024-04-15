@@ -26,6 +26,7 @@ import (
 	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
@@ -56,8 +57,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 
 	// Delete CronJobs if it were created for deleted Test Workflow
 	var testWorkflow testworkflowsv1.TestWorkflow
-	err := r.Get(ctx, req.NamespacedName, &testWorkflow)
-	if err != nil {
+	if err := r.Get(ctx, req.NamespacedName, &testWorkflow); err != nil {
 		if errors.IsNotFound(err) {
 			if err = r.CronJobClient.DeleteAll(ctx,
 				cronjob.GetSelector(req.NamespacedName.Name, cronjob.TestWorkflowResourceURI), req.NamespacedName.Namespace); err != nil {
@@ -68,6 +68,29 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		}
 
 		return ctrl.Result{}, err
+	}
+
+	var hasTemplates bool
+	events := testWorkflow.Spec.Events
+	for _, template := range testWorkflow.Spec.Use {
+		var testWorkflowTemplate testworkflowsv1.TestWorkflowTemplate
+		if err := r.Get(ctx, types.NamespacedName{Namespace: testWorkflow.Namespace, Name: template.Name}, &testWorkflowTemplate); err != nil {
+			return ctrl.Result{}, err
+		}
+
+		events = append(events, testWorkflowTemplate.Spec.Events...)
+		hasTemplates = true
+	}
+
+	_, ok := testWorkflow.Labels[cronjob.TestWorkflowTemplateResourceURI]
+	if ok && !hasTemplates {
+		delete(testWorkflow.Labels, cronjob.TestWorkflowTemplateResourceURI)
+		return ctrl.Result{}, r.Update(ctx, &testWorkflow)
+	}
+
+	if !ok && hasTemplates {
+		testWorkflow.Labels[cronjob.TestWorkflowTemplateResourceURI] = "yes"
+		return ctrl.Result{}, r.Update(ctx, &testWorkflow)
 	}
 
 	newCronJobConfigs := make(map[string]*testworkflowsv1.CronJobConfig)
@@ -82,7 +105,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		oldCronJobs[cronJobList.Items[i].Spec.Schedule] = &cronJobList.Items[i]
 	}
 
-	for _, event := range testWorkflow.Spec.Events {
+	for _, event := range events {
 		if event.Cronjob != nil {
 			if cronJob, ok := newCronJobConfigs[event.Cronjob.Cron]; !ok {
 				newCronJobConfigs[event.Cronjob.Cron] = &testworkflowsv1.CronJobConfig{
@@ -125,7 +148,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	}
 
 	for schedule, newCronJobConfig := range newCronJobConfigs {
-		if _, ok := oldCronJobs[schedule]; !ok {
+		if _, ok = oldCronJobs[schedule]; !ok {
 			// Create new Cron Jobs
 			newCronJobConfig.Labels[cronjob.TestWorkflowResourceURI] = testWorkflow.Name
 			options := cronjob.CronJobOptions{

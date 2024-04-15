@@ -26,6 +26,8 @@ const (
 	TestSuiteResourceURI = "test-suites"
 	// TestWorkflowResourceURI is test workflow resource uri for cron job call
 	TestWorkflowResourceURI = "test-workflows"
+	// TestWorkflowTemplateResourceURI is test workflow template resource uri for cron job call
+	TestWorkflowTemplateResourceURI = "test-workflow-templates"
 )
 
 // Client data struct for managing running cron jobs
