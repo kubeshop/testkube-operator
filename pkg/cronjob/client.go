@@ -4,11 +4,14 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"hash/fnv"
 	"strings"
 	"text/template"
 
 	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/yaml"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -21,6 +24,8 @@ const (
 	TestResourceURI = "tests"
 	// TestSuiteResourceURI is test suite resource uri for cron job call
 	TestSuiteResourceURI = "test-suites"
+	// TestWorkflowResourceURI is test workflow resource uri for cron job call
+	TestWorkflowResourceURI = "test-workflows"
 )
 
 // Client data struct for managing running cron jobs
@@ -35,11 +40,13 @@ type Client struct {
 
 type CronJobOptions struct {
 	Schedule                  string
+	Group                     string
 	Resource                  string
 	Version                   string
 	ResourceURI               string
 	Data                      string
 	Labels                    map[string]string
+	Annnotations              map[string]string
 	CronJobTemplate           string
 	CronJobTemplateExtensions string
 }
@@ -51,6 +58,7 @@ type templateParameters struct {
 	ServiceName               string
 	ServicePort               int
 	Schedule                  string
+	Group                     string
 	Resource                  string
 	Version                   string
 	ResourceURI               string
@@ -58,6 +66,7 @@ type templateParameters struct {
 	CronJobTemplateExtensions string
 	Data                      string
 	Labels                    map[string]string
+	Annnotations              map[string]string
 	Registry                  string
 	ArgoCDSync                bool
 	UID                       string
@@ -86,6 +95,25 @@ func (c *Client) Get(ctx context.Context, name, namespace string) (*batchv1.Cron
 	return &cronJob, nil
 }
 
+// ListAll is a method to list all cron jobs by selector
+func (c *Client) ListAll(ctx context.Context, selector, namespace string) (*batchv1.CronJobList, error) {
+	list := &batchv1.CronJobList{}
+	reqs, err := labels.ParseToRequirements(selector)
+	if err != nil {
+		return list, err
+	}
+
+	options := &client.ListOptions{
+		Namespace:     namespace,
+		LabelSelector: labels.NewSelector().Add(reqs...),
+	}
+	if err = c.List(context.Background(), list, options); err != nil {
+		return list, err
+	}
+
+	return list, err
+}
+
 // Create is a method to create a cron job
 func (c *Client) Create(ctx context.Context, id, name, namespace, uid string, options CronJobOptions) error {
 	template := c.cronJobTemplate
@@ -100,6 +128,7 @@ func (c *Client) Create(ctx context.Context, id, name, namespace, uid string, op
 		ServiceName:               c.serviceName,
 		ServicePort:               c.servicePort,
 		Schedule:                  options.Schedule,
+		Group:                     options.Group,
 		Resource:                  options.Resource,
 		Version:                   options.Version,
 		ResourceURI:               options.ResourceURI,
@@ -107,6 +136,7 @@ func (c *Client) Create(ctx context.Context, id, name, namespace, uid string, op
 		CronJobTemplateExtensions: options.CronJobTemplateExtensions,
 		Data:                      options.Data,
 		Labels:                    options.Labels,
+		Annnotations:              options.Annnotations,
 		Registry:                  c.registry,
 		ArgoCDSync:                c.argoCDSync,
 		UID:                       uid,
@@ -138,6 +168,7 @@ func (c *Client) Update(ctx context.Context, cronJob *batchv1.CronJob, id, name,
 		ServiceName:               c.serviceName,
 		ServicePort:               c.servicePort,
 		Schedule:                  options.Schedule,
+		Group:                     options.Group,
 		Resource:                  options.Resource,
 		Version:                   options.Version,
 		ResourceURI:               options.ResourceURI,
@@ -145,6 +176,7 @@ func (c *Client) Update(ctx context.Context, cronJob *batchv1.CronJob, id, name,
 		CronJobTemplateExtensions: options.CronJobTemplateExtensions,
 		Data:                      options.Data,
 		Labels:                    options.Labels,
+		Annnotations:              options.Annnotations,
 		Registry:                  c.registry,
 		ArgoCDSync:                c.argoCDSync,
 		UID:                       uid,
@@ -182,6 +214,20 @@ func (c *Client) Delete(ctx context.Context, name, namespace string) error {
 	}
 
 	return nil
+}
+
+// DeleteAll is a method to delete all cron jobs by selector
+func (c *Client) DeleteAll(ctx context.Context, selector, namespace string) error {
+	reqs, err := labels.ParseToRequirements(selector)
+	if err != nil {
+		return err
+	}
+
+	u := &unstructured.Unstructured{}
+	u.SetKind("CronJob")
+	u.SetAPIVersion("batch/v1")
+	return c.Client.DeleteAllOf(ctx, u, client.InNamespace(namespace),
+		client.MatchingLabelsSelector{Selector: labels.NewSelector().Add(reqs...)})
 }
 
 // NewCronJobSpec is a method to return cron job spec
@@ -224,6 +270,10 @@ func NewCronJobSpec(parameters templateParameters) (*batchv1.CronJob, error) {
 		cronJob.Labels[key] = value
 	}
 
+	for key, value := range parameters.Annnotations {
+		cronJob.Annotations[key] = value
+	}
+
 	return &cronJob, nil
 }
 
@@ -236,4 +286,23 @@ func GetMetadataName(name, resource string) string {
 	}
 
 	return result
+}
+
+// GetHashedMetadataName returns cron job hashed metadata name
+func GetHashedMetadataName(name, schedule string) string {
+	h := fnv.New32a()
+	h.Write([]byte(schedule))
+
+	hash := fmt.Sprintf("-%d", h.Sum32())
+
+	if len(name) > 52-len(hash) {
+		name = name[:52-len(hash)]
+	}
+
+	return name + hash
+}
+
+// GetSelector returns cron job selecttor
+func GetSelector(name, resource string) string {
+	return fmt.Sprintf("%s=%s", resource, name)
 }
