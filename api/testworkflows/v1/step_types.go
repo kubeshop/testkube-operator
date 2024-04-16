@@ -226,8 +226,7 @@ type TestExecutionRequest struct {
 	// config map references
 	EnvConfigMaps []testsv3.EnvReference `json:"envConfigMaps,omitempty" expr:"force"`
 	// secret references
-	EnvSecrets      []testsv3.EnvReference `json:"envSecrets,omitempty" expr:"force"`
-	SlavePodRequest *testsv3.PodRequest    `json:"slavePodRequest,omitempty" expr:"force"`
+	EnvSecrets []testsv3.EnvReference `json:"envSecrets,omitempty" expr:"force"`
 	// namespace for test execution (Pro edition only)
 	ExecutionNamespace string `json:"executionNamespace,omitempty" expr:"template"`
 }

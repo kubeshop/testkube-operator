@@ -1017,40 +1017,6 @@ spec:
                                   scraperTemplate:
                                     description: scraper template extensions
                                     type: string
-                                  slavePodRequest:
-                                    description: pod request body
-                                    properties:
-                                      podTemplate:
-                                        description: pod template extensions
-                                        type: string
-                                      podTemplateReference:
-                                        description: name of the template resource
-                                        type: string
-                                      resources:
-                                        description: pod resources request specification
-                                        properties:
-                                          limits:
-                                            description: resource request specification
-                                            properties:
-                                              cpu:
-                                                description: requested cpu units
-                                                type: string
-                                              memory:
-                                                description: requested memory units
-                                                type: string
-                                            type: object
-                                          requests:
-                                            description: resource request specification
-                                            properties:
-                                              cpu:
-                                                description: requested cpu units
-                                                type: string
-                                              memory:
-                                                description: requested memory units
-                                                type: string
-                                            type: object
-                                        type: object
-                                    type: object
                                   sourceScripts:
                                     description: run scripts using source command
                                       (container executor only)
@@ -5140,40 +5106,6 @@ spec:
                                   scraperTemplate:
                                     description: scraper template extensions
                                     type: string
-                                  slavePodRequest:
-                                    description: pod request body
-                                    properties:
-                                      podTemplate:
-                                        description: pod template extensions
-                                        type: string
-                                      podTemplateReference:
-                                        description: name of the template resource
-                                        type: string
-                                      resources:
-                                        description: pod resources request specification
-                                        properties:
-                                          limits:
-                                            description: resource request specification
-                                            properties:
-                                              cpu:
-                                                description: requested cpu units
-                                                type: string
-                                              memory:
-                                                description: requested memory units
-                                                type: string
-                                            type: object
-                                          requests:
-                                            description: resource request specification
-                                            properties:
-                                              cpu:
-                                                description: requested cpu units
-                                                type: string
-                                              memory:
-                                                description: requested memory units
-                                                type: string
-                                            type: object
-                                        type: object
-                                    type: object
                                   sourceScripts:
                                     description: run scripts using source command
                                       (container executor only)
@@ -6839,40 +6771,6 @@ spec:
                                   scraperTemplate:
                                     description: scraper template extensions
                                     type: string
-                                  slavePodRequest:
-                                    description: pod request body
-                                    properties:
-                                      podTemplate:
-                                        description: pod template extensions
-                                        type: string
-                                      podTemplateReference:
-                                        description: name of the template resource
-                                        type: string
-                                      resources:
-                                        description: pod resources request specification
-                                        properties:
-                                          limits:
-                                            description: resource request specification
-                                            properties:
-                                              cpu:
-                                                description: requested cpu units
-                                                type: string
-                                              memory:
-                                                description: requested memory units
-                                                type: string
-                                            type: object
-                                          requests:
-                                            description: resource request specification
-                                            properties:
-                                              cpu:
-                                                description: requested cpu units
-                                                type: string
-                                              memory:
-                                                description: requested memory units
-                                                type: string
-                                            type: object
-                                        type: object
-                                    type: object
                                   sourceScripts:
                                     description: run scripts using source command
                                       (container executor only)
