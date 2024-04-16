@@ -135,17 +135,18 @@ type StepExecuteStrategy struct {
 }
 
 type StepExecuteTest struct {
-	StepExecuteStrategy `json:",inline" expr:"include"`
-
 	// test name to run
 	Name string `json:"name,omitempty" expr:"template"`
+
+	StepExecuteStrategy `json:",inline" expr:"include"`
 }
 
 type StepExecuteWorkflow struct {
-	StepExecuteStrategy `json:",inline" expr:"include"`
-
 	// workflow name to run
 	Name string `json:"name,omitempty" expr:"template"`
+
+	StepExecuteStrategy `json:",inline" expr:"include"`
+
 	// configuration to pass for the workflow
 	Config map[string]intstr.IntOrString `json:"config,omitempty" expr:"template"`
 }
