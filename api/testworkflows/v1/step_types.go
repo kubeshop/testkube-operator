@@ -114,12 +114,36 @@ type StepExecute struct {
 	Workflows []StepExecuteWorkflow `json:"workflows,omitempty" expr:"include"`
 }
 
+type StepExecuteStrategy struct {
+	// matrix of parameters to spawn instances (static)
+	// +kubebuilder:validation:Schemaless
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Type="object"
+	Matrix map[string]DynamicList `json:"matrix,omitempty" expr:"force"`
+
+	// static number of sharded instances to spawn
+	Count *intstr.IntOrString `json:"count,omitempty" expr:"expression"`
+
+	// dynamic number of sharded instances to spawn - it will be lowered if there is not enough sharded values
+	MaxCount *intstr.IntOrString `json:"maxCount,omitempty" expr:"expression"`
+
+	// parameters that should be distributed across sharded instances
+	// +kubebuilder:validation:Schemaless
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Type="object"
+	Shards map[string]DynamicList `json:"shards,omitempty" expr:"force"`
+}
+
 type StepExecuteTest struct {
+	StepExecuteStrategy `json:",inline" expr:"include"`
+
 	// test name to run
 	Name string `json:"name,omitempty" expr:"template"`
 }
 
 type StepExecuteWorkflow struct {
+	StepExecuteStrategy `json:",inline" expr:"include"`
+
 	// workflow name to run
 	Name string `json:"name,omitempty" expr:"template"`
 	// configuration to pass for the workflow
