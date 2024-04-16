@@ -1183,6 +1183,9 @@ spec:
                                 description: static number of sharded instances to
                                   spawn
                                 x-kubernetes-int-or-string: true
+                              executionName:
+                                description: unique execution name to use
+                                type: string
                               matrix:
                                 description: matrix of parameters to spawn instances
                                   (static)
@@ -5234,6 +5237,9 @@ spec:
                                 description: static number of sharded instances to
                                   spawn
                                 x-kubernetes-int-or-string: true
+                              executionName:
+                                description: unique execution name to use
+                                type: string
                               matrix:
                                 description: matrix of parameters to spawn instances
                                   (static)
@@ -6861,6 +6867,9 @@ spec:
                                 description: static number of sharded instances to
                                   spawn
                                 x-kubernetes-int-or-string: true
+                              executionName:
+                                description: unique execution name to use
+                                type: string
                               matrix:
                                 description: matrix of parameters to spawn instances
                                   (static)

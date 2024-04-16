@@ -155,6 +155,9 @@ type StepExecuteWorkflow struct {
 
 	StepExecuteStrategy `json:",inline" expr:"include"`
 
+	// unique execution name to use
+	ExecutionName string `json:"executionName,omitempty" expr:"template"`
+
 	// configuration to pass for the workflow
 	Config map[string]intstr.IntOrString `json:"config,omitempty" expr:"template"`
 }
