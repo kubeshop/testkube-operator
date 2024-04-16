@@ -146,7 +146,7 @@ type StepExecuteTest struct {
 	StepExecuteStrategy `json:",inline" expr:"include"`
 
 	// pass the execution request overrides
-	ExecutionRequest TestExecutionRequest `json:"executionRequest,omitempty" expr:"include"`
+	ExecutionRequest *TestExecutionRequest `json:"executionRequest,omitempty" expr:"include"`
 }
 
 type StepExecuteWorkflow struct {
