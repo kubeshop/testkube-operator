@@ -145,6 +145,8 @@ func main() {
 		os.Exit(1)
 	}
 
+	cronJobClient := cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port,
+		templateCronjob, httpConfig.Registry, httpConfig.UseArgocdSync)
 	if err = (&scriptcontrollers.ScriptReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
@@ -160,19 +162,17 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&testscontrollers.TestReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port,
-			templateCronjob, httpConfig.Registry, httpConfig.UseArgocdSync),
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		CronJobClient: cronJobClient,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Test")
 		os.Exit(1)
 	}
 	if err = (&testsuitecontrollers.TestSuiteReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-		CronJobClient: cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port,
-			templateCronjob, httpConfig.Registry, httpConfig.UseArgocdSync),
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		CronJobClient: cronJobClient,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestSuite")
 		os.Exit(1)
@@ -225,8 +225,9 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&testworkflowscontrollers.TestWorkflowReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:        mgr.GetClient(),
+		Scheme:        mgr.GetScheme(),
+		CronJobClient: cronJobClient,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestWorkflow")
 		os.Exit(1)

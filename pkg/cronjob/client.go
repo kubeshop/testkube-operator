@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"hash/fnv"
+	"maps"
 	"strings"
 	"text/template"
 
@@ -48,7 +49,7 @@ type CronJobOptions struct {
 	ResourceURI               string
 	Data                      string
 	Labels                    map[string]string
-	Annnotations              map[string]string
+	Annotations               map[string]string
 	CronJobTemplate           string
 	CronJobTemplateExtensions string
 }
@@ -68,7 +69,7 @@ type templateParameters struct {
 	CronJobTemplateExtensions string
 	Data                      string
 	Labels                    map[string]string
-	Annnotations              map[string]string
+	Annotations               map[string]string
 	Registry                  string
 	ArgoCDSync                bool
 	UID                       string
@@ -138,7 +139,7 @@ func (c *Client) Create(ctx context.Context, id, name, namespace, uid string, op
 		CronJobTemplateExtensions: options.CronJobTemplateExtensions,
 		Data:                      options.Data,
 		Labels:                    options.Labels,
-		Annnotations:              options.Annnotations,
+		Annotations:               options.Annotations,
 		Registry:                  c.registry,
 		ArgoCDSync:                c.argoCDSync,
 		UID:                       uid,
@@ -178,7 +179,7 @@ func (c *Client) Update(ctx context.Context, cronJob *batchv1.CronJob, id, name,
 		CronJobTemplateExtensions: options.CronJobTemplateExtensions,
 		Data:                      options.Data,
 		Labels:                    options.Labels,
-		Annnotations:              options.Annnotations,
+		Annotations:               options.Annotations,
 		Registry:                  c.registry,
 		ArgoCDSync:                c.argoCDSync,
 		UID:                       uid,
@@ -268,13 +269,15 @@ func NewCronJobSpec(parameters templateParameters) (*batchv1.CronJob, error) {
 		return nil, fmt.Errorf("decoding cron job spec error: %w", err)
 	}
 
-	for key, value := range parameters.Labels {
-		cronJob.Labels[key] = value
+	if len(parameters.Labels) > 0 && cronJob.Labels == nil {
+		cronJob.Labels = map[string]string{}
 	}
+	maps.Copy(cronJob.Labels, parameters.Labels)
 
-	for key, value := range parameters.Annnotations {
-		cronJob.Annotations[key] = value
+	if len(parameters.Annotations) > 0 && cronJob.Annotations == nil {
+		cronJob.Annotations = map[string]string{}
 	}
+	maps.Copy(cronJob.Annotations, parameters.Annotations)
 
 	return &cronJob, nil
 }

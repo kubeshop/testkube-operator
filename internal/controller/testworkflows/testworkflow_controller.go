@@ -89,6 +89,10 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	}
 
 	if !ok && hasTemplates {
+		if testWorkflow.Labels == nil {
+			testWorkflow.Labels = make(map[string]string)
+		}
+
 		testWorkflow.Labels[cronjob.TestWorkflowTemplateResourceURI] = "yes"
 		return ctrl.Result{}, r.Update(ctx, &testWorkflow)
 	}
@@ -128,15 +132,20 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			}
 		} else {
 			// Update CronJob if it was created before
+			if newCronJobConfig.Labels == nil {
+				newCronJobConfig.Labels = make(map[string]string)
+			}
+
 			newCronJobConfig.Labels[cronjob.TestWorkflowResourceURI] = testWorkflow.Name
 			options := cronjob.CronJobOptions{
-				Schedule:     schedule,
-				Group:        testworkflowsv1.Group,
-				Resource:     testworkflowsv1.Resource,
-				Version:      testworkflowsv1.Version,
-				ResourceURI:  cronjob.TestWorkflowResourceURI,
-				Labels:       newCronJobConfig.Labels,
-				Annnotations: newCronJobConfig.Annotations,
+				Schedule:    schedule,
+				Group:       testworkflowsv1.Group,
+				Resource:    testworkflowsv1.Resource,
+				Version:     testworkflowsv1.Version,
+				ResourceURI: cronjob.TestWorkflowResourceURI,
+				Labels:      newCronJobConfig.Labels,
+				Annotations: newCronJobConfig.Annotations,
+				Data:        "{}",
 			}
 
 			if err = r.CronJobClient.Update(ctx, oldCronJob, testWorkflow.Name,
@@ -150,15 +159,20 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	for schedule, newCronJobConfig := range newCronJobConfigs {
 		if _, ok = oldCronJobs[schedule]; !ok {
 			// Create new Cron Jobs
+			if newCronJobConfig.Labels == nil {
+				newCronJobConfig.Labels = make(map[string]string)
+			}
+
 			newCronJobConfig.Labels[cronjob.TestWorkflowResourceURI] = testWorkflow.Name
 			options := cronjob.CronJobOptions{
-				Schedule:     schedule,
-				Group:        testworkflowsv1.Group,
-				Resource:     testworkflowsv1.Resource,
-				Version:      testworkflowsv1.Version,
-				ResourceURI:  cronjob.TestWorkflowResourceURI,
-				Labels:       newCronJobConfig.Labels,
-				Annnotations: newCronJobConfig.Annotations,
+				Schedule:    schedule,
+				Group:       testworkflowsv1.Group,
+				Resource:    testworkflowsv1.Resource,
+				Version:     testworkflowsv1.Version,
+				ResourceURI: cronjob.TestWorkflowResourceURI,
+				Labels:      newCronJobConfig.Labels,
+				Annotations: newCronJobConfig.Annotations,
+				Data:        "[]",
 			}
 
 			if err = r.CronJobClient.Create(ctx, testWorkflow.Name,
@@ -178,14 +192,17 @@ func MergeCronJobJobConfig(dst, include *testworkflowsv1.CronJobConfig) *testwor
 	} else if include == nil {
 		return dst
 	}
+
 	if len(include.Labels) > 0 && dst.Labels == nil {
 		dst.Labels = map[string]string{}
 	}
 	maps.Copy(dst.Labels, include.Labels)
+
 	if len(include.Annotations) > 0 && dst.Annotations == nil {
 		dst.Annotations = map[string]string{}
 	}
 	maps.Copy(dst.Annotations, include.Annotations)
+
 	return dst
 }
 
