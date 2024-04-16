@@ -18,6 +18,8 @@ package testworkflows
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	testworkflowsv1 "github.com/kubeshop/testkube-operator/api/testworkflows/v1"
 	"github.com/kubeshop/testkube-operator/pkg/cronjob"
@@ -74,6 +76,11 @@ func (r *TestWorkflowTemplateReconciler) Reconcile(ctx context.Context, req ctrl
 		}
 
 		if isUsed {
+			if testWorkflowList.Items[i].Labels == nil {
+				testWorkflowList.Items[i].Labels = make(map[string]string)
+			}
+
+			testWorkflowList.Items[i].Labels["reconciliation-date"] = fmt.Sprint(time.Now().UnixNano())
 			if err := r.Update(ctx, &testWorkflowList.Items[i]); err != nil {
 				return ctrl.Result{}, err
 			}
