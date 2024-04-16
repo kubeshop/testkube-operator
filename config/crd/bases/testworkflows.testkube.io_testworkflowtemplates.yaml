@@ -896,9 +896,6 @@ spec:
                                   cronJobTemplate:
                                     description: cron job template extensions
                                     type: string
-                                  cronJobTemplateReference:
-                                    description: name of the template resource
-                                    type: string
                                   envConfigMaps:
                                     description: config map references
                                     items:
@@ -961,12 +958,6 @@ spec:
                                       - reference
                                       type: object
                                     type: array
-                                  envs:
-                                    additionalProperties:
-                                      type: string
-                                    description: 'Environment variables passed to
-                                      executor. Deprecated: use Basic Variables instead'
-                                    type: object
                                   executePostRunScriptBeforeScraping:
                                     description: execute post run script before scraping
                                       (prebuilt executor only)
@@ -1009,50 +1000,23 @@ spec:
                                   jobTemplate:
                                     description: job template extensions
                                     type: string
-                                  jobTemplateReference:
-                                    description: name of the template resource
-                                    type: string
                                   name:
                                     description: test execution custom name
-                                    type: string
-                                  namespace:
-                                    description: test kubernetes namespace (\"testkube\"
-                                      when not set)
                                     type: string
                                   negativeTest:
                                     description: negative test will fail the execution
                                       if it is a success and it will succeed if it
                                       is a failure
                                     type: boolean
-                                  number:
-                                    description: test execution number
-                                    format: int32
-                                    type: integer
                                   postRunScript:
                                     description: script to run after test execution
                                     type: string
                                   preRunScript:
                                     description: script to run before test execution
                                     type: string
-                                  pvcTemplate:
-                                    description: pvc template extensions
-                                    type: string
-                                  pvcTemplateReference:
-                                    description: name of the template resource
-                                    type: string
                                   scraperTemplate:
                                     description: scraper template extensions
                                     type: string
-                                  scraperTemplateReference:
-                                    description: name of the template resource
-                                    type: string
-                                  secretEnvs:
-                                    additionalProperties:
-                                      type: string
-                                    description: 'Execution variables passed to executor
-                                      from secrets. Deprecated: use Secret Variables
-                                      instead'
-                                    type: object
                                   slavePodRequest:
                                     description: pod request body
                                     properties:
@@ -1097,14 +1061,6 @@ spec:
                                     type: boolean
                                   testSecretUUID:
                                     description: test secret uuid
-                                    type: string
-                                  testSuiteName:
-                                    description: unique test suite name (CRD Test
-                                      suite name), if it's run as a part of test suite
-                                    type: string
-                                  testSuiteSecretUUID:
-                                    description: test suite secret uuid, if it's run
-                                      as a part of test suite
                                     type: string
                                   variables:
                                     additionalProperties:
@@ -5025,9 +4981,6 @@ spec:
                                   cronJobTemplate:
                                     description: cron job template extensions
                                     type: string
-                                  cronJobTemplateReference:
-                                    description: name of the template resource
-                                    type: string
                                   envConfigMaps:
                                     description: config map references
                                     items:
@@ -5090,12 +5043,6 @@ spec:
                                       - reference
                                       type: object
                                     type: array
-                                  envs:
-                                    additionalProperties:
-                                      type: string
-                                    description: 'Environment variables passed to
-                                      executor. Deprecated: use Basic Variables instead'
-                                    type: object
                                   executePostRunScriptBeforeScraping:
                                     description: execute post run script before scraping
                                       (prebuilt executor only)
@@ -5138,50 +5085,23 @@ spec:
                                   jobTemplate:
                                     description: job template extensions
                                     type: string
-                                  jobTemplateReference:
-                                    description: name of the template resource
-                                    type: string
                                   name:
                                     description: test execution custom name
-                                    type: string
-                                  namespace:
-                                    description: test kubernetes namespace (\"testkube\"
-                                      when not set)
                                     type: string
                                   negativeTest:
                                     description: negative test will fail the execution
                                       if it is a success and it will succeed if it
                                       is a failure
                                     type: boolean
-                                  number:
-                                    description: test execution number
-                                    format: int32
-                                    type: integer
                                   postRunScript:
                                     description: script to run after test execution
                                     type: string
                                   preRunScript:
                                     description: script to run before test execution
                                     type: string
-                                  pvcTemplate:
-                                    description: pvc template extensions
-                                    type: string
-                                  pvcTemplateReference:
-                                    description: name of the template resource
-                                    type: string
                                   scraperTemplate:
                                     description: scraper template extensions
                                     type: string
-                                  scraperTemplateReference:
-                                    description: name of the template resource
-                                    type: string
-                                  secretEnvs:
-                                    additionalProperties:
-                                      type: string
-                                    description: 'Execution variables passed to executor
-                                      from secrets. Deprecated: use Secret Variables
-                                      instead'
-                                    type: object
                                   slavePodRequest:
                                     description: pod request body
                                     properties:
@@ -5226,14 +5146,6 @@ spec:
                                     type: boolean
                                   testSecretUUID:
                                     description: test secret uuid
-                                    type: string
-                                  testSuiteName:
-                                    description: unique test suite name (CRD Test
-                                      suite name), if it's run as a part of test suite
-                                    type: string
-                                  testSuiteSecretUUID:
-                                    description: test suite secret uuid, if it's run
-                                      as a part of test suite
                                     type: string
                                   variables:
                                     additionalProperties:
@@ -6730,9 +6642,6 @@ spec:
                                   cronJobTemplate:
                                     description: cron job template extensions
                                     type: string
-                                  cronJobTemplateReference:
-                                    description: name of the template resource
-                                    type: string
                                   envConfigMaps:
                                     description: config map references
                                     items:
@@ -6795,12 +6704,6 @@ spec:
                                       - reference
                                       type: object
                                     type: array
-                                  envs:
-                                    additionalProperties:
-                                      type: string
-                                    description: 'Environment variables passed to
-                                      executor. Deprecated: use Basic Variables instead'
-                                    type: object
                                   executePostRunScriptBeforeScraping:
                                     description: execute post run script before scraping
                                       (prebuilt executor only)
@@ -6843,50 +6746,23 @@ spec:
                                   jobTemplate:
                                     description: job template extensions
                                     type: string
-                                  jobTemplateReference:
-                                    description: name of the template resource
-                                    type: string
                                   name:
                                     description: test execution custom name
-                                    type: string
-                                  namespace:
-                                    description: test kubernetes namespace (\"testkube\"
-                                      when not set)
                                     type: string
                                   negativeTest:
                                     description: negative test will fail the execution
                                       if it is a success and it will succeed if it
                                       is a failure
                                     type: boolean
-                                  number:
-                                    description: test execution number
-                                    format: int32
-                                    type: integer
                                   postRunScript:
                                     description: script to run after test execution
                                     type: string
                                   preRunScript:
                                     description: script to run before test execution
                                     type: string
-                                  pvcTemplate:
-                                    description: pvc template extensions
-                                    type: string
-                                  pvcTemplateReference:
-                                    description: name of the template resource
-                                    type: string
                                   scraperTemplate:
                                     description: scraper template extensions
                                     type: string
-                                  scraperTemplateReference:
-                                    description: name of the template resource
-                                    type: string
-                                  secretEnvs:
-                                    additionalProperties:
-                                      type: string
-                                    description: 'Execution variables passed to executor
-                                      from secrets. Deprecated: use Secret Variables
-                                      instead'
-                                    type: object
                                   slavePodRequest:
                                     description: pod request body
                                     properties:
@@ -6931,14 +6807,6 @@ spec:
                                     type: boolean
                                   testSecretUUID:
                                     description: test secret uuid
-                                    type: string
-                                  testSuiteName:
-                                    description: unique test suite name (CRD Test
-                                      suite name), if it's run as a part of test suite
-                                    type: string
-                                  testSuiteSecretUUID:
-                                    description: test suite secret uuid, if it's run
-                                      as a part of test suite
                                     type: string
                                   variables:
                                     additionalProperties:

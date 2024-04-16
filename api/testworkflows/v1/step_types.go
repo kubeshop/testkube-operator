@@ -146,7 +146,7 @@ type StepExecuteTest struct {
 	StepExecuteStrategy `json:",inline" expr:"include"`
 
 	// pass the execution request overrides
-	ExecutionRequest testsv3.ExecutionRequest `json:"executionRequest,omitempty" expr:"include"`
+	ExecutionRequest TestExecutionRequest `json:"executionRequest,omitempty" expr:"include"`
 }
 
 type StepExecuteWorkflow struct {
@@ -186,8 +186,6 @@ type TestExecutionRequest struct {
 	Variables               map[string]testsv3.Variable `json:"variables,omitempty" expr:"template,force"`
 	// test secret uuid
 	TestSecretUUID string `json:"testSecretUUID,omitempty" expr:"template"`
-	// test suite secret uuid, if it's run as a part of test suite
-	TestSuiteSecretUUID string `json:"testSuiteSecretUUID,omitempty" expr:"template"`
 	// additional executor binary arguments
 	Args []string `json:"args,omitempty" expr:"template"`
 	// usage mode for arguments
