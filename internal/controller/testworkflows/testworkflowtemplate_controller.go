@@ -20,7 +20,9 @@ import (
 	"context"
 
 	testworkflowsv1 "github.com/kubeshop/testkube-operator/api/testworkflows/v1"
+	"github.com/kubeshop/testkube-operator/pkg/cronjob"
 
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -45,6 +47,36 @@ type TestWorkflowTemplateReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.11.0/pkg/reconcile
 func (r *TestWorkflowTemplateReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+	var testWorkflowList testworkflowsv1.TestWorkflowList
+	reqs, err := labels.ParseToRequirements(cronjob.GetSelector("yes", cronjob.TestWorkflowTemplateResourceURI))
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+
+	options := &client.ListOptions{
+		Namespace:     req.NamespacedName.Namespace,
+		LabelSelector: labels.NewSelector().Add(reqs...),
+	}
+	if err := r.List(ctx, &testWorkflowList, options); err != nil {
+		return ctrl.Result{}, nil
+	}
+
+	for i := range testWorkflowList.Items {
+		var isUsed bool
+		for _, template := range testWorkflowList.Items[i].Spec.Use {
+			if template.Name == req.NamespacedName.Name {
+				isUsed = true
+				break
+			}
+		}
+
+		if isUsed {
+			if err := r.Update(ctx, &testWorkflowList.Items[i]); err != nil {
+				return ctrl.Result{}, err
+			}
+		}
+	}
+
 	return ctrl.Result{}, nil
 }
 
