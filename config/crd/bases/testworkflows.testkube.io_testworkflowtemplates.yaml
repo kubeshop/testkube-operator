@@ -827,6 +827,9 @@ spec:
                                 description: static number of sharded instances to
                                   spawn
                                 x-kubernetes-int-or-string: true
+                              description:
+                                description: test execution description to display
+                                type: string
                               executionRequest:
                                 description: pass the execution request overrides
                                 properties:
@@ -1183,6 +1186,10 @@ spec:
                                 description: static number of sharded instances to
                                   spawn
                                 x-kubernetes-int-or-string: true
+                              description:
+                                description: test workflow execution description to
+                                  display
+                                type: string
                               executionName:
                                 description: unique execution name to use
                                 type: string
@@ -4881,6 +4888,9 @@ spec:
                                 description: static number of sharded instances to
                                   spawn
                                 x-kubernetes-int-or-string: true
+                              description:
+                                description: test execution description to display
+                                type: string
                               executionRequest:
                                 description: pass the execution request overrides
                                 properties:
@@ -5237,6 +5247,10 @@ spec:
                                 description: static number of sharded instances to
                                   spawn
                                 x-kubernetes-int-or-string: true
+                              description:
+                                description: test workflow execution description to
+                                  display
+                                type: string
                               executionName:
                                 description: unique execution name to use
                                 type: string
@@ -6511,6 +6525,9 @@ spec:
                                 description: static number of sharded instances to
                                   spawn
                                 x-kubernetes-int-or-string: true
+                              description:
+                                description: test execution description to display
+                                type: string
                               executionRequest:
                                 description: pass the execution request overrides
                                 properties:
@@ -6867,6 +6884,10 @@ spec:
                                 description: static number of sharded instances to
                                   spawn
                                 x-kubernetes-int-or-string: true
+                              description:
+                                description: test workflow execution description to
+                                  display
+                                type: string
                               executionName:
                                 description: unique execution name to use
                                 type: string

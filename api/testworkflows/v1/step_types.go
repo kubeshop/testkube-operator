@@ -143,6 +143,9 @@ type StepExecuteTest struct {
 	// test name to run
 	Name string `json:"name,omitempty" expr:"template"`
 
+	// test execution description to display
+	Description string `json:"description,omitempty" expr:"template"`
+
 	StepExecuteStrategy `json:",inline" expr:"include"`
 
 	// pass the execution request overrides
@@ -152,6 +155,9 @@ type StepExecuteTest struct {
 type StepExecuteWorkflow struct {
 	// workflow name to run
 	Name string `json:"name,omitempty" expr:"template"`
+
+	// test workflow execution description to display
+	Description string `json:"description,omitempty" expr:"template"`
 
 	StepExecuteStrategy `json:",inline" expr:"include"`
 
