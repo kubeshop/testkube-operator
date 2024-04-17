@@ -80,9 +80,9 @@ type Event struct {
 // cron job configuration
 type CronJobConfig struct {
 	// cron schedule to run a test workflow
-	Cron string `json:"cron"`
+	Cron string `json:"cron" expr:"template"`
 	// labels to attach to the cron job
-	Labels map[string]string `json:"labels,omitempty"`
+	Labels map[string]string `json:"labels,omitempty" expr:"template,template"`
 	// annotations to attach to the cron job
-	Annotations map[string]string `json:"annotations,omitempty"`
+	Annotations map[string]string `json:"annotations,omitempty" expr:"template,template"`
 }
