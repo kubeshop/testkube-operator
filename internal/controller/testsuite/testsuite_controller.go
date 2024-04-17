@@ -58,8 +58,7 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	// Delete CronJob if it was created for deleted TestSuite
 	var testSuite testsuitev3.TestSuite
-	err := r.Get(ctx, req.NamespacedName, &testSuite)
-	if err != nil {
+	if err := r.Get(ctx, req.NamespacedName, &testSuite); err != nil {
 		if errors.IsNotFound(err) {
 			if err = r.CronJobClient.Delete(ctx,
 				cronjob.GetMetadataName(req.NamespacedName.Name, cronjob.TestSuiteResourceURI), req.NamespacedName.Namespace); err != nil {
@@ -116,6 +115,7 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	options := cronjob.CronJobOptions{
 		Schedule:                  testSuite.Spec.Schedule,
+		Group:                     testsuitev3.Group,
 		Resource:                  testsuitev3.Resource,
 		Version:                   testsuitev3.Version,
 		ResourceURI:               cronjob.TestSuiteResourceURI,
@@ -131,7 +131,8 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	if err != nil {
 		if errors.IsNotFound(err) {
 			if err = r.CronJobClient.Create(ctx, testSuite.Name,
-				cronjob.GetMetadataName(testSuite.Name, cronjob.TestSuiteResourceURI), req.NamespacedName.Namespace, string(testSuite.UID), options); err != nil {
+				cronjob.GetMetadataName(testSuite.Name, cronjob.TestSuiteResourceURI), req.NamespacedName.Namespace,
+				string(testSuite.UID), options); err != nil {
 				return ctrl.Result{}, err
 			}
 		}
@@ -141,7 +142,8 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	// Update CronJob if it was created before provided Test schedule
 	if err = r.CronJobClient.Update(ctx, cronJob, testSuite.Name,
-		cronjob.GetMetadataName(testSuite.Name, cronjob.TestSuiteResourceURI), req.NamespacedName.Namespace, string(testSuite.UID), options); err != nil {
+		cronjob.GetMetadataName(testSuite.Name, cronjob.TestSuiteResourceURI), req.NamespacedName.Namespace,
+		string(testSuite.UID), options); err != nil {
 		return ctrl.Result{}, err
 	}
 

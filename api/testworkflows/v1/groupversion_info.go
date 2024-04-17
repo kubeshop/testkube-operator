@@ -22,8 +22,17 @@ import (
 )
 
 var (
+	// Group represents the API Group
+	Group = "testworkflows.testkube.io"
+
+	// Version represents the Resource version
+	Version = "v1"
+
+	// Resource corresponds to the CRD Kind
+	Resource = "TestWorkflow"
+
 	// GroupVersion is group version used to register these objects
-	GroupVersion = schema.GroupVersion{Group: "testworkflows.testkube.io", Version: "v1"}
+	GroupVersion = schema.GroupVersion{Group: Group, Version: Version}
 
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme
 	SchemeBuilder = &scheme.Builder{GroupVersion: GroupVersion}
