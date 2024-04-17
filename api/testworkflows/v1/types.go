@@ -1,6 +1,8 @@
 package v1
 
 import (
+	"encoding/json"
+
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
@@ -71,4 +73,60 @@ type PodConfig struct {
 
 	// volumes to include in the pod
 	Volumes []corev1.Volume `json:"volumes,omitempty" expr:"force"`
+}
+
+type DynamicList struct {
+	Dynamic    bool     `expr:"ignore"`
+	Static     []string `expr:"template"`
+	Expression string   `expr:"expression"`
+}
+
+// UnmarshalJSON implements the json.Unmarshaller interface.
+func (s *DynamicList) UnmarshalJSON(value []byte) error {
+	if value[0] == '[' {
+		result := make([]interface{}, 0)
+		err := json.Unmarshal(value, &result)
+		if err != nil {
+			return err
+		}
+		isStringOnly := true
+		for i := range result {
+			if _, ok := result[i].(string); !ok {
+				isStringOnly = false
+				break
+			}
+		}
+		if isStringOnly {
+			s.Dynamic = false
+			s.Static = make([]string, len(result))
+			for i := range result {
+				s.Static[i] = result[i].(string)
+			}
+		} else {
+			s.Dynamic = true
+			s.Expression = string(value)
+		}
+		return nil
+	}
+	if value[0] == '"' {
+		s.Dynamic = true
+		return json.Unmarshal(value, &s.Expression)
+	}
+	s.Dynamic = true
+	s.Expression = string(value)
+	return nil
+}
+
+// MarshalJSON implements the json.Marshaller interface.
+func (s DynamicList) MarshalJSON() ([]byte, error) {
+	if s.Dynamic {
+		var v []interface{}
+		err := json.Unmarshal([]byte(s.Expression), &v)
+		if err != nil {
+			return json.Marshal(s.Expression)
+		} else {
+			return []byte(s.Expression), nil
+		}
+	}
+	return json.Marshal(s.Static)
 }
