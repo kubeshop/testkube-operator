@@ -70,7 +70,6 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		return ctrl.Result{}, err
 	}
 
-	var hasTemplates bool
 	events := testWorkflow.Spec.Events
 	for _, template := range testWorkflow.Spec.Use {
 		var testWorkflowTemplate testworkflowsv1.TestWorkflowTemplate
@@ -83,9 +82,9 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		}
 
 		events = append(events, testWorkflowTemplate.Spec.Events...)
-		hasTemplates = true
 	}
 
+	hasTemplates := len(testWorkflow.Spec.Use) != 0
 	_, ok := testWorkflow.Labels[cronjob.TestWorkflowTemplateResourceURI]
 	if ok && !hasTemplates {
 		delete(testWorkflow.Labels, cronjob.TestWorkflowTemplateResourceURI)
