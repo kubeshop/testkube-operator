@@ -84,20 +84,27 @@ type DynamicList struct {
 // UnmarshalJSON implements the json.Unmarshaller interface.
 func (s *DynamicList) UnmarshalJSON(value []byte) error {
 	if value[0] == '[' {
-		s.Dynamic = false
 		result := make([]interface{}, 0)
 		err := json.Unmarshal(value, &result)
 		if err != nil {
 			return err
 		}
-		s.Static = make([]string, len(result))
+		isStringOnly := true
 		for i := range result {
-			if str, ok := result[i].(string); ok {
-				s.Static[i] = str
-			} else {
-				v, _ := json.Marshal(result[i])
-				s.Static[i] = string(v)
+			if _, ok := result[i].(string); !ok {
+				isStringOnly = false
+				break
 			}
+		}
+		if isStringOnly {
+			s.Dynamic = false
+			s.Static = make([]string, len(result))
+			for i := range result {
+				s.Static[i] = result[i].(string)
+			}
+		} else {
+			s.Dynamic = true
+			s.Expression = string(value)
 		}
 		return nil
 	}
@@ -113,7 +120,13 @@ func (s *DynamicList) UnmarshalJSON(value []byte) error {
 // MarshalJSON implements the json.Marshaller interface.
 func (s DynamicList) MarshalJSON() ([]byte, error) {
 	if s.Dynamic {
-		return json.Marshal(s.Expression)
+		var v []interface{}
+		err := json.Unmarshal([]byte(s.Expression), &v)
+		if err != nil {
+			return json.Marshal(s.Expression)
+		} else {
+			return []byte(s.Expression), nil
+		}
 	}
 	return json.Marshal(s.Static)
 }
