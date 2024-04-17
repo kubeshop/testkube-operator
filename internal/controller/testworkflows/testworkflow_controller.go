@@ -75,6 +75,10 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	for _, template := range testWorkflow.Spec.Use {
 		var testWorkflowTemplate testworkflowsv1.TestWorkflowTemplate
 		if err := r.Get(ctx, types.NamespacedName{Namespace: testWorkflow.Namespace, Name: template.Name}, &testWorkflowTemplate); err != nil {
+			if errors.IsNotFound(err) {
+				continue
+			}
+
 			return ctrl.Result{}, err
 		}
 
