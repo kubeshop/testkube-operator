@@ -114,7 +114,7 @@ func (c *Client) ListAll(ctx context.Context, selector, namespace string) (*batc
 		return list, err
 	}
 
-	return list, err
+	return list, nil
 }
 
 // Create is a method to create a cron job
