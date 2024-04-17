@@ -103,7 +103,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	newCronJobConfigs := make(map[string]*testworkflowsv1.CronJobConfig)
 	oldCronJobs := make(map[string]*batchv1.CronJob)
 	cronJobList, err := r.CronJobClient.ListAll(ctx,
-		cronjob.GetSelector(req.NamespacedName.Name, cronjob.TestWorkflowResourceURI), req.NamespacedName.Namespace)
+		cronjob.GetSelector(testWorkflow.Name, cronjob.TestWorkflowResourceURI), testWorkflow.Namespace)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
@@ -130,7 +130,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		if newCronJobConfig, ok := newCronJobConfigs[schedule]; !ok {
 			// Delete removed Cron Jobs
 			if err = r.CronJobClient.Delete(ctx,
-				cronjob.GetHashedMetadataName(req.NamespacedName.Name, schedule), req.NamespacedName.Namespace); err != nil {
+				cronjob.GetHashedMetadataName(testWorkflow.Name, schedule), testWorkflow.Namespace); err != nil {
 				return ctrl.Result{}, err
 			}
 		} else {
@@ -152,7 +152,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			}
 
 			if err = r.CronJobClient.Update(ctx, oldCronJob, testWorkflow.Name,
-				cronjob.GetHashedMetadataName(testWorkflow.Name, schedule), req.NamespacedName.Namespace,
+				cronjob.GetHashedMetadataName(testWorkflow.Name, schedule), testWorkflow.Namespace,
 				string(testWorkflow.UID), options); err != nil {
 				return ctrl.Result{}, err
 			}
@@ -179,7 +179,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			}
 
 			if err = r.CronJobClient.Create(ctx, testWorkflow.Name,
-				cronjob.GetHashedMetadataName(testWorkflow.Name, schedule), req.NamespacedName.Namespace,
+				cronjob.GetHashedMetadataName(testWorkflow.Name, schedule), testWorkflow.Namespace,
 				string(testWorkflow.UID), options); err != nil {
 				return ctrl.Result{}, err
 			}
