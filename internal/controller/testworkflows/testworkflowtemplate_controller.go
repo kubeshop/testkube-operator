@@ -31,6 +31,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )
 
+const (
+	reconciliationDateAnnotationName = "testworkflows.testkube.io/reconciliation-date"
+)
+
 // TestWorkflowTemplateReconciler reconciles a TestWorkflowTemplate object
 type TestWorkflowTemplateReconciler struct {
 	client.Client
@@ -76,11 +80,11 @@ func (r *TestWorkflowTemplateReconciler) Reconcile(ctx context.Context, req ctrl
 		}
 
 		if isUsed {
-			if testWorkflowList.Items[i].Labels == nil {
-				testWorkflowList.Items[i].Labels = make(map[string]string)
+			if testWorkflowList.Items[i].Annotations == nil {
+				testWorkflowList.Items[i].Annotations = make(map[string]string)
 			}
 
-			testWorkflowList.Items[i].Labels["reconciliation-date"] = fmt.Sprint(time.Now().UnixNano())
+			testWorkflowList.Items[i].Annotations[reconciliationDateAnnotationName] = fmt.Sprint(time.Now().UnixNano())
 			if err := r.Update(ctx, &testWorkflowList.Items[i]); err != nil {
 				return ctrl.Result{}, err
 			}
