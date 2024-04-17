@@ -17,4 +17,7 @@ type TestWorkflowSpecBase struct {
 
 	// configuration for the scheduled pod
 	Pod *PodConfig `json:"pod,omitempty" expr:"include"`
+
+	// events triggering execution of the test workflow
+	Events []Event `json:"events,omitempty" expr:"include"`
 }

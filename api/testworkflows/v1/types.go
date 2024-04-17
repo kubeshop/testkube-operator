@@ -130,3 +130,17 @@ func (s DynamicList) MarshalJSON() ([]byte, error) {
 	}
 	return json.Marshal(s.Static)
 }
+
+type Event struct {
+	Cronjob *CronJobConfig `json:"cronjob,omitempty"`
+}
+
+// cron job configuration
+type CronJobConfig struct {
+	// cron schedule to run a test workflow
+	Cron string `json:"cron" expr:"template"`
+	// labels to attach to the cron job
+	Labels map[string]string `json:"labels,omitempty" expr:"template,template"`
+	// annotations to attach to the cron job
+	Annotations map[string]string `json:"annotations,omitempty" expr:"template,template"`
+}
