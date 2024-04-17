@@ -1,6 +1,11 @@
 package v1
 
-import "k8s.io/apimachinery/pkg/util/intstr"
+import (
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/util/intstr"
+
+	testsv3 "github.com/kubeshop/testkube-operator/api/tests/v3"
+)
 
 type RetryPolicy struct {
 	// how many times at most it should retry
@@ -114,14 +119,51 @@ type StepExecute struct {
 	Workflows []StepExecuteWorkflow `json:"workflows,omitempty" expr:"include"`
 }
 
+type StepExecuteStrategy struct {
+	// matrix of parameters to spawn instances (static)
+	// +kubebuilder:validation:Schemaless
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Type="object"
+	Matrix map[string]DynamicList `json:"matrix,omitempty" expr:"force"`
+
+	// static number of sharded instances to spawn
+	Count *intstr.IntOrString `json:"count,omitempty" expr:"expression"`
+
+	// dynamic number of sharded instances to spawn - it will be lowered if there is not enough sharded values
+	MaxCount *intstr.IntOrString `json:"maxCount,omitempty" expr:"expression"`
+
+	// parameters that should be distributed across sharded instances
+	// +kubebuilder:validation:Schemaless
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Type="object"
+	Shards map[string]DynamicList `json:"shards,omitempty" expr:"force"`
+}
+
 type StepExecuteTest struct {
 	// test name to run
 	Name string `json:"name,omitempty" expr:"template"`
+
+	// test execution description to display
+	Description string `json:"description,omitempty" expr:"template"`
+
+	StepExecuteStrategy `json:",inline" expr:"include"`
+
+	// pass the execution request overrides
+	ExecutionRequest *TestExecutionRequest `json:"executionRequest,omitempty" expr:"include"`
 }
 
 type StepExecuteWorkflow struct {
 	// workflow name to run
 	Name string `json:"name,omitempty" expr:"template"`
+
+	// test workflow execution description to display
+	Description string `json:"description,omitempty" expr:"template"`
+
+	StepExecuteStrategy `json:",inline" expr:"include"`
+
+	// unique execution name to use
+	ExecutionName string `json:"executionName,omitempty" expr:"template"`
+
 	// configuration to pass for the workflow
 	Config map[string]intstr.IntOrString `json:"config,omitempty" expr:"template"`
 }
@@ -140,4 +182,60 @@ type ArtifactCompression struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinLength=1
 	Name string `json:"name" expr:"template"`
+}
+
+type TestExecutionRequest struct {
+	// test execution custom name
+	Name string `json:"name,omitempty" expr:"template"`
+	// test execution labels
+	ExecutionLabels map[string]string `json:"executionLabels,omitempty" expr:"template,template"`
+	// variables file content - need to be in format for particular executor (e.g. postman envs file)
+	VariablesFile           string                      `json:"variablesFile,omitempty" expr:"template"`
+	IsVariablesFileUploaded bool                        `json:"isVariablesFileUploaded,omitempty" expr:"ignore"`
+	Variables               map[string]testsv3.Variable `json:"variables,omitempty" expr:"template,force"`
+	// test secret uuid
+	TestSecretUUID string `json:"testSecretUUID,omitempty" expr:"template"`
+	// additional executor binary arguments
+	Args []string `json:"args,omitempty" expr:"template"`
+	// usage mode for arguments
+	ArgsMode testsv3.ArgsModeType `json:"argsMode,omitempty" expr:"template"`
+	// executor binary command
+	Command []string `json:"command,omitempty" expr:"template"`
+	// container executor image
+	Image string `json:"image,omitempty" expr:"template"`
+	// container executor image pull secrets
+	ImagePullSecrets []corev1.LocalObjectReference `json:"imagePullSecrets,omitempty" expr:"template"`
+	// whether to start execution sync or async
+	Sync bool `json:"sync,omitempty" expr:"ignore"`
+	// http proxy for executor containers
+	HttpProxy string `json:"httpProxy,omitempty" expr:"template"`
+	// https proxy for executor containers
+	HttpsProxy string `json:"httpsProxy,omitempty" expr:"template"`
+	// negative test will fail the execution if it is a success and it will succeed if it is a failure
+	NegativeTest bool `json:"negativeTest,omitempty" expr:"ignore"`
+	// Optional duration in seconds the pod may be active on the node relative to
+	// StartTime before the system will actively try to mark it failed and kill associated containers.
+	// Value must be a positive integer.
+	ActiveDeadlineSeconds int64                    `json:"activeDeadlineSeconds,omitempty" expr:"ignore"`
+	ArtifactRequest       *testsv3.ArtifactRequest `json:"artifactRequest,omitempty" expr:"force"`
+	// job template extensions
+	JobTemplate string `json:"jobTemplate,omitempty" expr:"ignore"`
+	// cron job template extensions
+	CronJobTemplate string `json:"cronJobTemplate,omitempty" expr:"ignore"`
+	// script to run before test execution
+	PreRunScript string `json:"preRunScript,omitempty" expr:"template"`
+	// script to run after test execution
+	PostRunScript string `json:"postRunScript,omitempty" expr:"template"`
+	// execute post run script before scraping (prebuilt executor only)
+	ExecutePostRunScriptBeforeScraping bool `json:"executePostRunScriptBeforeScraping,omitempty" expr:"ignore"`
+	// run scripts using source command (container executor only)
+	SourceScripts bool `json:"sourceScripts,omitempty" expr:"ignore"`
+	// scraper template extensions
+	ScraperTemplate string `json:"scraperTemplate,omitempty" expr:"ignore"`
+	// config map references
+	EnvConfigMaps []testsv3.EnvReference `json:"envConfigMaps,omitempty" expr:"force"`
+	// secret references
+	EnvSecrets []testsv3.EnvReference `json:"envSecrets,omitempty" expr:"force"`
+	// namespace for test execution (Pro edition only)
+	ExecutionNamespace string `json:"executionNamespace,omitempty" expr:"template"`
 }
