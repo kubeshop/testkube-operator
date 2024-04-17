@@ -72,6 +72,8 @@ type PodConfig struct {
 	Annotations map[string]string `json:"annotations,omitempty" expr:"template,template"`
 
 	// volumes to include in the pod
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
 	Volumes []corev1.Volume `json:"volumes,omitempty" expr:"force"`
 }
 
