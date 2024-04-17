@@ -18,18 +18,25 @@ package testworkflows
 
 import (
 	"context"
+	"maps"
 
 	testworkflowsv1 "github.com/kubeshop/testkube-operator/api/testworkflows/v1"
+	"github.com/kubeshop/testkube-operator/pkg/cronjob"
 
+	batchv1 "k8s.io/api/batch/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 )
 
 // TestWorkflowReconciler reconciles a TestWorkflow object
 type TestWorkflowReconciler struct {
 	client.Client
-	Scheme *runtime.Scheme
+	Scheme        *runtime.Scheme
+	CronJobClient *cronjob.Client
 }
 
 //+kubebuilder:rbac:groups=testworkflows.testkube.io,resources=testworkflows,verbs=get;list;watch;create;update;patch;delete
@@ -46,7 +53,160 @@ type TestWorkflowReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.11.0/pkg/reconcile
 func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+	_ = log.FromContext(ctx)
+
+	// Delete CronJobs if it were created for deleted Test Workflow
+	var testWorkflow testworkflowsv1.TestWorkflow
+	if err := r.Get(ctx, req.NamespacedName, &testWorkflow); err != nil {
+		if errors.IsNotFound(err) {
+			if err = r.CronJobClient.DeleteAll(ctx,
+				cronjob.GetSelector(req.NamespacedName.Name, cronjob.TestWorkflowResourceURI), req.NamespacedName.Namespace); err != nil {
+				return ctrl.Result{}, err
+			}
+
+			return ctrl.Result{}, nil
+		}
+
+		return ctrl.Result{}, err
+	}
+
+	events := testWorkflow.Spec.Events
+	for _, template := range testWorkflow.Spec.Use {
+		var testWorkflowTemplate testworkflowsv1.TestWorkflowTemplate
+		if err := r.Get(ctx, types.NamespacedName{Namespace: testWorkflow.Namespace, Name: template.Name}, &testWorkflowTemplate); err != nil {
+			if errors.IsNotFound(err) {
+				continue
+			}
+
+			return ctrl.Result{}, err
+		}
+
+		events = append(events, testWorkflowTemplate.Spec.Events...)
+	}
+
+	hasTemplates := len(testWorkflow.Spec.Use) != 0
+	_, ok := testWorkflow.Labels[cronjob.TestWorkflowTemplateResourceURI]
+	if ok && !hasTemplates {
+		delete(testWorkflow.Labels, cronjob.TestWorkflowTemplateResourceURI)
+		return ctrl.Result{}, r.Update(ctx, &testWorkflow)
+	}
+
+	if !ok && hasTemplates {
+		if testWorkflow.Labels == nil {
+			testWorkflow.Labels = make(map[string]string)
+		}
+
+		testWorkflow.Labels[cronjob.TestWorkflowTemplateResourceURI] = "yes"
+		return ctrl.Result{}, r.Update(ctx, &testWorkflow)
+	}
+
+	newCronJobConfigs := make(map[string]*testworkflowsv1.CronJobConfig)
+	oldCronJobs := make(map[string]*batchv1.CronJob)
+	cronJobList, err := r.CronJobClient.ListAll(ctx,
+		cronjob.GetSelector(testWorkflow.Name, cronjob.TestWorkflowResourceURI), testWorkflow.Namespace)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+
+	for i := range cronJobList.Items {
+		oldCronJobs[cronJobList.Items[i].Spec.Schedule] = &cronJobList.Items[i]
+	}
+
+	for _, event := range events {
+		if event.Cronjob != nil {
+			if cronJob, ok := newCronJobConfigs[event.Cronjob.Cron]; !ok {
+				newCronJobConfigs[event.Cronjob.Cron] = &testworkflowsv1.CronJobConfig{
+					Cron:        event.Cronjob.Cron,
+					Labels:      event.Cronjob.Labels,
+					Annotations: event.Cronjob.Annotations,
+				}
+			} else {
+				newCronJobConfigs[cronJob.Cron] = MergeCronJobJobConfig(cronJob, event.Cronjob)
+			}
+		}
+	}
+
+	for schedule, oldCronJob := range oldCronJobs {
+		if newCronJobConfig, ok := newCronJobConfigs[schedule]; !ok {
+			// Delete removed Cron Jobs
+			if err = r.CronJobClient.Delete(ctx,
+				cronjob.GetHashedMetadataName(testWorkflow.Name, schedule), testWorkflow.Namespace); err != nil {
+				return ctrl.Result{}, err
+			}
+		} else {
+			// Update CronJob if it was created before
+			if newCronJobConfig.Labels == nil {
+				newCronJobConfig.Labels = make(map[string]string)
+			}
+
+			newCronJobConfig.Labels[cronjob.TestWorkflowResourceURI] = testWorkflow.Name
+			options := cronjob.CronJobOptions{
+				Schedule:    schedule,
+				Group:       testworkflowsv1.Group,
+				Resource:    testworkflowsv1.Resource,
+				Version:     testworkflowsv1.Version,
+				ResourceURI: cronjob.TestWorkflowResourceURI,
+				Labels:      newCronJobConfig.Labels,
+				Annotations: newCronJobConfig.Annotations,
+				Data:        "{}",
+			}
+
+			if err = r.CronJobClient.Update(ctx, oldCronJob, testWorkflow.Name,
+				cronjob.GetHashedMetadataName(testWorkflow.Name, schedule), testWorkflow.Namespace,
+				string(testWorkflow.UID), options); err != nil {
+				return ctrl.Result{}, err
+			}
+		}
+	}
+
+	for schedule, newCronJobConfig := range newCronJobConfigs {
+		if _, ok = oldCronJobs[schedule]; !ok {
+			// Create new Cron Jobs
+			if newCronJobConfig.Labels == nil {
+				newCronJobConfig.Labels = make(map[string]string)
+			}
+
+			newCronJobConfig.Labels[cronjob.TestWorkflowResourceURI] = testWorkflow.Name
+			options := cronjob.CronJobOptions{
+				Schedule:    schedule,
+				Group:       testworkflowsv1.Group,
+				Resource:    testworkflowsv1.Resource,
+				Version:     testworkflowsv1.Version,
+				ResourceURI: cronjob.TestWorkflowResourceURI,
+				Labels:      newCronJobConfig.Labels,
+				Annotations: newCronJobConfig.Annotations,
+				Data:        "[]",
+			}
+
+			if err = r.CronJobClient.Create(ctx, testWorkflow.Name,
+				cronjob.GetHashedMetadataName(testWorkflow.Name, schedule), testWorkflow.Namespace,
+				string(testWorkflow.UID), options); err != nil {
+				return ctrl.Result{}, err
+			}
+		}
+	}
+
 	return ctrl.Result{}, nil
+}
+
+func MergeCronJobJobConfig(dst, include *testworkflowsv1.CronJobConfig) *testworkflowsv1.CronJobConfig {
+	if dst == nil {
+		return include
+	} else if include == nil {
+		return dst
+	}
+
+	if len(include.Labels) > 0 && dst.Labels == nil {
+		dst.Labels = map[string]string{}
+	}
+	maps.Copy(dst.Labels, include.Labels)
+
+	if len(include.Annotations) > 0 && dst.Annotations == nil {
+		dst.Annotations = map[string]string{}
+	}
+	maps.Copy(dst.Annotations, include.Annotations)
+
+	return dst
 }
 
 // SetupWithManager sets up the controller with the Manager.
