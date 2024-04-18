@@ -45,7 +45,7 @@ type ContentTarball struct {
 	// path where the tarball should be extracted
 	Path string `json:"path" expr:"template"`
 	// should it mount a new volume there
-	Mount *bool `json:"mount" expr:"ignore"`
+	Mount *bool `json:"mount,omitempty" expr:"ignore"`
 }
 
 type Content struct {
