@@ -113,7 +113,7 @@ type StepExecute struct {
 	Async bool `json:"async,omitempty"`
 
 	// pack some data from the original file system to serve them down
-	Tarball map[string]StepExecutePack `json:"tarball,omitempty" expr:"template,include"`
+	Tarball map[string]StepExecuteTarball `json:"tarball,omitempty" expr:"template,include"`
 
 	// tests to run
 	Tests []StepExecuteTest `json:"tests,omitempty" expr:"include"`
@@ -122,7 +122,7 @@ type StepExecute struct {
 	Workflows []StepExecuteWorkflow `json:"workflows,omitempty" expr:"include"`
 }
 
-type StepExecutePack struct {
+type StepExecuteTarball struct {
 	// path to load the files from
 	From string `json:"from,omitempty" expr:"template"`
 
