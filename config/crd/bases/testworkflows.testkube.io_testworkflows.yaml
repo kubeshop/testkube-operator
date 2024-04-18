@@ -800,6 +800,25 @@ spec:
                                   type: object
                               type: object
                           type: object
+                        tarball:
+                          description: tarballs to unpack
+                          items:
+                            properties:
+                              mount:
+                                description: should it mount a new volume there
+                                type: boolean
+                              path:
+                                description: path where the tarball should be extracted
+                                type: string
+                              url:
+                                description: url for the tarball to extract
+                                type: string
+                            required:
+                            - mount
+                            - path
+                            - url
+                            type: object
+                          type: array
                       type: object
                     delay:
                       description: delay before the step
@@ -2497,6 +2516,25 @@ spec:
                             type: object
                         type: object
                     type: object
+                  tarball:
+                    description: tarballs to unpack
+                    items:
+                      properties:
+                        mount:
+                          description: should it mount a new volume there
+                          type: boolean
+                        path:
+                          description: path where the tarball should be extracted
+                          type: string
+                        url:
+                          description: url for the tarball to extract
+                          type: string
+                      required:
+                      - mount
+                      - path
+                      - url
+                      type: object
+                    type: array
                 type: object
               events:
                 description: events triggering execution of the test workflow
@@ -4939,6 +4977,25 @@ spec:
                                   type: object
                               type: object
                           type: object
+                        tarball:
+                          description: tarballs to unpack
+                          items:
+                            properties:
+                              mount:
+                                description: should it mount a new volume there
+                                type: boolean
+                              path:
+                                description: path where the tarball should be extracted
+                                type: string
+                              url:
+                                description: url for the tarball to extract
+                                type: string
+                            required:
+                            - mount
+                            - path
+                            - url
+                            type: object
+                          type: array
                       type: object
                     delay:
                       description: delay before the step
@@ -6629,6 +6686,25 @@ spec:
                                   type: object
                               type: object
                           type: object
+                        tarball:
+                          description: tarballs to unpack
+                          items:
+                            properties:
+                              mount:
+                                description: should it mount a new volume there
+                                type: boolean
+                              path:
+                                description: path where the tarball should be extracted
+                                type: string
+                              url:
+                                description: url for the tarball to extract
+                                type: string
+                            required:
+                            - mount
+                            - path
+                            - url
+                            type: object
+                          type: array
                       type: object
                     delay:
                       description: delay before the step
