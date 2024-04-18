@@ -816,6 +816,21 @@ spec:
                           description: how many resources could be scheduled in parallel
                           format: int32
                           type: integer
+                        tarball:
+                          additionalProperties:
+                            properties:
+                              files:
+                                description: file patterns to pack
+                                items:
+                                  type: string
+                                type: array
+                              from:
+                                description: path to load the files from
+                                type: string
+                            type: object
+                          description: pack some data from the original file system
+                            to serve them down
+                          type: object
                         tests:
                           description: tests to run
                           items:
@@ -4902,6 +4917,21 @@ spec:
                           description: how many resources could be scheduled in parallel
                           format: int32
                           type: integer
+                        tarball:
+                          additionalProperties:
+                            properties:
+                              files:
+                                description: file patterns to pack
+                                items:
+                                  type: string
+                                type: array
+                              from:
+                                description: path to load the files from
+                                type: string
+                            type: object
+                          description: pack some data from the original file system
+                            to serve them down
+                          type: object
                         tests:
                           description: tests to run
                           items:
@@ -6539,6 +6569,21 @@ spec:
                           description: how many resources could be scheduled in parallel
                           format: int32
                           type: integer
+                        tarball:
+                          additionalProperties:
+                            properties:
+                              files:
+                                description: file patterns to pack
+                                items:
+                                  type: string
+                                type: array
+                              from:
+                                description: path to load the files from
+                                type: string
+                            type: object
+                          description: pack some data from the original file system
+                            to serve them down
+                          type: object
                         tests:
                           description: tests to run
                           items:
