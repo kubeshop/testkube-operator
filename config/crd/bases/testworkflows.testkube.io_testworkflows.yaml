@@ -836,20 +836,10 @@ spec:
                           format: int32
                           type: integer
                         tarball:
-                          additionalProperties:
-                            properties:
-                              files:
-                                description: file patterns to pack
-                                items:
-                                  type: string
-                                type: array
-                              from:
-                                description: path to load the files from
-                                type: string
-                            type: object
                           description: pack some data from the original file system
                             to serve them down
                           type: object
+                          x-kubernetes-preserve-unknown-fields: true
                         tests:
                           description: tests to run
                           items:
@@ -5013,20 +5003,10 @@ spec:
                           format: int32
                           type: integer
                         tarball:
-                          additionalProperties:
-                            properties:
-                              files:
-                                description: file patterns to pack
-                                items:
-                                  type: string
-                                type: array
-                              from:
-                                description: path to load the files from
-                                type: string
-                            type: object
                           description: pack some data from the original file system
                             to serve them down
                           type: object
+                          x-kubernetes-preserve-unknown-fields: true
                         tests:
                           description: tests to run
                           items:
@@ -6722,20 +6702,10 @@ spec:
                           format: int32
                           type: integer
                         tarball:
-                          additionalProperties:
-                            properties:
-                              files:
-                                description: file patterns to pack
-                                items:
-                                  type: string
-                                type: array
-                              from:
-                                description: path to load the files from
-                                type: string
-                            type: object
                           description: pack some data from the original file system
                             to serve them down
                           type: object
+                          x-kubernetes-preserve-unknown-fields: true
                         tests:
                           description: tests to run
                           items:

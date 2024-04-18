@@ -113,6 +113,9 @@ type StepExecute struct {
 	Async bool `json:"async,omitempty"`
 
 	// pack some data from the original file system to serve them down
+	// +kubebuilder:validation:Schemaless
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Type="object"
 	Tarball map[string]StepExecuteTarball `json:"tarball,omitempty" expr:"template,include"`
 
 	// tests to run
@@ -127,7 +130,7 @@ type StepExecuteTarball struct {
 	From string `json:"from,omitempty" expr:"template"`
 
 	// file patterns to pack
-	Files []string `json:"files,omitempty" expr:"template"`
+	Files DynamicList `json:"files,omitempty" expr:"template"`
 }
 
 type StepExecuteStrategy struct {
