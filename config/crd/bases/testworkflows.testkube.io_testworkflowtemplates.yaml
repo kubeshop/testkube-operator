@@ -835,11 +835,6 @@ spec:
                           description: how many resources could be scheduled in parallel
                           format: int32
                           type: integer
-                        tarball:
-                          description: pack some data from the original file system
-                            to serve them down
-                          type: object
-                          x-kubernetes-preserve-unknown-fields: true
                         tests:
                           description: tests to run
                           items:
@@ -1189,6 +1184,11 @@ spec:
                                   across sharded instances
                                 type: object
                                 x-kubernetes-preserve-unknown-fields: true
+                              tarball:
+                                description: pack some data from the original file
+                                  system to serve them down
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
                             type: object
                           type: array
                         workflows:
@@ -1236,6 +1236,11 @@ spec:
                               shards:
                                 description: parameters that should be distributed
                                   across sharded instances
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                              tarball:
+                                description: pack some data from the original file
+                                  system to serve them down
                                 type: object
                                 x-kubernetes-preserve-unknown-fields: true
                             type: object
@@ -4964,11 +4969,6 @@ spec:
                           description: how many resources could be scheduled in parallel
                           format: int32
                           type: integer
-                        tarball:
-                          description: pack some data from the original file system
-                            to serve them down
-                          type: object
-                          x-kubernetes-preserve-unknown-fields: true
                         tests:
                           description: tests to run
                           items:
@@ -5318,6 +5318,11 @@ spec:
                                   across sharded instances
                                 type: object
                                 x-kubernetes-preserve-unknown-fields: true
+                              tarball:
+                                description: pack some data from the original file
+                                  system to serve them down
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
                             type: object
                           type: array
                         workflows:
@@ -5365,6 +5370,11 @@ spec:
                               shards:
                                 description: parameters that should be distributed
                                   across sharded instances
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                              tarball:
+                                description: pack some data from the original file
+                                  system to serve them down
                                 type: object
                                 x-kubernetes-preserve-unknown-fields: true
                             type: object
@@ -6625,11 +6635,6 @@ spec:
                           description: how many resources could be scheduled in parallel
                           format: int32
                           type: integer
-                        tarball:
-                          description: pack some data from the original file system
-                            to serve them down
-                          type: object
-                          x-kubernetes-preserve-unknown-fields: true
                         tests:
                           description: tests to run
                           items:
@@ -6979,6 +6984,11 @@ spec:
                                   across sharded instances
                                 type: object
                                 x-kubernetes-preserve-unknown-fields: true
+                              tarball:
+                                description: pack some data from the original file
+                                  system to serve them down
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
                             type: object
                           type: array
                         workflows:
@@ -7026,6 +7036,11 @@ spec:
                               shards:
                                 description: parameters that should be distributed
                                   across sharded instances
+                                type: object
+                                x-kubernetes-preserve-unknown-fields: true
+                              tarball:
+                                description: pack some data from the original file
+                                  system to serve them down
                                 type: object
                                 x-kubernetes-preserve-unknown-fields: true
                             type: object
