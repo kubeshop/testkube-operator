@@ -59,8 +59,7 @@ func (r *TestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 
 	// Delete CronJob if it was created for deleted Test
 	var test testsv3.Test
-	err := r.Get(ctx, req.NamespacedName, &test)
-	if err != nil {
+	if err := r.Get(ctx, req.NamespacedName, &test); err != nil {
 		if errors.IsNotFound(err) {
 			if err = r.CronJobClient.Delete(ctx,
 				cronjob.GetMetadataName(req.NamespacedName.Name, cronjob.TestResourceURI), req.NamespacedName.Namespace); err != nil {
@@ -116,6 +115,7 @@ func (r *TestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 
 	options := cronjob.CronJobOptions{
 		Schedule:                  test.Spec.Schedule,
+		Group:                     testsv3.Group,
 		Resource:                  testsv3.Resource,
 		Version:                   testsv3.Version,
 		ResourceURI:               cronjob.TestResourceURI,
@@ -131,7 +131,8 @@ func (r *TestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 	if err != nil {
 		if errors.IsNotFound(err) {
 			if err = r.CronJobClient.Create(ctx, test.Name,
-				cronjob.GetMetadataName(test.Name, cronjob.TestResourceURI), req.NamespacedName.Namespace, string(test.UID), options); err != nil {
+				cronjob.GetMetadataName(test.Name, cronjob.TestResourceURI), req.NamespacedName.Namespace,
+				string(test.UID), options); err != nil {
 				return ctrl.Result{}, err
 			}
 		}
@@ -141,7 +142,8 @@ func (r *TestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 
 	// Update CronJob if it was created before provided Test schedule
 	if err = r.CronJobClient.Update(ctx, cronJob, test.Name,
-		cronjob.GetMetadataName(test.Name, cronjob.TestResourceURI), req.NamespacedName.Namespace, string(test.UID), options); err != nil {
+		cronjob.GetMetadataName(test.Name, cronjob.TestResourceURI), req.NamespacedName.Namespace,
+		string(test.UID), options); err != nil {
 		return ctrl.Result{}, err
 	}
 
