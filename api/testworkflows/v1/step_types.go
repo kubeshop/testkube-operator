@@ -124,7 +124,7 @@ type TarballRequest struct {
 	From string `json:"from,omitempty" expr:"template"`
 
 	// file patterns to pack
-	Files DynamicList `json:"files,omitempty" expr:"template"`
+	Files *DynamicList `json:"files,omitempty" expr:"template"`
 }
 
 type StepExecuteStrategy struct {
