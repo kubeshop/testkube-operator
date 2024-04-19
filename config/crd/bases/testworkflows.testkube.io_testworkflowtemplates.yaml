@@ -814,7 +814,6 @@ spec:
                                 description: url for the tarball to extract
                                 type: string
                             required:
-                            - mount
                             - path
                             - url
                             type: object
@@ -2487,7 +2486,6 @@ spec:
                           description: url for the tarball to extract
                           type: string
                       required:
-                      - mount
                       - path
                       - url
                       type: object
@@ -4948,7 +4946,6 @@ spec:
                                 description: url for the tarball to extract
                                 type: string
                             required:
-                            - mount
                             - path
                             - url
                             type: object
@@ -6614,7 +6611,6 @@ spec:
                                 description: url for the tarball to extract
                                 type: string
                             required:
-                            - mount
                             - path
                             - url
                             type: object
