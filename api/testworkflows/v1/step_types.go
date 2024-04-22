@@ -119,6 +119,14 @@ type StepExecute struct {
 	Workflows []StepExecuteWorkflow `json:"workflows,omitempty" expr:"include"`
 }
 
+type TarballRequest struct {
+	// path to load the files from
+	From string `json:"from,omitempty" expr:"template"`
+
+	// file patterns to pack
+	Files *DynamicList `json:"files,omitempty" expr:"template"`
+}
+
 type StepExecuteStrategy struct {
 	// matrix of parameters to spawn instances (static)
 	// +kubebuilder:validation:Schemaless
@@ -148,6 +156,12 @@ type StepExecuteTest struct {
 
 	StepExecuteStrategy `json:",inline" expr:"include"`
 
+	// pack some data from the original file system to serve them down
+	// +kubebuilder:validation:Schemaless
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Type="object"
+	Tarball map[string]TarballRequest `json:"tarball,omitempty" expr:"template,include"`
+
 	// pass the execution request overrides
 	ExecutionRequest *TestExecutionRequest `json:"executionRequest,omitempty" expr:"include"`
 }
@@ -163,6 +177,12 @@ type StepExecuteWorkflow struct {
 
 	// unique execution name to use
 	ExecutionName string `json:"executionName,omitempty" expr:"template"`
+
+	// pack some data from the original file system to serve them down
+	// +kubebuilder:validation:Schemaless
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Type="object"
+	Tarball map[string]TarballRequest `json:"tarball,omitempty" expr:"template,include"`
 
 	// configuration to pass for the workflow
 	Config map[string]intstr.IntOrString `json:"config,omitempty" expr:"template"`
