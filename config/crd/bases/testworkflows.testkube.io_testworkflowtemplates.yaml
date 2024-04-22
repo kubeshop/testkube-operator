@@ -1256,7 +1256,7 @@ spec:
                         the TestWorkflow result
                       type: boolean
                     pause:
-                      description: configuration for pausing the TestWorkflow initially
+                      description: configuration for pausing the step initially
                       properties:
                         condition:
                           default: always
@@ -5401,7 +5401,7 @@ spec:
                         the TestWorkflow result
                       type: boolean
                     pause:
-                      description: configuration for pausing the TestWorkflow initially
+                      description: configuration for pausing the step initially
                       properties:
                         condition:
                           default: always
@@ -7079,7 +7079,7 @@ spec:
                         the TestWorkflow result
                       type: boolean
                     pause:
-                      description: configuration for pausing the TestWorkflow initially
+                      description: configuration for pausing the step initially
                       properties:
                         condition:
                           default: always
