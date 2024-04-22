@@ -3,6 +3,9 @@ package v1
 type TestWorkflowSpecBase struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
+	// events triggering execution of the test workflow
+	Events []Event `json:"events,omitempty" expr:"include"`
+
 	// make the instance configurable with some input data for scheduling it
 	Config map[string]ParameterSchema `json:"config,omitempty" expr:"include"`
 
@@ -17,7 +20,4 @@ type TestWorkflowSpecBase struct {
 
 	// configuration for the scheduled pod
 	Pod *PodConfig `json:"pod,omitempty" expr:"include"`
-
-	// events triggering execution of the test workflow
-	Events []Event `json:"events,omitempty" expr:"include"`
 }
