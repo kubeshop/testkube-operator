@@ -75,6 +75,16 @@ type PodConfig struct {
 	Volumes []corev1.Volume `json:"volumes,omitempty" expr:"force"`
 }
 
+type PauseConfig struct {
+	// condition to pause at this point
+	// +kubebuilder:default=always
+	Condition string `json:"condition,omitempty" expr:"expression"`
+
+	// timeout to abort the TestWorkflow if it's not continued
+	// +kubebuilder:validation:Pattern=^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
+	Timeout string `json:"timeout,omitempty"`
+}
+
 type DynamicList struct {
 	Dynamic    bool     `expr:"ignore"`
 	Static     []string `expr:"template"`
