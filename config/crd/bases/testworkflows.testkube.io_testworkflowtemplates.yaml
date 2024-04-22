@@ -1255,19 +1255,9 @@ spec:
                       description: is the step optional, so its failure won't affect
                         the TestWorkflow result
                       type: boolean
-                    pause:
+                    paused:
                       description: configuration for pausing the step initially
-                      properties:
-                        condition:
-                          default: always
-                          description: condition to pause at this point
-                          type: string
-                        timeout:
-                          description: timeout to abort the TestWorkflow if it's not
-                            continued
-                          pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
-                          type: string
-                      type: object
+                      type: string
                     retry:
                       description: policy for retrying the step
                       properties:
@@ -5400,19 +5390,9 @@ spec:
                       description: is the step optional, so its failure won't affect
                         the TestWorkflow result
                       type: boolean
-                    pause:
+                    paused:
                       description: configuration for pausing the step initially
-                      properties:
-                        condition:
-                          default: always
-                          description: condition to pause at this point
-                          type: string
-                        timeout:
-                          description: timeout to abort the TestWorkflow if it's not
-                            continued
-                          pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
-                          type: string
-                      type: object
+                      type: string
                     retry:
                       description: policy for retrying the step
                       properties:
@@ -7078,19 +7058,9 @@ spec:
                       description: is the step optional, so its failure won't affect
                         the TestWorkflow result
                       type: boolean
-                    pause:
+                    paused:
                       description: configuration for pausing the step initially
-                      properties:
-                        condition:
-                          default: always
-                          description: condition to pause at this point
-                          type: string
-                        timeout:
-                          description: timeout to abort the TestWorkflow if it's not
-                            continued
-                          pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
-                          type: string
-                      type: object
+                      type: string
                     retry:
                       description: policy for retrying the step
                       properties:

@@ -32,7 +32,7 @@ type StepBase struct {
 	Optional bool `json:"optional,omitempty"`
 
 	// configuration for pausing the step initially
-	Pause *PauseConfig `json:"pause,omitempty" expr:"include"`
+	Paused string `json:"paused,omitempty" expr:"expression"`
 
 	// policy for retrying the step
 	Retry *RetryPolicy `json:"retry,omitempty" expr:"include"`
