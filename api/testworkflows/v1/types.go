@@ -73,6 +73,54 @@ type PodConfig struct {
 
 	// volumes to include in the pod
 	Volumes []corev1.Volume `json:"volumes,omitempty" expr:"force"`
+
+	// duration in seconds the pod may be active on the node
+	ActiveDeadlineSeconds *int64 `json:"activeDeadlineSeconds,omitempty" expr:"ignore"`
+
+	// DNS parameters given in DNSConfig will be merged with the policy selected with DNSPolicy.
+	DNSPolicy corev1.DNSPolicy `json:"dnsPolicy,omitempty" expr:"template"`
+
+	// NodeName is a request to schedule this pod onto a specific node.
+	NodeName string `json:"nodeName,omitempty" expr:"template"`
+
+	// SecurityContext holds pod-level security attributes and common container settings.
+	SecurityContext *corev1.PodSecurityContext `json:"securityContext,omitempty" expr:"force"`
+
+	// Specifies the hostname of the Pod
+	Hostname string `json:"hostname,omitempty" expr:"template"`
+
+	// If specified, the fully qualified Pod hostname will be "<hostname>.<subdomain>.<pod namespace>.svc.<cluster domain>".
+	Subdomain string `json:"subdomain,omitempty" expr:"template"`
+
+	// If specified, the pod's scheduling constraints
+	Affinity *corev1.Affinity `json:"affinity,omitempty" expr:"force"`
+
+	// If specified, the pod's tolerations.
+	Tolerations []corev1.Toleration `json:"tolerations,omitempty" expr:"force"`
+
+	// HostAliases is an optional list of hosts and IPs that will be injected into the pod's hosts file if specified
+	HostAliases []corev1.HostAlias `json:"hostAliases,omitempty" expr:"force"`
+
+	// If specified, indicates the pod's priority.
+	PriorityClassName string `json:"priorityClassName,omitempty" expr:"template"`
+
+	// The priority value. Various system components use this field to find the priority of the pod.
+	Priority *int32 `json:"priority,omitempty" expr:"ignore"`
+
+	// Specifies the DNS parameters of a pod.
+	DNSConfig *corev1.PodDNSConfig `json:"dnsConfig,omitempty" expr:"force"`
+
+	// PreemptionPolicy is the Policy for preempting pods with lower priority.
+	PreemptionPolicy *corev1.PreemptionPolicy `json:"preemptionPolicy,omitempty" expr:"template"`
+
+	// TopologySpreadConstraints describes how a group of pods ought to spread across topology domains.
+	TopologySpreadConstraints []corev1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty" expr:"force"`
+
+	// SchedulingGates is an opaque list of values that if specified will block scheduling the pod.
+	SchedulingGates []corev1.PodSchedulingGate `json:"schedulingGates,omitempty" expr:"force"`
+
+	// ResourceClaims defines which ResourceClaims must be allocated and reserved before the Pod is allowed to start.
+	ResourceClaims []corev1.PodResourceClaim `json:"resourceClaims,omitempty" expr:"force"`
 }
 
 type DynamicList struct {
