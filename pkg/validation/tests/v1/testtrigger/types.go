@@ -7,6 +7,7 @@ type Cause string
 const (
 	ExecutionTest                               = "test"
 	ExecutionTestsuite                          = "testsuite"
+	ExecutionTestWorkflow                       = "testworkflow"
 	ActionRun                                   = "run"
 	ConcurrencyPolicyAllow                      = "allow"
 	ConcurrencyPolicyForbid                     = "forbid"

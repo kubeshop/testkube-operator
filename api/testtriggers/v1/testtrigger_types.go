@@ -106,13 +106,14 @@ const (
 )
 
 // TestTriggerExecution defines execution for test triggers
-// +kubebuilder:validation:Enum=test;testsuite
+// +kubebuilder:validation:Enum=test;testsuite;testworkflow
 type TestTriggerExecution string
 
 // List of TestTriggerExecution
 const (
-	TestTriggerExecutionTest      TestTriggerExecution = "test"
-	TestTriggerExecutionTestsuite TestTriggerExecution = "testsuite"
+	TestTriggerExecutionTest          TestTriggerExecution = "test"
+	TestTriggerExecutionTestsuite     TestTriggerExecution = "testsuite"
+	TestTriggerExecutionTestWorkflow TestTriggerExecution = "testworkflow"
 )
 
 // TestTriggerConcurrencyPolicy defines concurrency policy for test triggers
