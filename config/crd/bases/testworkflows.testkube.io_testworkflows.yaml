@@ -1255,6 +1255,9 @@ spec:
                       description: is the step optional, so its failure won't affect
                         the TestWorkflow result
                       type: boolean
+                    paused:
+                      description: pause the step initially
+                      type: boolean
                     retry:
                       description: policy for retrying the step
                       properties:
@@ -5425,6 +5428,9 @@ spec:
                       description: is the step optional, so its failure won't affect
                         the TestWorkflow result
                       type: boolean
+                    paused:
+                      description: pause the step initially
+                      type: boolean
                     retry:
                       description: policy for retrying the step
                       properties:
@@ -7127,6 +7133,9 @@ spec:
                     optional:
                       description: is the step optional, so its failure won't affect
                         the TestWorkflow result
+                      type: boolean
+                    paused:
+                      description: pause the step initially
                       type: boolean
                     retry:
                       description: policy for retrying the step

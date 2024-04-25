@@ -31,6 +31,9 @@ type StepBase struct {
 	// is the step optional, so its failure won't affect the TestWorkflow result
 	Optional bool `json:"optional,omitempty"`
 
+	// pause the step initially
+	Paused bool `json:"paused,omitempty" expr:"ignore"`
+
 	// policy for retrying the step
 	Retry *RetryPolicy `json:"retry,omitempty" expr:"include"`
 
