@@ -113,7 +113,7 @@ type TestTriggerExecution string
 const (
 	TestTriggerExecutionTest          TestTriggerExecution = "test"
 	TestTriggerExecutionTestsuite     TestTriggerExecution = "testsuite"
-	TestTriggerExecutionYTestWorkflow TestTriggerExecution = "testworkflow"
+	TestTriggerExecutionTestWorkflow TestTriggerExecution = "testworkflow"
 )
 
 // TestTriggerConcurrencyPolicy defines concurrency policy for test triggers
