@@ -120,7 +120,7 @@ type PodConfig struct {
 	SchedulingGates []corev1.PodSchedulingGate `json:"schedulingGates,omitempty" expr:"force"`
 
 	// ResourceClaims defines which ResourceClaims must be allocated and reserved before the Pod is allowed to start.
-	ResourceClaims []corev1.ResourceClaim `json:"resourceClaims,omitempty" expr:"force"`
+	ResourceClaims []corev1.PodResourceClaim `json:"resourceClaims,omitempty" expr:"force"`
 }
 
 type DynamicList struct {

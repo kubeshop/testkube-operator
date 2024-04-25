@@ -540,8 +540,10 @@ func (in *PodConfig) DeepCopyInto(out *PodConfig) {
 	}
 	if in.ResourceClaims != nil {
 		in, out := &in.ResourceClaims, &out.ResourceClaims
-		*out = make([]corev1.ResourceClaim, len(*in))
-		copy(*out, *in)
+		*out = make([]corev1.PodResourceClaim, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
 	}
 }
 

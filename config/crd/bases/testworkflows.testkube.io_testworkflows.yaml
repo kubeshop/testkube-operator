@@ -3543,13 +3543,37 @@ spec:
                     description: ResourceClaims defines which ResourceClaims must
                       be allocated and reserved before the Pod is allowed to start.
                     items:
-                      description: ResourceClaim references one entry in PodSpec.ResourceClaims.
+                      description: PodResourceClaim references exactly one ResourceClaim
+                        through a ClaimSource. It adds a name to it that uniquely
+                        identifies the ResourceClaim inside the Pod. Containers that
+                        need access to the ResourceClaim reference it with this name.
                       properties:
                         name:
-                          description: Name must match the name of one entry in pod.spec.resourceClaims
-                            of the Pod where this field is used. It makes that resource
-                            available inside a container.
+                          description: Name uniquely identifies this resource claim
+                            inside the pod. This must be a DNS_LABEL.
                           type: string
+                        source:
+                          description: Source describes where to find the ResourceClaim.
+                          properties:
+                            resourceClaimName:
+                              description: ResourceClaimName is the name of a ResourceClaim
+                                object in the same namespace as this pod.
+                              type: string
+                            resourceClaimTemplateName:
+                              description: "ResourceClaimTemplateName is the name
+                                of a ResourceClaimTemplate object in the same namespace
+                                as this pod. \n The template will be used to create
+                                a new ResourceClaim, which will be bound to this pod.
+                                When this pod is deleted, the ResourceClaim will also
+                                be deleted. The pod name and resource name, along
+                                with a generated component, will be used to form a
+                                unique name for the ResourceClaim, which will be recorded
+                                in pod.status.resourceClaimStatuses. \n This field
+                                is immutable and no changes will be made to the corresponding
+                                ResourceClaim by the control plane after creating
+                                the ResourceClaim."
+                              type: string
+                          type: object
                       required:
                       - name
                       type: object
