@@ -65,9 +65,6 @@ type StepBase struct {
 
 	// scrape artifacts from the volumes
 	Artifacts *StepArtifacts `json:"artifacts,omitempty" expr:"include"`
-
-	// instructions for parallel execution
-	Parallel *StepParallel `json:"parallel,omitempty" expr:"include"`
 }
 
 type IndependentStep struct {
@@ -82,6 +79,9 @@ type IndependentStep struct {
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	Steps []IndependentStep `json:"steps,omitempty" expr:"include"`
+
+	// instructions for parallel execution
+	Parallel *StepIndependentParallel `json:"parallel,omitempty" expr:"include"`
 }
 
 type Step struct {
@@ -102,6 +102,9 @@ type Step struct {
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	Steps []Step `json:"steps,omitempty" expr:"include"`
+
+	// instructions for parallel execution
+	Parallel *StepParallel `json:"parallel,omitempty" expr:"include"`
 }
 
 type StepRun struct {
@@ -191,6 +194,17 @@ type StepParallel struct {
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	TestWorkflowSpec `json:",inline" expr:"include"`
+}
+
+type StepIndependentParallel struct {
+	StepExecuteStrategy `json:",inline" expr:"include"`
+
+	// instructions for transferring files
+	Transfer []StepParallelTransfer `json:"transfer,omitempty" expr:"include"`
+
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	TestWorkflowTemplateSpec `json:",inline" expr:"include"`
 }
 
 type StepParallelTransfer struct {
