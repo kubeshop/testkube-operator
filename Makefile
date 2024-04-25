@@ -46,7 +46,17 @@ manifests-clean: yq
 	@for file in testworkflows.testkube.io_testworkflows.yaml testworkflows.testkube.io_testworkflowtemplates.yaml; do \
 		for key in securityContext volumes dnsPolicy affinity tolerations hostAliases dnsConfig topologySpreadConstraints schedulingGates resourceClaims volumeMounts fieldRef resourceFieldRef configMapKeyRef secretKeyRef; do \
 			yq --no-colors -i "del(.. | select(has(\"$$key\")).$$key | .. | select(has(\"description\")).description)" "config/crd/bases/$$file"; \
-		done \
+		done; \
+		yq --no-colors -i \
+		'with(..; . | select(has("additionalProperties")) | select(.additionalProperties | has("type")) | select(.additionalProperties.type == "dynamicList") | \
+			.["x-kubernetes-preserve-unknown-fields"] = true | \
+			del(.additionalProperties) \
+		) | \
+		with(..; . | select(has("properties")) | select(.properties | to_entries | filter(.value | has("type")) | filter(.value.type == "dynamicList") | length > 0) | \
+			.["x-kubernetes-preserve-unknown-fields"] = true | \
+			del(.properties) \
+		)' \
+		"config/crd/bases/$$file"; \
 	done
 
 generate: controller-gen ## Generate code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.

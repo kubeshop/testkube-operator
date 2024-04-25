@@ -65,6 +65,9 @@ type StepBase struct {
 
 	// scrape artifacts from the volumes
 	Artifacts *StepArtifacts `json:"artifacts,omitempty" expr:"include"`
+
+	// instructions for parallel execution
+	Parallel *StepParallel `json:"parallel,omitempty" expr:"include"`
 }
 
 type IndependentStep struct {
@@ -132,9 +135,6 @@ type TarballRequest struct {
 
 type StepExecuteStrategy struct {
 	// matrix of parameters to spawn instances (static)
-	// +kubebuilder:validation:Schemaless
-	// +kubebuilder:pruning:PreserveUnknownFields
-	// +kubebuilder:validation:Type="object"
 	Matrix map[string]DynamicList `json:"matrix,omitempty" expr:"force"`
 
 	// static number of sharded instances to spawn
@@ -144,9 +144,6 @@ type StepExecuteStrategy struct {
 	MaxCount *intstr.IntOrString `json:"maxCount,omitempty" expr:"expression"`
 
 	// parameters that should be distributed across sharded instances
-	// +kubebuilder:validation:Schemaless
-	// +kubebuilder:pruning:PreserveUnknownFields
-	// +kubebuilder:validation:Type="object"
 	Shards map[string]DynamicList `json:"shards,omitempty" expr:"force"`
 }
 
@@ -160,9 +157,6 @@ type StepExecuteTest struct {
 	StepExecuteStrategy `json:",inline" expr:"include"`
 
 	// pack some data from the original file system to serve them down
-	// +kubebuilder:validation:Schemaless
-	// +kubebuilder:pruning:PreserveUnknownFields
-	// +kubebuilder:validation:Type="object"
 	Tarball map[string]TarballRequest `json:"tarball,omitempty" expr:"template,include"`
 
 	// pass the execution request overrides
@@ -182,13 +176,35 @@ type StepExecuteWorkflow struct {
 	ExecutionName string `json:"executionName,omitempty" expr:"template"`
 
 	// pack some data from the original file system to serve them down
-	// +kubebuilder:validation:Schemaless
-	// +kubebuilder:pruning:PreserveUnknownFields
-	// +kubebuilder:validation:Type="object"
 	Tarball map[string]TarballRequest `json:"tarball,omitempty" expr:"template,include"`
 
 	// configuration to pass for the workflow
 	Config map[string]intstr.IntOrString `json:"config,omitempty" expr:"template"`
+}
+
+type StepParallel struct {
+	StepExecuteStrategy `json:",inline" expr:"include"`
+
+	// instructions for transferring files
+	Transfer []StepParallelTransfer `json:"transfer,omitempty" expr:"include"`
+
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	TestWorkflowSpec `json:",inline" expr:"include"`
+}
+
+type StepParallelTransfer struct {
+	// path to load the files from
+	From string `json:"from,omitempty" expr:"template"`
+
+	// file patterns to pack
+	Files *DynamicList `json:"files,omitempty" expr:"template"`
+
+	// path where the tarball should be extracted
+	To string `json:"to,omitempty" expr:"template"`
+
+	// should it mount a new volume there
+	Mount *bool `json:"mount,omitempty" expr:"ignore"`
 }
 
 type StepArtifacts struct {
