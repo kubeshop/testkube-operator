@@ -81,7 +81,7 @@ type IndependentStep struct {
 	Steps []IndependentStep `json:"steps,omitempty" expr:"include"`
 
 	// instructions for parallel execution
-	Parallel *StepIndependentParallel `json:"parallel,omitempty" expr:"include"`
+	Parallel *IndependentStepParallel `json:"parallel,omitempty" expr:"include"`
 }
 
 type Step struct {
@@ -196,7 +196,7 @@ type StepParallel struct {
 	TestWorkflowSpec `json:",inline" expr:"include"`
 }
 
-type StepIndependentParallel struct {
+type IndependentStepParallel struct {
 	StepExecuteStrategy `json:",inline" expr:"include"`
 
 	// instructions for transferring files
