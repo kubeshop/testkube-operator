@@ -2103,6 +2103,9 @@ spec:
                         type: string
                       description: labels added to the scheduled pod
                       type: object
+                    namespace:
+                      description: namespace for execution of test workflow
+                      type: string
                     nodeName:
                       description: NodeName is a request to schedule this pod onto a specific node.
                       type: string

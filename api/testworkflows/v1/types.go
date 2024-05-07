@@ -121,6 +121,9 @@ type PodConfig struct {
 
 	// ResourceClaims defines which ResourceClaims must be allocated and reserved before the Pod is allowed to start.
 	ResourceClaims []corev1.PodResourceClaim `json:"resourceClaims,omitempty" expr:"force"`
+
+	// namespace for execution of test workflow
+	Namespace string `json:"namespace,omitempty"  expr:"template"`
 }
 
 type DynamicList struct {
