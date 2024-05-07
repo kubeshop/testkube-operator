@@ -53,6 +53,9 @@ type JobConfig struct {
 
 	// annotations added to the scheduled job
 	Annotations map[string]string `json:"annotations,omitempty" expr:"template,template"`
+
+	// namespace for execution of test workflow
+	Namespace string `json:"namespace,omitempty"  expr:"template"`
 }
 
 type PodConfig struct {
@@ -121,9 +124,6 @@ type PodConfig struct {
 
 	// ResourceClaims defines which ResourceClaims must be allocated and reserved before the Pod is allowed to start.
 	ResourceClaims []corev1.PodResourceClaim `json:"resourceClaims,omitempty" expr:"force"`
-
-	// namespace for execution of test workflow
-	Namespace string `json:"namespace,omitempty"  expr:"template"`
 }
 
 type DynamicList struct {
