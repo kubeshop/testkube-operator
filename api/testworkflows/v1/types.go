@@ -55,7 +55,7 @@ type JobConfig struct {
 	Annotations map[string]string `json:"annotations,omitempty" expr:"template,template"`
 
 	// namespace for execution of test workflow
-	Namespace string `json:"namespace,omitempty"  expr:"template"`
+	Namespace string `json:"namespace,omitempty"`
 }
 
 type PodConfig struct {
