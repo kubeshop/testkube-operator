@@ -53,6 +53,9 @@ type JobConfig struct {
 
 	// annotations added to the scheduled job
 	Annotations map[string]string `json:"annotations,omitempty" expr:"template,template"`
+
+	// namespace for execution of test workflow
+	Namespace string `json:"namespace,omitempty"`
 }
 
 type PodConfig struct {
