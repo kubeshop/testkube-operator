@@ -186,7 +186,13 @@ type StepExecuteWorkflow struct {
 }
 
 type StepParallel struct {
+	// how many resources could be scheduled in parallel
+	Parallelism int32 `json:"parallelism,omitempty"`
+
 	StepExecuteStrategy `json:",inline" expr:"include"`
+
+	// worker description to display
+	Description string `json:"description,omitempty" expr:"template"`
 
 	// instructions for transferring files
 	Transfer []StepParallelTransfer `json:"transfer,omitempty" expr:"include"`
@@ -197,7 +203,13 @@ type StepParallel struct {
 }
 
 type IndependentStepParallel struct {
+	// how many resources could be scheduled in parallel
+	Parallelism int32 `json:"parallelism,omitempty"`
+
 	StepExecuteStrategy `json:",inline" expr:"include"`
+
+	// worker description to display
+	Description string `json:"description,omitempty" expr:"template"`
 
 	// instructions for transferring files
 	Transfer []StepParallelTransfer `json:"transfer,omitempty" expr:"include"`

@@ -859,6 +859,9 @@ spec:
                               - type: string
                             description: static number of sharded instances to spawn
                             x-kubernetes-int-or-string: true
+                          description:
+                            description: worker description to display
+                            type: string
                           matrix:
                             description: matrix of parameters to spawn instances (static)
                             type: object
@@ -869,6 +872,10 @@ spec:
                               - type: string
                             description: dynamic number of sharded instances to spawn - it will be lowered if there is not enough sharded values
                             x-kubernetes-int-or-string: true
+                          parallelism:
+                            description: how many resources could be scheduled in parallel
+                            format: int32
+                            type: integer
                           shards:
                             description: parameters that should be distributed across sharded instances
                             type: object
@@ -3808,6 +3815,9 @@ spec:
                               - type: string
                             description: static number of sharded instances to spawn
                             x-kubernetes-int-or-string: true
+                          description:
+                            description: worker description to display
+                            type: string
                           matrix:
                             description: matrix of parameters to spawn instances (static)
                             type: object
@@ -3818,6 +3828,10 @@ spec:
                               - type: string
                             description: dynamic number of sharded instances to spawn - it will be lowered if there is not enough sharded values
                             x-kubernetes-int-or-string: true
+                          parallelism:
+                            description: how many resources could be scheduled in parallel
+                            format: int32
+                            type: integer
                           shards:
                             description: parameters that should be distributed across sharded instances
                             type: object
@@ -4910,6 +4924,9 @@ spec:
                               - type: string
                             description: static number of sharded instances to spawn
                             x-kubernetes-int-or-string: true
+                          description:
+                            description: worker description to display
+                            type: string
                           matrix:
                             description: matrix of parameters to spawn instances (static)
                             type: object
@@ -4920,6 +4937,10 @@ spec:
                               - type: string
                             description: dynamic number of sharded instances to spawn - it will be lowered if there is not enough sharded values
                             x-kubernetes-int-or-string: true
+                          parallelism:
+                            description: how many resources could be scheduled in parallel
+                            format: int32
+                            type: integer
                           shards:
                             description: parameters that should be distributed across sharded instances
                             type: object
