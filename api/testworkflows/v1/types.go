@@ -56,6 +56,9 @@ type JobConfig struct {
 
 	// namespace for execution of test workflow
 	Namespace string `json:"namespace,omitempty"`
+
+	// duration in seconds the job may be active on the node
+	ActiveDeadlineSeconds *int64 `json:"activeDeadlineSeconds,omitempty" expr:"ignore"`
 }
 
 type PodConfig struct {
