@@ -57,7 +57,7 @@ type StepControl struct {
 	Timeout string `json:"timeout,omitempty"`
 }
 
-type StepExecution struct {
+type StepOperations struct {
 	// delay before the step
 	// +kubebuilder:validation:Pattern=^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
 	Delay string `json:"delay,omitempty"`
@@ -86,7 +86,7 @@ type IndependentStep struct {
 	// +kubebuilder:validation:Schemaless
 	Setup []IndependentStep `json:"setup,omitempty" expr:"include"`
 
-	StepExecution `json:",inline" expr:"include"`
+	StepOperations `json:",inline" expr:"include"`
 
 	// instructions for parallel execution
 	Parallel *IndependentStepParallel `json:"parallel,omitempty" expr:"include"`
@@ -113,7 +113,7 @@ type Step struct {
 	// +kubebuilder:validation:Schemaless
 	Setup []Step `json:"setup,omitempty" expr:"include"`
 
-	StepExecution `json:",inline" expr:"include"`
+	StepOperations `json:",inline" expr:"include"`
 
 	// single template to run in this step
 	Template *TemplateRef `json:"template,omitempty" expr:"include"`
@@ -224,8 +224,8 @@ type StepParallel struct {
 	// +kubebuilder:validation:Schemaless
 	TestWorkflowSpec `json:",inline" expr:"include"`
 
-	StepControl   `json:",inline" expr:"include"`
-	StepExecution `json:",inline" expr:"include"`
+	StepControl    `json:",inline" expr:"include"`
+	StepOperations `json:",inline" expr:"include"`
 }
 
 type IndependentStepParallel struct {
@@ -247,8 +247,8 @@ type IndependentStepParallel struct {
 	// +kubebuilder:validation:Schemaless
 	TestWorkflowTemplateSpec `json:",inline" expr:"include"`
 
-	StepControl   `json:",inline" expr:"include"`
-	StepExecution `json:",inline" expr:"include"`
+	StepControl    `json:",inline" expr:"include"`
+	StepOperations `json:",inline" expr:"include"`
 }
 
 type StepParallelTransfer struct {
