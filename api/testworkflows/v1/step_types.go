@@ -17,14 +17,29 @@ type RetryPolicy struct {
 	Until string `json:"until,omitempty" expr:"expression"`
 }
 
-type StepBase struct {
+type StepMeta struct {
 	// readable name for the step
 	Name string `json:"name,omitempty" expr:"template"`
 
 	// expression to declare under which conditions the step should be run
 	// defaults to: "passed", except artifacts where it defaults to "always"
 	Condition string `json:"condition,omitempty" expr:"expression"`
+}
 
+type StepSource struct {
+	// content that should be fetched for this step
+	Content *Content `json:"content,omitempty" expr:"include"`
+}
+
+type StepDefaults struct {
+	// defaults for the containers in this step
+	Container *ContainerConfig `json:"container,omitempty" expr:"include"`
+
+	// working directory to use for this step
+	WorkingDir *string `json:"workingDir,omitempty" expr:"template"`
+}
+
+type StepControl struct {
 	// is the step expected to fail
 	Negative bool `json:"negative,omitempty"`
 
@@ -40,25 +55,18 @@ type StepBase struct {
 	// maximum time this step may take
 	// +kubebuilder:validation:Pattern=^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
 	Timeout string `json:"timeout,omitempty"`
+}
 
+type StepExecution struct {
 	// delay before the step
 	// +kubebuilder:validation:Pattern=^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
 	Delay string `json:"delay,omitempty"`
-
-	// content that should be fetched for this step
-	Content *Content `json:"content,omitempty" expr:"include"`
 
 	// script to run in a default shell for the container
 	Shell string `json:"shell,omitempty" expr:"template"`
 
 	// run specific container in the current step
 	Run *StepRun `json:"run,omitempty" expr:"include"`
-
-	// working directory to use for this step
-	WorkingDir *string `json:"workingDir,omitempty" expr:"template"`
-
-	// defaults for the containers in this step
-	Container *ContainerConfig `json:"container,omitempty" expr:"include"`
 
 	// execute other Testkube resources
 	Execute *StepExecute `json:"execute,omitempty" expr:"include"`
@@ -68,43 +76,55 @@ type StepBase struct {
 }
 
 type IndependentStep struct {
-	StepBase `json:",inline" expr:"include"`
+	StepMeta     `json:",inline" expr:"include"`
+	StepControl  `json:",inline" expr:"include"`
+	StepSource   `json:",inline" expr:"include"`
+	StepDefaults `json:",inline" expr:"include"`
 
 	// steps to run before other operations in this step
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	Setup []IndependentStep `json:"setup,omitempty" expr:"include"`
 
+	StepExecution `json:",inline" expr:"include"`
+
+	// instructions for parallel execution
+	Parallel *IndependentStepParallel `json:"parallel,omitempty" expr:"include"`
+
 	// sub-steps to run
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	Steps []IndependentStep `json:"steps,omitempty" expr:"include"`
-
-	// instructions for parallel execution
-	Parallel *IndependentStepParallel `json:"parallel,omitempty" expr:"include"`
 }
 
 type Step struct {
-	StepBase `json:",inline" expr:"include"`
+	StepMeta    `json:",inline" expr:"include"`
+	StepControl `json:",inline" expr:"include"`
 
 	// multiple templates to include in this step
 	Use []TemplateRef `json:"use,omitempty" expr:"include"`
 
-	// single template to run in this step
-	Template *TemplateRef `json:"template,omitempty" expr:"include"`
+	StepSource `json:",inline" expr:"include"`
+
+	StepDefaults `json:",inline" expr:"include"`
 
 	// steps to run before other operations in this step
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	Setup []Step `json:"setup,omitempty" expr:"include"`
 
+	StepExecution `json:",inline" expr:"include"`
+
+	// single template to run in this step
+	Template *TemplateRef `json:"template,omitempty" expr:"include"`
+
+	// instructions for parallel execution
+	Parallel *StepParallel `json:"parallel,omitempty" expr:"include"`
+
 	// sub-steps to run
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	Steps []Step `json:"steps,omitempty" expr:"include"`
-
-	// instructions for parallel execution
-	Parallel *StepParallel `json:"parallel,omitempty" expr:"include"`
 }
 
 type StepRun struct {
@@ -203,6 +223,9 @@ type StepParallel struct {
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	TestWorkflowSpec `json:",inline" expr:"include"`
+
+	StepControl   `json:",inline" expr:"include"`
+	StepExecution `json:",inline" expr:"include"`
 }
 
 type IndependentStepParallel struct {
@@ -223,6 +246,9 @@ type IndependentStepParallel struct {
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	TestWorkflowTemplateSpec `json:",inline" expr:"include"`
+
+	StepControl   `json:",inline" expr:"include"`
+	StepExecution `json:",inline" expr:"include"`
 }
 
 type StepParallelTransfer struct {
