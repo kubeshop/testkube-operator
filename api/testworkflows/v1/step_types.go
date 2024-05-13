@@ -197,6 +197,9 @@ type StepParallel struct {
 	// instructions for transferring files
 	Transfer []StepParallelTransfer `json:"transfer,omitempty" expr:"include"`
 
+	// instructions for fetching files back
+	Fetch []StepParallelFetch `json:"fetch,omitempty" expr:"include"`
+
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	TestWorkflowSpec `json:",inline" expr:"include"`
@@ -214,6 +217,9 @@ type IndependentStepParallel struct {
 	// instructions for transferring files
 	Transfer []StepParallelTransfer `json:"transfer,omitempty" expr:"include"`
 
+	// instructions for fetching files back
+	Fetch []StepParallelFetch `json:"fetch,omitempty" expr:"include"`
+
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	TestWorkflowTemplateSpec `json:",inline" expr:"include"`
@@ -221,7 +227,7 @@ type IndependentStepParallel struct {
 
 type StepParallelTransfer struct {
 	// path to load the files from
-	From string `json:"from,omitempty" expr:"template"`
+	From string `json:"from" expr:"template"`
 
 	// file patterns to pack
 	Files *DynamicList `json:"files,omitempty" expr:"template"`
@@ -231,6 +237,17 @@ type StepParallelTransfer struct {
 
 	// should it mount a new volume there
 	Mount *bool `json:"mount,omitempty" expr:"ignore"`
+}
+
+type StepParallelFetch struct {
+	// path to load the files from
+	From string `json:"from" expr:"template"`
+
+	// file patterns to pack
+	Files *DynamicList `json:"files,omitempty" expr:"template"`
+
+	// path where the tarball should be extracted
+	To string `json:"to,omitempty" expr:"template"`
 }
 
 type StepArtifacts struct {

@@ -862,6 +862,14 @@ spec:
                           description:
                             description: worker description to display
                             type: string
+                          fetch:
+                            description: instructions for fetching files back
+                            items:
+                              required:
+                                - from
+                              type: object
+                              x-kubernetes-preserve-unknown-fields: true
+                            type: array
                           matrix:
                             description: matrix of parameters to spawn instances (static)
                             type: object
@@ -883,6 +891,8 @@ spec:
                           transfer:
                             description: instructions for transferring files
                             items:
+                              required:
+                                - from
                               type: object
                               x-kubernetes-preserve-unknown-fields: true
                             type: array
@@ -3855,6 +3865,14 @@ spec:
                           description:
                             description: worker description to display
                             type: string
+                          fetch:
+                            description: instructions for fetching files back
+                            items:
+                              required:
+                                - from
+                              type: object
+                              x-kubernetes-preserve-unknown-fields: true
+                            type: array
                           matrix:
                             description: matrix of parameters to spawn instances (static)
                             type: object
@@ -3876,6 +3894,8 @@ spec:
                           transfer:
                             description: instructions for transferring files
                             items:
+                              required:
+                                - from
                               type: object
                               x-kubernetes-preserve-unknown-fields: true
                             type: array
@@ -5001,6 +5021,14 @@ spec:
                           description:
                             description: worker description to display
                             type: string
+                          fetch:
+                            description: instructions for fetching files back
+                            items:
+                              required:
+                                - from
+                              type: object
+                              x-kubernetes-preserve-unknown-fields: true
+                            type: array
                           matrix:
                             description: matrix of parameters to spawn instances (static)
                             type: object
@@ -5022,6 +5050,8 @@ spec:
                           transfer:
                             description: instructions for transferring files
                             items:
+                              required:
+                                - from
                               type: object
                               x-kubernetes-preserve-unknown-fields: true
                             type: array
