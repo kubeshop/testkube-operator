@@ -226,6 +226,9 @@ type StepParallel struct {
 
 	StepControl    `json:",inline" expr:"include"`
 	StepOperations `json:",inline" expr:"include"`
+
+	// single template to run in this step
+	Template *TemplateRef `json:"template,omitempty" expr:"include"`
 }
 
 type IndependentStepParallel struct {

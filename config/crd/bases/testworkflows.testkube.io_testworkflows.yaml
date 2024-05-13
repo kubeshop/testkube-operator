@@ -1494,6 +1494,23 @@ spec:
                           shell:
                             description: script to run in a default shell for the container
                             type: string
+                          template:
+                            description: single template to run in this step
+                            properties:
+                              config:
+                                additionalProperties:
+                                  anyOf:
+                                    - type: integer
+                                    - type: string
+                                  x-kubernetes-int-or-string: true
+                                description: trait configuration values if needed
+                                type: object
+                              name:
+                                description: name of the template to include
+                                type: string
+                            required:
+                              - name
+                            type: object
                           timeout:
                             description: maximum time this step may take
                             pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
@@ -5107,6 +5124,23 @@ spec:
                           shell:
                             description: script to run in a default shell for the container
                             type: string
+                          template:
+                            description: single template to run in this step
+                            properties:
+                              config:
+                                additionalProperties:
+                                  anyOf:
+                                    - type: integer
+                                    - type: string
+                                  x-kubernetes-int-or-string: true
+                                description: trait configuration values if needed
+                                type: object
+                              name:
+                                description: name of the template to include
+                                type: string
+                            required:
+                              - name
+                            type: object
                           timeout:
                             description: maximum time this step may take
                             pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
@@ -6873,6 +6907,23 @@ spec:
                           shell:
                             description: script to run in a default shell for the container
                             type: string
+                          template:
+                            description: single template to run in this step
+                            properties:
+                              config:
+                                additionalProperties:
+                                  anyOf:
+                                    - type: integer
+                                    - type: string
+                                  x-kubernetes-int-or-string: true
+                                description: trait configuration values if needed
+                                type: object
+                              name:
+                                description: name of the template to include
+                                type: string
+                            required:
+                              - name
+                            type: object
                           timeout:
                             description: maximum time this step may take
                             pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
