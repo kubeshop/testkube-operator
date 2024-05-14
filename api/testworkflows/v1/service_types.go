@@ -9,7 +9,7 @@ const (
 	ServiceRestartPolicyNever     ServiceRestartPolicy = "Never"
 )
 
-type ServiceSpec struct {
+type IndependentServiceSpec struct {
 	StepExecuteStrategy `json:",inline" expr:"include"`
 
 	// maximum time until reaching readiness
@@ -32,4 +32,11 @@ type ServiceSpec struct {
 
 	// Probe to check if the service has started correctly
 	ReadinessProbe *corev1.Probe `json:"readinessProbe,omitempty" expr:"force"`
+}
+
+type ServiceSpec struct {
+	// multiple templates to include in this step
+	Use []TemplateRef `json:"use,omitempty" expr:"include"`
+
+	IndependentServiceSpec `json:",inline" expr:"include"`
 }

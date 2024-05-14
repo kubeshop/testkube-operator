@@ -81,7 +81,7 @@ type IndependentStep struct {
 	StepSource  `json:",inline" expr:"include"`
 
 	// list of accompanying services to start
-	Services map[string]ServiceSpec `json:"services,omitempty" expr:"template,include"`
+	Services map[string]IndependentServiceSpec `json:"services,omitempty" expr:"template,include"`
 
 	StepDefaults `json:",inline" expr:"include"`
 

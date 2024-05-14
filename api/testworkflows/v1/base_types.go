@@ -12,9 +12,6 @@ type TestWorkflowSpecBase struct {
 	// global content that should be fetched into all containers
 	Content *Content `json:"content,omitempty" expr:"include"`
 
-	// list of accompanying services to start
-	Services map[string]ServiceSpec `json:"services,omitempty" expr:"template,include"`
-
 	// defaults for the containers for all the TestWorkflow steps
 	Container *ContainerConfig `json:"container,omitempty" expr:"include"`
 

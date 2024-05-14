@@ -2872,6 +2872,26 @@ spec:
                                 type: object
                                 x-kubernetes-preserve-unknown-fields: true
                               type: array
+                            use:
+                              description: multiple templates to include in this step
+                              items:
+                                description: TemplateRef is the reference for the template inclusion
+                                properties:
+                                  config:
+                                    additionalProperties:
+                                      anyOf:
+                                        - type: integer
+                                        - type: string
+                                      x-kubernetes-int-or-string: true
+                                    description: trait configuration values if needed
+                                    type: object
+                                  name:
+                                    description: name of the template to include
+                                    type: string
+                                required:
+                                  - name
+                                type: object
+                              type: array
                             volumeMounts:
                               items:
                                 properties:
@@ -5165,6 +5185,26 @@ spec:
                             - from
                           type: object
                           x-kubernetes-preserve-unknown-fields: true
+                        type: array
+                      use:
+                        description: multiple templates to include in this step
+                        items:
+                          description: TemplateRef is the reference for the template inclusion
+                          properties:
+                            config:
+                              additionalProperties:
+                                anyOf:
+                                  - type: integer
+                                  - type: string
+                                x-kubernetes-int-or-string: true
+                              description: trait configuration values if needed
+                              type: object
+                            name:
+                              description: name of the template to include
+                              type: string
+                          required:
+                            - name
+                          type: object
                         type: array
                       volumeMounts:
                         items:
@@ -8029,6 +8069,26 @@ spec:
                                   - from
                                 type: object
                                 x-kubernetes-preserve-unknown-fields: true
+                              type: array
+                            use:
+                              description: multiple templates to include in this step
+                              items:
+                                description: TemplateRef is the reference for the template inclusion
+                                properties:
+                                  config:
+                                    additionalProperties:
+                                      anyOf:
+                                        - type: integer
+                                        - type: string
+                                      x-kubernetes-int-or-string: true
+                                    description: trait configuration values if needed
+                                    type: object
+                                  name:
+                                    description: name of the template to include
+                                    type: string
+                                required:
+                                  - name
+                                type: object
                               type: array
                             volumeMounts:
                               items:
@@ -10948,6 +11008,26 @@ spec:
                                   - from
                                 type: object
                                 x-kubernetes-preserve-unknown-fields: true
+                              type: array
+                            use:
+                              description: multiple templates to include in this step
+                              items:
+                                description: TemplateRef is the reference for the template inclusion
+                                properties:
+                                  config:
+                                    additionalProperties:
+                                      anyOf:
+                                        - type: integer
+                                        - type: string
+                                      x-kubernetes-int-or-string: true
+                                    description: trait configuration values if needed
+                                    type: object
+                                  name:
+                                    description: name of the template to include
+                                    type: string
+                                required:
+                                  - name
+                                type: object
                               type: array
                             volumeMounts:
                               items:
