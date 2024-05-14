@@ -82,7 +82,7 @@ const (
 )
 
 // TestTriggerEvent defines event for test triggers
-// +kubebuilder:validation:Enum=created;modified;deleted;deployment-scale-update;deployment-image-update;deployment-env-update;deployment-containers-modified;event-start-test;event-end-test-success;event-end-test-failed;event-end-test-aborted;event-end-test-timeout;event-start-testsuite;event-end-testsuite-success;event-end-testsuite-failed;event-end-testsuite-aborted;event-end-testsuite-timeout;event-queue-testworkflow;event-start-testworkflow;event-end-testworkflow-success;event-end-testworkflow-failed;event-end-testworkflow-aborted
+// +kubebuilder:validation:Enum=created;modified;deleted;deployment-scale-update;deployment-image-update;deployment-env-update;deployment-containers-modified;event-start-test;event-end-test-success;event-end-test-failed;event-end-test-aborted;event-end-test-timeout;event-start-testsuite;event-end-testsuite-success;event-end-testsuite-failed;event-end-testsuite-aborted;event-end-testsuite-timeout;event-queue-testworkflow;event-start-testworkflow;event-end-testworkflow-success;event-end-testworkflow-failed;event-end-testworkflow-aborted;event-created;event-updated;event-deleted
 type TestTriggerEvent string
 
 // List of TestTriggerEvents
@@ -109,6 +109,9 @@ const (
 	TestTriggerCauseEventEndTestWorkflowSuccess  TestTriggerEvent = "event-end-testworkflow-success"
 	TestTriggerCauseEventEndTestWorkflowFailed   TestTriggerEvent = "event-end-testworkflow-failed"
 	TestTriggerCauseEventEndTestWorkflowAborted  TestTriggerEvent = "event-end-testworkflow-aborted"
+	TestTriggerCauseEventCreated                 TestTriggerEvent = "event-created"
+	TestTriggerCauseEventUpdated                 TestTriggerEvent = "event-updated"
+	TestTriggerCauseEventDeleted                 TestTriggerEvent = "event-deleted"
 )
 
 // TestTriggerAction defines action for test triggers
