@@ -82,7 +82,7 @@ const (
 )
 
 // TestTriggerEvent defines event for test triggers
-// +kubebuilder:validation:Enum=created;modified;deleted;deployment-scale-update;deployment-image-update;deployment-env-update;deployment-containers-modified
+// +kubebuilder:validation:Enum=created;modified;deleted;deployment-scale-update;deployment-image-update;deployment-env-update;deployment-containers-modified;event-start-test;event-end-test-success;event-end-test-failed;event-end-test-aborted;event-end-test-timeout;event-start-testsuite;event-end-testsuite-success;event-end-testsuite-failed;event-end-testsuite-aborted;event-end-testsuite-timeout;event-queue-testworkflow;event-start-testworkflow;event-end-testworkflow-success;event-end-testworkflow-failed;event-end-testworkflow-aborted;event-created;event-updated;event-deleted
 type TestTriggerEvent string
 
 // List of TestTriggerEvents
@@ -94,6 +94,24 @@ const (
 	TestTriggerCauseDeploymentImageUpdate        TestTriggerEvent = "deployment-image-update"
 	TestTriggerCauseDeploymentEnvUpdate          TestTriggerEvent = "deployment-env-update"
 	TestTriggerCauseDeploymentContainersModified TestTriggerEvent = "deployment-containers-modified"
+	TestTriggerCauseEventStartTest               TestTriggerEvent = "event-start-test"
+	TestTriggerCauseEventEndTestSuccess          TestTriggerEvent = "event-end-test-success"
+	TestTriggerCauseEventEndTestFailed           TestTriggerEvent = "event-end-test-failed"
+	TestTriggerCauseEventEndTestAborted          TestTriggerEvent = "event-end-test-aborted"
+	TestTriggerCauseEventEndTestTimeout          TestTriggerEvent = "event-end-test-timeout"
+	TestTriggerCauseEventStartTestSuite          TestTriggerEvent = "event-start-testsuite"
+	TestTriggerCauseEventEndTestSuiteSuccess     TestTriggerEvent = "event-end-testsuite-success"
+	TestTriggerCauseEventEndTestSuiteFailed      TestTriggerEvent = "event-end-testsuite-failed"
+	TestTriggerCauseEventEndTestSuiteAborted     TestTriggerEvent = "event-end-testsuite-aborted"
+	TestTriggerCauseEventEndTestSuiteTimeout     TestTriggerEvent = "event-end-testsuite-timeout"
+	TestTriggerCauseEventQueueTestWorkflow       TestTriggerEvent = "event-queue-testworkflow"
+	TestTriggerCauseEventStartTestWorkflow       TestTriggerEvent = "event-start-testworkflow"
+	TestTriggerCauseEventEndTestWorkflowSuccess  TestTriggerEvent = "event-end-testworkflow-success"
+	TestTriggerCauseEventEndTestWorkflowFailed   TestTriggerEvent = "event-end-testworkflow-failed"
+	TestTriggerCauseEventEndTestWorkflowAborted  TestTriggerEvent = "event-end-testworkflow-aborted"
+	TestTriggerCauseEventCreated                 TestTriggerEvent = "event-created"
+	TestTriggerCauseEventUpdated                 TestTriggerEvent = "event-updated"
+	TestTriggerCauseEventDeleted                 TestTriggerEvent = "event-deleted"
 )
 
 // TestTriggerAction defines action for test triggers
@@ -111,8 +129,8 @@ type TestTriggerExecution string
 
 // List of TestTriggerExecution
 const (
-	TestTriggerExecutionTest          TestTriggerExecution = "test"
-	TestTriggerExecutionTestsuite     TestTriggerExecution = "testsuite"
+	TestTriggerExecutionTest         TestTriggerExecution = "test"
+	TestTriggerExecutionTestsuite    TestTriggerExecution = "testsuite"
 	TestTriggerExecutionTestWorkflow TestTriggerExecution = "testworkflow"
 )
 
