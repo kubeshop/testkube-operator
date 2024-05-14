@@ -2089,6 +2089,9 @@ spec:
                             imagePullPolicy:
                               description: pulling policy for the image
                               type: string
+                            logs:
+                              description: should it fetch logs for that service
+                              type: boolean
                             matrix:
                               description: matrix of parameters to spawn instances (static)
                               type: object
@@ -4346,6 +4349,9 @@ spec:
                       imagePullPolicy:
                         description: pulling policy for the image
                         type: string
+                      logs:
+                        description: should it fetch logs for that service
+                        type: boolean
                       matrix:
                         description: matrix of parameters to spawn instances (static)
                         type: object
@@ -7193,6 +7199,9 @@ spec:
                             imagePullPolicy:
                               description: pulling policy for the image
                               type: string
+                            logs:
+                              description: should it fetch logs for that service
+                              type: boolean
                             matrix:
                               description: matrix of parameters to spawn instances (static)
                               type: object
@@ -10058,6 +10067,9 @@ spec:
                             imagePullPolicy:
                               description: pulling policy for the image
                               type: string
+                            logs:
+                              description: should it fetch logs for that service
+                              type: boolean
                             matrix:
                               description: matrix of parameters to spawn instances (static)
                               type: object
