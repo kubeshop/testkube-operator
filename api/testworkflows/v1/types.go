@@ -78,6 +78,8 @@ type PodConfig struct {
 	Annotations map[string]string `json:"annotations,omitempty" expr:"template,template"`
 
 	// volumes to include in the pod
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
 	Volumes []corev1.Volume `json:"volumes,omitempty" expr:"force"`
 
 	// duration in seconds the pod may be active on the node
@@ -120,6 +122,8 @@ type PodConfig struct {
 	PreemptionPolicy *corev1.PreemptionPolicy `json:"preemptionPolicy,omitempty" expr:"template"`
 
 	// TopologySpreadConstraints describes how a group of pods ought to spread across topology domains.
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
 	TopologySpreadConstraints []corev1.TopologySpreadConstraint `json:"topologySpreadConstraints,omitempty" expr:"force"`
 
 	// SchedulingGates is an opaque list of values that if specified will block scheduling the pod.
