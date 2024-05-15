@@ -214,6 +214,9 @@ type StepParallel struct {
 	// worker description to display
 	Description string `json:"description,omitempty" expr:"template"`
 
+	// should save logs for the parallel step (true if not specified)
+	Logs *string `json:"logs,omitempty" expr:"expression"`
+
 	// instructions for transferring files
 	Transfer []StepParallelTransfer `json:"transfer,omitempty" expr:"include"`
 
@@ -239,6 +242,9 @@ type IndependentStepParallel struct {
 
 	// worker description to display
 	Description string `json:"description,omitempty" expr:"template"`
+
+	// should save logs for the parallel step (true if not specified)
+	Logs *string `json:"logs,omitempty" expr:"expression"`
 
 	// instructions for transferring files
 	Transfer []StepParallelTransfer `json:"transfer,omitempty" expr:"include"`

@@ -333,6 +333,11 @@ func (in *IndependentStep) DeepCopy() *IndependentStep {
 func (in *IndependentStepParallel) DeepCopyInto(out *IndependentStepParallel) {
 	*out = *in
 	in.StepExecuteStrategy.DeepCopyInto(&out.StepExecuteStrategy)
+	if in.Logs != nil {
+		in, out := &in.Logs, &out.Logs
+		*out = new(string)
+		**out = **in
+	}
 	if in.Transfer != nil {
 		in, out := &in.Transfer, &out.Transfer
 		*out = make([]StepParallelTransfer, len(*in))
@@ -949,6 +954,11 @@ func (in *StepOperations) DeepCopy() *StepOperations {
 func (in *StepParallel) DeepCopyInto(out *StepParallel) {
 	*out = *in
 	in.StepExecuteStrategy.DeepCopyInto(&out.StepExecuteStrategy)
+	if in.Logs != nil {
+		in, out := &in.Logs, &out.Logs
+		*out = new(string)
+		**out = **in
+	}
 	if in.Transfer != nil {
 		in, out := &in.Transfer, &out.Transfer
 		*out = make([]StepParallelTransfer, len(*in))
