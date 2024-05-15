@@ -17,14 +17,29 @@ type RetryPolicy struct {
 	Until string `json:"until,omitempty" expr:"expression"`
 }
 
-type StepBase struct {
+type StepMeta struct {
 	// readable name for the step
 	Name string `json:"name,omitempty" expr:"template"`
 
 	// expression to declare under which conditions the step should be run
 	// defaults to: "passed", except artifacts where it defaults to "always"
 	Condition string `json:"condition,omitempty" expr:"expression"`
+}
 
+type StepSource struct {
+	// content that should be fetched for this step
+	Content *Content `json:"content,omitempty" expr:"include"`
+}
+
+type StepDefaults struct {
+	// defaults for the containers in this step
+	Container *ContainerConfig `json:"container,omitempty" expr:"include"`
+
+	// working directory to use for this step
+	WorkingDir *string `json:"workingDir,omitempty" expr:"template"`
+}
+
+type StepControl struct {
 	// is the step expected to fail
 	Negative bool `json:"negative,omitempty"`
 
@@ -40,25 +55,18 @@ type StepBase struct {
 	// maximum time this step may take
 	// +kubebuilder:validation:Pattern=^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
 	Timeout string `json:"timeout,omitempty"`
+}
 
+type StepOperations struct {
 	// delay before the step
 	// +kubebuilder:validation:Pattern=^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
 	Delay string `json:"delay,omitempty"`
-
-	// content that should be fetched for this step
-	Content *Content `json:"content,omitempty" expr:"include"`
 
 	// script to run in a default shell for the container
 	Shell string `json:"shell,omitempty" expr:"template"`
 
 	// run specific container in the current step
 	Run *StepRun `json:"run,omitempty" expr:"include"`
-
-	// working directory to use for this step
-	WorkingDir *string `json:"workingDir,omitempty" expr:"template"`
-
-	// defaults for the containers in this step
-	Container *ContainerConfig `json:"container,omitempty" expr:"include"`
 
 	// execute other Testkube resources
 	Execute *StepExecute `json:"execute,omitempty" expr:"include"`
@@ -68,12 +76,20 @@ type StepBase struct {
 }
 
 type IndependentStep struct {
-	StepBase `json:",inline" expr:"include"`
+	StepMeta     `json:",inline" expr:"include"`
+	StepControl  `json:",inline" expr:"include"`
+	StepSource   `json:",inline" expr:"include"`
+	StepDefaults `json:",inline" expr:"include"`
 
 	// steps to run before other operations in this step
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	Setup []IndependentStep `json:"setup,omitempty" expr:"include"`
+
+	StepOperations `json:",inline" expr:"include"`
+
+	// instructions for parallel execution
+	Parallel *IndependentStepParallel `json:"parallel,omitempty" expr:"include"`
 
 	// sub-steps to run
 	// +kubebuilder:pruning:PreserveUnknownFields
@@ -82,18 +98,28 @@ type IndependentStep struct {
 }
 
 type Step struct {
-	StepBase `json:",inline" expr:"include"`
+	StepMeta    `json:",inline" expr:"include"`
+	StepControl `json:",inline" expr:"include"`
 
 	// multiple templates to include in this step
 	Use []TemplateRef `json:"use,omitempty" expr:"include"`
 
-	// single template to run in this step
-	Template *TemplateRef `json:"template,omitempty" expr:"include"`
+	StepSource `json:",inline" expr:"include"`
+
+	StepDefaults `json:",inline" expr:"include"`
 
 	// steps to run before other operations in this step
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	Setup []Step `json:"setup,omitempty" expr:"include"`
+
+	StepOperations `json:",inline" expr:"include"`
+
+	// single template to run in this step
+	Template *TemplateRef `json:"template,omitempty" expr:"include"`
+
+	// instructions for parallel execution
+	Parallel *StepParallel `json:"parallel,omitempty" expr:"include"`
 
 	// sub-steps to run
 	// +kubebuilder:pruning:PreserveUnknownFields
@@ -132,9 +158,6 @@ type TarballRequest struct {
 
 type StepExecuteStrategy struct {
 	// matrix of parameters to spawn instances (static)
-	// +kubebuilder:validation:Schemaless
-	// +kubebuilder:pruning:PreserveUnknownFields
-	// +kubebuilder:validation:Type="object"
 	Matrix map[string]DynamicList `json:"matrix,omitempty" expr:"force"`
 
 	// static number of sharded instances to spawn
@@ -144,9 +167,6 @@ type StepExecuteStrategy struct {
 	MaxCount *intstr.IntOrString `json:"maxCount,omitempty" expr:"expression"`
 
 	// parameters that should be distributed across sharded instances
-	// +kubebuilder:validation:Schemaless
-	// +kubebuilder:pruning:PreserveUnknownFields
-	// +kubebuilder:validation:Type="object"
 	Shards map[string]DynamicList `json:"shards,omitempty" expr:"force"`
 }
 
@@ -160,9 +180,6 @@ type StepExecuteTest struct {
 	StepExecuteStrategy `json:",inline" expr:"include"`
 
 	// pack some data from the original file system to serve them down
-	// +kubebuilder:validation:Schemaless
-	// +kubebuilder:pruning:PreserveUnknownFields
-	// +kubebuilder:validation:Type="object"
 	Tarball map[string]TarballRequest `json:"tarball,omitempty" expr:"template,include"`
 
 	// pass the execution request overrides
@@ -182,13 +199,90 @@ type StepExecuteWorkflow struct {
 	ExecutionName string `json:"executionName,omitempty" expr:"template"`
 
 	// pack some data from the original file system to serve them down
-	// +kubebuilder:validation:Schemaless
-	// +kubebuilder:pruning:PreserveUnknownFields
-	// +kubebuilder:validation:Type="object"
 	Tarball map[string]TarballRequest `json:"tarball,omitempty" expr:"template,include"`
 
 	// configuration to pass for the workflow
 	Config map[string]intstr.IntOrString `json:"config,omitempty" expr:"template"`
+}
+
+type StepParallel struct {
+	// how many resources could be scheduled in parallel
+	Parallelism int32 `json:"parallelism,omitempty"`
+
+	StepExecuteStrategy `json:",inline" expr:"include"`
+
+	// worker description to display
+	Description string `json:"description,omitempty" expr:"template"`
+
+	// should save logs for the parallel step (true if not specified)
+	Logs *string `json:"logs,omitempty" expr:"expression"`
+
+	// instructions for transferring files
+	Transfer []StepParallelTransfer `json:"transfer,omitempty" expr:"include"`
+
+	// instructions for fetching files back
+	Fetch []StepParallelFetch `json:"fetch,omitempty" expr:"include"`
+
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	TestWorkflowSpec `json:",inline" expr:"include"`
+
+	StepControl    `json:",inline" expr:"include"`
+	StepOperations `json:",inline" expr:"include"`
+
+	// single template to run in this step
+	Template *TemplateRef `json:"template,omitempty" expr:"include"`
+}
+
+type IndependentStepParallel struct {
+	// how many resources could be scheduled in parallel
+	Parallelism int32 `json:"parallelism,omitempty"`
+
+	StepExecuteStrategy `json:",inline" expr:"include"`
+
+	// worker description to display
+	Description string `json:"description,omitempty" expr:"template"`
+
+	// should save logs for the parallel step (true if not specified)
+	Logs *string `json:"logs,omitempty" expr:"expression"`
+
+	// instructions for transferring files
+	Transfer []StepParallelTransfer `json:"transfer,omitempty" expr:"include"`
+
+	// instructions for fetching files back
+	Fetch []StepParallelFetch `json:"fetch,omitempty" expr:"include"`
+
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	TestWorkflowTemplateSpec `json:",inline" expr:"include"`
+
+	StepControl    `json:",inline" expr:"include"`
+	StepOperations `json:",inline" expr:"include"`
+}
+
+type StepParallelTransfer struct {
+	// path to load the files from
+	From string `json:"from" expr:"template"`
+
+	// file patterns to pack
+	Files *DynamicList `json:"files,omitempty" expr:"template"`
+
+	// path where the tarball should be extracted
+	To string `json:"to,omitempty" expr:"template"`
+
+	// should it mount a new volume there
+	Mount *bool `json:"mount,omitempty" expr:"ignore"`
+}
+
+type StepParallelFetch struct {
+	// path to load the files from
+	From string `json:"from" expr:"template"`
+
+	// file patterns to pack
+	Files *DynamicList `json:"files,omitempty" expr:"template"`
+
+	// path where the tarball should be extracted
+	To string `json:"to,omitempty" expr:"template"`
 }
 
 type StepArtifacts struct {

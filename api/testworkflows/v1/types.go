@@ -129,6 +129,7 @@ type PodConfig struct {
 	ResourceClaims []corev1.PodResourceClaim `json:"resourceClaims,omitempty" expr:"force"`
 }
 
+// +kubebuilder:validation:Type=dynamicList
 type DynamicList struct {
 	Dynamic    bool     `expr:"ignore"`
 	Static     []string `expr:"template"`
