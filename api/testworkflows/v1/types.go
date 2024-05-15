@@ -101,6 +101,8 @@ type PodConfig struct {
 	Subdomain string `json:"subdomain,omitempty" expr:"template"`
 
 	// If specified, the pod's scheduling constraints
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
 	Affinity *corev1.Affinity `json:"affinity,omitempty" expr:"force"`
 
 	// If specified, the pod's tolerations.
