@@ -39,9 +39,20 @@ type ContentFile struct {
 	Mode *int32 `json:"mode,omitempty"`
 }
 
+type ContentTarball struct {
+	// url for the tarball to extract
+	Url string `json:"url" expr:"template"`
+	// path where the tarball should be extracted
+	Path string `json:"path" expr:"template"`
+	// should it mount a new volume there
+	Mount *bool `json:"mount,omitempty" expr:"ignore"`
+}
+
 type Content struct {
 	// git repository details
 	Git *ContentGit `json:"git,omitempty" expr:"include"`
 	// files to load
 	Files []ContentFile `json:"files,omitempty" expr:"include"`
+	// tarballs to unpack
+	Tarball []ContentTarball `json:"tarball,omitempty" expr:"include"`
 }

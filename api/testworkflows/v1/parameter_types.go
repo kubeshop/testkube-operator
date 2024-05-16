@@ -52,6 +52,6 @@ type ParameterSchema struct {
 	// +kubebuilder:validation:XIntOrString
 	Default *intstr.IntOrString `json:"default,omitempty" expr:"template"`
 
-	ParameterStringSchema `json:",inline"`
-	ParameterNumberSchema `json:",inline"`
+	ParameterStringSchema `json:",inline" expr:"include"`
+	ParameterNumberSchema `json:",inline" expr:"include"`
 }

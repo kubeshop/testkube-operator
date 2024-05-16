@@ -37,8 +37,27 @@ help: ## Display this help.
 
 ##@ Development
 
-manifests: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
+manifests: manifests-create manifests-clean ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects. Delete unnecessary entries.
+
+manifests-create: controller-gen ## Generate WebhookConfiguration, ClusterRole and CustomResourceDefinition objects.
 	$(CONTROLLER_GEN) $(CRD_OPTIONS) rbac:roleName=manager-role webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+
+manifests-clean: yq
+	@for file in testworkflows.testkube.io_testworkflows.yaml testworkflows.testkube.io_testworkflowtemplates.yaml; do \
+		for key in securityContext volumes dnsPolicy affinity tolerations hostAliases dnsConfig topologySpreadConstraints schedulingGates resourceClaims volumeMounts fieldRef resourceFieldRef configMapKeyRef secretKeyRef; do \
+			yq --no-colors -i "del(.. | select(has(\"$$key\")).$$key | .. | select(has(\"description\")).description)" "config/crd/bases/$$file"; \
+		done; \
+		yq --no-colors -i \
+		'with(..; . | select(has("additionalProperties")) | select(.additionalProperties | has("type")) | select(.additionalProperties.type == "dynamicList") | \
+			.["x-kubernetes-preserve-unknown-fields"] = true | \
+			del(.additionalProperties) \
+		) | \
+		with(..; . | select(has("properties")) | select(.properties | to_entries | filter(.value | has("type")) | filter(.value.type == "dynamicList") | length > 0) | \
+			.["x-kubernetes-preserve-unknown-fields"] = true | \
+			del(.properties) \
+		)' \
+		"config/crd/bases/$$file"; \
+	done
 
 generate: controller-gen ## Generate code containing DeepCopy, DeepCopyInto, and DeepCopyObject method implementations.
 	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
@@ -111,6 +130,10 @@ controller-gen: ## Download controller-gen locally if necessary.
 KUSTOMIZE = $(shell pwd)/bin/kustomize
 kustomize: ## Download kustomize locally if necessary.
 	$(call go-get-tool,$(KUSTOMIZE),sigs.k8s.io/kustomize/kustomize/v5@v5.2.1)
+
+YQ = $(shell pwd)/bin/yq
+yq: ## Download YQ locally if necessary.
+	$(call go-get-tool,$(YQ),github.com/mikefarah/yq/v4@v4.43.1)
 
 # go-get-tool will 'go get' any package $2 and install it to $1.
 PROJECT_DIR := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))
