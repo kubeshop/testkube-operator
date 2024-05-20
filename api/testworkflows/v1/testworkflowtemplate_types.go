@@ -23,6 +23,9 @@ type TestWorkflowTemplateSpec struct {
 
 	TestWorkflowSpecBase `json:",inline" expr:"include"`
 
+	// list of accompanying services to start
+	Services map[string]IndependentServiceSpec `json:"services,omitempty" expr:"template,include"`
+
 	// steps for setting up the workflow
 	Setup []IndependentStep `json:"setup,omitempty" expr:"include"`
 

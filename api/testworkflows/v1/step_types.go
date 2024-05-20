@@ -76,9 +76,13 @@ type StepOperations struct {
 }
 
 type IndependentStep struct {
-	StepMeta     `json:",inline" expr:"include"`
-	StepControl  `json:",inline" expr:"include"`
-	StepSource   `json:",inline" expr:"include"`
+	StepMeta    `json:",inline" expr:"include"`
+	StepControl `json:",inline" expr:"include"`
+	StepSource  `json:",inline" expr:"include"`
+
+	// list of accompanying services to start
+	Services map[string]IndependentServiceSpec `json:"services,omitempty" expr:"template,include"`
+
 	StepDefaults `json:",inline" expr:"include"`
 
 	// steps to run before other operations in this step
@@ -105,6 +109,9 @@ type Step struct {
 	Use []TemplateRef `json:"use,omitempty" expr:"include"`
 
 	StepSource `json:",inline" expr:"include"`
+
+	// list of accompanying services to start
+	Services map[string]ServiceSpec `json:"services,omitempty" expr:"template,include"`
 
 	StepDefaults `json:",inline" expr:"include"`
 
