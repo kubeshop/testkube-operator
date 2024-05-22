@@ -1,0 +1,24 @@
+# permissions for end users to edit testworkflowexecutions.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: testworkflowexecution-editor-role
+rules:
+- apiGroups:
+  - testworkflows.testkube.io
+  resources:
+  - testworkflowexecutions
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - testworkflows.testkube.io
+  resources:
+  - testworkflowexecutions/status
+  verbs:
+  - get
