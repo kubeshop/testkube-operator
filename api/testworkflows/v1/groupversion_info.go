@@ -31,6 +31,12 @@ var (
 	// Resource corresponds to the CRD Kind
 	Resource = "TestWorkflow"
 
+	// ResourcTemplate corresponds to the CRD Kind
+	ResourceTemplate = "TestWorkflowTemplate"
+
+	// ResourceExecution corresponds to the CRD Kind
+	ResourceExecution = "TestWorkflowExecution"
+
 	// GroupVersion is group version used to register these objects
 	GroupVersion = schema.GroupVersion{Group: Group, Version: Version}
 
