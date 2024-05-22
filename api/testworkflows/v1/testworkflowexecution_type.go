@@ -21,6 +21,7 @@ import (
 
 // TestWorkflowExecutionSpec defines the desired state of TestWorkflowExecution
 type TestWorkflowExecutionSpec struct {
+	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
 	TestWorkflow     *corev1.LocalObjectReference  `json:"testWorkflow" expr:"include"`
@@ -43,16 +44,18 @@ type TestWorkflowExecution struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// TestWorkflowExecution specification
-	Spec TestWorkflowTemplateSpec `json:"spec" expr:"include"`
-	// TestWorkflowExecutionStatus soecification
-	Status *TestWorkflowExecutionStatus `json:"status,omitempty"`
+	Spec TestWorkflowExecutionSpec `json:"spec" expr:"include"`
+	// TestWorkflowExecutionStatus specification
+	Status *TestWorkflowExecutionStatus `json:"status,omitempty" expr:"include"`
 }
 
-// test workflow execution status
+// TestWorkflowExecutionStatus defines the observed state of TestWorkflowExecution
 type TestWorkflowExecutionStatus struct {
-	LatestExecution *TestWorkflowExecution `json:"latestExecution,omitempty"`
+	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
+	// Important: Run "make" to regenerate code after modifying this file
+	LatestExecution *TestWorkflowExecution `json:"latestExecution,omitempty" expr:"include"`
 	// test workflow execution generation
-	Generation int64 `json:"generation,omitempty"`
+	Generation int64 `json:"generation,omitempty" expr:"template"`
 }
 
 //+kubebuilder:object:root=true
