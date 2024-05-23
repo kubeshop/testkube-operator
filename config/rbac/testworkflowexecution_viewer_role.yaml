@@ -5,7 +5,7 @@ metadata:
   name: testworkflowexecution-viewer-role
 rules:
 - apiGroups:
-  - tests.testkube.io
+  - testworkflows.testkube.io
   resources:
   - testworkflowexecutions
   verbs:
@@ -13,7 +13,7 @@ rules:
   - list
   - watch
 - apiGroups:
-  - tests.testkube.io
+  - testworkflows.testkube.io
   resources:
   - testworkflowexecutions/status
   verbs:
