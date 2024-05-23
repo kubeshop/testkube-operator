@@ -69,6 +69,8 @@ type TestWorkflowExecutionDetails struct {
 	Reports          []TestWorkflowReport `json:"reports,omitempty" expr:"include"`
 	Workflow         *TestWorkflow        `json:"workflow" expr:"include"`
 	ResolvedWorkflow *TestWorkflow        `json:"resolvedWorkflow,omitempty" expr:"include"`
+	// test workflow execution name started the test workflow execution
+	TestWorkflowExecutionName string `json:"testWorkflowExecutionName,omitempty"`
 }
 
 // TestWorkflowSignature has signature of TestWorkflow
