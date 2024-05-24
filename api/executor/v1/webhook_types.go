@@ -42,6 +42,8 @@ type WebhookSpec struct {
 	PayloadTemplateReference string `json:"payloadTemplateReference,omitempty"`
 	// webhook headers (golang template supported)
 	Headers map[string]string `json:"headers,omitempty"`
+	// Disabled will disable the webhook
+	Disabled bool `json:"disabled,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=start-test;end-test-success;end-test-failed;end-test-aborted;end-test-timeout;start-testsuite;end-testsuite-success;end-testsuite-failed;end-testsuite-aborted;end-testsuite-timeout;start-testworkflow;queue-testworkflow;end-testworkflow-success;end-testworkflow-failed;end-testworkflow-aborted
