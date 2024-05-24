@@ -35,6 +35,8 @@ type TestWorkflowExecutionRequest struct {
 	// custom execution name
 	Name   string                        `json:"name,omitempty" expr:"template"`
 	Config map[string]intstr.IntOrString `json:"config,omitempty" expr:"template"`
+	// test workflow execution name started the test workflow execution
+	TestWorkflowExecutionName string `json:"testWorkflowExecutionName,omitempty" expr:"template"`
 }
 
 // TestWorkflowExecutionStatus defines the observed state of TestWorkflowExecution
@@ -70,7 +72,7 @@ type TestWorkflowExecutionDetails struct {
 	Workflow         *TestWorkflow        `json:"workflow" expr:"include"`
 	ResolvedWorkflow *TestWorkflow        `json:"resolvedWorkflow,omitempty" expr:"include"`
 	// test workflow execution name started the test workflow execution
-	TestWorkflowExecutionName string `json:"testWorkflowExecutionName,omitempty"`
+	TestWorkflowExecutionName string `json:"testWorkflowExecutionName,omitempty" expr:"template"`
 }
 
 // TestWorkflowSignature has signature of TestWorkflow
