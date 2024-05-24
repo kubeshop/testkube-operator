@@ -35,6 +35,9 @@ spec:
           spec:
             description: WebhookSpec defines the desired state of Webhook
             properties:
+              disabled:
+                description: Disabled will disable the webhook
+                type: boolean
               events:
                 description: Events declare list if events on which webhook should
                   be called
@@ -79,9 +82,6 @@ spec:
                 description: Uri is address where webhook should be made (golang template
                   supported)
                 type: string
-              disabled:
-                description: disable the webhook
-                type: boolean
             type: object
           status:
             description: WebhookStatus defines the observed state of Webhook
