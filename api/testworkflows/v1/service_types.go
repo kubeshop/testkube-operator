@@ -12,8 +12,8 @@ const (
 type IndependentServiceSpec struct {
 	StepExecuteStrategy `json:",inline" expr:"include"`
 
-	// should it fetch logs for that service
-	Logs bool `json:"logs,omitempty"`
+	// should save logs for the service (false if not specified)
+	Logs *string `json:"logs,omitempty" expr:"expression"`
 
 	// maximum time until reaching readiness
 	// +kubebuilder:validation:Pattern=^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
