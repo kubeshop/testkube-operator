@@ -216,7 +216,7 @@ type TestWorkflowExecution struct {
 	// TestWorkflowExecution specification
 	Spec TestWorkflowExecutionSpec `json:"spec" expr:"include"`
 	// TestWorkflowExecutionStatus specification
-	Status *TestWorkflowExecutionStatus `json:"status,omitempty" expr:"include"`
+	Status TestWorkflowExecutionStatus `json:"status,omitempty" expr:"include"`
 }
 
 //+kubebuilder:object:root=true
