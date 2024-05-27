@@ -1463,9 +1463,9 @@ func (in *TestWorkflowOutput) DeepCopyInto(out *TestWorkflowOutput) {
 	*out = *in
 	if in.Value != nil {
 		in, out := &in.Value, &out.Value
-		*out = make(map[string]interface{}, len(*in))
+		*out = make(map[string]DynamicList, len(*in))
 		for key, val := range *in {
-			(*out)[key]=val
+			(*out)[key] = *val.DeepCopy()
 		}
 	}
 }

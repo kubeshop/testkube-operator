@@ -14,8 +14,6 @@ limitations under the License.
 package v1
 
 import (
-	"time"
-
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
@@ -59,9 +57,9 @@ type TestWorkflowExecutionDetails struct {
 	// sequence number for the execution
 	Number int32 `json:"number,omitempty" expr:"template"`
 	// when the execution has been scheduled to run
-	ScheduledAt time.Time `json:"scheduledAt,omitempty" expr:"template"`
+	ScheduledAt metav1.Time `json:"scheduledAt,omitempty" expr:"template"`
 	// when the execution result's status has changed last time (queued, passed, failed)
-	StatusAt time.Time `json:"statusAt,omitempty" expr:"template"`
+	StatusAt metav1.Time `json:"statusAt,omitempty" expr:"template"`
 	// structured tree of steps
 	Signature []TestWorkflowSignature `json:"signature,omitempty" expr:"include"`
 	Result    *TestWorkflowResult     `json:"result,omitempty" expr:"include"`
@@ -86,7 +84,9 @@ type TestWorkflowSignature struct {
 	// is the step/group meant to be optional
 	Optional bool `json:"optional,omitempty" expr:"template"`
 	// is the step/group meant to be negative
-	Negative bool                    `json:"negative,omitempty" expr:"template"`
+	Negative bool `json:"negative,omitempty" expr:"template"`
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
 	Children []TestWorkflowSignature `json:"children,omitempty" expr:"include"`
 }
 
@@ -95,11 +95,11 @@ type TestWorkflowResult struct {
 	Status          *TestWorkflowStatus `json:"status" expr:"include"`
 	PredictedStatus *TestWorkflowStatus `json:"predictedStatus" expr:"include"`
 	// when the pod was created
-	QueuedAt time.Time `json:"queuedAt,omitempty" expr:"template"`
+	QueuedAt metav1.Time `json:"queuedAt,omitempty" expr:"template"`
 	// when the pod has been successfully assigned
-	StartedAt time.Time `json:"startedAt,omitempty" expr:"template"`
+	StartedAt metav1.Time `json:"startedAt,omitempty" expr:"template"`
 	// when the pod has been completed
-	FinishedAt time.Time `json:"finishedAt,omitempty" expr:"template"`
+	FinishedAt metav1.Time `json:"finishedAt,omitempty" expr:"template"`
 	// Go-formatted (human-readable) duration
 	Duration string `json:"duration,omitempty" expr:"template"`
 	// Go-formatted (human-readable) total duration (incl. pause)
@@ -134,22 +134,22 @@ type TestWorkflowPause struct {
 	// step at which it was paused
 	Ref string `json:"ref" expr:"template"`
 	// when the pause has started
-	PausedAt time.Time `json:"pausedAt" expr:"template"`
+	PausedAt metav1.Time `json:"pausedAt" expr:"template"`
 	// when the pause has ended
-	ResumedAt time.Time `json:"resumedAt,omitempty" expr:"template"`
+	ResumedAt metav1.Time `json:"resumedAt,omitempty" expr:"template"`
 }
 
 // TestWorkflowStepResult contains step result of TestWorkflow
 type TestWorkflowStepResult struct {
 	ErrorMessage string                  `json:"errorMessage,omitempty" expr:"template"`
 	Status       *TestWorkflowStepStatus `json:"status,omitempty" expr:"include"`
-	ExitCode     float64                 `json:"exitCode,omitempty" expr:"template"`
+	ExitCode     int64                   `json:"exitCode,omitempty" expr:"template"`
 	// when the container was created
-	QueuedAt time.Time `json:"queuedAt,omitempty" expr:"template"`
+	QueuedAt metav1.Time `json:"queuedAt,omitempty" expr:"template"`
 	// when the container was started
-	StartedAt time.Time `json:"startedAt,omitempty" expr:"template"`
+	StartedAt metav1.Time `json:"startedAt,omitempty" expr:"template"`
 	// when the container was finished
-	FinishedAt time.Time `json:"finishedAt,omitempty" expr:"template"`
+	FinishedAt metav1.Time `json:"finishedAt,omitempty" expr:"template"`
 }
 
 // TestWorkfloStepwStatus has step status of TestWorkflow
@@ -175,7 +175,7 @@ type TestWorkflowOutput struct {
 	// output kind name
 	Name string `json:"name,omitempty" expr:"template"`
 	// value returned
-	Value map[string]interface{} `json:"value,omitempty" expr:"include"`
+	Value map[string]DynamicList `json:"value,omitempty" expr:"force"`
 }
 
 // TestWorkflowStepReport contains report of TestWorkflow
