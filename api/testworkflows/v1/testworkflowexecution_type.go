@@ -41,78 +41,82 @@ type TestWorkflowExecutionRequest struct {
 type TestWorkflowExecutionStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	LatestExecution *TestWorkflowExecutionDetails `json:"latestExecution,omitempty" expr:"include"`
+	LatestExecution *TestWorkflowExecutionDetails `json:"latestExecution,omitempty"`
 	// test workflow execution generation
-	Generation int64 `json:"generation,omitempty" expr:"template"`
+	Generation int64 `json:"generation,omitempty"`
 }
 
 // TestWorkflowExecutionDetails contains the details of TestWorkflowExecution
 type TestWorkflowExecutionDetails struct {
 	// unique execution identifier
-	Id string `json:"id" expr:"template"`
+	Id string `json:"id"`
 	// execution name
-	Name string `json:"name" expr:"template"`
+	Name string `json:"name"`
 	// execution namespace
-	Namespace string `json:"namespace,omitempty" expr:"template"`
+	Namespace string `json:"namespace,omitempty"`
 	// sequence number for the execution
-	Number int32 `json:"number,omitempty" expr:"template"`
+	Number int32 `json:"number,omitempty"`
 	// when the execution has been scheduled to run
-	ScheduledAt metav1.Time `json:"scheduledAt,omitempty" expr:"template"`
+	ScheduledAt metav1.Time `json:"scheduledAt,omitempty"`
 	// when the execution result's status has changed last time (queued, passed, failed)
-	StatusAt metav1.Time `json:"statusAt,omitempty" expr:"template"`
+	StatusAt metav1.Time `json:"statusAt,omitempty"`
 	// structured tree of steps
-	Signature []TestWorkflowSignature `json:"signature,omitempty" expr:"include"`
-	Result    *TestWorkflowResult     `json:"result,omitempty" expr:"include"`
+	Signature []TestWorkflowSignature `json:"signature,omitempty"`
+	Result    *TestWorkflowResult     `json:"result,omitempty"`
 	// additional information from the steps, like referenced executed tests or artifacts
-	Output []TestWorkflowOutput `json:"output,omitempty" expr:"include"`
+	Output []TestWorkflowOutput `json:"output,omitempty"`
 	// generated reports from the steps, like junit
-	Reports          []TestWorkflowReport `json:"reports,omitempty" expr:"include"`
-	Workflow         *TestWorkflow        `json:"workflow" expr:"include"`
-	ResolvedWorkflow *TestWorkflow        `json:"resolvedWorkflow,omitempty" expr:"include"`
+	Reports []TestWorkflowReport `json:"reports,omitempty"`
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Workflow *TestWorkflow `json:"workflow"`
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	ResolvedWorkflow *TestWorkflow `json:"resolvedWorkflow,omitempty"`
 	// test workflow execution name started the test workflow execution
-	TestWorkflowExecutionName string `json:"testWorkflowExecutionName,omitempty" expr:"template"`
+	TestWorkflowExecutionName string `json:"testWorkflowExecutionName,omitempty"`
 }
 
 // TestWorkflowSignature has signature of TestWorkflow
 type TestWorkflowSignature struct {
 	// step reference
-	Ref string `json:"ref,omitempty" expr:"template"`
+	Ref string `json:"ref,omitempty"`
 	// step name
-	Name string `json:"name,omitempty" expr:"template"`
+	Name string `json:"name,omitempty"`
 	// step category, that may be used as name fallback
-	Category string `json:"category,omitempty" expr:"template"`
+	Category string `json:"category,omitempty"`
 	// is the step/group meant to be optional
-	Optional bool `json:"optional,omitempty" expr:"template"`
+	Optional bool `json:"optional,omitempty"`
 	// is the step/group meant to be negative
-	Negative bool `json:"negative,omitempty" expr:"template"`
+	Negative bool `json:"negative,omitempty"`
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
-	Children []TestWorkflowSignature `json:"children,omitempty" expr:"include"`
+	Children []TestWorkflowSignature `json:"children,omitempty"`
 }
 
 // TestWorkflowResult contains result of TestWorkflow
 type TestWorkflowResult struct {
-	Status          *TestWorkflowStatus `json:"status" expr:"include"`
-	PredictedStatus *TestWorkflowStatus `json:"predictedStatus" expr:"include"`
+	Status          *TestWorkflowStatus `json:"status"`
+	PredictedStatus *TestWorkflowStatus `json:"predictedStatus"`
 	// when the pod was created
-	QueuedAt metav1.Time `json:"queuedAt,omitempty" expr:"template"`
+	QueuedAt metav1.Time `json:"queuedAt,omitempty"`
 	// when the pod has been successfully assigned
-	StartedAt metav1.Time `json:"startedAt,omitempty" expr:"template"`
+	StartedAt metav1.Time `json:"startedAt,omitempty"`
 	// when the pod has been completed
-	FinishedAt metav1.Time `json:"finishedAt,omitempty" expr:"template"`
+	FinishedAt metav1.Time `json:"finishedAt,omitempty"`
 	// Go-formatted (human-readable) duration
-	Duration string `json:"duration,omitempty" expr:"template"`
+	Duration string `json:"duration,omitempty"`
 	// Go-formatted (human-readable) total duration (incl. pause)
-	TotalDuration string `json:"totalDuration,omitempty" expr:"template"`
+	TotalDuration string `json:"totalDuration,omitempty"`
 	// Duration in milliseconds
-	DurationMs int32 `json:"durationMs,omitempty" expr:"template"`
+	DurationMs int32 `json:"durationMs,omitempty"`
 	// Pause duration in milliseconds
-	PausedMs int32 `json:"pausedMs,omitempty" expr:"template"`
+	PausedMs int32 `json:"pausedMs,omitempty"`
 	// Total duration in milliseconds (incl. pause)
-	TotalDurationMs int32                             `json:"totalDurationMs,omitempty" expr:"template"`
-	Pauses          []TestWorkflowPause               `json:"pauses,omitempty" expr:"include"`
-	Initialization  *TestWorkflowStepResult           `json:"initialization,omitempty" expr:"include"`
-	Steps           map[string]TestWorkflowStepResult `json:"steps,omitempty" expr:"include"`
+	TotalDurationMs int32                             `json:"totalDurationMs,omitempty"`
+	Pauses          []TestWorkflowPause               `json:"pauses,omitempty"`
+	Initialization  *TestWorkflowStepResult           `json:"initialization,omitempty"`
+	Steps           map[string]TestWorkflowStepResult `json:"steps,omitempty"`
 }
 
 // TestWorkflowStatus has status of TestWorkflow
@@ -132,24 +136,24 @@ const (
 // TestWorkflowPause defines pause of TestWorkflow
 type TestWorkflowPause struct {
 	// step at which it was paused
-	Ref string `json:"ref" expr:"template"`
+	Ref string `json:"ref"`
 	// when the pause has started
-	PausedAt metav1.Time `json:"pausedAt" expr:"template"`
+	PausedAt metav1.Time `json:"pausedAt"`
 	// when the pause has ended
-	ResumedAt metav1.Time `json:"resumedAt,omitempty" expr:"template"`
+	ResumedAt metav1.Time `json:"resumedAt,omitempty"`
 }
 
 // TestWorkflowStepResult contains step result of TestWorkflow
 type TestWorkflowStepResult struct {
-	ErrorMessage string                  `json:"errorMessage,omitempty" expr:"template"`
-	Status       *TestWorkflowStepStatus `json:"status,omitempty" expr:"include"`
-	ExitCode     int64                   `json:"exitCode,omitempty" expr:"template"`
+	ErrorMessage string                  `json:"errorMessage,omitempty"`
+	Status       *TestWorkflowStepStatus `json:"status,omitempty"`
+	ExitCode     int64                   `json:"exitCode,omitempty"`
 	// when the container was created
-	QueuedAt metav1.Time `json:"queuedAt,omitempty" expr:"template"`
+	QueuedAt metav1.Time `json:"queuedAt,omitempty"`
 	// when the container was started
-	StartedAt metav1.Time `json:"startedAt,omitempty" expr:"template"`
+	StartedAt metav1.Time `json:"startedAt,omitempty"`
 	// when the container was finished
-	FinishedAt metav1.Time `json:"finishedAt,omitempty" expr:"template"`
+	FinishedAt metav1.Time `json:"finishedAt,omitempty"`
 }
 
 // TestWorkfloStepwStatus has step status of TestWorkflow
@@ -171,38 +175,38 @@ const (
 // TestWorkflowOutput defines output of TestWorkflow
 type TestWorkflowOutput struct {
 	// step reference
-	Ref string `json:"ref,omitempty" expr:"template"`
+	Ref string `json:"ref,omitempty"`
 	// output kind name
-	Name string `json:"name,omitempty" expr:"template"`
+	Name string `json:"name,omitempty"`
 	// value returned
-	Value map[string]DynamicList `json:"value,omitempty" expr:"force"`
+	Value map[string]DynamicList `json:"value,omitempty"`
 }
 
 // TestWorkflowStepReport contains report of TestWorkflow
 type TestWorkflowReport struct {
 	// step reference
-	Ref string `json:"ref,omitempty" expr:"template"`
+	Ref string `json:"ref,omitempty"`
 	// report kind/type
-	Kind string `json:"kind,omitempty" expr:"template"`
+	Kind string `json:"kind,omitempty"`
 	// file path to full report in artifact storage
-	File    string                     `json:"file,omitempty" expr:"template"`
-	Summary *TestWorkflowReportSummary `json:"summary,omitempty" expr:"include"`
+	File    string                     `json:"file,omitempty"`
+	Summary *TestWorkflowReportSummary `json:"summary,omitempty"`
 }
 
 // TestWorkflowStepReportSummary contains report summary of TestWorkflow
 type TestWorkflowReportSummary struct {
 	// total number of test cases
-	Tests int32 `json:"tests,omitempty" expr:"template"`
+	Tests int32 `json:"tests,omitempty"`
 	// number of passed test cases
-	Passed int32 `json:"passed,omitempty" expr:"template"`
+	Passed int32 `json:"passed,omitempty"`
 	// number of failed test cases
-	Failed int32 `json:"failed,omitempty" expr:"template"`
+	Failed int32 `json:"failed,omitempty"`
 	// number of skipped test cases
-	Skipped int32 `json:"skipped,omitempty" expr:"template"`
+	Skipped int32 `json:"skipped,omitempty"`
 	// number of error test cases
-	Errored int32 `json:"errored,omitempty" expr:"template"`
+	Errored int32 `json:"errored,omitempty"`
 	// total duration of all test cases in milliseconds
-	Duration int64 `json:"duration,omitempty" expr:"template"`
+	Duration int64 `json:"duration,omitempty"`
 }
 
 // +kubebuilder:object:root=true
