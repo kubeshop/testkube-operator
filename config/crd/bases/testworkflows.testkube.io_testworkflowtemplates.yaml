@@ -2141,6 +2141,9 @@ spec:
                                 - type: string
                               description: static number of sharded instances to spawn
                               x-kubernetes-int-or-string: true
+                            description:
+                              description: service description to display
+                              type: string
                             env:
                               description: environment variables to append to the container
                               items:
@@ -3818,6 +3821,9 @@ spec:
                           - type: string
                         description: static number of sharded instances to spawn
                         x-kubernetes-int-or-string: true
+                      description:
+                        description: service description to display
+                        type: string
                       env:
                         description: environment variables to append to the container
                         items:
@@ -6531,6 +6537,9 @@ spec:
                                 - type: string
                               description: static number of sharded instances to spawn
                               x-kubernetes-int-or-string: true
+                            description:
+                              description: service description to display
+                              type: string
                             env:
                               description: environment variables to append to the container
                               items:
@@ -9262,6 +9271,9 @@ spec:
                                 - type: string
                               description: static number of sharded instances to spawn
                               x-kubernetes-int-or-string: true
+                            description:
+                              description: service description to display
+                              type: string
                             env:
                               description: environment variables to append to the container
                               items:

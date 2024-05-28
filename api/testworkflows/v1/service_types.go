@@ -12,6 +12,9 @@ const (
 type IndependentServiceSpec struct {
 	StepExecuteStrategy `json:",inline" expr:"include"`
 
+	// service description to display
+	Description string `json:"description,omitempty" expr:"template"`
+
 	// should save logs for the service (false if not specified)
 	Logs *string `json:"logs,omitempty" expr:"expression"`
 
