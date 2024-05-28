@@ -135,4 +135,13 @@ resources:
   kind: Template
   path: github.com/kubeshop/testkube-operator/api/template/v1
   version: v1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: testkube.io
+  group: testwokflows
+  kind: TestWorkflowExecution
+  path: github.com/kubeshop/testkube-operator/api/testworkflows/v1
+  version: v1
 version: "3"
