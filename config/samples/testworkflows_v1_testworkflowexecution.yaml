@@ -1,0 +1,11 @@
+apiVersion: testworkflows.testkube.io/v1
+kind: TestWorkflowExecution
+metadata:
+  name: testworkflowexecution-sample
+spec:
+  testWorkflow:
+    name: testworkflow-example
+  executionRequest:
+    name: first-run
+
+

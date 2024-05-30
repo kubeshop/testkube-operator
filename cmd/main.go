@@ -63,6 +63,7 @@ import (
 	testsuitecontrollers "github.com/kubeshop/testkube-operator/internal/controller/testsuite"
 	testsuiteexecutioncontrollers "github.com/kubeshop/testkube-operator/internal/controller/testsuiteexecution"
 	testtriggerscontrollers "github.com/kubeshop/testkube-operator/internal/controller/testtriggers"
+	testworkflowexecutioncontrollers "github.com/kubeshop/testkube-operator/internal/controller/testworkflowexecution"
 	testworkflowscontrollers "github.com/kubeshop/testkube-operator/internal/controller/testworkflows"
 	"github.com/kubeshop/testkube-operator/pkg/cronjob"
 	//+kubebuilder:scaffold:imports
@@ -239,6 +240,16 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "TestWorkflowTemplate")
 		os.Exit(1)
 	}
+	if err = (&testworkflowexecutioncontrollers.TestWorkflowExecutionReconciler{
+		Client:      mgr.GetClient(),
+		Scheme:      mgr.GetScheme(),
+		ServiceName: httpConfig.Fullname,
+		ServicePort: httpConfig.Port,
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "TestWorkflowExecution")
+		os.Exit(1)
+	}
+
 	//+kubebuilder:scaffold:builder
 
 	if os.Getenv("ENABLE_WEBHOOKS") != "false" {
