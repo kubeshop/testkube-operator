@@ -175,7 +175,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				ResourceURI: cronjob.TestWorkflowResourceURI,
 				Labels:      newCronJobConfig.Labels,
 				Annotations: newCronJobConfig.Annotations,
-				Data:        "[]",
+				Data:        "{}",
 			}
 
 			if err = r.CronJobClient.Create(ctx, testWorkflow.Name,
