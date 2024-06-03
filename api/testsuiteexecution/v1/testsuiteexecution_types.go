@@ -286,6 +286,8 @@ type Execution struct {
 	SlavePodRequest   *PodRequest `json:"slavePodRequest,omitempty"`
 	// namespace for test execution (Pro edition only)
 	ExecutionNamespace string `json:"executionNamespace,omitempty"`
+	// whether webhooks should be disabled for this execution
+	DisableWebhooks bool `json:"disableWebhooks,omitempty"`
 }
 
 // artifact request body with test artifacts
