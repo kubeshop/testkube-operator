@@ -19,6 +19,10 @@ type ContentGit struct {
 	Token string `json:"token,omitempty" expr:"template"`
 	// external token to fetch with
 	TokenFrom *corev1.EnvVarSource `json:"tokenFrom,omitempty" expr:"force"`
+	// plain text SSH private key to fetch with
+	SshKey string `json:"sshKey,omitempty" expr:"template"`
+	// external SSH private key to fetch with
+	SshKeyFrom *corev1.EnvVarSource `json:"sshKeyFrom,omitempty" expr:"force"`
 	// authorization type for the credentials
 	AuthType testsv3.GitAuthType `json:"authType,omitempty" expr:"template"`
 	// where to mount the fetched repository contents (defaults to "repo" directory in the data volume)

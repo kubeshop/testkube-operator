@@ -183,6 +183,11 @@ func (in *ContentGit) DeepCopyInto(out *ContentGit) {
 		*out = new(corev1.EnvVarSource)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.SshKeyFrom != nil {
+		in, out := &in.SshKeyFrom, &out.SshKeyFrom
+		*out = new(corev1.EnvVarSource)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Paths != nil {
 		in, out := &in.Paths, &out.Paths
 		*out = make([]string, len(*in))
