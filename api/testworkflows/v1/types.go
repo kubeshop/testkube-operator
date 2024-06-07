@@ -135,6 +135,10 @@ type PodConfig struct {
 	ResourceClaims []corev1.PodResourceClaim `json:"resourceClaims,omitempty" expr:"force"`
 }
 
+type NotificationsConfig struct {
+	DisableWebhooks bool `json:"disableWebhooks,omitempty" expr:"template"`
+}
+
 // +kubebuilder:validation:Type=dynamicList
 // +kubebuilder:object:generate=false
 type DynamicList struct {
