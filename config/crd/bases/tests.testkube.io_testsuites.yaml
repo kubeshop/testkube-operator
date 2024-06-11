@@ -644,6 +644,10 @@ spec:
                               cronJobTemplateReference:
                                 description: cron job template extensions reference
                                 type: string
+                              disableWebhooks:
+                                description: whether webhooks should be called on
+                                  execution
+                                type: boolean
                               executionLabels:
                                 additionalProperties:
                                   type: string
@@ -874,6 +878,10 @@ spec:
                               cronJobTemplateReference:
                                 description: cron job template extensions reference
                                 type: string
+                              disableWebhooks:
+                                description: whether webhooks should be called on
+                                  execution
+                                type: boolean
                               executionLabels:
                                 additionalProperties:
                                   type: string
@@ -1053,6 +1061,9 @@ spec:
                   cronJobTemplateReference:
                     description: name of the template resource
                     type: string
+                  disableWebhooks:
+                    description: whether webhooks should be called on execution
+                    type: boolean
                   executionLabels:
                     additionalProperties:
                       type: string
@@ -1273,6 +1284,10 @@ spec:
                               cronJobTemplateReference:
                                 description: cron job template extensions reference
                                 type: string
+                              disableWebhooks:
+                                description: whether webhooks should be called on
+                                  execution
+                                type: boolean
                               executionLabels:
                                 additionalProperties:
                                   type: string

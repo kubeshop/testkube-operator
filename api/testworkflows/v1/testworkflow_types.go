@@ -48,7 +48,14 @@ type TemplateRef struct {
 	Config map[string]intstr.IntOrString `json:"config,omitempty" expr:"template"`
 }
 
-// +kubebuilder:object:root=true
+// test workflow status
+type TestWorkflowStatusSummary struct {
+	LatestExecution *TestWorkflowExecutionSummary `json:"latestExecution,omitempty"`
+}
+
+//+kubebuilder:object:root=true
+//+kubebuilder:subresource:status
+//+kubebuilder:storageversion
 
 // TestWorkflow is the Schema for the workflows API
 type TestWorkflow struct {
@@ -59,7 +66,8 @@ type TestWorkflow struct {
 	Description string `json:"description,omitempty"`
 
 	// TestWorkflow specification
-	Spec TestWorkflowSpec `json:"spec" expr:"include"`
+	Spec   TestWorkflowSpec          `json:"spec" expr:"include"`
+	Status TestWorkflowStatusSummary `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true

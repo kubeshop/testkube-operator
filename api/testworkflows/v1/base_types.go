@@ -20,4 +20,7 @@ type TestWorkflowSpecBase struct {
 
 	// configuration for the scheduled pod
 	Pod *PodConfig `json:"pod,omitempty" expr:"include"`
+
+	// configuration for notifications
+	Notifications *NotificationsConfig `json:"notifications,omitempty" expr:"include"`
 }

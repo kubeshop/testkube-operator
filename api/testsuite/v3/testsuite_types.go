@@ -129,6 +129,8 @@ type TestSuiteExecutionRequest struct {
 	PvcTemplate string `json:"pvcTemplate,omitempty"`
 	// name of the template resource
 	PvcTemplateReference string `json:"pvcTemplateReference,omitempty"`
+	// whether webhooks should be called on execution
+	DisableWebhooks bool `json:"disableWebhooks,omitempty"`
 }
 
 type TestSuiteExecutionStatus string
@@ -232,4 +234,6 @@ type TestSuiteStepExecutionRequest struct {
 	// pvc template extensions reference
 	PvcTemplateReference string                   `json:"pvcTemplateReference,omitempty"`
 	RunningContext       *commonv1.RunningContext `json:"runningContext,omitempty"`
+	// whether webhooks should be called on execution
+	DisableWebhooks bool `json:"disableWebhooks,omitempty"`
 }
