@@ -44,6 +44,8 @@ type WebhookSpec struct {
 	Headers map[string]string `json:"headers,omitempty"`
 	// Disabled will disable the webhook
 	Disabled bool `json:"disabled,omitempty"`
+	// OnStateChange will trigger the webhook only when the result of the current execution differs from the previous result of the same test/test suite/workflow
+	OnStateChange bool `json:"onStateChange,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=start-test;end-test-success;end-test-failed;end-test-aborted;end-test-timeout;start-testsuite;end-testsuite-success;end-testsuite-failed;end-testsuite-aborted;end-testsuite-timeout;start-testworkflow;queue-testworkflow;end-testworkflow-success;end-testworkflow-failed;end-testworkflow-aborted
