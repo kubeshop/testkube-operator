@@ -63,6 +63,8 @@ type TestTriggerSpec struct {
 	// +kubebuilder:validation:Type:=string
 	// +kubebuilder:validation:Format:=duration
 	Delay *metav1.Duration `json:"delay,omitempty"`
+	// whether test trigger is disabled
+	Disabled bool `json:"disabled,omitempty"`
 }
 
 // TestTriggerResource defines resource for test triggers
