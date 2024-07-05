@@ -34,7 +34,8 @@ type TestWorkflowExecutionRequest struct {
 	Name   string                        `json:"name,omitempty" expr:"template"`
 	Config map[string]intstr.IntOrString `json:"config,omitempty" expr:"template"`
 	// test workflow execution name started the test workflow execution
-	TestWorkflowExecutionName string `json:"testWorkflowExecutionName,omitempty" expr:"template"`
+	TestWorkflowExecutionName string          `json:"testWorkflowExecutionName,omitempty" expr:"template"`
+	RunningContext            *RunningContext `json:"runningContext,omitempty"`
 }
 
 // TestWorkflowExecutionStatus defines the observed state of TestWorkflowExecution
@@ -74,8 +75,21 @@ type TestWorkflowExecutionDetails struct {
 	// +kubebuilder:validation:Schemaless
 	ResolvedWorkflow *TestWorkflow `json:"resolvedWorkflow,omitempty"`
 	// test workflow execution name started the test workflow execution
-	TestWorkflowExecutionName string `json:"testWorkflowExecutionName,omitempty"`
+	TestWorkflowExecutionName string          `json:"testWorkflowExecutionName,omitempty"`
+	RunningContext            *RunningContext `json:"runningContext,omitempty"`
 }
+
+// running context for test or test workflow execution
+type RunningContext struct {
+	// One of possible context types
+	Type_ RunningContextType `json:"type"`
+	// Context value depending from its type
+	Context string `json:"context,omitempty"`
+}
+
+// RunningContextType defines running context type
+// +kubebuilder:validation:Enum=user-cli;user-ui;testsuite;testtrigger;scheduler;testexecution;testsuiteexecution;testworkflow;testworkflowexecution
+type RunningContextType string
 
 // TestWorkflowSignature has signature of TestWorkflow
 type TestWorkflowSignature struct {
