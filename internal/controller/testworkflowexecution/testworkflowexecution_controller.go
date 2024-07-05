@@ -72,6 +72,13 @@ func (r *TestWorkflowExecutionReconciler) Reconcile(ctx context.Context, req ctr
 		return ctrl.Result{}, nil
 	}
 
+	if testWorkflowExecution.Spec.ExecutionRequest != nil {
+		testWorkflowExecution.Spec.ExecutionRequest.RunningContext = &testworkflowsv1.RunningContext{
+			Type_:   testworkflowsv1.RunningContextTypeTestWorkflowExecution,
+			Context: testWorkflowExecution.Name,
+		}
+	}
+
 	jsonData, err := json.Marshal(testWorkflowExecution.Spec.ExecutionRequest)
 	if err != nil {
 		return ctrl.Result{}, err

@@ -18,6 +18,7 @@ package testworkflows
 
 import (
 	"context"
+	"encoding/json"
 	"maps"
 
 	testworkflowsv1 "github.com/kubeshop/testkube-operator/api/testworkflows/v1"
@@ -139,6 +140,16 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				newCronJobConfig.Labels = make(map[string]string)
 			}
 
+			data, err := json.Marshal(testworkflowsv1.TestWorkflowExecutionRequest{
+				RunningContext: &testworkflowsv1.RunningContext{
+					Type_:   testworkflowsv1.RunningContextTypeScheduler,
+					Context: schedule,
+				},
+			})
+			if err != nil {
+				return ctrl.Result{}, err
+			}
+
 			newCronJobConfig.Labels[cronjob.TestWorkflowResourceURI] = testWorkflow.Name
 			options := cronjob.CronJobOptions{
 				Schedule:    schedule,
@@ -148,7 +159,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				ResourceURI: cronjob.TestWorkflowResourceURI,
 				Labels:      newCronJobConfig.Labels,
 				Annotations: newCronJobConfig.Annotations,
-				Data:        "{}",
+				Data:        string(data),
 			}
 
 			if err = r.CronJobClient.Update(ctx, oldCronJob, testWorkflow.Name,
@@ -166,6 +177,16 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				newCronJobConfig.Labels = make(map[string]string)
 			}
 
+			data, err := json.Marshal(testworkflowsv1.TestWorkflowExecutionRequest{
+				RunningContext: &testworkflowsv1.RunningContext{
+					Type_:   testworkflowsv1.RunningContextTypeScheduler,
+					Context: schedule,
+				},
+			})
+			if err != nil {
+				return ctrl.Result{}, err
+			}
+
 			newCronJobConfig.Labels[cronjob.TestWorkflowResourceURI] = testWorkflow.Name
 			options := cronjob.CronJobOptions{
 				Schedule:    schedule,
@@ -175,7 +196,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				ResourceURI: cronjob.TestWorkflowResourceURI,
 				Labels:      newCronJobConfig.Labels,
 				Annotations: newCronJobConfig.Annotations,
-				Data:        "{}",
+				Data:        string(data),
 			}
 
 			if err = r.CronJobClient.Create(ctx, testWorkflow.Name,
