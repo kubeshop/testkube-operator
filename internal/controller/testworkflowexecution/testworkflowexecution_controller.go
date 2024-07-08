@@ -73,9 +73,13 @@ func (r *TestWorkflowExecutionReconciler) Reconcile(ctx context.Context, req ctr
 	}
 
 	if testWorkflowExecution.Spec.ExecutionRequest != nil {
-		testWorkflowExecution.Spec.ExecutionRequest.RunningContext = &testworkflowsv1.RunningContext{
-			Type_:   testworkflowsv1.RunningContextTypeTestWorkflowExecution,
-			Context: testWorkflowExecution.Name,
+		interface_ := testworkflowsv1.API_TestWorkflowRunningContextInterface
+		actor := testworkflowsv1.TESTWORKFLOWEXECUTION_TestWorkflowRunningContextActor
+		testWorkflowExecution.Spec.ExecutionRequest.RunningContext = []testworkflowsv1.TestWorkflowRunningContext{
+			{
+				Interface_: &interface_,
+				Actor:      &actor,
+			},
 		}
 	}
 

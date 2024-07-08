@@ -140,10 +140,14 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				newCronJobConfig.Labels = make(map[string]string)
 			}
 
+			interface_ := testworkflowsv1.API_TestWorkflowRunningContextInterface
+			actor := testworkflowsv1.CRON_TestWorkflowRunningContextActor
 			data, err := json.Marshal(testworkflowsv1.TestWorkflowExecutionRequest{
-				RunningContext: &testworkflowsv1.RunningContext{
-					Type_:   testworkflowsv1.RunningContextTypeScheduler,
-					Context: schedule,
+				RunningContext: []testworkflowsv1.TestWorkflowRunningContext{
+					{
+						Interface_: &interface_,
+						Actor:      &actor,
+					},
 				},
 			})
 			if err != nil {
@@ -177,10 +181,14 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				newCronJobConfig.Labels = make(map[string]string)
 			}
 
+			interface_ := testworkflowsv1.API_TestWorkflowRunningContextInterface
+			actor := testworkflowsv1.CRON_TestWorkflowRunningContextActor
 			data, err := json.Marshal(testworkflowsv1.TestWorkflowExecutionRequest{
-				RunningContext: &testworkflowsv1.RunningContext{
-					Type_:   testworkflowsv1.RunningContextTypeScheduler,
-					Context: schedule,
+				RunningContext: []testworkflowsv1.TestWorkflowRunningContext{
+					{
+						Interface_: &interface_,
+						Actor:      &actor,
+					},
 				},
 			})
 			if err != nil {

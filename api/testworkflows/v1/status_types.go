@@ -15,10 +15,11 @@ type TestWorkflowExecutionSummary struct {
 	// when the execution has been scheduled to run
 	ScheduledAt metav1.Time `json:"scheduledAt,omitempty"`
 	// when the execution result's status has changed last time (queued, passed, failed)
-	StatusAt       metav1.Time                `json:"statusAt,omitempty"`
-	Result         *TestWorkflowResultSummary `json:"result,omitempty"`
-	Workflow       *TestWorkflowSummary       `json:"workflow"`
-	RunningContext *RunningContext            `json:"runningContext,omitempty"`
+	StatusAt metav1.Time                `json:"statusAt,omitempty"`
+	Result   *TestWorkflowResultSummary `json:"result,omitempty"`
+	Workflow *TestWorkflowSummary       `json:"workflow"`
+	// running context for the test workflow execution
+	RunningContext []TestWorkflowRunningContext `json:"runningContext,omitempty"`
 }
 
 // TestWorkflowResultSummary defines TestWorkflow result summary
