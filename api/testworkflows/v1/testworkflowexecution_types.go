@@ -89,6 +89,7 @@ type TestWorkflowRunningContext struct {
 }
 
 // TestWorkflowRunningContextActor : supported actors for test workflow running context
+// +kubebuilder:validation:Enum=cron;testrigger;user;testworkflow;testworkflowexecution
 type TestWorkflowRunningContextActor string
 
 // List of TestWorkflowRunningContextActor
@@ -112,15 +113,18 @@ type TestWorkflowRunningContextCaller struct {
 }
 
 // TestWorkflowRunningContextCallerResourceType : supported caller resource types for test workflow running context
+// +kubebuilder:validation:Enum=testworkflow;testworkflowexecution;testrigger
 type TestWorkflowRunningContextCallerResourceType string
 
 // List of TestWorkflowRunningContextCallerResourceType
 const (
-	TESTWORKFLOW_TestWorkflowRunningContextCallerResourceType TestWorkflowRunningContextCallerResourceType = "testworkflow"
-	TESTTRIGGER_TestWorkflowRunningContextCallerResourceType  TestWorkflowRunningContextCallerResourceType = "testtrigger"
+	TESTWORKFLOW_TestWorkflowRunningContextCallerResourceType          TestWorkflowRunningContextCallerResourceType = "testworkflow"
+	TESTWORKFLOWEXECUTION_TestWorkflowRunningContextCallerResourceType TestWorkflowRunningContextCallerResourceType = "testworkflowexecution"
+	TESTTRIGGER_TestWorkflowRunningContextCallerResourceType           TestWorkflowRunningContextCallerResourceType = "testtrigger"
 )
 
 // TestWorkflowRunningContextInterface : supported interfaces for test workflow running context
+// +kubebuilder:validation:Enum=cli;ui;api;internal
 type TestWorkflowRunningContextInterface string
 
 // List of TestWorkflowRunningContextInterface
