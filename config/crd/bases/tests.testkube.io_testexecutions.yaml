@@ -256,6 +256,7 @@ spec:
                         - scheduler
                         - testexecution
                         - testsuiteexecution
+                        - testworkflow
                         type: string
                     required:
                     - type
@@ -719,6 +720,7 @@ spec:
                         - scheduler
                         - testexecution
                         - testsuiteexecution
+                        - testworklow
                         type: string
                     required:
                     - type

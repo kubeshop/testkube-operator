@@ -72,6 +72,24 @@ func (r *TestWorkflowExecutionReconciler) Reconcile(ctx context.Context, req ctr
 		return ctrl.Result{}, nil
 	}
 
+	if testWorkflowExecution.Spec.ExecutionRequest == nil {
+		testWorkflowExecution.Spec.ExecutionRequest = &testworkflowsv1.TestWorkflowExecutionRequest{}
+	}
+
+	interface_ := testworkflowsv1.API_TestWorkflowRunningContextInterface
+	actor := testworkflowsv1.TESTWORKFLOWEXECUTION_TestWorkflowRunningContextActor
+	callerResourceType := testworkflowsv1.TESTWORKFLOWEXECUTION_TestWorkflowRunningContextCallerResourceType
+	testWorkflowExecution.Spec.ExecutionRequest.RunningContext = []testworkflowsv1.TestWorkflowRunningContext{
+		{
+			Interface_: &interface_,
+			Actor:      &actor,
+			Caller: &testworkflowsv1.TestWorkflowRunningContextCaller{
+				CallerResourceType: &callerResourceType,
+				CallerResourceName: testWorkflowExecution.Name,
+			},
+		},
+	}
+
 	jsonData, err := json.Marshal(testWorkflowExecution.Spec.ExecutionRequest)
 	if err != nil {
 		return ctrl.Result{}, err

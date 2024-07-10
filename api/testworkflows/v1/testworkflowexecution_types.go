@@ -35,6 +35,8 @@ type TestWorkflowExecutionRequest struct {
 	Config map[string]intstr.IntOrString `json:"config,omitempty" expr:"template"`
 	// test workflow execution name started the test workflow execution
 	TestWorkflowExecutionName string `json:"testWorkflowExecutionName,omitempty" expr:"template"`
+	// running context for the test workflow execution
+	RunningContext []TestWorkflowRunningContext `json:"runningContext,omitempty"`
 }
 
 // TestWorkflowExecutionStatus defines the observed state of TestWorkflowExecution
@@ -75,7 +77,63 @@ type TestWorkflowExecutionDetails struct {
 	ResolvedWorkflow *TestWorkflow `json:"resolvedWorkflow,omitempty"`
 	// test workflow execution name started the test workflow execution
 	TestWorkflowExecutionName string `json:"testWorkflowExecutionName,omitempty"`
+	// running context for the test workflow execution
+	RunningContext []TestWorkflowRunningContext `json:"runningContext,omitempty"`
 }
+
+// running context for test workflow execution
+type TestWorkflowRunningContext struct {
+	Interface_ *TestWorkflowRunningContextInterface `json:"interface"`
+	Actor      *TestWorkflowRunningContextActor     `json:"actor"`
+	Caller     *TestWorkflowRunningContextCaller    `json:"caller,omitempty"`
+}
+
+// TestWorkflowRunningContextActor : supported actors for test workflow running context
+// +kubebuilder:validation:Enum=cron;testrigger;user;testworkflow;testworkflowexecution
+type TestWorkflowRunningContextActor string
+
+// List of TestWorkflowRunningContextActor
+const (
+	CRON_TestWorkflowRunningContextActor                  TestWorkflowRunningContextActor = "cron"
+	TESTRIGGER_TestWorkflowRunningContextActor            TestWorkflowRunningContextActor = "testrigger"
+	USER_TestWorkflowRunningContextActor                  TestWorkflowRunningContextActor = "user"
+	TESTWORKFLOW_TestWorkflowRunningContextActor          TestWorkflowRunningContextActor = "testworkflow"
+	TESTWORKFLOWEXECUTION_TestWorkflowRunningContextActor TestWorkflowRunningContextActor = "testworkflowexecution"
+)
+
+// running context caller for test workflow execution
+type TestWorkflowRunningContextCaller struct {
+	CallerResourceType *TestWorkflowRunningContextCallerResourceType `json:"callerResourceType"`
+	// caller resource name
+	CallerResourceName string `json:"callerResourceName"`
+	// caller resource execution id
+	CallerResourceExecutionID string `json:"callerResourceExecutionID,omitempty"`
+	// all test workflow execution ids starting from the root
+	FullExecutionPath string `json:"fullExecutionPath,omitempty"`
+}
+
+// TestWorkflowRunningContextCallerResourceType : supported caller resource types for test workflow running context
+// +kubebuilder:validation:Enum=testworkflow;testworkflowexecution;testrigger
+type TestWorkflowRunningContextCallerResourceType string
+
+// List of TestWorkflowRunningContextCallerResourceType
+const (
+	TESTWORKFLOW_TestWorkflowRunningContextCallerResourceType          TestWorkflowRunningContextCallerResourceType = "testworkflow"
+	TESTWORKFLOWEXECUTION_TestWorkflowRunningContextCallerResourceType TestWorkflowRunningContextCallerResourceType = "testworkflowexecution"
+	TESTTRIGGER_TestWorkflowRunningContextCallerResourceType           TestWorkflowRunningContextCallerResourceType = "testtrigger"
+)
+
+// TestWorkflowRunningContextInterface : supported interfaces for test workflow running context
+// +kubebuilder:validation:Enum=cli;ui;api;internal
+type TestWorkflowRunningContextInterface string
+
+// List of TestWorkflowRunningContextInterface
+const (
+	CLI_TestWorkflowRunningContextInterface      TestWorkflowRunningContextInterface = "cli"
+	UI_TestWorkflowRunningContextInterface       TestWorkflowRunningContextInterface = "ui"
+	API_TestWorkflowRunningContextInterface      TestWorkflowRunningContextInterface = "api"
+	INTERNAL_TestWorkflowRunningContextInterface TestWorkflowRunningContextInterface = "internal"
+)
 
 // TestWorkflowSignature has signature of TestWorkflow
 type TestWorkflowSignature struct {

@@ -18,6 +18,7 @@ package testworkflows
 
 import (
 	"context"
+	"encoding/json"
 	"maps"
 
 	testworkflowsv1 "github.com/kubeshop/testkube-operator/api/testworkflows/v1"
@@ -126,6 +127,20 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		}
 	}
 
+	interface_ := testworkflowsv1.API_TestWorkflowRunningContextInterface
+	actor := testworkflowsv1.CRON_TestWorkflowRunningContextActor
+	data, err := json.Marshal(testworkflowsv1.TestWorkflowExecutionRequest{
+		RunningContext: []testworkflowsv1.TestWorkflowRunningContext{
+			{
+				Interface_: &interface_,
+				Actor:      &actor,
+			},
+		},
+	})
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+
 	for schedule, oldCronJob := range oldCronJobs {
 		if newCronJobConfig, ok := newCronJobConfigs[schedule]; !ok {
 			// Delete removed Cron Jobs
@@ -148,7 +163,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				ResourceURI: cronjob.TestWorkflowResourceURI,
 				Labels:      newCronJobConfig.Labels,
 				Annotations: newCronJobConfig.Annotations,
-				Data:        "{}",
+				Data:        string(data),
 			}
 
 			if err = r.CronJobClient.Update(ctx, oldCronJob, testWorkflow.Name,
@@ -175,7 +190,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				ResourceURI: cronjob.TestWorkflowResourceURI,
 				Labels:      newCronJobConfig.Labels,
 				Annotations: newCronJobConfig.Annotations,
-				Data:        "{}",
+				Data:        string(data),
 			}
 
 			if err = r.CronJobClient.Create(ctx, testWorkflow.Name,
