@@ -72,6 +72,10 @@ func (r *TestExecutionReconciler) Reconcile(ctx context.Context, req ctrl.Reques
 		return ctrl.Result{}, nil
 	}
 
+	if testExecution.Spec.ExecutionRequest == nil {
+		testExecution.Spec.ExecutionRequest = &testexecutionv1.ExecutionRequest{}
+	}
+
 	if testExecution.Spec.ExecutionRequest != nil {
 		testExecution.Spec.ExecutionRequest.RunningContext = &testexecutionv1.RunningContext{
 			Type_:   testexecutionv1.RunningContextTypeTestExecution,
