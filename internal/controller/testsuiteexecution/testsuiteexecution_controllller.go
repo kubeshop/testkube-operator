@@ -76,11 +76,9 @@ func (r *TestSuiteExecutionReconciler) Reconcile(ctx context.Context, req ctrl.R
 		testSuiteExecution.Spec.ExecutionRequest = &testsuiteexecutionv1.TestSuiteExecutionRequest{}
 	}
 
-	if testSuiteExecution.Spec.ExecutionRequest != nil {
-		testSuiteExecution.Spec.ExecutionRequest.RunningContext = &testsuiteexecutionv1.RunningContext{
-			Type_:   testsuiteexecutionv1.RunningContextTypeTestSuiteExecution,
-			Context: testSuiteExecution.Name,
-		}
+	testSuiteExecution.Spec.ExecutionRequest.RunningContext = &testsuiteexecutionv1.RunningContext{
+		Type_:   testsuiteexecutionv1.RunningContextTypeTestSuiteExecution,
+		Context: testSuiteExecution.Name,
 	}
 
 	jsonData, err := json.Marshal(testSuiteExecution.Spec.ExecutionRequest)
