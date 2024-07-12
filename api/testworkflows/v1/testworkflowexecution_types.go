@@ -35,6 +35,8 @@ type TestWorkflowExecutionRequest struct {
 	Config map[string]intstr.IntOrString `json:"config,omitempty" expr:"template"`
 	// test workflow execution name started the test workflow execution
 	TestWorkflowExecutionName string `json:"testWorkflowExecutionName,omitempty" expr:"template"`
+	// whether webhooks should be disabled for this execution
+	DisableWebhooks bool `json:"disableWebhooks,omitempty"`
 }
 
 // TestWorkflowExecutionStatus defines the observed state of TestWorkflowExecution
