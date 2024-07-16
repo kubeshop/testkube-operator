@@ -130,6 +130,7 @@ type TestSuiteExecutionRequest struct {
 	// name of the template resource
 	PvcTemplateReference string `json:"pvcTemplateReference,omitempty"`
 	// whether webhooks should be called on execution
+	// Deprecated: field is not used
 	DisableWebhooks bool `json:"disableWebhooks,omitempty"`
 }
 
@@ -235,5 +236,6 @@ type TestSuiteStepExecutionRequest struct {
 	PvcTemplateReference string                   `json:"pvcTemplateReference,omitempty"`
 	RunningContext       *commonv1.RunningContext `json:"runningContext,omitempty"`
 	// whether webhooks should be called on execution
+	// Deprecated: field is not used
 	DisableWebhooks bool `json:"disableWebhooks,omitempty"`
 }

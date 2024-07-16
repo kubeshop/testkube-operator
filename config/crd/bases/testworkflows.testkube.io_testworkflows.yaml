@@ -3610,7 +3610,9 @@ spec:
                       type: string
                   type: object
                 notifications:
-                  description: configuration for notifications
+                  description: |-
+                    configuration for notifications
+                    Deprecated: field is not used
                   properties:
                     disableWebhooks:
                       type: boolean

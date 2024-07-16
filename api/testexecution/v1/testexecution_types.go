@@ -145,7 +145,7 @@ type ExecutionRequest struct {
 	// namespace for test execution (Pro edition only)
 	ExecutionNamespace string `json:"executionNamespace,omitempty"`
 	// whether webhooks should be called on execution
-	DisableWebhooks *bool `json:"disableWebhooks,omitempty"`
+	DisableWebhooks bool `json:"disableWebhooks,omitempty"`
 }
 
 // ArgsModeType defines args mode type
@@ -276,6 +276,8 @@ type Execution struct {
 	SlavePodRequest *PodRequest `json:"slavePodRequest,omitempty"`
 	// namespace for test execution (Pro edition only)
 	ExecutionNamespace string `json:"executionNamespace,omitempty"`
+	// whether webhooks should be called on execution
+	DisableWebhooks bool `json:"disableWebhooks,omitempty"`
 }
 
 // TestContent defines test content

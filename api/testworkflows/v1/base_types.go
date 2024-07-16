@@ -22,5 +22,6 @@ type TestWorkflowSpecBase struct {
 	Pod *PodConfig `json:"pod,omitempty" expr:"include"`
 
 	// configuration for notifications
+	// Deprecated: field is not used
 	Notifications *NotificationsConfig `json:"notifications,omitempty" expr:"include"`
 }
