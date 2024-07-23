@@ -98,6 +98,8 @@ type TestSuiteExecutionRequest struct {
 	ConcurrencyLevel int32 `json:"concurrencyLevel,omitempty"`
 	// test suite execution name started the test suite execution
 	TestSuiteExecutionName string `json:"testSuiteExecutionName,omitempty"`
+	// whether webhooks should be disabled for this execution
+	DisableWebhooks bool `json:"disableWebhooks,omitempty"`
 }
 
 type ObjectRef struct {
@@ -156,6 +158,8 @@ type SuiteExecution struct {
 	RunningContext *RunningContext   `json:"runningContext,omitempty"`
 	// test suite execution name started the test suite execution
 	TestSuiteExecutionName string `json:"testSuiteExecutionName,omitempty"`
+	// whether webhooks should be disabled for this execution
+	DisableWebhooks bool `json:"disableWebhooks,omitempty"`
 }
 
 // execution result returned from executor
