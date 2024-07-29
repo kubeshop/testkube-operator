@@ -166,6 +166,8 @@ func main() {
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
 		CronJobClient: cronJobClient,
+		ServiceName:   httpConfig.Fullname,
+		ServicePort:   httpConfig.Port,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Test")
 		os.Exit(1)
@@ -174,6 +176,8 @@ func main() {
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
 		CronJobClient: cronJobClient,
+		ServiceName:   httpConfig.Fullname,
+		ServicePort:   httpConfig.Port,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestSuite")
 		os.Exit(1)
@@ -229,6 +233,8 @@ func main() {
 		Client:        mgr.GetClient(),
 		Scheme:        mgr.GetScheme(),
 		CronJobClient: cronJobClient,
+		ServiceName:   httpConfig.Fullname,
+		ServicePort:   httpConfig.Port,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestWorkflow")
 		os.Exit(1)
