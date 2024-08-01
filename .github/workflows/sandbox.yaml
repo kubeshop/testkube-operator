@@ -1,0 +1,143 @@
+name: Sanbox image to build on push to sandbox/<sandbox identifier> branch
+
+on:
+  push:
+    branches:
+      - sandbox/**
+      - ci/add-sandbox
+  pull_request:
+    types:
+      - opened
+
+permissions:
+  contents: write
+  id-token: write
+  pull-requests: write
+  issues: write
+
+
+env:
+  ALPINE_IMAGE: alpine:3.18.3
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Docker Buildx
+        if: startsWith(github.ref, 'refs/heads/sandbox/')
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Set up QEMU
+        if: startsWith(github.ref, 'refs/heads/sandbox/')
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Go
+        if: startsWith(github.ref, 'refs/heads/sandbox/')
+        uses: actions/setup-go@v4
+
+      - name: Login to DockerHub
+        if: startsWith(github.ref, 'refs/heads/sandbox/')
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set version
+        if: startsWith(github.ref, 'refs/heads/sandbox/')
+        run: |
+          #get short commit sha that triggered the flow
+          echo git_hash="$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_ENV
+
+          # Extract everything before the first slash
+          branch_identifier=$(echo "$GITHUB_REF_NAME" | cut -d'/' -f2-)
+
+          # Replace slashes with dashes using sed
+          echo branch_identifier=$(echo "$branch_identifier" | sed 's/\//-/g') >> $GITHUB_ENV
+
+      - name: Set image tag
+        if: startsWith(github.ref, 'refs/heads/sandbox/')
+        run: |
+          # set image tag that includes service name, sandbox identifier and commit sha
+          image_tag="${{ matrix.service }}-${{ env.branch_identifier }}-${{ env.git_hash }}"
+          echo image_tag_sha=$image_tag  >> $GITHUB_ENV
+
+      - name: Build images with GoReleaser
+        if: startsWith(github.ref, 'refs/heads/sandbox/')
+        uses: goreleaser/goreleaser-action@v4
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release -f goreleaser/.goreleaser-snapshot.yaml --snapshot
+        env:
+          GITHUB_TOKEN: ${{ secrets.CI_BOT_TOKEN }}
+          DOCKER_BUILDX_BUILDER: "${{ steps.buildx.outputs.name }}"
+          DOCKER_BUILDX_CACHE_FROM: "type=gha"
+          DOCKER_BUILDX_CACHE_TO: "type=gha,mode=max"
+          ALPINE_IMAGE: ${{ env.ALPINE_IMAGE }}
+          SANDBOX_IMAGE: true
+
+      - name: Push Docker images
+        if: startsWith(github.ref, 'refs/heads/sandbox/')
+        run: |
+          docker tag kubeshop/testkube-operator:${{ env.image_tag_sha }} kubeshop/testkube-sandbox:${{ env.image_tag_sha }}
+          docker push kubeshop/testkube-sandbox:${{ env.image_tag_sha }}
+
+#      - name: Repository dispatch
+#        if: startsWith(github.ref, 'refs/heads/sandbox/')
+#        uses: peter-evans/repository-dispatch@v2
+#        with:
+#          token: ${{ secrets.CI_BOT_TOKEN }}
+#          repository: kubeshop/testkube-deployment
+#          event-type: sandbox_image_update
+#          client-payload: '{"ref_name": "${{ github.ref_name }}", "sandbox_repo": "kubeshop/testkube-sandbox"}'
+
+      - name: Output summary
+        if: startsWith(github.ref, 'refs/heads/sandbox/')
+        run: |
+          echo -e "### Sandbox Environment" >> $GITHUB_STEP_SUMMARY
+          echo -e '```' >> $GITHUB_STEP_SUMMARY
+          ## URLs
+
+          - Dashboard: https://dashboard.${{ github.ref_name }}.testkube.dev
+          - API: https://api.${{ github.ref_name }}.testkube.dev
+          - Agent: https://agent.${{ github.ref_name }}.testkube.dev
+          - Storage: https://storage.${{ github.ref_name }}.testkube.dev
+          - Websockets: https://websockets.${{ github.ref_name }}.testkube.dev
+          echo -e '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: Get a branch name if PR is created
+        if: startsWith(github.event.pull_request.head.ref, 'sandbox/')
+        run: |
+          # get a branch name
+          branch_ref="${{ github.event.pull_request.head.ref }}"
+
+          #remove slash
+          branch_ref="${branch_ref#*/}"
+
+          #create env var
+          echo "branch_ref=$branch_ref" >> $GITHUB_ENV
+
+      - name: Render template
+        if: startsWith(github.event.pull_request.head.ref, 'sandbox/')
+        id: template
+        uses: chuhlomin/render-template@v1.4
+        with:
+          template: .github/comment-template.md
+          vars: |
+            branch_ref: ${{ env.branch_ref }}
+
+      - name: Create comment on a PR with the endpoints
+        if: startsWith(github.event.pull_request.head.ref, 'sandbox/')
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.CI_BOT_TOKEN }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{ steps.template.outputs.result }}
+
+
