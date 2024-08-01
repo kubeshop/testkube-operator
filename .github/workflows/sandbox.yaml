@@ -102,13 +102,12 @@ jobs:
         run: |
           echo -e "### Sandbox Environment" >> $GITHUB_STEP_SUMMARY
           echo -e '```' >> $GITHUB_STEP_SUMMARY
-          ## URLs
-
-          - Dashboard: https://dashboard.${{ github.ref_name }}.testkube.dev
-          - API: https://api.${{ github.ref_name }}.testkube.dev
-          - Agent: https://agent.${{ github.ref_name }}.testkube.dev
-          - Storage: https://storage.${{ github.ref_name }}.testkube.dev
-          - Websockets: https://websockets.${{ github.ref_name }}.testkube.dev
+          echo -e "## URLs" >> $GITHUB_STEP_SUMMARY
+          echo "- Dashboard: https://dashboard.${{ github.ref_name }}.testkube.dev" >> $GITHUB_STEP_SUMMARY
+          echo "- API: https://api.${{ github.ref_name }}.testkube.dev" >> $GITHUB_STEP_SUMMARY
+          echo "- Agent: https://agent.${{ github.ref_name }}.testkube.dev" >> $GITHUB_STEP_SUMMARY
+          echo "- Storage: https://storage.${{ github.ref_name }}.testkube.dev" >> $GITHUB_STEP_SUMMARY
+          echo "- Websockets: https://websockets.${{ github.ref_name }}.testkube.dev" >> $GITHUB_STEP_SUMMARY
           echo -e '```' >> $GITHUB_STEP_SUMMARY
 
       - name: Get a branch name if PR is created
