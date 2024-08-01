@@ -64,7 +64,7 @@ jobs:
         if: startsWith(github.ref, 'refs/heads/ci/')
         run: |
           # set image tag that includes service name, sandbox identifier and commit sha
-          image_tag="${{ matrix.service }}-${{ env.branch_identifier }}-${{ env.git_hash }}"
+          image_tag="${{ env.branch_identifier }}-${{ env.git_hash }}"
           echo image_tag_sha=$image_tag  >> $GITHUB_ENV
 
       - name: Build images with GoReleaser
