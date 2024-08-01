@@ -29,27 +29,27 @@ jobs:
           fetch-depth: 0
 
       - name: Set up Docker Buildx
-        if: startsWith(github.ref, 'refs/heads/sandbox/')
+        if: startsWith(github.ref, 'refs/heads/ci/')
         id: buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Set up QEMU
-        if: startsWith(github.ref, 'refs/heads/sandbox/')
+        if: startsWith(github.ref, 'refs/heads/ci/')
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Go
-        if: startsWith(github.ref, 'refs/heads/sandbox/')
+        if: startsWith(github.ref, 'refs/heads/ci/')
         uses: actions/setup-go@v4
 
       - name: Login to DockerHub
-        if: startsWith(github.ref, 'refs/heads/sandbox/')
+        if: startsWith(github.ref, 'refs/heads/ci/')
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Set version
-        if: startsWith(github.ref, 'refs/heads/sandbox/')
+        if: startsWith(github.ref, 'refs/heads/ci/')
         run: |
           #get short commit sha that triggered the flow
           echo git_hash="$(git rev-parse --short "$GITHUB_SHA")" >> $GITHUB_ENV
@@ -61,14 +61,14 @@ jobs:
           echo branch_identifier=$(echo "$branch_identifier" | sed 's/\//-/g') >> $GITHUB_ENV
 
       - name: Set image tag
-        if: startsWith(github.ref, 'refs/heads/sandbox/')
+        if: startsWith(github.ref, 'refs/heads/ci/')
         run: |
           # set image tag that includes service name, sandbox identifier and commit sha
           image_tag="${{ matrix.service }}-${{ env.branch_identifier }}-${{ env.git_hash }}"
           echo image_tag_sha=$image_tag  >> $GITHUB_ENV
 
       - name: Build images with GoReleaser
-        if: startsWith(github.ref, 'refs/heads/sandbox/')
+        if: startsWith(github.ref, 'refs/heads/ci/')
         uses: goreleaser/goreleaser-action@v4
         with:
           distribution: goreleaser
@@ -83,7 +83,7 @@ jobs:
           SANDBOX_IMAGE: true
 
       - name: Push Docker images
-        if: startsWith(github.ref, 'refs/heads/sandbox/')
+        if: startsWith(github.ref, 'refs/heads/ci/')
         run: |
           docker tag kubeshop/testkube-operator:${{ env.image_tag_sha }} kubeshop/testkube-sandbox:${{ env.image_tag_sha }}
           docker push kubeshop/testkube-sandbox:${{ env.image_tag_sha }}
@@ -98,7 +98,7 @@ jobs:
 #          client-payload: '{"ref_name": "${{ github.ref_name }}", "sandbox_repo": "kubeshop/testkube-sandbox"}'
 
       - name: Output summary
-        if: startsWith(github.ref, 'refs/heads/sandbox/')
+        if: startsWith(github.ref, 'refs/heads/ci/')
         run: |
           echo -e "### Sandbox Environment" >> $GITHUB_STEP_SUMMARY
           echo -e '```' >> $GITHUB_STEP_SUMMARY
