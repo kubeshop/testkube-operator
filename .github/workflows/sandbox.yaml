@@ -85,7 +85,7 @@ jobs:
       - name: Push Docker images
         if: startsWith(github.ref, 'refs/heads/ci/')
         run: |
-          docker tag kubeshop/testkube-operator:${{ env.image_tag_sha }} kubeshop/testkube-sandbox:${{ env.image_tag_sha }}
+          docker tag kubeshop/testkube-operator:${{ env.git_hash }} kubeshop/testkube-sandbox:${{ env.image_tag_sha }}
           docker push kubeshop/testkube-sandbox:${{ env.image_tag_sha }}
 
 #      - name: Repository dispatch
