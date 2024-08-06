@@ -51,6 +51,8 @@ type ParameterSchema struct {
 	// default value - if not provided, the parameter is required
 	// +kubebuilder:validation:XIntOrString
 	Default *intstr.IntOrString `json:"default,omitempty" expr:"template"`
+	// whether this value should be stored in the secret
+	Sensitive bool `json:"sensitive,omitempty"`
 
 	ParameterStringSchema `json:",inline" expr:"include"`
 	ParameterNumberSchema `json:",inline" expr:"include"`
