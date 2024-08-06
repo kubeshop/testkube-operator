@@ -38,10 +38,11 @@ import (
 // TestSuiteReconciler reconciles a TestSuite object
 type TestSuiteReconciler struct {
 	client.Client
-	Scheme        *runtime.Scheme
-	CronJobClient *cronjob.Client
-	ServiceName   string
-	ServicePort   int
+	Scheme          *runtime.Scheme
+	CronJobClient   *cronjob.Client
+	ServiceName     string
+	ServicePort     int
+	PurgeExecutions bool
 }
 
 //+kubebuilder:rbac:groups=tests.testkube.io,resources=testsuites,verbs=get;list;watch;create;update;patch;delete
@@ -168,6 +169,10 @@ func (r *TestSuiteReconciler) SetupWithManager(mgr ctrl.Manager) error {
 }
 
 func (r *TestSuiteReconciler) deleteTestSuite(testSuiteName, namespace string) (out string, err error) {
+	if !r.PurgeExecutions {
+		return out, nil
+	}
+
 	request, err := http.NewRequest(http.MethodDelete,
 		fmt.Sprintf("http://%s.%s.svc.cluster.local:%d/v1/test-suites/%s?skipDeleteCRD=true",
 			r.ServiceName, namespace, r.ServicePort, testSuiteName), nil)
