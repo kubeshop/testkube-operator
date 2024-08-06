@@ -19,6 +19,8 @@ package tests
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"net/http"
 
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -37,8 +39,11 @@ import (
 // TestReconciler reconciles a Test object
 type TestReconciler struct {
 	client.Client
-	Scheme        *runtime.Scheme
-	CronJobClient *cronjob.Client
+	Scheme          *runtime.Scheme
+	CronJobClient   *cronjob.Client
+	ServiceName     string
+	ServicePort     int
+	PurgeExecutions bool
 }
 
 //+kubebuilder:rbac:groups=tests.testkube.io,resources=tests,verbs=get;list;watch;create;update;patch;delete
@@ -63,6 +68,10 @@ func (r *TestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		if errors.IsNotFound(err) {
 			if err = r.CronJobClient.Delete(ctx,
 				cronjob.GetMetadataName(req.NamespacedName.Name, cronjob.TestResourceURI), req.NamespacedName.Namespace); err != nil {
+				return ctrl.Result{}, err
+			}
+
+			if _, err = r.deleteTest(req.NamespacedName.Name, req.NamespacedName.Namespace); err != nil {
 				return ctrl.Result{}, err
 			}
 
@@ -157,4 +166,30 @@ func (r *TestReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		For(&testsv3.Test{}).
 		WithEventFilter(pred).
 		Complete(r)
+}
+
+func (r *TestReconciler) deleteTest(testName, namespace string) (out string, err error) {
+	if !r.PurgeExecutions {
+		return out, nil
+	}
+
+	request, err := http.NewRequest(http.MethodDelete,
+		fmt.Sprintf("http://%s.%s.svc.cluster.local:%d/v1/tests/%s?skipDeleteCRD=true",
+			r.ServiceName, namespace, r.ServicePort, testName), nil)
+	if err != nil {
+		return out, err
+	}
+
+	request.Header.Set("Content-Type", "application/json")
+	resp, err := http.DefaultClient.Do(request)
+	if err != nil {
+		return out, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode > 300 {
+		return out, fmt.Errorf("could not DELETE, statusCode: %d", resp.StatusCode)
+	}
+
+	return fmt.Sprintf("status: %d", resp.StatusCode), err
 }
