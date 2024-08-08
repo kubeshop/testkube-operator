@@ -31,8 +31,8 @@ type TestWorkflowSpecBase struct {
 
 type TestWorkflowSystem struct {
 	// assume all the steps are pure by default
-	PureByDefault bool `json:"pureByDefault,omitempty"`
+	PureByDefault *bool `json:"pureByDefault,omitempty"`
 
 	// disable the behavior of merging multiple operations in a single container
-	IsolatedContainers bool `json:"isolatedContainers,omitempty"`
+	IsolatedContainers *bool `json:"isolatedContainers,omitempty"`
 }
