@@ -37,6 +37,8 @@ type TestWorkflowExecutionRequest struct {
 	TestWorkflowExecutionName string `json:"testWorkflowExecutionName,omitempty" expr:"template"`
 	// whether webhooks should be disabled for this execution
 	DisableWebhooks bool `json:"disableWebhooks,omitempty"`
+	// test workflow execution tags
+	Tags map[string]string `json:"tags,omitempty" expr:"template"`
 }
 
 // TestWorkflowExecutionStatus defines the observed state of TestWorkflowExecution
@@ -79,6 +81,8 @@ type TestWorkflowExecutionDetails struct {
 	TestWorkflowExecutionName string `json:"testWorkflowExecutionName,omitempty"`
 	// whether webhooks should be disabled for this execution
 	DisableWebhooks bool `json:"disableWebhooks,omitempty"`
+	// test workflow execution tags
+	Tags map[string]string `json:"tags,omitempty"`
 }
 
 // TestWorkflowSignature has signature of TestWorkflow

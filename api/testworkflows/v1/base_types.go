@@ -27,6 +27,9 @@ type TestWorkflowSpecBase struct {
 	// configuration for notifications
 	// Deprecated: field is not used
 	Notifications *NotificationsConfig `json:"notifications,omitempty" expr:"include"`
+
+	// values to be used for test workflow execution
+	Execution *TestWorkflowTagSchema `json:"execution,omitempty" expr:"include"`
 }
 
 type TestWorkflowSystem struct {
