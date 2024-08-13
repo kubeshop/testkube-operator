@@ -81,6 +81,7 @@ type config struct {
 	TemplateCronjob string `split_words:"true"`
 	Registry        string
 	UseArgocdSync   bool `split_words:"true"`
+	PurgeExecutions bool `split_words:"true"`
 }
 
 func init() {
@@ -163,21 +164,23 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&testscontrollers.TestReconciler{
-		Client:        mgr.GetClient(),
-		Scheme:        mgr.GetScheme(),
-		CronJobClient: cronJobClient,
-		ServiceName:   httpConfig.Fullname,
-		ServicePort:   httpConfig.Port,
+		Client:          mgr.GetClient(),
+		Scheme:          mgr.GetScheme(),
+		CronJobClient:   cronJobClient,
+		ServiceName:     httpConfig.Fullname,
+		ServicePort:     httpConfig.Port,
+		PurgeExecutions: httpConfig.PurgeExecutions,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Test")
 		os.Exit(1)
 	}
 	if err = (&testsuitecontrollers.TestSuiteReconciler{
-		Client:        mgr.GetClient(),
-		Scheme:        mgr.GetScheme(),
-		CronJobClient: cronJobClient,
-		ServiceName:   httpConfig.Fullname,
-		ServicePort:   httpConfig.Port,
+		Client:          mgr.GetClient(),
+		Scheme:          mgr.GetScheme(),
+		CronJobClient:   cronJobClient,
+		ServiceName:     httpConfig.Fullname,
+		ServicePort:     httpConfig.Port,
+		PurgeExecutions: httpConfig.PurgeExecutions,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestSuite")
 		os.Exit(1)
@@ -230,11 +233,12 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&testworkflowscontrollers.TestWorkflowReconciler{
-		Client:        mgr.GetClient(),
-		Scheme:        mgr.GetScheme(),
-		CronJobClient: cronJobClient,
-		ServiceName:   httpConfig.Fullname,
-		ServicePort:   httpConfig.Port,
+		Client:          mgr.GetClient(),
+		Scheme:          mgr.GetScheme(),
+		CronJobClient:   cronJobClient,
+		ServiceName:     httpConfig.Fullname,
+		ServicePort:     httpConfig.Port,
+		PurgeExecutions: httpConfig.PurgeExecutions,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestWorkflow")
 		os.Exit(1)

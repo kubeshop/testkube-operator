@@ -37,10 +37,11 @@ import (
 // TestWorkflowReconciler reconciles a TestWorkflow object
 type TestWorkflowReconciler struct {
 	client.Client
-	Scheme        *runtime.Scheme
-	CronJobClient *cronjob.Client
-	ServiceName   string
-	ServicePort   int
+	Scheme          *runtime.Scheme
+	CronJobClient   *cronjob.Client
+	ServiceName     string
+	ServicePort     int
+	PurgeExecutions bool
 }
 
 //+kubebuilder:rbac:groups=testworkflows.testkube.io,resources=testworkflows,verbs=get;list;watch;create;update;patch;delete
@@ -225,6 +226,10 @@ func (r *TestWorkflowReconciler) SetupWithManager(mgr ctrl.Manager) error {
 }
 
 func (r *TestWorkflowReconciler) deleteTestWorkflow(testWorkflowName, namespace string) (out string, err error) {
+	if !r.PurgeExecutions {
+		return out, nil
+	}
+
 	request, err := http.NewRequest(http.MethodDelete,
 		fmt.Sprintf("http://%s.%s.svc.cluster.local:%d/v1/test-workflows/%s?skipDeleteCRD=true",
 			r.ServiceName, namespace, r.ServicePort, testWorkflowName), nil)
