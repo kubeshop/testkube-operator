@@ -18,6 +18,8 @@ type TestWorkflowExecutionSummary struct {
 	StatusAt metav1.Time                `json:"statusAt,omitempty"`
 	Result   *TestWorkflowResultSummary `json:"result,omitempty"`
 	Workflow *TestWorkflowSummary       `json:"workflow"`
+	// test workflow execution tags
+	Tags map[string]string `json:"tags,omitempty"`
 }
 
 // TestWorkflowResultSummary defines TestWorkflow result summary
