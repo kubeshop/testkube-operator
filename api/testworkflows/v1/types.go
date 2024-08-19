@@ -223,3 +223,8 @@ type CronJobConfig struct {
 	// annotations to attach to the cron job
 	Annotations map[string]string `json:"annotations,omitempty" expr:"template,template"`
 }
+
+type TestWorkflowTagSchema struct {
+	// test workflow execution tags
+	Tags map[string]string `json:"tags,omitempty" expr:"template"`
+}
