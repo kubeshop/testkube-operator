@@ -19,7 +19,9 @@ package testworkflows
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"maps"
+	"net/http"
 
 	testworkflowsv1 "github.com/kubeshop/testkube-operator/api/testworkflows/v1"
 	"github.com/kubeshop/testkube-operator/pkg/cronjob"
@@ -36,8 +38,11 @@ import (
 // TestWorkflowReconciler reconciles a TestWorkflow object
 type TestWorkflowReconciler struct {
 	client.Client
-	Scheme        *runtime.Scheme
-	CronJobClient *cronjob.Client
+	Scheme          *runtime.Scheme
+	CronJobClient   *cronjob.Client
+	ServiceName     string
+	ServicePort     int
+	PurgeExecutions bool
 }
 
 //+kubebuilder:rbac:groups=testworkflows.testkube.io,resources=testworkflows,verbs=get;list;watch;create;update;patch;delete
@@ -62,6 +67,10 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		if errors.IsNotFound(err) {
 			if err = r.CronJobClient.DeleteAll(ctx,
 				cronjob.GetSelector(req.NamespacedName.Name, cronjob.TestWorkflowResourceURI), req.NamespacedName.Namespace); err != nil {
+				return ctrl.Result{}, err
+			}
+
+			if _, err = r.deleteTestWorkflow(req.NamespacedName.Name, req.NamespacedName.Namespace); err != nil {
 				return ctrl.Result{}, err
 			}
 
@@ -229,4 +238,30 @@ func (r *TestWorkflowReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&testworkflowsv1.TestWorkflow{}).
 		Complete(r)
+}
+
+func (r *TestWorkflowReconciler) deleteTestWorkflow(testWorkflowName, namespace string) (out string, err error) {
+	if !r.PurgeExecutions {
+		return out, nil
+	}
+
+	request, err := http.NewRequest(http.MethodDelete,
+		fmt.Sprintf("http://%s.%s.svc.cluster.local:%d/v1/test-workflows/%s?skipDeleteCRD=true",
+			r.ServiceName, namespace, r.ServicePort, testWorkflowName), nil)
+	if err != nil {
+		return out, err
+	}
+
+	request.Header.Set("Content-Type", "application/json")
+	resp, err := http.DefaultClient.Do(request)
+	if err != nil {
+		return out, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode > 300 {
+		return out, fmt.Errorf("could not DELETE, statusCode: %d", resp.StatusCode)
+	}
+
+	return fmt.Sprintf("status: %d", resp.StatusCode), err
 }

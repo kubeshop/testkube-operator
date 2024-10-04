@@ -24,6 +24,9 @@ type StepMeta struct {
 	// expression to declare under which conditions the step should be run
 	// defaults to: "passed", except artifacts where it defaults to "always"
 	Condition string `json:"condition,omitempty" expr:"expression"`
+
+	// mark the step as pure, applying optimizations to merge the containers together
+	Pure *bool `json:"pure,omitempty"`
 }
 
 type StepSource struct {

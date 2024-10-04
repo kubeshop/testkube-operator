@@ -18,6 +18,8 @@ type TestWorkflowExecutionSummary struct {
 	StatusAt metav1.Time                `json:"statusAt,omitempty"`
 	Result   *TestWorkflowResultSummary `json:"result,omitempty"`
 	Workflow *TestWorkflowSummary       `json:"workflow"`
+	// test workflow execution tags
+	Tags map[string]string `json:"tags,omitempty"`
 	// running context for the test workflow execution
 	RunningContext []TestWorkflowRunningContext `json:"runningContext,omitempty"`
 }

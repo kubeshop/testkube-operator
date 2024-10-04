@@ -247,6 +247,7 @@ type ExecutionRequest struct {
 	// namespace for test execution (Pro edition only)
 	ExecutionNamespace string `json:"executionNamespace,omitempty"`
 	// whether webhooks should be called on execution
+	// Deprecated: field is not used
 	DisableWebhooks bool `json:"disableWebhooks,omitempty"`
 }
 

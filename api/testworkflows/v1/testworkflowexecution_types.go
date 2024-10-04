@@ -35,6 +35,10 @@ type TestWorkflowExecutionRequest struct {
 	Config map[string]intstr.IntOrString `json:"config,omitempty" expr:"template"`
 	// test workflow execution name started the test workflow execution
 	TestWorkflowExecutionName string `json:"testWorkflowExecutionName,omitempty" expr:"template"`
+	// whether webhooks should be disabled for this execution
+	DisableWebhooks bool `json:"disableWebhooks,omitempty"`
+	// test workflow execution tags
+	Tags map[string]string `json:"tags,omitempty" expr:"template"`
 	// running context for the test workflow execution
 	RunningContext []TestWorkflowRunningContext `json:"runningContext,omitempty"`
 }
@@ -77,6 +81,10 @@ type TestWorkflowExecutionDetails struct {
 	ResolvedWorkflow *TestWorkflow `json:"resolvedWorkflow,omitempty"`
 	// test workflow execution name started the test workflow execution
 	TestWorkflowExecutionName string `json:"testWorkflowExecutionName,omitempty"`
+	// whether webhooks should be disabled for this execution
+	DisableWebhooks bool `json:"disableWebhooks,omitempty"`
+	// test workflow execution tags
+	Tags map[string]string `json:"tags,omitempty"`
 	// running context for the test workflow execution
 	RunningContext []TestWorkflowRunningContext `json:"runningContext,omitempty"`
 }
