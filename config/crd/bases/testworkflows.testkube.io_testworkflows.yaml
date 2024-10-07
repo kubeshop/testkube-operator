@@ -959,7 +959,7 @@ spec:
                                 shards:
                                   description: parameters that should be distributed across sharded instances
                                   type: object
-                                  x-kubernetes-preserve-unknown-fields: true       
+                                  x-kubernetes-preserve-unknown-fields: true
                                 tarball:
                                   additionalProperties:
                                     type: object
@@ -6113,7 +6113,7 @@ spec:
                                     tarball:
                                       additionalProperties:
                                         type: object
-                                         x-kubernetes-preserve-unknown-fields: true
+                                        x-kubernetes-preserve-unknown-fields: true
                                       description: pack some data from the original file system to serve them down
                                       type: object
                                   type: object
@@ -6411,7 +6411,7 @@ spec:
                           shards:
                             description: parameters that should be distributed across sharded instances
                             type: object
-                             x-kubernetes-preserve-unknown-fields: true
+                            x-kubernetes-preserve-unknown-fields: true
                           shell:
                             description: script to run in a default shell for the container
                             type: string
@@ -9034,6 +9034,7 @@ spec:
                                     shards:
                                       description: parameters that should be distributed across sharded instances
                                       type: object
+                                      x-kubernetes-preserve-unknown-fields: true
                                     tarball:
                                       additionalProperties:
                                         type: object
@@ -9048,6 +9049,7 @@ spec:
                               required:
                                 - from
                               type: object
+                              x-kubernetes-preserve-unknown-fields: true
                             type: array
                           logs:
                             description: should save logs for the parallel step (true if not specified)
@@ -9055,6 +9057,7 @@ spec:
                           matrix:
                             description: matrix of parameters to spawn instances (static)
                             type: object
+                            x-kubernetes-preserve-unknown-fields: true
                           maxCount:
                             anyOf:
                               - type: integer
@@ -9332,6 +9335,7 @@ spec:
                           shards:
                             description: parameters that should be distributed across sharded instances
                             type: object
+                            x-kubernetes-preserve-unknown-fields: true
                           shell:
                             description: script to run in a default shell for the container
                             type: string
@@ -9362,6 +9366,7 @@ spec:
                               required:
                                 - from
                               type: object
+                              x-kubernetes-preserve-unknown-fields: true
                             type: array
                         type: object
                         x-kubernetes-preserve-unknown-fields: true
@@ -10066,6 +10071,7 @@ spec:
                             matrix:
                               description: matrix of parameters to spawn instances (static)
                               type: object
+                              x-kubernetes-preserve-unknown-fields: true
                             maxCount:
                               anyOf:
                                 - type: integer
@@ -10507,10 +10513,9 @@ spec:
                                   type: object
                               type: object
                             shards:
-                              additionalProperties:
-                                type: dynamicList
                               description: parameters that should be distributed across sharded instances
                               type: object
+                              x-kubernetes-preserve-unknown-fields: true
                             shell:
                               description: script to run in a default shell for the container
                               type: string
@@ -10521,22 +10526,10 @@ spec:
                             transfer:
                               description: instructions for transferring files
                               items:
-                                properties:
-                                  files:
-                                    description: file patterns to pack
-                                    type: dynamicList
-                                  from:
-                                    description: path to load the files from
-                                    type: string
-                                  mount:
-                                    description: should it mount a new volume there
-                                    type: boolean
-                                  to:
-                                    description: path where the tarball should be extracted
-                                    type: string
                                 required:
                                   - from
                                 type: object
+                                x-kubernetes-preserve-unknown-fields: true
                               type: array
                             use:
                               description: multiple templates to include in this step
