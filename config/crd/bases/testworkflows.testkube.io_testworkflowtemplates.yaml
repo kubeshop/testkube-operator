@@ -149,7 +149,7 @@ spec:
                                             the specified API version.
                                           type: string
                                       required:
-                                        - fieldPath
+                                      - fieldPath
                                       type: object
                                       x-kubernetes-map-type: atomic
                                     resourceFieldRef:
