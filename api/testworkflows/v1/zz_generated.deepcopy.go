@@ -1366,10 +1366,8 @@ func (in *TestWorkflowExecutionDetails) DeepCopyInto(out *TestWorkflowExecutionD
 	}
 	if in.RunningContext != nil {
 		in, out := &in.RunningContext, &out.RunningContext
-		*out = make([]TestWorkflowRunningContext, len(*in))
-		for i := range *in {
-			(*in)[i].DeepCopyInto(&(*out)[i])
-		}
+		*out = new(TestWorkflowRunningContext)
+		(*in).DeepCopyInto(*out)
 	}
 }
 
@@ -1434,10 +1432,8 @@ func (in *TestWorkflowExecutionRequest) DeepCopyInto(out *TestWorkflowExecutionR
 	}
 	if in.RunningContext != nil {
 		in, out := &in.RunningContext, &out.RunningContext
-		*out = make([]TestWorkflowRunningContext, len(*in))
-		for i := range *in {
-			(*in)[i].DeepCopyInto(&(*out)[i])
-		}
+		*out = new(TestWorkflowRunningContext)
+		(*in).DeepCopyInto(*out)
 	}
 }
 
@@ -1520,10 +1516,8 @@ func (in *TestWorkflowExecutionSummary) DeepCopyInto(out *TestWorkflowExecutionS
 	}
 	if in.RunningContext != nil {
 		in, out := &in.RunningContext, &out.RunningContext
-		*out = make([]TestWorkflowRunningContext, len(*in))
-		for i := range *in {
-			(*in)[i].DeepCopyInto(&(*out)[i])
-		}
+		*out = new(TestWorkflowRunningContext)
+		(*in).DeepCopyInto(*out)
 	}
 }
 

@@ -40,7 +40,7 @@ type TestWorkflowExecutionRequest struct {
 	// test workflow execution tags
 	Tags map[string]string `json:"tags,omitempty" expr:"template"`
 	// running context for the test workflow execution
-	RunningContext []TestWorkflowRunningContext `json:"runningContext,omitempty"`
+	RunningContext *TestWorkflowRunningContext `json:"runningContext,omitempty"`
 }
 
 // TestWorkflowExecutionStatus defines the observed state of TestWorkflowExecution
@@ -86,7 +86,7 @@ type TestWorkflowExecutionDetails struct {
 	// test workflow execution tags
 	Tags map[string]string `json:"tags,omitempty"`
 	// running context for the test workflow execution
-	RunningContext []TestWorkflowRunningContext `json:"runningContext,omitempty"`
+	RunningContext *TestWorkflowRunningContext `json:"runningContext,omitempty"`
 }
 
 // running context for test workflow execution

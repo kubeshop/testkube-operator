@@ -40,7 +40,8 @@ spec:
               description: TestWorkflowExecution specification
               properties:
                 executionRequest:
-                  description: TestWorkflowExecutionRequest contains TestWorkflow execution parameters
+                  description: TestWorkflowExecutionRequest contains TestWorkflow execution
+                    parameters
                   properties:
                     config:
                       additionalProperties:
@@ -57,66 +58,71 @@ spec:
                       type: string
                     runningContext:
                       description: running context for the test workflow execution
-                      items:
-                        description: running context for test workflow execution
-                        properties:
-                          actor:
-                            description: 'TestWorkflowRunningContextActor : supported
-                              actors for test workflow running context'
-                            enum:
-                            - cron
-                            - testrigger
-                            - user
-                            - testworkflow
-                            - testworkflowexecution
-                            type: string
-                          caller:
-                            description: running context caller for test workflow execution
-                            properties:
-                              callerResourceExecutionID:
-                                description: caller resource execution id
-                                type: string
-                              callerResourceName:
-                                description: caller resource name
-                                type: string
-                              callerResourceType:
-                                description: 'TestWorkflowRunningContextCallerResourceType
-                                  : supported caller resource types for test workflow
-                                  running context'
-                                enum:
+                      properties:
+                        actor:
+                          description: running context actor for test workflow execution
+                          properties:
+                            email:
+                              description: actor email
+                              type: string
+                            executionId:
+                              description: test workflow execution id
+                              type: string
+                            executionPath:
+                              description: all test workflow execution ids starting
+                                from the root
+                              type: string
+                            name:
+                              description: actor name
+                              type: string
+                            type:
+                              description: 'TestWorkflowRunningContextActorType : supported
+                                actors for test workflow running context'
+                              enum:
+                                - cron
+                                - testrigger
+                                - user
                                 - testworkflow
                                 - testworkflowexecution
-                                - testrigger
-                                type: string
-                              fullExecutionPath:
-                                description: all test workflow execution ids starting
-                                  from the root
-                                type: string
-                            required:
-                            - callerResourceName
-                            - callerResourceType
-                            type: object
-                          interface:
-                            description: 'TestWorkflowRunningContextInterface : supported
-                              interfaces for test workflow running context'
-                            enum:
-                            - cli
-                            - ui
-                            - api
-                            - internal
-                            type: string
-                        required:
+                                - program
+                              type: string
+                            username:
+                              description: actor username
+                              type: string
+                          required:
+                            - type
+                          type: object
+                        interface:
+                          description: running context interface for test workflow execution
+                          properties:
+                            name:
+                              description: interface name
+                              type: string
+                            type:
+                              description: 'TestWorkflowRunningContextInterfaceType
+                                : supported interfaces for test workflow running context'
+                              enum:
+                                - cli
+                                - ui
+                                - api
+                                - ci/cd
+                                - internal
+                              type: string
+                          required:
+                          - type
+                          type: object
+                      required:
                         - actor
                         - interface
-                        type: object
-                      type: array
+                      type: object
                     tags:
                       additionalProperties:
                         type: string
                       description: test workflow execution tags
                       type: object
                     testWorkflowExecutionName:
-                      description: test workflow execution name started the test workflow execution
+                      description: test workflow execution name started the test workflow
+                        execution
                       type: string
                   type: object
                 testWorkflow:
@@ -133,7 +139,7 @@ spec:
                   type: object
                   x-kubernetes-map-type: atomic
               required:
-                - testWorkflow
+              - testWorkflow
               type: object
             status:
               description: TestWorkflowExecutionStatus specification
@@ -164,7 +170,8 @@ spec:
                       format: int32
                       type: integer
                     output:
-                      description: additional information from the steps, like referenced executed tests or artifacts
+                      description: additional information from the steps, like referenced
+                        executed tests or artifacts
                       items:
                         description: TestWorkflowOutput defines output of TestWorkflow
                         properties:
@@ -175,9 +182,10 @@ spec:
                             description: step reference
                             type: string
                           value:
+                            additionalProperties:
+                              type: dynamicList
                             description: value returned
                             type: object
-                            x-kubernetes-preserve-unknown-fields: true
                         type: object
                       type: array
                     reports:
@@ -195,7 +203,8 @@ spec:
                             description: step reference
                             type: string
                           summary:
-                            description: TestWorkflowStepReportSummary contains report summary of TestWorkflow
+                            description: TestWorkflowStepReportSummary contains report
+                              summary of TestWorkflow
                             properties:
                               duration:
                                 description: total duration of all test cases in milliseconds
@@ -241,7 +250,8 @@ spec:
                           format: date-time
                           type: string
                         initialization:
-                          description: TestWorkflowStepResult contains step result of TestWorkflow
+                          description: TestWorkflowStepResult contains step result of
+                            TestWorkflow
                           properties:
                             errorMessage:
                               type: string
@@ -261,7 +271,8 @@ spec:
                               format: date-time
                               type: string
                             status:
-                              description: TestWorkfloStepwStatus has step status of TestWorkflow
+                              description: TestWorkfloStepwStatus has step status of
+                                TestWorkflow
                               type: string
                           type: object
                         pausedMs:
@@ -318,7 +329,8 @@ spec:
                           type: string
                         steps:
                           additionalProperties:
-                            description: TestWorkflowStepResult contains step result of TestWorkflow
+                            description: TestWorkflowStepResult contains step result
+                              of TestWorkflow
                             properties:
                               errorMessage:
                                 type: string
@@ -338,12 +350,14 @@ spec:
                                 format: date-time
                                 type: string
                               status:
-                                description: TestWorkfloStepwStatus has step status of TestWorkflow
+                                description: TestWorkfloStepwStatus has step status
+                                  of TestWorkflow
                                 type: string
                             type: object
                           type: object
                         totalDuration:
-                          description: Go-formatted (human-readable) total duration (incl. pause)
+                          description: Go-formatted (human-readable) total duration
+                            (incl. pause)
                           type: string
                         totalDurationMs:
                           description: Total duration in milliseconds (incl. pause)
@@ -355,59 +369,63 @@ spec:
                       type: object
                     runningContext:
                       description: running context for the test workflow execution
-                      items:
-                        description: running context for test workflow execution
-                        properties:
-                          actor:
-                            description: 'TestWorkflowRunningContextActor : supported
-                              actors for test workflow running context'
-                            enum:
-                            - cron
-                            - testrigger
-                            - user
-                            - testworkflow
-                            - testworkflowexecution
-                            type: string
-                          caller:
-                            description: running context caller for test workflow execution
-                            properties:
-                              callerResourceExecutionID:
-                                description: caller resource execution id
-                                type: string
-                              callerResourceName:
-                                description: caller resource name
-                                type: string
-                              callerResourceType:
-                                description: 'TestWorkflowRunningContextCallerResourceType
-                                  : supported caller resource types for test workflow
-                                  running context'
-                                enum:
+                      properties:
+                        actor:
+                          description: running context actor for test workflow execution
+                          properties:
+                            email:
+                              description: actor email
+                              type: string
+                            executionId:
+                              description: test workflow execution id
+                              type: string
+                            executionPath:
+                              description: all test workflow execution ids starting
+                                from the root
+                              type: string
+                            name:
+                              description: actor name
+                              type: string
+                            type:
+                              description: 'TestWorkflowRunningContextActorType : supported
+                                actors for test workflow running context'
+                              enum:
+                                - cron
+                                - testrigger
+                                - user
                                 - testworkflow
                                 - testworkflowexecution
-                                - testrigger
-                                type: string
-                              fullExecutionPath:
-                                description: all test workflow execution ids starting
-                                  from the root
-                                type: string
-                            required:
-                            - callerResourceName
-                            - callerResourceType
-                            type: object
-                          interface:
-                            description: 'TestWorkflowRunningContextInterface : supported
-                              interfaces for test workflow running context'
-                            enum:
-                            - cli
-                            - ui
-                            - api
-                            - internal
-                            type: string
-                        required:
+                                - program
+                              type: string
+                            username:
+                              description: actor username
+                              type: string
+                          required:
+                            - type
+                          type: object
+                        interface:
+                          description: running context interface for test workflow execution
+                          properties:
+                            name:
+                              description: interface name
+                              type: string
+                            type:
+                              description: 'TestWorkflowRunningContextInterfaceType
+                                : supported interfaces for test workflow running context'
+                              enum:
+                                - cli
+                                - ui
+                                - api
+                                - ci/cd
+                                - internal
+                              type: string
+                          required:
+                            - type
+                          type: object
+                      required:
                         - actor
                         - interface
-                        type: object
-                      type: array
+                      type: object
                     scheduledAt:
                       description: when the execution has been scheduled to run
                       format: date-time
@@ -437,7 +455,8 @@ spec:
                         type: object
                       type: array
                     statusAt:
-                      description: when the execution result's status has changed last time (queued, passed, failed)
+                      description: when the execution result's status has changed last
+                        time (queued, passed, failed)
                       format: date-time
                       type: string
                     tags:
@@ -446,7 +465,8 @@ spec:
                       description: test workflow execution tags
                       type: object
                     testWorkflowExecutionName:
-                      description: test workflow execution name started the test workflow execution
+                      description: test workflow execution name started the test workflow
+                        execution
                       type: string
                     workflow:
                       x-kubernetes-preserve-unknown-fields: true

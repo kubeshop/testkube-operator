@@ -21,7 +21,7 @@ type TestWorkflowExecutionSummary struct {
 	// test workflow execution tags
 	Tags map[string]string `json:"tags,omitempty"`
 	// running context for the test workflow execution
-	RunningContext []TestWorkflowRunningContext `json:"runningContext,omitempty"`
+	RunningContext *TestWorkflowRunningContext `json:"runningContext,omitempty"`
 }
 
 // TestWorkflowResultSummary defines TestWorkflow result summary

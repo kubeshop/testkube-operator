@@ -723,7 +723,7 @@ spec:
                         - scheduler
                         - testexecution
                         - testsuiteexecution
-                        - testworklow
+                        - testworkflow
                         type: string
                     required:
                     - type
