@@ -136,13 +136,17 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		}
 	}
 
-	interface_ := testworkflowsv1.API_TestWorkflowRunningContextInterface
-	actor := testworkflowsv1.CRON_TestWorkflowRunningContextActor
+	interface_ := testworkflowsv1.API_TestWorkflowRunningContextInterfaceType
+	actor := testworkflowsv1.CRON_TestWorkflowRunningContextActorType
 	data, err := json.Marshal(testworkflowsv1.TestWorkflowExecutionRequest{
 		RunningContext: []testworkflowsv1.TestWorkflowRunningContext{
 			{
-				Interface_: &interface_,
-				Actor:      &actor,
+				Interface_: &testworkflowsv1.TestWorkflowRunningContextInterface{
+					Type_: &interface_,
+				},
+				Actor: &testworkflowsv1.TestWorkflowRunningContextActor{
+					Type_: &actor,
+				},
 			},
 		},
 	})

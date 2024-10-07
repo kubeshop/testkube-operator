@@ -93,55 +93,56 @@ type TestWorkflowExecutionDetails struct {
 type TestWorkflowRunningContext struct {
 	Interface_ *TestWorkflowRunningContextInterface `json:"interface"`
 	Actor      *TestWorkflowRunningContextActor     `json:"actor"`
-	Caller     *TestWorkflowRunningContextCaller    `json:"caller,omitempty"`
 }
 
-// TestWorkflowRunningContextActor : supported actors for test workflow running context
-// +kubebuilder:validation:Enum=cron;testrigger;user;testworkflow;testworkflowexecution
-type TestWorkflowRunningContextActor string
+// TestWorkflowRunningContextActorType : supported actors for test workflow running context
+// +kubebuilder:validation:Enum=cron;testrigger;user;testworkflow;testworkflowexecution;program
+type TestWorkflowRunningContextActorType string
 
-// List of TestWorkflowRunningContextActor
+// List of TestWorkflowRunningContextActorType
 const (
-	CRON_TestWorkflowRunningContextActor                  TestWorkflowRunningContextActor = "cron"
-	TESTRIGGER_TestWorkflowRunningContextActor            TestWorkflowRunningContextActor = "testrigger"
-	USER_TestWorkflowRunningContextActor                  TestWorkflowRunningContextActor = "user"
-	TESTWORKFLOW_TestWorkflowRunningContextActor          TestWorkflowRunningContextActor = "testworkflow"
-	TESTWORKFLOWEXECUTION_TestWorkflowRunningContextActor TestWorkflowRunningContextActor = "testworkflowexecution"
+	CRON_TestWorkflowRunningContextActorType                  TestWorkflowRunningContextActorType = "cron"
+	TESTRIGGER_TestWorkflowRunningContextActorType            TestWorkflowRunningContextActorType = "testrigger"
+	USER_TestWorkflowRunningContextActorType                  TestWorkflowRunningContextActorType = "user"
+	TESTWORKFLOW_TestWorkflowRunningContextActorType          TestWorkflowRunningContextActorType = "testworkflow"
+	TESTWORKFLOWEXECUTION_TestWorkflowRunningContextActorType TestWorkflowRunningContextActorType = "testworkflowexecution"
+	PROGRAM_TestWorkflowRunningContextActorType               TestWorkflowRunningContextActorType = "program"
 )
 
-// running context caller for test workflow execution
-type TestWorkflowRunningContextCaller struct {
-	CallerResourceType *TestWorkflowRunningContextCallerResourceType `json:"callerResourceType"`
-	// caller resource name
-	CallerResourceName string `json:"callerResourceName"`
-	// caller resource execution id
-	CallerResourceExecutionID string `json:"callerResourceExecutionID,omitempty"`
+// running context actor for test workflow execution
+type TestWorkflowRunningContextActor struct {
+	// actor name
+	Name string `json:"name,omitempty"`
+	// actor username
+	Username string `json:"username,omitempty"`
+	// actor email
+	Email string `json:"email,omitempty"`
+	// test workflow execution id
+	ExecutionId string `json:"executionId,omitempty"`
 	// all test workflow execution ids starting from the root
-	FullExecutionPath string `json:"fullExecutionPath,omitempty"`
+	ExecutionPath string                               `json:"executionPath,omitempty"`
+	Type_         *TestWorkflowRunningContextActorType `json:"type"`
 }
 
-// TestWorkflowRunningContextCallerResourceType : supported caller resource types for test workflow running context
-// +kubebuilder:validation:Enum=testworkflow;testworkflowexecution;testrigger
-type TestWorkflowRunningContextCallerResourceType string
+// TestWorkflowRunningContextInterfaceType : supported interfaces for test workflow running context
+// +kubebuilder:validation:Enum=cli;ui;api;ci/cd;internal
+type TestWorkflowRunningContextInterfaceType string
 
-// List of TestWorkflowRunningContextCallerResourceType
+// List of TestWorkflowRunningContextInterfaceType
 const (
-	TESTWORKFLOW_TestWorkflowRunningContextCallerResourceType          TestWorkflowRunningContextCallerResourceType = "testworkflow"
-	TESTWORKFLOWEXECUTION_TestWorkflowRunningContextCallerResourceType TestWorkflowRunningContextCallerResourceType = "testworkflowexecution"
-	TESTTRIGGER_TestWorkflowRunningContextCallerResourceType           TestWorkflowRunningContextCallerResourceType = "testtrigger"
+	CLI_TestWorkflowRunningContextInterfaceType      TestWorkflowRunningContextInterfaceType = "cli"
+	UI_TestWorkflowRunningContextInterfaceType       TestWorkflowRunningContextInterfaceType = "ui"
+	API_TestWorkflowRunningContextInterfaceType      TestWorkflowRunningContextInterfaceType = "api"
+	CICD_TestWorkflowRunningContextInterfaceType     TestWorkflowRunningContextInterfaceType = "ci/cd"
+	INTERNAL_TestWorkflowRunningContextInterfaceType TestWorkflowRunningContextInterfaceType = "internal"
 )
 
-// TestWorkflowRunningContextInterface : supported interfaces for test workflow running context
-// +kubebuilder:validation:Enum=cli;ui;api;internal
-type TestWorkflowRunningContextInterface string
-
-// List of TestWorkflowRunningContextInterface
-const (
-	CLI_TestWorkflowRunningContextInterface      TestWorkflowRunningContextInterface = "cli"
-	UI_TestWorkflowRunningContextInterface       TestWorkflowRunningContextInterface = "ui"
-	API_TestWorkflowRunningContextInterface      TestWorkflowRunningContextInterface = "api"
-	INTERNAL_TestWorkflowRunningContextInterface TestWorkflowRunningContextInterface = "internal"
-)
+// running context interface for test workflow execution
+type TestWorkflowRunningContextInterface struct {
+	// interface name
+	Name  string                                   `json:"name,omitempty"`
+	Type_ *TestWorkflowRunningContextInterfaceType `json:"type"`
+}
 
 // TestWorkflowSignature has signature of TestWorkflow
 type TestWorkflowSignature struct {

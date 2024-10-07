@@ -76,16 +76,16 @@ func (r *TestWorkflowExecutionReconciler) Reconcile(ctx context.Context, req ctr
 		testWorkflowExecution.Spec.ExecutionRequest = &testworkflowsv1.TestWorkflowExecutionRequest{}
 	}
 
-	interface_ := testworkflowsv1.API_TestWorkflowRunningContextInterface
-	actor := testworkflowsv1.TESTWORKFLOWEXECUTION_TestWorkflowRunningContextActor
-	callerResourceType := testworkflowsv1.TESTWORKFLOWEXECUTION_TestWorkflowRunningContextCallerResourceType
+	interface_ := testworkflowsv1.API_TestWorkflowRunningContextInterfaceType
+	actor := testworkflowsv1.TESTWORKFLOWEXECUTION_TestWorkflowRunningContextActorType
 	testWorkflowExecution.Spec.ExecutionRequest.RunningContext = []testworkflowsv1.TestWorkflowRunningContext{
 		{
-			Interface_: &interface_,
-			Actor:      &actor,
-			Caller: &testworkflowsv1.TestWorkflowRunningContextCaller{
-				CallerResourceType: &callerResourceType,
-				CallerResourceName: testWorkflowExecution.Name,
+			Interface_: &testworkflowsv1.TestWorkflowRunningContextInterface{
+				Type_: &interface_,
+			},
+			Actor: &testworkflowsv1.TestWorkflowRunningContextActor{
+				Name:  testWorkflowExecution.Name,
+				Type_: &actor,
 			},
 		},
 	}
