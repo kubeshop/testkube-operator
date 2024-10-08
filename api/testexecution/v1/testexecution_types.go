@@ -59,7 +59,7 @@ type RunningContext struct {
 }
 
 // RunningContextType defines running context type
-// +kubebuilder:validation:Enum=user-cli;user-ui;testsuite;testtrigger;scheduler;testexecution;testsuiteexecution
+// +kubebuilder:validation:Enum=user-cli;user-ui;testsuite;testtrigger;scheduler;testexecution;testsuiteexecution;testworkflow
 type RunningContextType string
 
 const (
@@ -70,6 +70,7 @@ const (
 	RunningContextTypeScheduler          RunningContextType = "scheduler"
 	RunningContextTypeTestExecution      RunningContextType = "testexecution"
 	RunningContextTypeTestSuiteExecution RunningContextType = "testsuiteexecution"
+	RunningContextTypeTestWorkflow       RunningContextType = "testworkflow"
 	RunningContextTypeEmpty              RunningContextType = ""
 )
 
