@@ -39,7 +39,7 @@ type TestWorkflowExecutionRequest struct {
 	DisableWebhooks bool `json:"disableWebhooks,omitempty"`
 	// test workflow execution tags
 	Tags map[string]string `json:"tags,omitempty" expr:"template"`
-	// running context for the test workflow execution
+	// running context for the test workflow execution (Pro edition only)
 	RunningContext *TestWorkflowRunningContext `json:"runningContext,omitempty"`
 }
 
@@ -85,7 +85,7 @@ type TestWorkflowExecutionDetails struct {
 	DisableWebhooks bool `json:"disableWebhooks,omitempty"`
 	// test workflow execution tags
 	Tags map[string]string `json:"tags,omitempty"`
-	// running context for the test workflow execution
+	// running context for the test workflow execution (Pro edition only)
 	RunningContext *TestWorkflowRunningContext `json:"runningContext,omitempty"`
 }
 
@@ -95,7 +95,7 @@ type TestWorkflowRunningContext struct {
 	Actor      *TestWorkflowRunningContextActor     `json:"actor"`
 }
 
-// TestWorkflowRunningContextActorType : supported actors for test workflow running context
+// supported actors for test workflow running context
 // +kubebuilder:validation:Enum=cron;testrigger;user;testworkflow;testworkflowexecution;program
 type TestWorkflowRunningContextActorType string
 
@@ -124,7 +124,7 @@ type TestWorkflowRunningContextActor struct {
 	Type_         *TestWorkflowRunningContextActorType `json:"type"`
 }
 
-// TestWorkflowRunningContextInterfaceType : supported interfaces for test workflow running context
+// supported interfaces for test workflow running context
 // +kubebuilder:validation:Enum=cli;ui;api;ci/cd;internal
 type TestWorkflowRunningContextInterfaceType string
 

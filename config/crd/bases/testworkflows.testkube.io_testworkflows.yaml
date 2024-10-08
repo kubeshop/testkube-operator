@@ -10741,7 +10741,7 @@ spec:
                         - totalDurationMs
                       type: object
                     runningContext:
-                      description: running context for the test workflow execution
+                      description: running context for the test workflow execution (Pro edition only)
                       properties:
                         actor:
                           description: running context actor for test workflow execution
@@ -10759,7 +10759,7 @@ spec:
                               description: actor name
                               type: string
                             type:
-                              description: 'TestWorkflowRunningContextActorType : supported actors for test workflow running context'
+                              description: supported actors for test workflow running context
                               enum:
                                 - cron
                                 - testrigger
@@ -10781,7 +10781,7 @@ spec:
                               description: interface name
                               type: string
                             type:
-                              description: 'TestWorkflowRunningContextInterfaceType : supported interfaces for test workflow running context'
+                              description: supported interfaces for test workflow running context
                               enum:
                                 - cli
                                 - ui
