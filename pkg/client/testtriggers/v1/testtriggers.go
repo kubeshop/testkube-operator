@@ -17,6 +17,7 @@ type Interface interface {
 	Create(trigger *testtriggersv1.TestTrigger) (*testtriggersv1.TestTrigger, error)
 	Update(trigger *testtriggersv1.TestTrigger) (*testtriggersv1.TestTrigger, error)
 	Delete(name, namespace string) error
+	DeleteAll(namespace string) error
 	DeleteByLabels(selector, namespace string) error
 }
 
@@ -87,6 +88,17 @@ func (s TestTriggersClient) Delete(name, namespace string) error {
 		return err
 	}
 	return s.Client.Delete(context.Background(), trigger)
+}
+
+// DeleteAll delete all TestTriggers
+func (s TestTriggersClient) DeleteAll(namespace string) error {
+	if namespace == "" {
+		namespace = s.Namespace
+	}
+	u := &unstructured.Unstructured{}
+	u.SetKind("TestTrigger")
+	u.SetAPIVersion(testtriggersv1.GroupVersion.String())
+	return s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(namespace))
 }
 
 // DeleteByLabels deletes TestTriggers by labels
