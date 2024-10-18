@@ -12,12 +12,12 @@ import (
 
 //go:generate mockgen -destination=./mock_testtriggers.go -package=v1 "github.com/kubeshop/testkube-operator/pkg/client/testtriggers/v1" Interface
 type Interface interface {
-	List(selector string) (*testtriggersv1.TestTriggerList, error)
-	Get(name string) (*testtriggersv1.TestTrigger, error)
+	List(selector, namespace string) (*testtriggersv1.TestTriggerList, error)
+	Get(name, namespace string) (*testtriggersv1.TestTrigger, error)
 	Create(trigger *testtriggersv1.TestTrigger) (*testtriggersv1.TestTrigger, error)
 	Update(trigger *testtriggersv1.TestTrigger) (*testtriggersv1.TestTrigger, error)
-	Delete(name string) error
-	DeleteByLabels(selector string) error
+	Delete(name, namespace string) error
+	DeleteByLabels(selector, namespace string) error
 }
 
 // NewClient creates new TestTrigger client
@@ -35,15 +35,18 @@ type TestTriggersClient struct {
 }
 
 // List lists TestTriggers
-func (s TestTriggersClient) List(selector string) (*testtriggersv1.TestTriggerList, error) {
+func (s TestTriggersClient) List(selector, namespace string) (*testtriggersv1.TestTriggerList, error) {
 	list := &testtriggersv1.TestTriggerList{}
 	reqs, err := labels.ParseToRequirements(selector)
 	if err != nil {
 		return list, err
 	}
+	if namespace == "" {
+		namespace = s.Namespace
+	}
 
 	options := &client.ListOptions{
-		Namespace:     s.Namespace,
+		Namespace:     namespace,
 		LabelSelector: labels.NewSelector().Add(reqs...),
 	}
 
@@ -55,9 +58,12 @@ func (s TestTriggersClient) List(selector string) (*testtriggersv1.TestTriggerLi
 }
 
 // Get returns TestTrigger
-func (s TestTriggersClient) Get(name string) (*testtriggersv1.TestTrigger, error) {
+func (s TestTriggersClient) Get(name, namespace string) (*testtriggersv1.TestTrigger, error) {
+	if namespace == "" {
+		namespace = s.Namespace
+	}
 	trigger := &testtriggersv1.TestTrigger{}
-	err := s.Client.Get(context.Background(), client.ObjectKey{Namespace: s.Namespace, Name: name}, trigger)
+	err := s.Client.Get(context.Background(), client.ObjectKey{Namespace: namespace, Name: name}, trigger)
 	if err != nil {
 		return nil, err
 	}
@@ -75,8 +81,8 @@ func (s TestTriggersClient) Update(trigger *testtriggersv1.TestTrigger) (*testtr
 }
 
 // Delete deletes existing TestTrigger
-func (s TestTriggersClient) Delete(name string) error {
-	trigger, err := s.Get(name)
+func (s TestTriggersClient) Delete(name, namespace string) error {
+	trigger, err := s.Get(name, namespace)
 	if err != nil {
 		return err
 	}
@@ -84,16 +90,19 @@ func (s TestTriggersClient) Delete(name string) error {
 }
 
 // DeleteByLabels deletes TestTriggers by labels
-func (s TestTriggersClient) DeleteByLabels(selector string) error {
+func (s TestTriggersClient) DeleteByLabels(selector, namespace string) error {
 	reqs, err := labels.ParseToRequirements(selector)
 	if err != nil {
 		return err
+	}
+	if namespace == "" {
+		namespace = s.Namespace
 	}
 
 	u := &unstructured.Unstructured{}
 	u.SetKind("TestTrigger")
 	u.SetAPIVersion(testtriggersv1.GroupVersion.String())
-	err = s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(s.Namespace),
+	err = s.Client.DeleteAllOf(context.Background(), u, client.InNamespace(namespace),
 		client.MatchingLabelsSelector{Selector: labels.NewSelector().Add(reqs...)})
 	return err
 }
