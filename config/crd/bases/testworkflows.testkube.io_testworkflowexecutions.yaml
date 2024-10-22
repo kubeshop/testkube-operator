@@ -84,9 +84,6 @@ spec:
                                 - testworkflowexecution
                                 - program
                               type: string
-                            username:
-                              description: actor username
-                              type: string
                           required:
                             - type
                           type: object
@@ -383,9 +380,6 @@ spec:
                                 - testworkflow
                                 - testworkflowexecution
                                 - program
-                              type: string
-                            username:
-                              description: actor username
                               type: string
                           required:
                             - type
