@@ -11,6 +11,17 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
+//go:generate mockgen -destination=./mock_webhooks.go -package=executors "github.com/kubeshop/testkube-operator/pkg/client/executors/v1" WebhooksInterface
+type WebhooksInterface interface {
+	List(selector string) (*executorsv1.WebhookList, error)
+	Get(name string) (*executorsv1.Webhook, error)
+	GetByEvent(event executorsv1.EventType) (*executorsv1.WebhookList, error)
+	Create(webhook *executorsv1.Webhook) (*executorsv1.Webhook, error)
+	Update(webhook *executorsv1.Webhook) (*executorsv1.Webhook, error)
+	Delete(name string) error
+	DeleteByLabels(selector string) error
+}
+
 // NewWebhooksClient returns new client instance, needs kubernetes client to be passed as dependecy
 func NewWebhooksClient(client client.Client, namespace string) *WebhooksClient {
 	return &WebhooksClient{
