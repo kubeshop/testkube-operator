@@ -96,13 +96,13 @@ type TestWorkflowRunningContext struct {
 }
 
 // supported actors for test workflow running context
-// +kubebuilder:validation:Enum=cron;testrigger;user;testworkflow;testworkflowexecution;program
+// +kubebuilder:validation:Enum=cron;testtrigger;user;testworkflow;testworkflowexecution;program
 type TestWorkflowRunningContextActorType string
 
 // List of TestWorkflowRunningContextActorType
 const (
 	CRON_TestWorkflowRunningContextActorType                  TestWorkflowRunningContextActorType = "cron"
-	TESTRIGGER_TestWorkflowRunningContextActorType            TestWorkflowRunningContextActorType = "testrigger"
+	TESTRIGGER_TestWorkflowRunningContextActorType            TestWorkflowRunningContextActorType = "testtrigger"
 	USER_TestWorkflowRunningContextActorType                  TestWorkflowRunningContextActorType = "user"
 	TESTWORKFLOW_TestWorkflowRunningContextActorType          TestWorkflowRunningContextActorType = "testworkflow"
 	TESTWORKFLOWEXECUTION_TestWorkflowRunningContextActorType TestWorkflowRunningContextActorType = "testworkflowexecution"
