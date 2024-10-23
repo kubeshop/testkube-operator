@@ -39,6 +39,8 @@ type TestWorkflowExecutionRequest struct {
 	DisableWebhooks bool `json:"disableWebhooks,omitempty"`
 	// test workflow execution tags
 	Tags map[string]string `json:"tags,omitempty" expr:"template"`
+	// running context for the test workflow execution (Pro edition only)
+	RunningContext *TestWorkflowRunningContext `json:"runningContext,omitempty"`
 }
 
 // TestWorkflowExecutionStatus defines the observed state of TestWorkflowExecution
@@ -83,6 +85,61 @@ type TestWorkflowExecutionDetails struct {
 	DisableWebhooks bool `json:"disableWebhooks,omitempty"`
 	// test workflow execution tags
 	Tags map[string]string `json:"tags,omitempty"`
+	// running context for the test workflow execution (Pro edition only)
+	RunningContext *TestWorkflowRunningContext `json:"runningContext,omitempty"`
+}
+
+// running context for test workflow execution
+type TestWorkflowRunningContext struct {
+	Interface_ *TestWorkflowRunningContextInterface `json:"interface"`
+	Actor      *TestWorkflowRunningContextActor     `json:"actor"`
+}
+
+// supported actors for test workflow running context
+// +kubebuilder:validation:Enum=cron;testtrigger;user;testworkflow;testworkflowexecution;program
+type TestWorkflowRunningContextActorType string
+
+// List of TestWorkflowRunningContextActorType
+const (
+	CRON_TestWorkflowRunningContextActorType                  TestWorkflowRunningContextActorType = "cron"
+	TESTRIGGER_TestWorkflowRunningContextActorType            TestWorkflowRunningContextActorType = "testtrigger"
+	USER_TestWorkflowRunningContextActorType                  TestWorkflowRunningContextActorType = "user"
+	TESTWORKFLOW_TestWorkflowRunningContextActorType          TestWorkflowRunningContextActorType = "testworkflow"
+	TESTWORKFLOWEXECUTION_TestWorkflowRunningContextActorType TestWorkflowRunningContextActorType = "testworkflowexecution"
+	PROGRAM_TestWorkflowRunningContextActorType               TestWorkflowRunningContextActorType = "program"
+)
+
+// running context actor for test workflow execution
+type TestWorkflowRunningContextActor struct {
+	// actor name
+	Name string `json:"name,omitempty"`
+	// actor email
+	Email string `json:"email,omitempty"`
+	// test workflow execution id
+	ExecutionId string `json:"executionId,omitempty"`
+	// all test workflow execution ids starting from the root
+	ExecutionPath string                               `json:"executionPath,omitempty"`
+	Type_         *TestWorkflowRunningContextActorType `json:"type"`
+}
+
+// supported interfaces for test workflow running context
+// +kubebuilder:validation:Enum=cli;ui;api;ci/cd;internal
+type TestWorkflowRunningContextInterfaceType string
+
+// List of TestWorkflowRunningContextInterfaceType
+const (
+	CLI_TestWorkflowRunningContextInterfaceType      TestWorkflowRunningContextInterfaceType = "cli"
+	UI_TestWorkflowRunningContextInterfaceType       TestWorkflowRunningContextInterfaceType = "ui"
+	API_TestWorkflowRunningContextInterfaceType      TestWorkflowRunningContextInterfaceType = "api"
+	CICD_TestWorkflowRunningContextInterfaceType     TestWorkflowRunningContextInterfaceType = "ci/cd"
+	INTERNAL_TestWorkflowRunningContextInterfaceType TestWorkflowRunningContextInterfaceType = "internal"
+)
+
+// running context interface for test workflow execution
+type TestWorkflowRunningContextInterface struct {
+	// interface name
+	Name  string                                   `json:"name,omitempty"`
+	Type_ *TestWorkflowRunningContextInterfaceType `json:"type"`
 }
 
 // TestWorkflowSignature has signature of TestWorkflow
