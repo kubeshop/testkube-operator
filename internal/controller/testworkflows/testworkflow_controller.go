@@ -18,6 +18,7 @@ package testworkflows
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"maps"
 	"net/http"
@@ -128,11 +129,17 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 					Cron:        event.Cronjob.Cron,
 					Labels:      event.Cronjob.Labels,
 					Annotations: event.Cronjob.Annotations,
+					Config:      event.Cronjob.Config,
 				}
 			} else {
 				newCronJobConfigs[cronJob.Cron] = MergeCronJobJobConfig(cronJob, event.Cronjob)
 			}
 		}
+	}
+
+	data, err := json.Marshal(testworkflowsv1.TestWorkflowExecutionRequest{})
+	if err != nil {
+		return ctrl.Result{}, err
 	}
 
 	for schedule, oldCronJob := range oldCronJobs {
@@ -157,7 +164,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				ResourceURI: cronjob.TestWorkflowResourceURI,
 				Labels:      newCronJobConfig.Labels,
 				Annotations: newCronJobConfig.Annotations,
-				Data:        "{}",
+				Data:        string(data),
 			}
 
 			if err = r.CronJobClient.Update(ctx, oldCronJob, testWorkflow.Name,
@@ -184,7 +191,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				ResourceURI: cronjob.TestWorkflowResourceURI,
 				Labels:      newCronJobConfig.Labels,
 				Annotations: newCronJobConfig.Annotations,
-				Data:        "{}",
+				Data:        string(data),
 			}
 
 			if err = r.CronJobClient.Create(ctx, testWorkflow.Name,
