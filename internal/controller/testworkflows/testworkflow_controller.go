@@ -139,7 +139,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 
 	interface_ := testworkflowsv1.API_TestWorkflowRunningContextInterfaceType
 	actor := testworkflowsv1.CRON_TestWorkflowRunningContextActorType
-	data, err := json.Marshal(testworkflowsv1.TestWorkflowExecutionRequest{
+	request := testworkflowsv1.TestWorkflowExecutionRequest{
 		RunningContext: &testworkflowsv1.TestWorkflowRunningContext{
 			Interface_: &testworkflowsv1.TestWorkflowRunningContextInterface{
 				Type_: &interface_,
@@ -148,9 +148,6 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				Type_: &actor,
 			},
 		},
-	})
-	if err != nil {
-		return ctrl.Result{}, err
 	}
 
 	for schedule, oldCronJob := range oldCronJobs {
@@ -164,6 +161,12 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			// Update CronJob if it was created before
 			if newCronJobConfig.Labels == nil {
 				newCronJobConfig.Labels = make(map[string]string)
+			}
+
+			request.Config = newCronJobConfig.Config
+			data, err := json.Marshal(request)
+			if err != nil {
+				return ctrl.Result{}, err
 			}
 
 			newCronJobConfig.Labels[cronjob.TestWorkflowResourceURI] = testWorkflow.Name
@@ -191,6 +194,12 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			// Create new Cron Jobs
 			if newCronJobConfig.Labels == nil {
 				newCronJobConfig.Labels = make(map[string]string)
+			}
+
+			request.Config = newCronJobConfig.Config
+			data, err := json.Marshal(request)
+			if err != nil {
+				return ctrl.Result{}, err
 			}
 
 			newCronJobConfig.Labels[cronjob.TestWorkflowResourceURI] = testWorkflow.Name
