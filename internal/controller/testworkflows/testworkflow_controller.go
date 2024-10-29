@@ -30,7 +30,6 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/apimachinery/pkg/util/intstr"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
@@ -244,11 +243,6 @@ func MergeCronJobJobConfig(dst, include *testworkflowsv1.CronJobConfig) *testwor
 		dst.Annotations = map[string]string{}
 	}
 	maps.Copy(dst.Annotations, include.Annotations)
-
-	if len(include.Config) > 0 && dst.Config == nil {
-		dst.Config = map[string]intstr.IntOrString{}
-	}
-	maps.Copy(dst.Config, include.Config)
 
 	return dst
 }
