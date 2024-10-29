@@ -21,6 +21,7 @@ import (
 	testsuitev2 "github.com/kubeshop/testkube-operator/api/testsuite/v2"
 	testsuitev3 "github.com/kubeshop/testkube-operator/api/testsuite/v3"
 	testsuiteexecutionv1 "github.com/kubeshop/testkube-operator/api/testsuiteexecution/v1"
+	testtriggersv1 "github.com/kubeshop/testkube-operator/api/testtriggers/v1"
 	testworkflowsv1 "github.com/kubeshop/testkube-operator/api/testworkflows/v1"
 )
 
@@ -35,6 +36,7 @@ func GetClient() (client.Client, error) {
 	utilruntime.Must(testsv2.AddToScheme(scheme))
 	utilruntime.Must(testsv3.AddToScheme(scheme))
 	utilruntime.Must(testsuitev1.AddToScheme(scheme))
+	utilruntime.Must(testtriggersv1.AddToScheme(scheme))
 	utilruntime.Must(corev1.AddToScheme(scheme))
 	utilruntime.Must(testsuitev2.AddToScheme(scheme))
 	utilruntime.Must(testsuitev3.AddToScheme(scheme))
