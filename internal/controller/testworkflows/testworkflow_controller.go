@@ -119,26 +119,32 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	}
 
 	for i := range cronJobList.Items {
-		oldCronJobs[cronJobList.Items[i].Spec.Schedule] = &cronJobList.Items[i]
+		oldCronJobs[cronJobList.Items[i].Name] = &cronJobList.Items[i]
 	}
 
 	for _, event := range events {
 		if event.Cronjob != nil {
-			if cronJob, ok := newCronJobConfigs[event.Cronjob.Cron]; !ok {
-				newCronJobConfigs[event.Cronjob.Cron] = &testworkflowsv1.CronJobConfig{
+			name, err := cronjob.GetHashedMetadataName(testWorkflow.Name, event.Cronjob.Cron, event.Cronjob.Config)
+			if err != nil {
+				return ctrl.Result{}, err
+			}
+
+			if cronJob, ok := newCronJobConfigs[name]; !ok {
+				newCronJobConfigs[name] = &testworkflowsv1.CronJobConfig{
 					Cron:        event.Cronjob.Cron,
 					Labels:      event.Cronjob.Labels,
 					Annotations: event.Cronjob.Annotations,
+					Config:      event.Cronjob.Config,
 				}
 			} else {
-				newCronJobConfigs[cronJob.Cron] = MergeCronJobJobConfig(cronJob, event.Cronjob)
+				newCronJobConfigs[name] = MergeCronJobJobConfig(cronJob, event.Cronjob)
 			}
 		}
 	}
 
 	interface_ := testworkflowsv1.API_TestWorkflowRunningContextInterfaceType
 	actor := testworkflowsv1.CRON_TestWorkflowRunningContextActorType
-	data, err := json.Marshal(testworkflowsv1.TestWorkflowExecutionRequest{
+	request := testworkflowsv1.TestWorkflowExecutionRequest{
 		RunningContext: &testworkflowsv1.TestWorkflowRunningContext{
 			Interface_: &testworkflowsv1.TestWorkflowRunningContextInterface{
 				Type_: &interface_,
@@ -147,16 +153,12 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				Type_: &actor,
 			},
 		},
-	})
-	if err != nil {
-		return ctrl.Result{}, err
 	}
 
-	for schedule, oldCronJob := range oldCronJobs {
-		if newCronJobConfig, ok := newCronJobConfigs[schedule]; !ok {
+	for name, oldCronJob := range oldCronJobs {
+		if newCronJobConfig, ok := newCronJobConfigs[name]; !ok {
 			// Delete removed Cron Jobs
-			if err = r.CronJobClient.Delete(ctx,
-				cronjob.GetHashedMetadataName(testWorkflow.Name, schedule), testWorkflow.Namespace); err != nil {
+			if err = r.CronJobClient.Delete(ctx, name, testWorkflow.Namespace); err != nil {
 				return ctrl.Result{}, err
 			}
 		} else {
@@ -165,9 +167,15 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				newCronJobConfig.Labels = make(map[string]string)
 			}
 
+			request.Config = newCronJobConfig.Config
+			data, err := json.Marshal(request)
+			if err != nil {
+				return ctrl.Result{}, err
+			}
+
 			newCronJobConfig.Labels[cronjob.TestWorkflowResourceURI] = testWorkflow.Name
 			options := cronjob.CronJobOptions{
-				Schedule:    schedule,
+				Schedule:    newCronJobConfig.Cron,
 				Group:       testworkflowsv1.Group,
 				Resource:    testworkflowsv1.Resource,
 				Version:     testworkflowsv1.Version,
@@ -177,24 +185,29 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				Data:        string(data),
 			}
 
-			if err = r.CronJobClient.Update(ctx, oldCronJob, testWorkflow.Name,
-				cronjob.GetHashedMetadataName(testWorkflow.Name, schedule), testWorkflow.Namespace,
+			if err = r.CronJobClient.Update(ctx, oldCronJob, testWorkflow.Name, name, testWorkflow.Namespace,
 				string(testWorkflow.UID), options); err != nil {
 				return ctrl.Result{}, err
 			}
 		}
 	}
 
-	for schedule, newCronJobConfig := range newCronJobConfigs {
-		if _, ok = oldCronJobs[schedule]; !ok {
+	for name, newCronJobConfig := range newCronJobConfigs {
+		if _, ok = oldCronJobs[name]; !ok {
 			// Create new Cron Jobs
 			if newCronJobConfig.Labels == nil {
 				newCronJobConfig.Labels = make(map[string]string)
 			}
 
+			request.Config = newCronJobConfig.Config
+			data, err := json.Marshal(request)
+			if err != nil {
+				return ctrl.Result{}, err
+			}
+
 			newCronJobConfig.Labels[cronjob.TestWorkflowResourceURI] = testWorkflow.Name
 			options := cronjob.CronJobOptions{
-				Schedule:    schedule,
+				Schedule:    newCronJobConfig.Cron,
 				Group:       testworkflowsv1.Group,
 				Resource:    testworkflowsv1.Resource,
 				Version:     testworkflowsv1.Version,
@@ -204,8 +217,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				Data:        string(data),
 			}
 
-			if err = r.CronJobClient.Create(ctx, testWorkflow.Name,
-				cronjob.GetHashedMetadataName(testWorkflow.Name, schedule), testWorkflow.Namespace,
+			if err = r.CronJobClient.Create(ctx, testWorkflow.Name, name, testWorkflow.Namespace,
 				string(testWorkflow.UID), options); err != nil {
 				return ctrl.Result{}, err
 			}

@@ -3,6 +3,7 @@ package cronjob
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"hash/fnv"
 	"maps"
@@ -14,6 +15,7 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/apimachinery/pkg/util/yaml"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	kyaml "sigs.k8s.io/kustomize/kyaml/yaml"
@@ -294,17 +296,23 @@ func GetMetadataName(name, resource string) string {
 }
 
 // GetHashedMetadataName returns cron job hashed metadata name
-func GetHashedMetadataName(name, schedule string) string {
-	h := fnv.New32a()
-	h.Write([]byte(schedule))
+func GetHashedMetadataName(name, schedule string, config map[string]intstr.IntOrString) (string, error) {
+	data, err := json.Marshal(config)
+	if err != nil {
+		return "", err
+	}
 
-	hash := fmt.Sprintf("-%d", h.Sum32())
+	h := fnv.New64a()
+	h.Write([]byte(schedule))
+	h.Write(data)
+
+	hash := fmt.Sprintf("-%d", h.Sum64())
 
 	if len(name) > 52-len(hash) {
 		name = name[:52-len(hash)]
 	}
 
-	return name + hash
+	return name + hash, nil
 }
 
 // GetSelector returns cron job selecttor
