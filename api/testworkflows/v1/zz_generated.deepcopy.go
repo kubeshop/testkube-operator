@@ -23,6 +23,7 @@ package v1
 import (
 	"github.com/kubeshop/testkube-operator/api/tests/v3"
 	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
@@ -979,6 +980,11 @@ func (in *StepExecuteWorkflow) DeepCopyInto(out *StepExecuteWorkflow) {
 		for key, val := range *in {
 			(*out)[key] = val
 		}
+	}
+	if in.Selector != nil {
+		in, out := &in.Selector, &out.Selector
+		*out = new(metav1.LabelSelector)
+		(*in).DeepCopyInto(*out)
 	}
 }
 
