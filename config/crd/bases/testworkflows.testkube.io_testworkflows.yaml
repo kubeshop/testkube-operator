@@ -9246,6 +9246,9 @@ spec:
                                         - type: string
                                       description: dynamic number of sharded instances to spawn - it will be lowered if there is not enough sharded values
                                       x-kubernetes-int-or-string: true
+                                    name:
+                                      description: workflow name to run
+                                      type: string
                                     selector:
                                       description: selector is used to identify a group of test workflows based on their metadata labels
                                       properties:
@@ -9288,9 +9291,6 @@ spec:
                                           type: object
                                       type: object
                                       x-kubernetes-map-type: atomic
-                                    name:
-                                      description: workflow name to run
-                                      type: string
                                     shards:
                                       description: parameters that should be distributed across sharded instances
                                       type: object
