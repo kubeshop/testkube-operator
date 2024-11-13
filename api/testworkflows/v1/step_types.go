@@ -216,7 +216,7 @@ type StepExecuteWorkflow struct {
 	Config map[string]intstr.IntOrString `json:"config,omitempty" expr:"template"`
 
 	// selector is used to identify a group of test workflows based on their metadata labels
-	Selector *metav1.LabelSelector `json:"selector,omitempty"`
+	Selector *metav1.LabelSelector `json:"selector,omitempty" expr:"include"`
 }
 
 type StepParallel struct {
