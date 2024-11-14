@@ -201,6 +201,9 @@ type StepExecuteWorkflow struct {
 	// workflow name to run
 	Name string `json:"name,omitempty" expr:"template"`
 
+	// selector is used to identify a group of test workflows based on their metadata labels
+	Selector *metav1.LabelSelector `json:"selector,omitempty" expr:"include"`
+
 	// test workflow execution description to display
 	Description string `json:"description,omitempty" expr:"template"`
 
@@ -214,9 +217,6 @@ type StepExecuteWorkflow struct {
 
 	// configuration to pass for the workflow
 	Config map[string]intstr.IntOrString `json:"config,omitempty" expr:"template"`
-
-	// selector is used to identify a group of test workflows based on their metadata labels
-	Selector *metav1.LabelSelector `json:"selector,omitempty" expr:"include"`
 }
 
 type StepParallel struct {
