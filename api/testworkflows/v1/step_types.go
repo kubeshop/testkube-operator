@@ -2,6 +2,7 @@ package v1
 
 import (
 	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 
 	testsv3 "github.com/kubeshop/testkube-operator/api/tests/v3"
@@ -199,6 +200,9 @@ type StepExecuteTest struct {
 type StepExecuteWorkflow struct {
 	// workflow name to run
 	Name string `json:"name,omitempty" expr:"template"`
+
+	// selector is used to identify a group of test workflows based on their metadata labels
+	Selector *metav1.LabelSelector `json:"selector,omitempty" expr:"include"`
 
 	// test workflow execution description to display
 	Description string `json:"description,omitempty" expr:"template"`
