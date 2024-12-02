@@ -4,6 +4,7 @@ import (
 	"context"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	testworkflowsv1 "github.com/kubeshop/testkube-operator/api/testworkflows/v1"
@@ -11,6 +12,7 @@ import (
 
 //go:generate mockgen -destination=./mock_testworkflowexecutions.go -package=v1 "github.com/kubeshop/testkube-operator/pkg/client/testworkflows/v1" TestWorkflowExecutionsInterface
 type TestWorkflowExecutionsInterface interface {
+	List(selector string) (*testworkflowsv1.TestWorkflowExecutionList, error)
 	Get(name string) (*testworkflowsv1.TestWorkflowExecution, error)
 	Create(testWorkflowExecution *testworkflowsv1.TestWorkflowExecution) (*testworkflowsv1.TestWorkflowExecution, error)
 	Update(testWorkflowExecution *testworkflowsv1.TestWorkflowExecution) (*testworkflowsv1.TestWorkflowExecution, error)
@@ -30,6 +32,26 @@ func NewTestWorkflowExecutionsClient(client client.Client, namespace string) *Te
 type TestWorkflowExecutionsClient struct {
 	k8sClient client.Client
 	namespace string
+}
+
+// List lists TestWorkflowExecutions
+func (s TestWorkflowExecutionsClient) List(selector string) (*testworkflowsv1.TestWorkflowExecutionList, error) {
+	list := &testworkflowsv1.TestWorkflowExecutionList{}
+	reqs, err := labels.ParseToRequirements(selector)
+	if err != nil {
+		return list, err
+	}
+
+	options := &client.ListOptions{
+		Namespace:     s.namespace,
+		LabelSelector: labels.NewSelector().Add(reqs...),
+	}
+
+	if err = s.k8sClient.List(context.Background(), list, options); err != nil {
+		return list, err
+	}
+
+	return list, nil
 }
 
 // Get gets test workflow execution by name in given namespace

@@ -78,6 +78,21 @@ func (mr *MockTestWorkflowExecutionsInterfaceMockRecorder) Get(arg0 interface{})
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockTestWorkflowExecutionsInterface)(nil).Get), arg0)
 }
 
+// List mocks base method.
+func (m *MockTestWorkflowExecutionsInterface) List(arg0 string) (*v1.TestWorkflowExecutionList, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "List", arg0)
+	ret0, _ := ret[0].(*v1.TestWorkflowExecutionList)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// List indicates an expected call of List.
+func (mr *MockTestWorkflowExecutionsInterfaceMockRecorder) List(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockTestWorkflowExecutionsInterface)(nil).List), arg0)
+}
+
 // Update mocks base method.
 func (m *MockTestWorkflowExecutionsInterface) Update(arg0 *v1.TestWorkflowExecution) (*v1.TestWorkflowExecution, error) {
 	m.ctrl.T.Helper()
