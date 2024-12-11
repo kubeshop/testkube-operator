@@ -38,6 +38,9 @@ type TestWorkflowSpec struct {
 
 	// steps to run at the end of the workflow
 	After []Step `json:"after,omitempty" expr:"include"`
+
+	// list of accompanying permanent volume claims
+	Pvcs map[string]TestWorkflowPvcConfig `json:"pvcs,omitempty" expr:"template,include"`
 }
 
 // TemplateRef is the reference for the template inclusion
