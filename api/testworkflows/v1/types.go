@@ -233,8 +233,6 @@ type TestWorkflowTagSchema struct {
 }
 
 type TestWorkflowPvcConfig struct {
-	// Specify whether the pvc should be shared between test workflow pods
-	Shared bool `json:"shared,omitempty" expr:"ignore"`
 	// Access mode for claim storage. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes
 	AccessModes []string `json:"accessModes,omitempty" expr:"template"`
 	// Volume mode indicates the consumption of the volume as either a filesystem or block device. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#volume-mode
