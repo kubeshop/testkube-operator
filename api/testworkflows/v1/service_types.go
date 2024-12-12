@@ -38,6 +38,9 @@ type IndependentServiceSpec struct {
 
 	// Probe to check if the service has started correctly
 	ReadinessProbe *corev1.Probe `json:"readinessProbe,omitempty" expr:"force"`
+
+	// list of accompanying permanent volume claims
+	Pvcs map[string]TestWorkflowPvcConfig `json:"pvcs,omitempty" expr:"template,include"`
 }
 
 type ServiceSpec struct {
