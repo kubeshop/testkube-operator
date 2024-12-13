@@ -241,6 +241,8 @@ type TestWorkflowPvcConfig struct {
 	Resources *Resources `json:"resources,omitempty" expr:"include"`
 	// Storage class name specifies the name of a StorageClass. More info: https://kubernetes.io/docs/concepts/storage/storage-classes/
 	StorageClassName string `json:"storageClassName,omitempty" expr:"template"`
+	// volume name is used to identify the volume
+	VolumeName string `json:"volumeName,omitempty" expr:"template"`
 	// selector is used to identify a group of volumes based on their metadata labels
 	Selector *metav1.LabelSelector `json:"selector,omitempty" expr:"include"`
 }
