@@ -1630,10 +1630,20 @@ func (in *TestWorkflowPvcConfig) DeepCopyInto(out *TestWorkflowPvcConfig) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
+	if in.VolumeMode != nil {
+		in, out := &in.VolumeMode, &out.VolumeMode
+		*out = new(string)
+		**out = **in
+	}
 	if in.Resources != nil {
 		in, out := &in.Resources, &out.Resources
 		*out = new(Resources)
 		(*in).DeepCopyInto(*out)
+	}
+	if in.StorageClassName != nil {
+		in, out := &in.StorageClassName, &out.StorageClassName
+		*out = new(string)
+		**out = **in
 	}
 	if in.Selector != nil {
 		in, out := &in.Selector, &out.Selector
