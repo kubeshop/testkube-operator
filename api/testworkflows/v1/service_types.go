@@ -40,7 +40,7 @@ type IndependentServiceSpec struct {
 	ReadinessProbe *corev1.Probe `json:"readinessProbe,omitempty" expr:"force"`
 
 	// list of accompanying permanent volume claims
-	Pvcs map[string]TestWorkflowPvcConfig `json:"pvcs,omitempty" expr:"template,include"`
+	Pvcs map[string]corev1.PersistentVolumeClaimSpec `json:"pvcs,omitempty" expr:"template,include"`
 }
 
 type ServiceSpec struct {

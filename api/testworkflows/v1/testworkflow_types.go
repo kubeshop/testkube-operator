@@ -14,6 +14,7 @@ limitations under the License.
 package v1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
@@ -40,7 +41,7 @@ type TestWorkflowSpec struct {
 	After []Step `json:"after,omitempty" expr:"include"`
 
 	// list of accompanying permanent volume claims
-	Pvcs map[string]TestWorkflowPvcConfig `json:"pvcs,omitempty" expr:"template,include"`
+	Pvcs map[string]corev1.PersistentVolumeClaimSpec `json:"pvcs,omitempty" expr:"template,include"`
 }
 
 // TemplateRef is the reference for the template inclusion

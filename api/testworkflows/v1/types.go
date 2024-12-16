@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 
 	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
@@ -229,20 +228,5 @@ type CronJobConfig struct {
 
 type TestWorkflowTagSchema struct {
 	// test workflow execution tags
-	Tags map[string]string `json:"tags,omitempty" expr:"template"`
-}
-
-type TestWorkflowPvcConfig struct {
-	// Access mode for claim storage. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes
-	AccessModes []string `json:"accessModes,omitempty" expr:"template"`
-	// Volume mode indicates the consumption of the volume as either a filesystem or block device. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#volume-mode
-	VolumeMode *string `json:"volumeMode,omitempty" expr:"template"`
-	// expected resources for the pvc
-	Resources *Resources `json:"resources,omitempty" expr:"include"`
-	// Storage class name specifies the name of a StorageClass. More info: https://kubernetes.io/docs/concepts/storage/storage-classes/
-	StorageClassName *string `json:"storageClassName,omitempty" expr:"template"`
-	// volume name is used to identify the volume
-	VolumeName string `json:"volumeName,omitempty" expr:"template"`
-	// selector is used to identify a group of volumes based on their metadata labels
-	Selector *metav1.LabelSelector `json:"selector,omitempty" expr:"include"`
+	Tags map[string]string `json:"tags,omitempty" expr:"template,template"`
 }
