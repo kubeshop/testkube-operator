@@ -39,6 +39,9 @@ type IndependentServiceSpec struct {
 	// Probe to check if the service has started correctly
 	ReadinessProbe *corev1.Probe `json:"readinessProbe,omitempty" expr:"force"`
 
+	// defaults for the containers of the pod
+	Container *ContainerConfig `json:"container,omitempty" expr:"include"`
+
 	// list of accompanying permanent volume claims
 	Pvcs map[string]corev1.PersistentVolumeClaimSpec `json:"pvcs,omitempty" expr:"template,include"`
 }
