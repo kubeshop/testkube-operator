@@ -314,11 +314,6 @@ func (in *IndependentServiceSpec) DeepCopyInto(out *IndependentServiceSpec) {
 		*out = new(corev1.Probe)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Container != nil {
-		in, out := &in.Container, &out.Container
-		*out = new(ContainerConfig)
-		(*in).DeepCopyInto(*out)
-	}
 	if in.Pvcs != nil {
 		in, out := &in.Pvcs, &out.Pvcs
 		*out = make(map[string]corev1.PersistentVolumeClaimSpec, len(*in))
