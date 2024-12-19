@@ -398,6 +398,9 @@ spec:
                                   - basic
                                   - header
                                 type: string
+                              cone:
+                                description: enable cone mode for sparse checkout with paths
+                                type: boolean
                               mountPath:
                                 description: where to mount the fetched repository contents (defaults to "repo" directory in the data volume)
                                 type: string
@@ -2148,6 +2151,9 @@ spec:
                                         - basic
                                         - header
                                       type: string
+                                    cone:
+                                      description: enable cone mode for sparse checkout with paths
+                                      type: boolean
                                     mountPath:
                                       description: where to mount the fetched repository contents (defaults to "repo" directory in the data volume)
                                       type: string
@@ -3655,6 +3661,9 @@ spec:
                             - basic
                             - header
                           type: string
+                        cone:
+                          description: enable cone mode for sparse checkout with paths
+                          type: boolean
                         mountPath:
                           description: where to mount the fetched repository contents (defaults to "repo" directory in the data volume)
                           type: string
@@ -4441,6 +4450,9 @@ spec:
                                   - basic
                                   - header
                                 type: string
+                              cone:
+                                description: enable cone mode for sparse checkout with paths
+                                type: boolean
                               mountPath:
                                 description: where to mount the fetched repository contents (defaults to "repo" directory in the data volume)
                                 type: string
@@ -5852,6 +5864,9 @@ spec:
                                   - basic
                                   - header
                                 type: string
+                              cone:
+                                description: enable cone mode for sparse checkout with paths
+                                type: boolean
                               mountPath:
                                 description: where to mount the fetched repository contents (defaults to "repo" directory in the data volume)
                                 type: string
@@ -7602,6 +7617,9 @@ spec:
                                         - basic
                                         - header
                                       type: string
+                                    cone:
+                                      description: enable cone mode for sparse checkout with paths
+                                      type: boolean
                                     mountPath:
                                       description: where to mount the fetched repository contents (defaults to "repo" directory in the data volume)
                                       type: string
@@ -9068,6 +9086,9 @@ spec:
                                   - basic
                                   - header
                                 type: string
+                              cone:
+                                description: enable cone mode for sparse checkout with paths
+                                type: boolean
                               mountPath:
                                 description: where to mount the fetched repository contents (defaults to "repo" directory in the data volume)
                                 type: string
@@ -10818,6 +10839,9 @@ spec:
                                         - basic
                                         - header
                                       type: string
+                                    cone:
+                                      description: enable cone mode for sparse checkout with paths
+                                      type: boolean
                                     mountPath:
                                       description: where to mount the fetched repository contents (defaults to "repo" directory in the data volume)
                                       type: string

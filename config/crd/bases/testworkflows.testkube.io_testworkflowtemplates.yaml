@@ -398,6 +398,9 @@ spec:
                                   - basic
                                   - header
                                 type: string
+                              cone:
+                                description: enable cone mode for sparse checkout with paths
+                                type: boolean
                               mountPath:
                                 description: where to mount the fetched repository contents (defaults to "repo" directory in the data volume)
                                 type: string
@@ -2131,6 +2134,9 @@ spec:
                                         - basic
                                         - header
                                       type: string
+                                    cone:
+                                      description: enable cone mode for sparse checkout with paths
+                                      type: boolean
                                     mountPath:
                                       description: where to mount the fetched repository contents (defaults to "repo" directory in the data volume)
                                       type: string
@@ -2716,16 +2722,14 @@ spec:
                                           For any other third-party types, APIGroup is required.
                                         type: string
                                       kind:
-                                        description: Kind is the type of resource being
-                                          referenced
+                                        description: Kind is the type of resource being referenced
                                         type: string
                                       name:
-                                        description: Name is the name of resource being
-                                          referenced
+                                        description: Name is the name of resource being referenced
                                         type: string
                                     required:
-                                    - kind
-                                    - name
+                                      - kind
+                                      - name
                                     type: object
                                     x-kubernetes-map-type: atomic
                                   dataSourceRef:
@@ -2761,12 +2765,10 @@ spec:
                                           For any other third-party types, APIGroup is required.
                                         type: string
                                       kind:
-                                        description: Kind is the type of resource being
-                                          referenced
+                                        description: Kind is the type of resource being referenced
                                         type: string
                                       name:
-                                        description: Name is the name of resource being
-                                          referenced
+                                        description: Name is the name of resource being referenced
                                         type: string
                                       namespace:
                                         description: |-
@@ -2775,8 +2777,8 @@ spec:
                                           (Alpha) This field requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
                                         type: string
                                     required:
-                                    - kind
-                                    - name
+                                      - kind
+                                      - name
                                     type: object
                                   resources:
                                     description: |-
@@ -2798,8 +2800,7 @@ spec:
 
                                           This field is immutable. It can only be set for containers.
                                         items:
-                                          description: ResourceClaim references one
-                                            entry in PodSpec.ResourceClaims.
+                                          description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                                           properties:
                                             name:
                                               description: |-
@@ -2808,17 +2809,17 @@ spec:
                                                 inside a container.
                                               type: string
                                           required:
-                                          - name
+                                            - name
                                           type: object
                                         type: array
                                         x-kubernetes-list-map-keys:
-                                        - name
+                                          - name
                                         x-kubernetes-list-type: map
                                       limits:
                                         additionalProperties:
                                           anyOf:
-                                          - type: integer
-                                          - type: string
+                                            - type: integer
+                                            - type: string
                                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                           x-kubernetes-int-or-string: true
                                         description: |-
@@ -2828,8 +2829,8 @@ spec:
                                       requests:
                                         additionalProperties:
                                           anyOf:
-                                          - type: integer
-                                          - type: string
+                                            - type: integer
+                                            - type: string
                                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                           x-kubernetes-int-or-string: true
                                         description: |-
@@ -2840,21 +2841,17 @@ spec:
                                         type: object
                                     type: object
                                   selector:
-                                    description: selector is a label query over volumes
-                                      to consider for binding.
+                                    description: selector is a label query over volumes to consider for binding.
                                     properties:
                                       matchExpressions:
-                                        description: matchExpressions is a list of label
-                                          selector requirements. The requirements are
-                                          ANDed.
+                                        description: matchExpressions is a list of label selector requirements. The requirements are ANDed.
                                         items:
                                           description: |-
                                             A label selector requirement is a selector that contains values, a key, and an operator that
                                             relates the key and values.
                                           properties:
                                             key:
-                                              description: key is the label key that
-                                                the selector applies to.
+                                              description: key is the label key that the selector applies to.
                                               type: string
                                             operator:
                                               description: |-
@@ -2871,8 +2868,8 @@ spec:
                                                 type: string
                                               type: array
                                           required:
-                                          - key
-                                          - operator
+                                            - key
+                                            - operator
                                           type: object
                                         type: array
                                       matchLabels:
@@ -2896,8 +2893,7 @@ spec:
                                       Value of Filesystem is implied when not included in claim spec.
                                     type: string
                                   volumeName:
-                                    description: volumeName is the binding reference
-                                      to the PersistentVolume backing this claim.
+                                    description: volumeName is the binding reference to the PersistentVolume backing this claim.
                                     type: string
                                 type: object
                               description: list of accompanying permanent volume claims
@@ -3591,6 +3587,9 @@ spec:
                             - basic
                             - header
                           type: string
+                        cone:
+                          description: enable cone mode for sparse checkout with paths
+                          type: boolean
                         mountPath:
                           description: where to mount the fetched repository contents (defaults to "repo" directory in the data volume)
                           type: string
@@ -4103,16 +4102,14 @@ spec:
                               For any other third-party types, APIGroup is required.
                             type: string
                           kind:
-                            description: Kind is the type of resource being
-                              referenced
+                            description: Kind is the type of resource being referenced
                             type: string
                           name:
-                            description: Name is the name of resource being
-                              referenced
+                            description: Name is the name of resource being referenced
                             type: string
                         required:
-                        - kind
-                        - name
+                          - kind
+                          - name
                         type: object
                         x-kubernetes-map-type: atomic
                       dataSourceRef:
@@ -4148,12 +4145,10 @@ spec:
                               For any other third-party types, APIGroup is required.
                             type: string
                           kind:
-                            description: Kind is the type of resource being
-                              referenced
+                            description: Kind is the type of resource being referenced
                             type: string
                           name:
-                            description: Name is the name of resource being
-                              referenced
+                            description: Name is the name of resource being referenced
                             type: string
                           namespace:
                             description: |-
@@ -4162,8 +4157,8 @@ spec:
                               (Alpha) This field requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
                             type: string
                         required:
-                        - kind
-                        - name
+                          - kind
+                          - name
                         type: object
                       resources:
                         description: |-
@@ -4185,8 +4180,7 @@ spec:
 
                               This field is immutable. It can only be set for containers.
                             items:
-                              description: ResourceClaim references one
-                                entry in PodSpec.ResourceClaims.
+                              description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                               properties:
                                 name:
                                   description: |-
@@ -4195,17 +4189,17 @@ spec:
                                     inside a container.
                                   type: string
                               required:
-                              - name
+                                - name
                               type: object
                             type: array
                             x-kubernetes-list-map-keys:
-                            - name
+                              - name
                             x-kubernetes-list-type: map
                           limits:
                             additionalProperties:
                               anyOf:
-                              - type: integer
-                              - type: string
+                                - type: integer
+                                - type: string
                               pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                               x-kubernetes-int-or-string: true
                             description: |-
@@ -4215,8 +4209,8 @@ spec:
                           requests:
                             additionalProperties:
                               anyOf:
-                              - type: integer
-                              - type: string
+                                - type: integer
+                                - type: string
                               pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                               x-kubernetes-int-or-string: true
                             description: |-
@@ -4227,21 +4221,17 @@ spec:
                             type: object
                         type: object
                       selector:
-                        description: selector is a label query over volumes
-                          to consider for binding.
+                        description: selector is a label query over volumes to consider for binding.
                         properties:
                           matchExpressions:
-                            description: matchExpressions is a list of label
-                              selector requirements. The requirements are
-                              ANDed.
+                            description: matchExpressions is a list of label selector requirements. The requirements are ANDed.
                             items:
                               description: |-
                                 A label selector requirement is a selector that contains values, a key, and an operator that
                                 relates the key and values.
                               properties:
                                 key:
-                                  description: key is the label key that
-                                    the selector applies to.
+                                  description: key is the label key that the selector applies to.
                                   type: string
                                 operator:
                                   description: |-
@@ -4258,8 +4248,8 @@ spec:
                                     type: string
                                   type: array
                               required:
-                              - key
-                              - operator
+                                - key
+                                - operator
                               type: object
                             type: array
                           matchLabels:
@@ -4283,8 +4273,7 @@ spec:
                           Value of Filesystem is implied when not included in claim spec.
                         type: string
                       volumeName:
-                        description: volumeName is the binding reference
-                          to the PersistentVolume backing this claim.
+                        description: volumeName is the binding reference to the PersistentVolume backing this claim.
                         type: string
                     type: object
                   description: list of accompanying permanent volume claims
@@ -4387,6 +4376,9 @@ spec:
                                   - basic
                                   - header
                                 type: string
+                              cone:
+                                description: enable cone mode for sparse checkout with paths
+                                type: boolean
                               mountPath:
                                 description: where to mount the fetched repository contents (defaults to "repo" directory in the data volume)
                                 type: string
@@ -4972,16 +4964,14 @@ spec:
                                     For any other third-party types, APIGroup is required.
                                   type: string
                                 kind:
-                                  description: Kind is the type of resource being
-                                    referenced
+                                  description: Kind is the type of resource being referenced
                                   type: string
                                 name:
-                                  description: Name is the name of resource being
-                                    referenced
+                                  description: Name is the name of resource being referenced
                                   type: string
                               required:
-                              - kind
-                              - name
+                                - kind
+                                - name
                               type: object
                               x-kubernetes-map-type: atomic
                             dataSourceRef:
@@ -5017,12 +5007,10 @@ spec:
                                     For any other third-party types, APIGroup is required.
                                   type: string
                                 kind:
-                                  description: Kind is the type of resource being
-                                    referenced
+                                  description: Kind is the type of resource being referenced
                                   type: string
                                 name:
-                                  description: Name is the name of resource being
-                                    referenced
+                                  description: Name is the name of resource being referenced
                                   type: string
                                 namespace:
                                   description: |-
@@ -5031,8 +5019,8 @@ spec:
                                     (Alpha) This field requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
                                   type: string
                               required:
-                              - kind
-                              - name
+                                - kind
+                                - name
                               type: object
                             resources:
                               description: |-
@@ -5054,8 +5042,7 @@ spec:
 
                                     This field is immutable. It can only be set for containers.
                                   items:
-                                    description: ResourceClaim references one
-                                      entry in PodSpec.ResourceClaims.
+                                    description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                                     properties:
                                       name:
                                         description: |-
@@ -5064,17 +5051,17 @@ spec:
                                           inside a container.
                                         type: string
                                     required:
-                                    - name
+                                      - name
                                     type: object
                                   type: array
                                   x-kubernetes-list-map-keys:
-                                  - name
+                                    - name
                                   x-kubernetes-list-type: map
                                 limits:
                                   additionalProperties:
                                     anyOf:
-                                    - type: integer
-                                    - type: string
+                                      - type: integer
+                                      - type: string
                                     pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                     x-kubernetes-int-or-string: true
                                   description: |-
@@ -5084,8 +5071,8 @@ spec:
                                 requests:
                                   additionalProperties:
                                     anyOf:
-                                    - type: integer
-                                    - type: string
+                                      - type: integer
+                                      - type: string
                                     pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                     x-kubernetes-int-or-string: true
                                   description: |-
@@ -5096,21 +5083,17 @@ spec:
                                   type: object
                               type: object
                             selector:
-                              description: selector is a label query over volumes
-                                to consider for binding.
+                              description: selector is a label query over volumes to consider for binding.
                               properties:
                                 matchExpressions:
-                                  description: matchExpressions is a list of label
-                                    selector requirements. The requirements are
-                                    ANDed.
+                                  description: matchExpressions is a list of label selector requirements. The requirements are ANDed.
                                   items:
                                     description: |-
                                       A label selector requirement is a selector that contains values, a key, and an operator that
                                       relates the key and values.
                                     properties:
                                       key:
-                                        description: key is the label key that
-                                          the selector applies to.
+                                        description: key is the label key that the selector applies to.
                                         type: string
                                       operator:
                                         description: |-
@@ -5127,8 +5110,8 @@ spec:
                                           type: string
                                         type: array
                                     required:
-                                    - key
-                                    - operator
+                                      - key
+                                      - operator
                                     type: object
                                   type: array
                                 matchLabels:
@@ -5152,8 +5135,7 @@ spec:
                                 Value of Filesystem is implied when not included in claim spec.
                               type: string
                             volumeName:
-                              description: volumeName is the binding reference
-                                to the PersistentVolume backing this claim.
+                              description: volumeName is the binding reference to the PersistentVolume backing this claim.
                               type: string
                           type: object
                         description: list of accompanying permanent volume claims
@@ -5788,6 +5770,9 @@ spec:
                                   - basic
                                   - header
                                 type: string
+                              cone:
+                                description: enable cone mode for sparse checkout with paths
+                                type: boolean
                               mountPath:
                                 description: where to mount the fetched repository contents (defaults to "repo" directory in the data volume)
                                 type: string
@@ -7521,6 +7506,9 @@ spec:
                                         - basic
                                         - header
                                       type: string
+                                    cone:
+                                      description: enable cone mode for sparse checkout with paths
+                                      type: boolean
                                     mountPath:
                                       description: where to mount the fetched repository contents (defaults to "repo" directory in the data volume)
                                       type: string
@@ -8106,16 +8094,14 @@ spec:
                                           For any other third-party types, APIGroup is required.
                                         type: string
                                       kind:
-                                        description: Kind is the type of resource being
-                                          referenced
+                                        description: Kind is the type of resource being referenced
                                         type: string
                                       name:
-                                        description: Name is the name of resource being
-                                          referenced
+                                        description: Name is the name of resource being referenced
                                         type: string
                                     required:
-                                    - kind
-                                    - name
+                                      - kind
+                                      - name
                                     type: object
                                     x-kubernetes-map-type: atomic
                                   dataSourceRef:
@@ -8151,12 +8137,10 @@ spec:
                                           For any other third-party types, APIGroup is required.
                                         type: string
                                       kind:
-                                        description: Kind is the type of resource being
-                                          referenced
+                                        description: Kind is the type of resource being referenced
                                         type: string
                                       name:
-                                        description: Name is the name of resource being
-                                          referenced
+                                        description: Name is the name of resource being referenced
                                         type: string
                                       namespace:
                                         description: |-
@@ -8165,8 +8149,8 @@ spec:
                                           (Alpha) This field requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
                                         type: string
                                     required:
-                                    - kind
-                                    - name
+                                      - kind
+                                      - name
                                     type: object
                                   resources:
                                     description: |-
@@ -8188,8 +8172,7 @@ spec:
 
                                           This field is immutable. It can only be set for containers.
                                         items:
-                                          description: ResourceClaim references one
-                                            entry in PodSpec.ResourceClaims.
+                                          description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                                           properties:
                                             name:
                                               description: |-
@@ -8198,17 +8181,17 @@ spec:
                                                 inside a container.
                                               type: string
                                           required:
-                                          - name
+                                            - name
                                           type: object
                                         type: array
                                         x-kubernetes-list-map-keys:
-                                        - name
+                                          - name
                                         x-kubernetes-list-type: map
                                       limits:
                                         additionalProperties:
                                           anyOf:
-                                          - type: integer
-                                          - type: string
+                                            - type: integer
+                                            - type: string
                                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                           x-kubernetes-int-or-string: true
                                         description: |-
@@ -8218,8 +8201,8 @@ spec:
                                       requests:
                                         additionalProperties:
                                           anyOf:
-                                          - type: integer
-                                          - type: string
+                                            - type: integer
+                                            - type: string
                                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                           x-kubernetes-int-or-string: true
                                         description: |-
@@ -8230,21 +8213,17 @@ spec:
                                         type: object
                                     type: object
                                   selector:
-                                    description: selector is a label query over volumes
-                                      to consider for binding.
+                                    description: selector is a label query over volumes to consider for binding.
                                     properties:
                                       matchExpressions:
-                                        description: matchExpressions is a list of label
-                                          selector requirements. The requirements are
-                                          ANDed.
+                                        description: matchExpressions is a list of label selector requirements. The requirements are ANDed.
                                         items:
                                           description: |-
                                             A label selector requirement is a selector that contains values, a key, and an operator that
                                             relates the key and values.
                                           properties:
                                             key:
-                                              description: key is the label key that
-                                                the selector applies to.
+                                              description: key is the label key that the selector applies to.
                                               type: string
                                             operator:
                                               description: |-
@@ -8261,8 +8240,8 @@ spec:
                                                 type: string
                                               type: array
                                           required:
-                                          - key
-                                          - operator
+                                            - key
+                                            - operator
                                           type: object
                                         type: array
                                       matchLabels:
@@ -8286,8 +8265,7 @@ spec:
                                       Value of Filesystem is implied when not included in claim spec.
                                     type: string
                                   volumeName:
-                                    description: volumeName is the binding reference
-                                      to the PersistentVolume backing this claim.
+                                    description: volumeName is the binding reference to the PersistentVolume backing this claim.
                                     type: string
                                 type: object
                               description: list of accompanying permanent volume claims
@@ -8940,6 +8918,9 @@ spec:
                                   - basic
                                   - header
                                 type: string
+                              cone:
+                                description: enable cone mode for sparse checkout with paths
+                                type: boolean
                               mountPath:
                                 description: where to mount the fetched repository contents (defaults to "repo" directory in the data volume)
                                 type: string
@@ -10673,6 +10654,9 @@ spec:
                                         - basic
                                         - header
                                       type: string
+                                    cone:
+                                      description: enable cone mode for sparse checkout with paths
+                                      type: boolean
                                     mountPath:
                                       description: where to mount the fetched repository contents (defaults to "repo" directory in the data volume)
                                       type: string
@@ -11258,16 +11242,14 @@ spec:
                                           For any other third-party types, APIGroup is required.
                                         type: string
                                       kind:
-                                        description: Kind is the type of resource being
-                                          referenced
+                                        description: Kind is the type of resource being referenced
                                         type: string
                                       name:
-                                        description: Name is the name of resource being
-                                          referenced
+                                        description: Name is the name of resource being referenced
                                         type: string
                                     required:
-                                    - kind
-                                    - name
+                                      - kind
+                                      - name
                                     type: object
                                     x-kubernetes-map-type: atomic
                                   dataSourceRef:
@@ -11303,12 +11285,10 @@ spec:
                                           For any other third-party types, APIGroup is required.
                                         type: string
                                       kind:
-                                        description: Kind is the type of resource being
-                                          referenced
+                                        description: Kind is the type of resource being referenced
                                         type: string
                                       name:
-                                        description: Name is the name of resource being
-                                          referenced
+                                        description: Name is the name of resource being referenced
                                         type: string
                                       namespace:
                                         description: |-
@@ -11317,8 +11297,8 @@ spec:
                                           (Alpha) This field requires the CrossNamespaceVolumeDataSource feature gate to be enabled.
                                         type: string
                                     required:
-                                    - kind
-                                    - name
+                                      - kind
+                                      - name
                                     type: object
                                   resources:
                                     description: |-
@@ -11340,8 +11320,7 @@ spec:
 
                                           This field is immutable. It can only be set for containers.
                                         items:
-                                          description: ResourceClaim references one
-                                            entry in PodSpec.ResourceClaims.
+                                          description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                                           properties:
                                             name:
                                               description: |-
@@ -11350,17 +11329,17 @@ spec:
                                                 inside a container.
                                               type: string
                                           required:
-                                          - name
+                                            - name
                                           type: object
                                         type: array
                                         x-kubernetes-list-map-keys:
-                                        - name
+                                          - name
                                         x-kubernetes-list-type: map
                                       limits:
                                         additionalProperties:
                                           anyOf:
-                                          - type: integer
-                                          - type: string
+                                            - type: integer
+                                            - type: string
                                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                           x-kubernetes-int-or-string: true
                                         description: |-
@@ -11370,8 +11349,8 @@ spec:
                                       requests:
                                         additionalProperties:
                                           anyOf:
-                                          - type: integer
-                                          - type: string
+                                            - type: integer
+                                            - type: string
                                           pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                           x-kubernetes-int-or-string: true
                                         description: |-
@@ -11382,21 +11361,17 @@ spec:
                                         type: object
                                     type: object
                                   selector:
-                                    description: selector is a label query over volumes
-                                      to consider for binding.
+                                    description: selector is a label query over volumes to consider for binding.
                                     properties:
                                       matchExpressions:
-                                        description: matchExpressions is a list of label
-                                          selector requirements. The requirements are
-                                          ANDed.
+                                        description: matchExpressions is a list of label selector requirements. The requirements are ANDed.
                                         items:
                                           description: |-
                                             A label selector requirement is a selector that contains values, a key, and an operator that
                                             relates the key and values.
                                           properties:
                                             key:
-                                              description: key is the label key that
-                                                the selector applies to.
+                                              description: key is the label key that the selector applies to.
                                               type: string
                                             operator:
                                               description: |-
@@ -11413,8 +11388,8 @@ spec:
                                                 type: string
                                               type: array
                                           required:
-                                          - key
-                                          - operator
+                                            - key
+                                            - operator
                                           type: object
                                         type: array
                                       matchLabels:
@@ -11438,8 +11413,7 @@ spec:
                                       Value of Filesystem is implied when not included in claim spec.
                                     type: string
                                   volumeName:
-                                    description: volumeName is the binding reference
-                                      to the PersistentVolume backing this claim.
+                                    description: volumeName is the binding reference to the PersistentVolume backing this claim.
                                     type: string
                                 type: object
                               description: list of accompanying permanent volume claims
