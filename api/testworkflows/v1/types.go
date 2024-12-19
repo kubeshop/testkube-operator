@@ -228,5 +228,5 @@ type CronJobConfig struct {
 
 type TestWorkflowTagSchema struct {
 	// test workflow execution tags
-	Tags map[string]string `json:"tags,omitempty" expr:"template"`
+	Tags map[string]string `json:"tags,omitempty" expr:"template,template"`
 }
