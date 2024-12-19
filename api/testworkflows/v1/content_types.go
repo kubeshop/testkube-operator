@@ -27,6 +27,8 @@ type ContentGit struct {
 	AuthType testsv3.GitAuthType `json:"authType,omitempty" expr:"template"`
 	// where to mount the fetched repository contents (defaults to "repo" directory in the data volume)
 	MountPath string `json:"mountPath,omitempty" expr:"template"`
+	// enable cone mode for sparse checkout with paths
+	Cone bool `json:"cone,omitempty" expr:"ignore"`
 	// paths to fetch for the sparse checkout
 	Paths []string `json:"paths,omitempty" expr:"template"`
 }

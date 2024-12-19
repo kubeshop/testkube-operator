@@ -68,8 +68,7 @@ spec:
                               description: test workflow execution id
                               type: string
                             executionPath:
-                              description: all test workflow execution ids starting
-                                from the root
+                              description: all test workflow execution ids starting from the root
                               type: string
                             name:
                               description: actor name
@@ -103,7 +102,7 @@ spec:
                                 - internal
                               type: string
                           required:
-                          - type
+                            - type
                           type: object
                       required:
                         - actor
@@ -365,14 +364,13 @@ spec:
                               description: test workflow execution id
                               type: string
                             executionPath:
-                              description: all test workflow execution ids starting
-                                from the root
+                              description: all test workflow execution ids starting from the root
                               type: string
                             name:
                               description: actor name
                               type: string
                             type:
-                              description: supported actors for test workflow running context'
+                              description: supported actors for test workflow running context
                               enum:
                                 - cron
                                 - testtrigger
