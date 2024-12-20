@@ -47,6 +47,50 @@ type WebhookSpec struct {
 	// OnStateChange will trigger the webhook only when the result of the current execution differs from the previous result of the same test/test suite/workflow
 	// Deprecated: field is not used
 	OnStateChange bool `json:"onStateChange,omitempty"`
+	// webhook parameter configuration
+	WebhookConfig map[string]WebhookParameterSchema `json:"webhookConfig,omitempty"`
+	// webhook template reference
+	WebhookTemplateRef *WebhookTemplateRef `json:"webhookTemplateRef,omitempty"`
+}
+
+// webhook parameter schema
+type WebhookParameterSchema struct {
+	// description for the property
+	Description string `json:"description,omitempty"`
+	// whether parameter is required
+	Required bool `json:"required,omitempty"`
+	// example value for the parameter
+	Example string `json:"example,omitempty"`
+	// default parameter value
+	Default_ *string `json:"default,omitempty"`
+	// regular expression to match
+	Pattern string `json:"pattern,omitempty"`
+}
+
+// webhook template reference
+type WebhookTemplateRef struct {
+	// webhook template name to include
+	Name string `json:"name"`
+	//  webhook config to use in webhook template
+	Config map[string]WebhookConfigValue `json:"config,omitempty"`
+}
+
+// webhook configuration value
+type WebhookConfigValue struct {
+	// public value to use in webhook template
+	Public *string `json:"public,omitempty"`
+	// private value stored in secret to use in webhook template
+	Private *SecretRef `json:"private,omitempty"`
+}
+
+// Testkube internal reference for secret storage in Kubernetes secrets
+type SecretRef struct {
+	// object kubernetes namespace
+	Namespace string `json:"namespace,omitempty"`
+	// object name
+	Name string `json:"name"`
+	// object key
+	Key string `json:"key"`
 }
 
 // +kubebuilder:validation:Enum=start-test;end-test-success;end-test-failed;end-test-aborted;end-test-timeout;become-test-up;become-test-down;become-test-failed;become-test-aborted;become-test-timeout;start-testsuite;end-testsuite-success;end-testsuite-failed;end-testsuite-aborted;end-testsuite-timeout;become-testsuite-up;become-testsuite-down;become-testsuite-failed;become-testsuite-aborted;become-testsuite-timeout;start-testworkflow;queue-testworkflow;end-testworkflow-success;end-testworkflow-failed;end-testworkflow-aborted;become-testworkflow-up;become-testworkflow-down;become-testworkflow-failed;become-testworkflow-aborted
