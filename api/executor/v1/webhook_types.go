@@ -47,8 +47,10 @@ type WebhookSpec struct {
 	// OnStateChange will trigger the webhook only when the result of the current execution differs from the previous result of the same test/test suite/workflow
 	// Deprecated: field is not used
 	OnStateChange bool `json:"onStateChange,omitempty"`
-	// webhook parameter configuration
-	WebhookConfig map[string]WebhookParameterSchema `json:"webhookConfig,omitempty"`
+	// webhook configuration
+	Config map[string]WebhookConfigValue `json:"config,omitempty"`
+	// webhook parameters
+	Parameters map[string]WebhookParameterSchema `json:"parameters,omitempty"`
 	// webhook template reference
 	WebhookTemplateRef *WebhookTemplateRef `json:"webhookTemplateRef,omitempty"`
 }
@@ -71,8 +73,6 @@ type WebhookParameterSchema struct {
 type WebhookTemplateRef struct {
 	// webhook template name to include
 	Name string `json:"name"`
-	//  webhook config to use in webhook template
-	Config map[string]WebhookConfigValue `json:"config,omitempty"`
 }
 
 // webhook configuration value
