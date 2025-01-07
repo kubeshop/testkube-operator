@@ -53,6 +53,8 @@ type WebhookSpec struct {
 	Parameters map[string]WebhookParameterSchema `json:"parameters,omitempty"`
 	// webhook template reference
 	WebhookTemplateRef *WebhookTemplateRef `json:"webhookTemplateRef,omitempty"`
+	// whether webhook is used as a template
+	IsTemplate bool `json:"isTemplate,omitempty"`
 }
 
 // webhook parameter schema
