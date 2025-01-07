@@ -80,9 +80,9 @@ type WebhookTemplateRef struct {
 // webhook configuration value
 type WebhookConfigValue struct {
 	// public value to use in webhook template
-	Public *string `json:"public,omitempty"`
+	Value *string `json:"value,omitempty"`
 	// private value stored in secret to use in webhook template
-	Private *SecretRef `json:"private,omitempty"`
+	Secret *SecretRef `json:"secret,omitempty"`
 }
 
 // Testkube internal reference for secret storage in Kubernetes secrets
