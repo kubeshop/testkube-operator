@@ -1,0 +1,9 @@
+apiVersion: executor.testkube.io/v1
+kind: WebhookTemplate
+metadata:
+  name: webhooktemplate-sample
+spec:
+  uri: http://localhost:8080/events
+  events:
+    - start-test
+    - end-test

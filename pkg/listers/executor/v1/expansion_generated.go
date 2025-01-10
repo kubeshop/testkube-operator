@@ -29,3 +29,10 @@ type WebhookListerExpansion interface{}
 // WebhookNamespaceListerExpansion allows custom methods to be added to
 // WebhookNamespaceLister.
 type WebhookNamespaceListerExpansion interface{}
+
+// WebhookTemplateListerExpansion allows custom methods to be added to WebhookTemplateLister.
+type WebhookTemplateListerExpansion interface{}
+
+// WebhookTemplateNamespaceListerExpansion allows custom methods to be added to
+// WebhookTemplateNamespaceLister.
+type WebhookTemplateNamespaceListerExpansion interface{}

@@ -24,6 +24,8 @@ type Interface interface {
 	Executor() ExecutorInformer
 	// Webhook returns a WebhookInformer.
 	Webhook() WebhookInformer
+	// WebhookTemplate returns a WebhookTemplateInformer.
+	WebhookTemplate() WebhookTemplateInformer
 }
 
 type version struct {
@@ -49,4 +51,9 @@ func (v *version) Executor() ExecutorInformer {
 // Webhook returns a WebhookInformer.
 func (v *version) Webhook() WebhookInformer {
 	return &webhookInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// WebhookTemplate returns a WebhookTemplateInformer.
+func (v *version) WebhookTemplate() WebhookTemplateInformer {
+	return &webhookTemplateInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

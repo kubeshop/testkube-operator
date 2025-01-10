@@ -85,6 +85,12 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 			resource: resource.GroupResource(),
 			informer: f.Executor().V1().Webhook().Informer(),
 		}, nil
+		// Group=executor.testkube.io, Version=v1
+	case executorv1.WebhookTemplateGroupVersionResource:
+		return &genericInformer{
+			resource: resource.GroupResource(),
+			informer: f.Executor().V1().WebhookTemplate().Informer(),
+		}, nil
 		// Group=tests.testkube.io, Version=v1
 	case testsourcev1.GroupVersionResource:
 		return &genericInformer{

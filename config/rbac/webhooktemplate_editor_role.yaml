@@ -1,0 +1,24 @@
+# permissions for end users to edit webhook templates.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: webhooktemplate-editor-role
+rules:
+- apiGroups:
+  - executor.testkube.io
+  resources:
+  - webhooktemplates
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - executor.testkube.io
+  resources:
+  - webhooktemplates/status
+  verbs:
+  - get

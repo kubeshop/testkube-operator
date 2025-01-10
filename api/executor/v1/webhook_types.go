@@ -53,8 +53,36 @@ type WebhookSpec struct {
 	Parameters map[string]WebhookParameterSchema `json:"parameters,omitempty"`
 	// webhook template reference
 	WebhookTemplateRef *WebhookTemplateRef `json:"webhookTemplateRef,omitempty"`
-	// whether webhook is used as a template
-	IsTemplate bool `json:"isTemplate,omitempty"`
+}
+
+// WebhookTemplateSpec defines the desired state of Webhook Template
+type WebhookTemplateSpec struct {
+	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
+	// Important: Run "make" to regenerate code after modifying this file
+
+	// Uri is address where webhook should be made (golang template supported)
+	Uri string `json:"uri,omitempty"`
+	// Events declare list if events on which webhook should be called
+	Events []EventType `json:"events,omitempty"`
+	// Labels to filter for tests and test suites
+	Selector string `json:"selector,omitempty"`
+	// will load the generated payload for notification inside the object
+	PayloadObjectField string `json:"payloadObjectField,omitempty"`
+	// golang based template for notification payload
+	PayloadTemplate string `json:"payloadTemplate,omitempty"`
+	// name of the template resource
+	PayloadTemplateReference string `json:"payloadTemplateReference,omitempty"`
+	// webhook headers (golang template supported)
+	Headers map[string]string `json:"headers,omitempty"`
+	// Disabled will disable the webhook
+	Disabled bool `json:"disabled,omitempty"`
+	// OnStateChange will trigger the webhook only when the result of the current execution differs from the previous result of the same test/test suite/workflow
+	// Deprecated: field is not used
+	OnStateChange bool `json:"onStateChange,omitempty"`
+	// webhook configuration
+	Config map[string]WebhookConfigValue `json:"config,omitempty"`
+	// webhook parameters
+	Parameters map[string]WebhookParameterSchema `json:"parameters,omitempty"`
 }
 
 // webhook parameter schema
@@ -137,6 +165,12 @@ type WebhookStatus struct {
 	// Important: Run "make" to regenerate code after modifying this file
 }
 
+// WebhookTemplateStatus defines the observed state of Webhook Template
+type WebhookTemplateStatus struct {
+	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
+	// Important: Run "make" to regenerate code after modifying this file
+}
+
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
@@ -150,6 +184,18 @@ type Webhook struct {
 }
 
 //+kubebuilder:object:root=true
+//+kubebuilder:subresource:status
+
+// WebhookTemplate is the Schema for the webhook templates API
+type WebhookTemplate struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   WebhookTemplateSpec   `json:"spec,omitempty"`
+	Status WebhookTemplateStatus `json:"status,omitempty"`
+}
+
+//+kubebuilder:object:root=true
 
 // WebhookList contains a list of Webhook
 type WebhookList struct {
@@ -158,6 +204,16 @@ type WebhookList struct {
 	Items           []Webhook `json:"items"`
 }
 
+//+kubebuilder:object:root=true
+
+// WebhookTemplateList contains a list of Webhook Template
+type WebhookTemplateList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []WebhookTemplate `json:"items"`
+}
+
 func init() {
 	SchemeBuilder.Register(&Webhook{}, &WebhookList{})
+	SchemeBuilder.Register(&WebhookTemplate{}, &WebhookTemplateList{})
 }

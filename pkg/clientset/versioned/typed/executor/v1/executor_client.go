@@ -29,6 +29,7 @@ type ExecutorV1Interface interface {
 	RESTClient() rest.Interface
 	ExecutorGetter
 	WebhookGetter
+	WebhookTemplateGetter
 }
 
 // ExecutorV1Client is used to interact with features provided by the executor.testkube.io group.
@@ -42,6 +43,10 @@ func (c *ExecutorV1Client) Executor(namespace string) ExecutorInterface {
 
 func (c *ExecutorV1Client) Webhook(namespace string) WebhookInterface {
 	return newWebhook(c, namespace)
+}
+
+func (c *ExecutorV1Client) WebhookTemplate(namespace string) WebhookTemplateInterface {
+	return newWebhookTemplate(c, namespace)
 }
 
 // NewForConfig creates a new ExecutorV1Client for the given config.
