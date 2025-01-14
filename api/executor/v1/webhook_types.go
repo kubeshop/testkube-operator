@@ -76,9 +76,6 @@ type WebhookTemplateSpec struct {
 	Headers map[string]string `json:"headers,omitempty"`
 	// Disabled will disable the webhook
 	Disabled bool `json:"disabled,omitempty"`
-	// OnStateChange will trigger the webhook only when the result of the current execution differs from the previous result of the same test/test suite/workflow
-	// Deprecated: field is not used
-	OnStateChange bool `json:"onStateChange,omitempty"`
 	// webhook configuration
 	Config map[string]WebhookConfigValue `json:"config,omitempty"`
 	// webhook parameters
