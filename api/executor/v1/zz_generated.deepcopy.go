@@ -349,9 +349,9 @@ func (in *WebhookSpec) DeepCopyInto(out *WebhookSpec) {
 	}
 	if in.Parameters != nil {
 		in, out := &in.Parameters, &out.Parameters
-		*out = make(map[string]WebhookParameterSchema, len(*in))
-		for key, val := range *in {
-			(*out)[key] = *val.DeepCopy()
+		*out = make([]WebhookParameterSchema, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
 	if in.WebhookTemplateRef != nil {
@@ -484,9 +484,9 @@ func (in *WebhookTemplateSpec) DeepCopyInto(out *WebhookTemplateSpec) {
 	}
 	if in.Parameters != nil {
 		in, out := &in.Parameters, &out.Parameters
-		*out = make(map[string]WebhookParameterSchema, len(*in))
-		for key, val := range *in {
-			(*out)[key] = *val.DeepCopy()
+		*out = make([]WebhookParameterSchema, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
 }

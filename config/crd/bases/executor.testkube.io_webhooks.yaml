@@ -116,7 +116,8 @@ spec:
                   Deprecated: field is not used
                 type: boolean
               parameters:
-                additionalProperties:
+                description: webhook parameters
+                items:
                   description: webhook parameter schema
                   properties:
                     default:
@@ -128,15 +129,19 @@ spec:
                     example:
                       description: example value for the parameter
                       type: string
+                    name:
+                      description: unique parameter name
+                      type: string
                     pattern:
                       description: regular expression to match
                       type: string
                     required:
                       description: whether parameter is required
                       type: boolean
+                  required:
+                  - name
                   type: object
-                description: webhook parameters
-                type: object
+                type: array
               payloadObjectField:
                 description: will load the generated payload for notification inside
                   the object

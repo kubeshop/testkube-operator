@@ -50,7 +50,7 @@ type WebhookSpec struct {
 	// webhook configuration
 	Config map[string]WebhookConfigValue `json:"config,omitempty"`
 	// webhook parameters
-	Parameters map[string]WebhookParameterSchema `json:"parameters,omitempty"`
+	Parameters []WebhookParameterSchema `json:"parameters,omitempty"`
 	// webhook template reference
 	WebhookTemplateRef *WebhookTemplateRef `json:"webhookTemplateRef,omitempty"`
 }
@@ -79,11 +79,13 @@ type WebhookTemplateSpec struct {
 	// webhook configuration
 	Config map[string]WebhookConfigValue `json:"config,omitempty"`
 	// webhook parameters
-	Parameters map[string]WebhookParameterSchema `json:"parameters,omitempty"`
+	Parameters []WebhookParameterSchema `json:"parameters,omitempty"`
 }
 
 // webhook parameter schema
 type WebhookParameterSchema struct {
+	// unique parameter name
+	Name string `json:"name"`
 	// description for the property
 	Description string `json:"description,omitempty"`
 	// whether parameter is required
