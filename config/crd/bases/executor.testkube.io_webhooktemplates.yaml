@@ -120,7 +120,7 @@ spec:
                       description: default parameter value
                       type: string
                     description:
-                      description: description for the property
+                      description: description for the parameter
                       type: string
                     example:
                       description: example value for the parameter

@@ -86,7 +86,7 @@ type WebhookTemplateSpec struct {
 type WebhookParameterSchema struct {
 	// unique parameter name
 	Name string `json:"name"`
-	// description for the property
+	// description for the parameter
 	Description string `json:"description,omitempty"`
 	// whether parameter is required
 	Required bool `json:"required,omitempty"`
