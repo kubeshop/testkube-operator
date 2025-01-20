@@ -19,3 +19,5 @@ package v1
 type ExecutorExpansion interface{}
 
 type WebhookExpansion interface{}
+
+type WebhookTemplateExpansion interface{}

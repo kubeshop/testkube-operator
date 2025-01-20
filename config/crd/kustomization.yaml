@@ -7,6 +7,7 @@ resources:
 - bases/tests.testkube.io_tests.yaml
 - bases/tests.testkube.io_testsuites.yaml
 - bases/executor.testkube.io_webhooks.yaml
+- bases/executor.testkube.io_webhooktemplates.yaml
 - bases/tests.testkube.io_testtriggers.yaml
 - bases/tests.testkube.io_testsources.yaml
 - bases/tests.testkube.io_testexecutions.yaml
@@ -25,6 +26,7 @@ patchesStrategicMerge:
 #- patches/webhook_in_tests.yaml
 #- patches/webhook_in_testsuites.yaml
 #- patches/webhook_in_webhooks.yaml
+#- patches/webhook_in_webhooktemplates.yaml
 - patches/webhook_in_testtriggers.yaml
 #- patches/webhook_in_testsources.yaml
 #- patches/webhook_in_testexecutions.yaml

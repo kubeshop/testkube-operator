@@ -193,6 +193,13 @@ func main() {
 		setupLog.Error(err, "unable to create controller", "controller", "Webhook")
 		os.Exit(1)
 	}
+	if err = (&executorcontrollers.WebhookTemplateReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "WebhookTemplate")
+		os.Exit(1)
+	}
 	if err = (&testsourcecontrollers.TestSourceReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),

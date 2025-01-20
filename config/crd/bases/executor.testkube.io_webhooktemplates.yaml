@@ -4,20 +4,20 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.15.0
-  name: webhooks.executor.testkube.io
+  name: webhooktemplates.executor.testkube.io
 spec:
   group: executor.testkube.io
   names:
-    kind: Webhook
-    listKind: WebhookList
-    plural: webhooks
-    singular: webhook
+    kind: WebhookTemplate
+    listKind: WebhookTemplateList
+    plural: webhooktemplates
+    singular: webhooktemplate
   scope: Namespaced
   versions:
   - name: v1
     schema:
       openAPIV3Schema:
-        description: Webhook is the Schema for the webhooks API
+        description: WebhookTemplate is the Schema for the webhook templates API
         properties:
           apiVersion:
             description: |-
@@ -37,7 +37,8 @@ spec:
           metadata:
             type: object
           spec:
-            description: WebhookSpec defines the desired state of Webhook
+            description: WebhookTemplateSpec defines the desired state of Webhook
+              Template
             properties:
               config:
                 additionalProperties:
@@ -110,11 +111,6 @@ spec:
                   type: string
                 description: webhook headers (golang template supported)
                 type: object
-              onStateChange:
-                description: |-
-                  OnStateChange will trigger the webhook only when the result of the current execution differs from the previous result of the same test/test suite/workflow
-                  Deprecated: field is not used
-                type: boolean
               parameters:
                 description: webhook parameters
                 items:
@@ -159,18 +155,10 @@ spec:
                 description: Uri is address where webhook should be made (golang template
                   supported)
                 type: string
-              webhookTemplateRef:
-                description: webhook template reference
-                properties:
-                  name:
-                    description: webhook template name to include
-                    type: string
-                required:
-                - name
-                type: object
             type: object
           status:
-            description: WebhookStatus defines the observed state of Webhook
+            description: WebhookTemplateStatus defines the observed state of Webhook
+              Template
             type: object
         type: object
     served: true

@@ -37,6 +37,9 @@ var (
 	// WebhookResource corresponds to the CRD Kind
 	WebhookResource = "Webhook"
 
+	// WebhookTemplateResource corresponds to the CRD Kind
+	WebhookTemplateResource = "WebhookTemplate"
+
 	// GroupVersion is group version used to register these objects
 	GroupVersion = schema.GroupVersion{Group: Group, Version: Version}
 
@@ -45,6 +48,9 @@ var (
 
 	// WebhookGroupVersionResource is group, version and resource used to register these objects
 	WebhookGroupVersionResource = schema.GroupVersionResource{Group: Group, Version: Version, Resource: WebhookResource}
+
+	// WebhookTemplateGroupVersionResource is group, version and resource used to register these objects
+	WebhookTemplateGroupVersionResource = schema.GroupVersionResource{Group: Group, Version: Version, Resource: WebhookTemplateResource}
 
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme
 	SchemeBuilder = &scheme.Builder{GroupVersion: GroupVersion}

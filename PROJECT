@@ -57,6 +57,15 @@ resources:
 - api:
     crdVersion: v1
     namespaced: true
+  controller: true
+  domain: testkube.io
+  group: executor
+  kind: WebhookTemplate
+  path: github.com/kubeshop/testkube-operator/api/executor/v1
+  version: v1
+- api:
+    crdVersion: v1
+    namespaced: true
   domain: testkube.io
   group: tests
   kind: Test

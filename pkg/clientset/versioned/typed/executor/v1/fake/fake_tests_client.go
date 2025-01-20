@@ -34,6 +34,10 @@ func (c *FakeExecutorV1) Webhook(namespace string) v1.WebhookInterface {
 	return &FakeWebhook{c, namespace}
 }
 
+func (c *FakeExecutorV1) WebhookTemplate(namespace string) v1.WebhookTemplateInterface {
+	return &FakeWebhookTemplate{c, namespace}
+}
+
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
 func (c *FakeExecutorV1) RESTClient() rest.Interface {
