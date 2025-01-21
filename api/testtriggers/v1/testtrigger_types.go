@@ -96,6 +96,8 @@ const (
 	TestTriggerCauseDeploymentImageUpdate        TestTriggerEvent = "deployment-image-update"
 	TestTriggerCauseDeploymentEnvUpdate          TestTriggerEvent = "deployment-env-update"
 	TestTriggerCauseDeploymentContainersModified TestTriggerEvent = "deployment-containers-modified"
+	TestTriggerCauseDeploymentGenerationModified TestTriggerEvent = "deployment-generation-modified"
+	TestTriggerCauseDeploymentResourceModified   TestTriggerEvent = "deployment-resource-modified"
 	TestTriggerCauseEventStartTest               TestTriggerEvent = "event-start-test"
 	TestTriggerCauseEventEndTestSuccess          TestTriggerEvent = "event-end-test-success"
 	TestTriggerCauseEventEndTestFailed           TestTriggerEvent = "event-end-test-failed"
