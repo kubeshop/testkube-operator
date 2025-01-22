@@ -28,6 +28,8 @@ const (
 	CauseDeploymentImageUpdate        Cause     = "deployment-image-update"
 	CauseDeploymentEnvUpdate          Cause     = "deployment-env-update"
 	CauseDeploymentContainersModified Cause     = "deployment-containers-modified"
+	CauseDeploymentGenerationModified Cause     = "deployment-generation-modified"
+	CauseDeploymentResourceModified   Cause     = "deployment-resource-modified"
 	CauseEventStartTest               Cause     = "event-start-test"
 	CauseEventEndTestSuccess          Cause     = "event-end-test-success"
 	CauseEventEndTestFailed           Cause     = "event-end-test-failed"
