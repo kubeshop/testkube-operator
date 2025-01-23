@@ -58,6 +58,18 @@ spec:
                 enum:
                 - run
                 type: string
+              actionParameters:
+                description: supported action parameters for test triggers
+                properties:
+                  config:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  tags:
+                    additionalProperties:
+                      type: string
+                    type: object
+                type: object
               concurrencyPolicy:
                 description: ConcurrencyPolicy defines concurrency policy for selected
                   Execution
@@ -272,6 +284,9 @@ spec:
                   namespace:
                     description: Namespace of the Kubernetes object
                     type: string
+                  namespaceRegex:
+                    description: kubernetes resource namespace regex
+                    type: string
                 type: object
               testSelector:
                 description: TestSelector identifies on which Testkube Kubernetes
@@ -331,6 +346,9 @@ spec:
                     type: string
                   namespace:
                     description: Namespace of the Kubernetes object
+                    type: string
+                  namespaceRegex:
+                    description: kubernetes resource namespace regex
                     type: string
                 type: object
             required:

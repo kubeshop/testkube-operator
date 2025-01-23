@@ -52,7 +52,8 @@ type TestTriggerSpec struct {
 	// What resource probes should be matched
 	ProbeSpec *TestTriggerProbeSpec `json:"probeSpec,omitempty"`
 	// Action represents what needs to be executed for selected Execution
-	Action TestTriggerAction `json:"action"`
+	Action           TestTriggerAction            `json:"action"`
+	ActionParameters *TestTriggerActionParameters `json:"actionParameters,omitempty"`
 	// Execution identifies for which test execution should an Action be executed
 	Execution TestTriggerExecution `json:"execution"`
 	// TestSelector identifies on which Testkube Kubernetes Objects an Action should be taken
@@ -157,6 +158,8 @@ type TestTriggerSelector struct {
 	NameRegex string `json:"nameRegex,omitempty"`
 	// Namespace of the Kubernetes object
 	Namespace string `json:"namespace,omitempty"`
+	// kubernetes resource namespace regex
+	NamespaceRegex string `json:"namespaceRegex,omitempty"`
 	// LabelSelector is used to identify a group of Kubernetes Objects based on their metadata labels
 	LabelSelector *metav1.LabelSelector `json:"labelSelector,omitempty"`
 }
@@ -221,6 +224,12 @@ type TestTriggerProbeSpec struct {
 	Timeout int32 `json:"timeout,omitempty"`
 	// duration in seconds the test trigger waits between probes
 	Delay int32 `json:"delay,omitempty"`
+}
+
+// supported action parameters for test triggers
+type TestTriggerActionParameters struct {
+	Config map[string]string `json:"config,omitempty"`
+	Tags   map[string]string `json:"tags,omitempty"`
 }
 
 //+kubebuilder:object:root=true
