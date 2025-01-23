@@ -228,8 +228,10 @@ type TestTriggerProbeSpec struct {
 
 // supported action parameters for test triggers
 type TestTriggerActionParameters struct {
+	// configuration to pass for the workflow
 	Config map[string]string `json:"config,omitempty"`
-	Tags   map[string]string `json:"tags,omitempty"`
+	// test workflow execution tags
+	Tags map[string]string `json:"tags,omitempty"`
 }
 
 //+kubebuilder:object:root=true

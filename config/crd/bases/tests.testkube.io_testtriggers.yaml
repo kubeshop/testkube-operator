@@ -64,10 +64,12 @@ spec:
                   config:
                     additionalProperties:
                       type: string
+                    description: configuration to pass for the workflow
                     type: object
                   tags:
                     additionalProperties:
                       type: string
+                    description: test workflow execution tags
                     type: object
                 type: object
               concurrencyPolicy:
