@@ -124,7 +124,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 
 	for _, event := range events {
 		if event.Cronjob != nil {
-			name, err := cronjob.GetHashedMetadataName(testWorkflow.Name, event.Cronjob.Cron, event.Cronjob.Config)
+			name, err := cronjob.GetHashedMetadataName(testWorkflow.Name, event.Cronjob.Cron, string(testWorkflow.UID), event.Cronjob.Config)
 			if err != nil {
 				return ctrl.Result{}, err
 			}
