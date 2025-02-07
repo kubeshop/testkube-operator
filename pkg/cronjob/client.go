@@ -309,7 +309,7 @@ func GetHashedMetadataName(name, schedule, uid string, config map[string]intstr.
 	s := fnv.New32a()
 	s.Write([]byte(uid))
 
-	hash := fmt.Sprintf("%d-%d", s.Sum32(), h.Sum32())
+	hash := fmt.Sprintf("-%d-%d", s.Sum32(), h.Sum32())
 
 	if len(name) > 52-len(hash) {
 		name = name[:52-len(hash)]
