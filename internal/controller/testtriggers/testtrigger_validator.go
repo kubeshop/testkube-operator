@@ -28,6 +28,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
 type Validator struct {
@@ -38,7 +39,8 @@ func NewValidator(c client.Client) *Validator {
 	return &Validator{c: c}
 }
 
-func (v *Validator) ValidateCreate(ctx context.Context, t *testtriggerv1.TestTrigger) error {
+func (v *Validator) ValidateCreate(ctx context.Context, o runtime.Object) (admission.Warnings, error) {
+	t := o.(*testtriggerv1.TestTrigger)
 	var allErrs field.ErrorList
 
 	if err := v.validateResource(t.Spec.Resource); err != nil {
@@ -74,10 +76,10 @@ func (v *Validator) ValidateCreate(ctx context.Context, t *testtriggerv1.TestTri
 	}
 
 	if len(allErrs) == 0 {
-		return nil
+		return nil, nil
 	}
 
-	return k8serrors.NewInvalid(
+	return nil, k8serrors.NewInvalid(
 		schema.GroupKind{
 			Group: testtriggerv1.GroupVersion.Group,
 			Kind:  "TestTrigger",
@@ -87,57 +89,59 @@ func (v *Validator) ValidateCreate(ctx context.Context, t *testtriggerv1.TestTri
 	)
 }
 
-func (v *Validator) ValidateUpdate(ctx context.Context, old runtime.Object, new *testtriggerv1.TestTrigger) error {
+func (v *Validator) ValidateUpdate(ctx context.Context, oldObject runtime.Object, newObject runtime.Object) (admission.Warnings, error) {
 	var allErrs field.ErrorList
 
-	if err := v.validateResource(new.Spec.Resource); err != nil {
+	newTestTrigger := newObject.(*testtriggerv1.TestTrigger)
+
+	if err := v.validateResource(newTestTrigger.Spec.Resource); err != nil {
 		allErrs = append(allErrs, err)
 	}
 
-	if err := v.validateAction(new.Spec.Action); err != nil {
+	if err := v.validateAction(newTestTrigger.Spec.Action); err != nil {
 		allErrs = append(allErrs, err)
 	}
 
-	if errs := v.validateConditions(new.Spec.ConditionSpec); errs != nil {
+	if errs := v.validateConditions(newTestTrigger.Spec.ConditionSpec); errs != nil {
 		allErrs = append(allErrs, errs...)
 	}
 
-	if errs := v.validateProbes(new.Spec.ProbeSpec); errs != nil {
+	if errs := v.validateProbes(newTestTrigger.Spec.ProbeSpec); errs != nil {
 		allErrs = append(allErrs, errs...)
 	}
 
-	if err := v.validateExecution(new.Spec.Execution); err != nil {
+	if err := v.validateExecution(newTestTrigger.Spec.Execution); err != nil {
 		allErrs = append(allErrs, err)
 	}
 
-	if err := v.validateConcurrencyPolicy(new.Spec.ConcurrencyPolicy); err != nil {
+	if err := v.validateConcurrencyPolicy(newTestTrigger.Spec.ConcurrencyPolicy); err != nil {
 		allErrs = append(allErrs, err)
 	}
 
-	if errs := v.validateResourceSelector(new.Spec.ResourceSelector); errs != nil {
+	if errs := v.validateResourceSelector(newTestTrigger.Spec.ResourceSelector); errs != nil {
 		allErrs = append(allErrs, errs...)
 	}
 
-	if err := v.validateTestSelector(new.Spec.TestSelector); err != nil {
+	if err := v.validateTestSelector(newTestTrigger.Spec.TestSelector); err != nil {
 		allErrs = append(allErrs, err...)
 	}
 
 	if len(allErrs) == 0 {
-		return nil
+		return nil, nil
 	}
 
-	return k8serrors.NewInvalid(
+	return nil, k8serrors.NewInvalid(
 		schema.GroupKind{
 			Group: testtriggerv1.GroupVersion.Group,
 			Kind:  testtriggerv1.Resource,
 		},
-		new.Name,
+		newTestTrigger.Name,
 		allErrs,
 	)
 }
 
-func (v *Validator) ValidateDelete(ctx context.Context, trigger *testtriggerv1.TestTrigger) error {
-	return nil
+func (v *Validator) ValidateDelete(_ context.Context, _ runtime.Object) (admission.Warnings, error) {
+	return nil, nil
 }
 
 func (v *Validator) validateResourceSelector(resourceSelector testtriggerv1.TestTriggerSelector) field.ErrorList {
@@ -286,5 +290,3 @@ func (v *Validator) validateProbes(probeSpec *testtriggerv1.TestTriggerProbeSpec
 
 	return allErrs
 }
-
-var _ testtriggerv1.TestTriggerValidator = &Validator{}

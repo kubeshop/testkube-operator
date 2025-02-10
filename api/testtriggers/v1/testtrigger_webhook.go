@@ -17,38 +17,13 @@ limitations under the License.
 package v1
 
 import (
-	"context"
-
-	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
-// +k8s:deepcopy-gen=false
-type TestTriggerValidator interface {
-	ValidateCreate(context.Context, *TestTrigger) error
-	ValidateUpdate(ctx context.Context, old runtime.Object, new *TestTrigger) error
-	ValidateDelete(context.Context, *TestTrigger) error
-}
-
-var ctx = context.Background()
-var vldtr TestTriggerValidator
-
-func (in *TestTrigger) ValidateCreate(ctx context.Context) (admission.Warnings, error) {
-	return nil, vldtr.ValidateCreate(ctx, in)
-}
-
-func (in *TestTrigger) ValidateUpdate(old runtime.Object) (admission.Warnings, error) {
-	return nil, vldtr.ValidateUpdate(ctx, old, in)
-}
-
-func (in *TestTrigger) ValidateDelete() (admission.Warnings, error) {
-	return nil, vldtr.ValidateDelete(ctx, in)
-}
-
-func (in *TestTrigger) SetupWebhookWithManager(mgr ctrl.Manager, validator TestTriggerValidator) error {
-	vldtr = validator
+func (in *TestTrigger) SetupWebhookWithManager(mgr ctrl.Manager, validator admission.CustomValidator) error {
 	return ctrl.NewWebhookManagedBy(mgr).
+		WithValidator(validator).
 		For(in).
 		Complete()
 }
