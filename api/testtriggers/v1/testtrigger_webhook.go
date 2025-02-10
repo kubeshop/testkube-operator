@@ -18,9 +18,9 @@ package v1
 
 import (
 	"context"
+
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
-	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
@@ -34,7 +34,7 @@ type TestTriggerValidator interface {
 var ctx = context.Background()
 var vldtr TestTriggerValidator
 
-func (in *TestTrigger) ValidateCreate() (admission.Warnings, error) {
+func (in *TestTrigger) ValidateCreate(ctx context.Context) (admission.Warnings, error) {
 	return nil, vldtr.ValidateCreate(ctx, in)
 }
 
@@ -45,8 +45,6 @@ func (in *TestTrigger) ValidateUpdate(old runtime.Object) (admission.Warnings, e
 func (in *TestTrigger) ValidateDelete() (admission.Warnings, error) {
 	return nil, vldtr.ValidateDelete(ctx, in)
 }
-
-var _ webhook.Validator = &TestTrigger{}
 
 func (in *TestTrigger) SetupWebhookWithManager(mgr ctrl.Manager, validator TestTriggerValidator) error {
 	vldtr = validator
