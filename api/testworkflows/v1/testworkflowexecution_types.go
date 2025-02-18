@@ -118,8 +118,10 @@ type TestWorkflowRunningContextActor struct {
 	// test workflow execution id
 	ExecutionId string `json:"executionId,omitempty"`
 	// all test workflow execution ids starting from the root
-	ExecutionPath string                               `json:"executionPath,omitempty"`
-	Type_         *TestWorkflowRunningContextActorType `json:"type"`
+	ExecutionPath string `json:"executionPath,omitempty"`
+	// reference test workflow execution id
+	ExecutionReference string                               `json:"executionReference,omitempty"`
+	Type_              *TestWorkflowRunningContextActorType `json:"type"`
 }
 
 // supported interfaces for test workflow running context
