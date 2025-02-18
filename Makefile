@@ -124,7 +124,7 @@ undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/confi
 ##@ Setup
 
 CONTROLLER_GEN = $(shell pwd)/bin/controller-gen
-CONTROLLER_GEN_VERSION = v0.15.0
+CONTROLLER_GEN_VERSION = v0.17.2
 controller-gen: ## Download controller-gen locally if necessary.
 	@[ -f $(CONTROLLER_GEN) ] && [[ `$(CONTROLLER_GEN) --version` =~ "$(CONTROLLER_GEN_VERSION)" ]] || { \
 		 rm $(CONTROLLER_GEN);\
