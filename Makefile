@@ -126,9 +126,9 @@ undeploy: ## Undeploy controller from the K8s cluster specified in ~/.kube/confi
 CONTROLLER_GEN = $(shell pwd)/bin/controller-gen
 CONTROLLER_GEN_VERSION = v0.17.2
 controller-gen: ## Download controller-gen locally if necessary.
-	@[ -f $(CONTROLLER_GEN) ] && [[ `$(CONTROLLER_GEN) --version` =~ "$(CONTROLLER_GEN_VERSION)" ]] || { \
-		 rm $(CONTROLLER_GEN);\
-	}
+	@if [ -f "$(CONTROLLER_GEN)" ] && [[ ! `"$(CONTROLLER_GEN)" --version` =~ "$(CONTROLLER_GEN_VERSION)" ]]; then\
+		rm "$(CONTROLLER_GEN)";\
+	fi
 	$(call go-get-tool,$(CONTROLLER_GEN),sigs.k8s.io/controller-tools/cmd/controller-gen@$(CONTROLLER_GEN_VERSION))
 
 KUSTOMIZE = $(shell pwd)/bin/kustomize
