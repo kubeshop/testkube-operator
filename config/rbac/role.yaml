@@ -8,57 +8,7 @@ rules:
   - executor.testkube.io
   resources:
   - executors
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - executor.testkube.io
-  resources:
-  - executors/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - executor.testkube.io
-  resources:
-  - executors/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - executor.testkube.io
-  resources:
   - webhooks
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - executor.testkube.io
-  resources:
-  - webhooks/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - executor.testkube.io
-  resources:
-  - webhooks/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - executor.testkube.io
-  resources:
   - webhooktemplates
   verbs:
   - create
@@ -71,12 +21,16 @@ rules:
 - apiGroups:
   - executor.testkube.io
   resources:
+  - executors/finalizers
+  - webhooks/finalizers
   - webhooktemplates/finalizers
   verbs:
   - update
 - apiGroups:
   - executor.testkube.io
   resources:
+  - executors/status
+  - webhooks/status
   - webhooktemplates/status
   verbs:
   - get
@@ -86,185 +40,12 @@ rules:
   - tests.testkube.io
   resources:
   - scripts
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - tests.testkube.io
-  resources:
-  - scripts/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - tests.testkube.io
-  resources:
-  - scripts/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - tests.testkube.io
-  resources:
   - templates
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - tests.testkube.io
-  resources:
-  - templates/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - tests.testkube.io
-  resources:
-  - templates/status
-  verbs:
-  - get
-- apiGroups:
-  - tests.testkube.io
-  resources:
   - testexecutions
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - tests.testkube.io
-  resources:
-  - testexecutions/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - tests.testkube.io
-  resources:
-  - testexecutions/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - tests.testkube.io
-  resources:
   - tests
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - tests.testkube.io
-  resources:
-  - tests/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - tests.testkube.io
-  resources:
-  - tests/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - tests.testkube.io
-  resources:
   - testsources
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - tests.testkube.io
-  resources:
-  - testsources/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - tests.testkube.io
-  resources:
-  - testsources/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - tests.testkube.io
-  resources:
   - testsuiteexecutions
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - tests.testkube.io
-  resources:
-  - testsuiteexecutions/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - tests.testkube.io
-  resources:
-  - testsuiteexecutions/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - tests.testkube.io
-  resources:
   - testsuites
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - tests.testkube.io
-  resources:
-  - testsuites/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - tests.testkube.io
-  resources:
-  - testsuites/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - tests.testkube.io
-  resources:
   - testtriggers
   verbs:
   - create
@@ -277,72 +58,41 @@ rules:
 - apiGroups:
   - tests.testkube.io
   resources:
+  - scripts/finalizers
+  - templates/finalizers
+  - testexecutions/finalizers
+  - tests/finalizers
+  - testsources/finalizers
+  - testsuiteexecutions/finalizers
+  - testsuites/finalizers
   - testtriggers/finalizers
   verbs:
   - update
 - apiGroups:
   - tests.testkube.io
   resources:
+  - scripts/status
+  - testexecutions/status
+  - tests/status
+  - testsources/status
+  - testsuiteexecutions/status
+  - testsuites/status
   - testtriggers/status
   verbs:
   - get
   - patch
   - update
 - apiGroups:
+  - tests.testkube.io
+  resources:
+  - templates/status
+  verbs:
+  - get
+- apiGroups:
   - testworkflows.testkube.io
   resources:
   - testworkflowexecutions
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - testworkflows.testkube.io
-  resources:
-  - testworkflowexecutions/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - testworkflows.testkube.io
-  resources:
-  - testworkflowexecutions/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - testworkflows.testkube.io
-  resources:
   - testworkflows
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - testworkflows.testkube.io
-  resources:
-  - testworkflows/finalizers
-  verbs:
-  - update
-- apiGroups:
-  - testworkflows.testkube.io
-  resources:
-  - testworkflows/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - testworkflows.testkube.io
-  resources:
   - testworkflowtemplates
   verbs:
   - create
@@ -355,6 +105,17 @@ rules:
 - apiGroups:
   - testworkflows.testkube.io
   resources:
+  - testworkflowexecutions/finalizers
+  - testworkflows/finalizers
   - testworkflowtemplates/finalizers
   verbs:
+  - update
+- apiGroups:
+  - testworkflows.testkube.io
+  resources:
+  - testworkflowexecutions/status
+  - testworkflows/status
+  verbs:
+  - get
+  - patch
   - update
