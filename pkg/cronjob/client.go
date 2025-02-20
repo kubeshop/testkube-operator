@@ -296,17 +296,20 @@ func GetMetadataName(name, resource string) string {
 }
 
 // GetHashedMetadataName returns cron job hashed metadata name
-func GetHashedMetadataName(name, schedule string, config map[string]intstr.IntOrString) (string, error) {
+func GetHashedMetadataName(name, schedule, uid string, config map[string]intstr.IntOrString) (string, error) {
 	data, err := json.Marshal(config)
 	if err != nil {
 		return "", err
 	}
 
-	h := fnv.New64a()
+	h := fnv.New32a()
 	h.Write([]byte(schedule))
 	h.Write(data)
 
-	hash := fmt.Sprintf("-%d", h.Sum64())
+	s := fnv.New32a()
+	s.Write([]byte(uid))
+
+	hash := fmt.Sprintf("-%d-%d", s.Sum32(), h.Sum32())
 
 	if len(name) > 52-len(hash) {
 		name = name[:52-len(hash)]
