@@ -49,6 +49,10 @@ func (m *Manager) CleanForNewArchitecture(ctx context.Context) error {
 			return err
 		}
 
+		if data == nil {
+			continue
+		}
+
 		if flag, ok := data[enableCronJobsFLagName]; ok && flag != "" {
 			value, err := strconv.ParseBool(flag)
 			if err != nil {
@@ -62,11 +66,8 @@ func (m *Manager) CleanForNewArchitecture(ctx context.Context) error {
 	}
 
 	for _, namespace := range namespaces {
-		resources := []string{cronjobclient.TestResourceURI, cronjobclient.TestSuiteResourceURI, cronjobclient.TestWorkflowResourceURI}
-		for _, resource := range resources {
-			if err = m.cronJobClient.DeleteAll(ctx, resource, namespace); err != nil {
-				return err
-			}
+		if err = m.cronJobClient.DeleteAll(ctx, cronjobclient.TestWorkflowResourceURI, namespace); err != nil {
+			return err
 		}
 	}
 
