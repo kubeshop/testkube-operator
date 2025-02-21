@@ -39,7 +39,7 @@ import (
 type TestWorkflowReconciler struct {
 	client.Client
 	Scheme          *runtime.Scheme
-	CronJobClient   *cronjobclient.Client
+	CronJobClient   cronjobclient.Interface
 	ServiceName     string
 	ServicePort     int
 	PurgeExecutions bool

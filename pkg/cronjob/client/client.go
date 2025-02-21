@@ -33,6 +33,16 @@ const (
 	TestWorkflowTemplateResourceURI = "test-workflow-templates"
 )
 
+//go:generate mockgen -destination=./mock_client.go -package=client "github.com/kubeshop/testkube-operator/pkg/cronjob/client" Interface
+type Interface interface {
+	Get(ctx context.Context, name, namespace string) (*batchv1.CronJob, error)
+	ListAll(ctx context.Context, selector, namespace string) (*batchv1.CronJobList, error)
+	Create(ctx context.Context, id, name, namespace, uid string, options Options) error
+	Update(ctx context.Context, cronJob *batchv1.CronJob, id, name, namespace, uid string, options Options) error
+	Delete(ctx context.Context, name, namespace string) error
+	DeleteAll(ctx context.Context, selector, namespace string) error
+}
+
 // Client data struct for managing running cron jobs
 type Client struct {
 	k8sclient.Client

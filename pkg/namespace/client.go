@@ -18,8 +18,8 @@ type Client struct {
 	client.Client
 }
 
-// NewClient is a method to create new namespace client
-func NewClient(cli client.Client) *Client {
+// New is a method to create new namespace client
+func New(cli client.Client) *Client {
 	return &Client{
 		Client: cli,
 	}
