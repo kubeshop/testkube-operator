@@ -24,7 +24,7 @@ import (
 	"net/http"
 
 	testworkflowsv1 "github.com/kubeshop/testkube-operator/api/testworkflows/v1"
-	"github.com/kubeshop/testkube-operator/pkg/cronjob"
+	cronjobclient "github.com/kubeshop/testkube-operator/pkg/cronjob/client"
 
 	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -39,7 +39,7 @@ import (
 type TestWorkflowReconciler struct {
 	client.Client
 	Scheme          *runtime.Scheme
-	CronJobClient   *cronjob.Client
+	CronJobClient   *cronjobclient.Client
 	ServiceName     string
 	ServicePort     int
 	PurgeExecutions bool
@@ -66,7 +66,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	if err := r.Get(ctx, req.NamespacedName, &testWorkflow); err != nil {
 		if errors.IsNotFound(err) {
 			if err = r.CronJobClient.DeleteAll(ctx,
-				cronjob.GetSelector(req.NamespacedName.Name, cronjob.TestWorkflowResourceURI), req.NamespacedName.Namespace); err != nil {
+				cronjobclient.GetSelector(req.NamespacedName.Name, cronjobclient.TestWorkflowResourceURI), req.NamespacedName.Namespace); err != nil {
 				return ctrl.Result{}, err
 			}
 
@@ -95,9 +95,9 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 	}
 
 	hasTemplates := len(testWorkflow.Spec.Use) != 0
-	_, ok := testWorkflow.Labels[cronjob.TestWorkflowTemplateResourceURI]
+	_, ok := testWorkflow.Labels[cronjobclient.TestWorkflowTemplateResourceURI]
 	if ok && !hasTemplates {
-		delete(testWorkflow.Labels, cronjob.TestWorkflowTemplateResourceURI)
+		delete(testWorkflow.Labels, cronjobclient.TestWorkflowTemplateResourceURI)
 		return ctrl.Result{}, r.Update(ctx, &testWorkflow)
 	}
 
@@ -106,14 +106,14 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			testWorkflow.Labels = make(map[string]string)
 		}
 
-		testWorkflow.Labels[cronjob.TestWorkflowTemplateResourceURI] = "yes"
+		testWorkflow.Labels[cronjobclient.TestWorkflowTemplateResourceURI] = "yes"
 		return ctrl.Result{}, r.Update(ctx, &testWorkflow)
 	}
 
 	newCronJobConfigs := make(map[string]*testworkflowsv1.CronJobConfig)
 	oldCronJobs := make(map[string]*batchv1.CronJob)
 	cronJobList, err := r.CronJobClient.ListAll(ctx,
-		cronjob.GetSelector(testWorkflow.Name, cronjob.TestWorkflowResourceURI), testWorkflow.Namespace)
+		cronjobclient.GetSelector(testWorkflow.Name, cronjobclient.TestWorkflowResourceURI), testWorkflow.Namespace)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
@@ -124,7 +124,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 
 	for _, event := range events {
 		if event.Cronjob != nil {
-			name, err := cronjob.GetHashedMetadataName(testWorkflow.Name, event.Cronjob.Cron, string(testWorkflow.UID), event.Cronjob.Config)
+			name, err := cronjobclient.GetHashedMetadataName(testWorkflow.Name, event.Cronjob.Cron, string(testWorkflow.UID), event.Cronjob.Config)
 			if err != nil {
 				return ctrl.Result{}, err
 			}
@@ -173,13 +173,13 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				return ctrl.Result{}, err
 			}
 
-			newCronJobConfig.Labels[cronjob.TestWorkflowResourceURI] = testWorkflow.Name
-			options := cronjob.CronJobOptions{
+			newCronJobConfig.Labels[cronjobclient.TestWorkflowResourceURI] = testWorkflow.Name
+			options := cronjobclient.Options{
 				Schedule:    newCronJobConfig.Cron,
 				Group:       testworkflowsv1.Group,
 				Resource:    testworkflowsv1.Resource,
 				Version:     testworkflowsv1.Version,
-				ResourceURI: cronjob.TestWorkflowResourceURI,
+				ResourceURI: cronjobclient.TestWorkflowResourceURI,
 				Labels:      newCronJobConfig.Labels,
 				Annotations: newCronJobConfig.Annotations,
 				Data:        string(data),
@@ -205,13 +205,13 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				return ctrl.Result{}, err
 			}
 
-			newCronJobConfig.Labels[cronjob.TestWorkflowResourceURI] = testWorkflow.Name
-			options := cronjob.CronJobOptions{
+			newCronJobConfig.Labels[cronjobclient.TestWorkflowResourceURI] = testWorkflow.Name
+			options := cronjobclient.Options{
 				Schedule:    newCronJobConfig.Cron,
 				Group:       testworkflowsv1.Group,
 				Resource:    testworkflowsv1.Resource,
 				Version:     testworkflowsv1.Version,
-				ResourceURI: cronjob.TestWorkflowResourceURI,
+				ResourceURI: cronjobclient.TestWorkflowResourceURI,
 				Labels:      newCronJobConfig.Labels,
 				Annotations: newCronJobConfig.Annotations,
 				Data:        string(data),

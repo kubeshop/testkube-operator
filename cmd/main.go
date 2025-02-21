@@ -52,7 +52,7 @@ import (
 	testtriggerscontrollers "github.com/kubeshop/testkube-operator/internal/controller/testtriggers"
 	testworkflowexecutioncontrollers "github.com/kubeshop/testkube-operator/internal/controller/testworkflowexecution"
 	testworkflowscontrollers "github.com/kubeshop/testkube-operator/internal/controller/testworkflows"
-	"github.com/kubeshop/testkube-operator/pkg/cronjob"
+	cronjobclient "github.com/kubeshop/testkube-operator/pkg/cronjob/client"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -254,7 +254,7 @@ func main() {
 		}
 		templateCronjob = string(data)
 	}
-	cronJobClient := cronjob.NewClient(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port,
+	cronJobClient := cronjobclient.New(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port,
 		templateCronjob, httpConfig.Registry, httpConfig.UseArgocdSync)
 	if err = (&scriptcontrollers.ScriptReconciler{
 		Client: mgr.GetClient(),
