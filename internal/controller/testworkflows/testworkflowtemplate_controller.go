@@ -22,7 +22,7 @@ import (
 	"time"
 
 	testworkflowsv1 "github.com/kubeshop/testkube-operator/api/testworkflows/v1"
-	"github.com/kubeshop/testkube-operator/pkg/cronjob"
+	cronjobclient "github.com/kubeshop/testkube-operator/pkg/cronjob/client"
 
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -57,7 +57,7 @@ func (r *TestWorkflowTemplateReconciler) Reconcile(ctx context.Context, req ctrl
 	_ = log.FromContext(ctx)
 
 	var testWorkflowList testworkflowsv1.TestWorkflowList
-	reqs, err := labels.ParseToRequirements(cronjob.GetSelector("yes", cronjob.TestWorkflowTemplateResourceURI))
+	reqs, err := labels.ParseToRequirements(cronjobclient.GetSelector("yes", cronjobclient.TestWorkflowTemplateResourceURI))
 	if err != nil {
 		return ctrl.Result{}, err
 	}
