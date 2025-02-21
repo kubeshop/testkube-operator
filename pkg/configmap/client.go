@@ -41,7 +41,7 @@ func (c *Client) Get(ctx context.Context, name, namespace string) (map[string]st
 		return nil, err
 	}
 
-	stringData := map[string]string{}
+	stringData := make(map[string]string)
 	for key, value := range configMap.Data {
 		stringData[key] = value
 	}
