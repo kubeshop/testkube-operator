@@ -25,6 +25,7 @@ import (
 
 	testworkflowsv1 "github.com/kubeshop/testkube-operator/api/testworkflows/v1"
 	cronjobclient "github.com/kubeshop/testkube-operator/pkg/cronjob/client"
+	cronjobmanager "github.com/kubeshop/testkube-operator/pkg/cronjob/manager"
 
 	batchv1 "k8s.io/api/batch/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -40,6 +41,7 @@ type TestWorkflowReconciler struct {
 	client.Client
 	Scheme          *runtime.Scheme
 	CronJobClient   cronjobclient.Interface
+	CronJobManager  cronjobmanager.Interface
 	ServiceName     string
 	ServicePort     int
 	PurgeExecutions bool
@@ -60,6 +62,10 @@ type TestWorkflowReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.11.0/pkg/reconcile
 func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
+
+	if ok, err := r.CronJobManager.IsNamespaceForNewArchitecture(ctx, req.NamespacedName.Namespace); err != nil || !ok {
+		return ctrl.Result{}, err
+	}
 
 	// Delete CronJobs if it were created for deleted Test Workflow
 	var testWorkflow testworkflowsv1.TestWorkflow

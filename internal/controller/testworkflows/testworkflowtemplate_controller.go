@@ -23,6 +23,7 @@ import (
 
 	testworkflowsv1 "github.com/kubeshop/testkube-operator/api/testworkflows/v1"
 	cronjobclient "github.com/kubeshop/testkube-operator/pkg/cronjob/client"
+	cronjobmanager "github.com/kubeshop/testkube-operator/pkg/cronjob/manager"
 
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -38,7 +39,8 @@ const (
 // TestWorkflowTemplateReconciler reconciles a TestWorkflowTemplate object
 type TestWorkflowTemplateReconciler struct {
 	client.Client
-	Scheme *runtime.Scheme
+	Scheme         *runtime.Scheme
+	CronJobManager cronjobmanager.Interface
 }
 
 //+kubebuilder:rbac:groups=testworkflows.testkube.io,resources=testworkflowtemplates,verbs=get;list;watch;create;update;patch;delete
@@ -55,6 +57,10 @@ type TestWorkflowTemplateReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.11.0/pkg/reconcile
 func (r *TestWorkflowTemplateReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
+
+	if ok, err := r.CronJobManager.IsNamespaceForNewArchitecture(ctx, req.NamespacedName.Namespace); err != nil || !ok {
+		return ctrl.Result{}, err
+	}
 
 	var testWorkflowList testworkflowsv1.TestWorkflowList
 	reqs, err := labels.ParseToRequirements(cronjobclient.GetSelector("yes", cronjobclient.TestWorkflowTemplateResourceURI))

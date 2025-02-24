@@ -90,6 +90,7 @@ type HttpServerConfig struct {
 	Registry        string
 	UseArgocdSync   bool `split_words:"true"`
 	PurgeExecutions bool `split_words:"true"`
+	Config          string
 }
 
 // nolint:gocyclo
