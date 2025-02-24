@@ -2,7 +2,7 @@
 // Source: github.com/kubeshop/testkube-operator/pkg/cronjob/manager (interfaces: Interface)
 
 // Package managerr is a generated GoMock package.
-package managerr
+package manager
 
 import (
 	context "context"

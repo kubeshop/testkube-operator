@@ -13,7 +13,7 @@ const (
 	enableCronJobsFLagName = "enable-cron-jobs"
 )
 
-//go:generate mockgen -destination=./mock_client.go -package=managerr "github.com/kubeshop/testkube-operator/pkg/cronjob/manager" Interface
+//go:generate mockgen -destination=./mock_client.go -package=manager "github.com/kubeshop/testkube-operator/pkg/cronjob/manager" Interface
 type Interface interface {
 	IsNamespaceForNewArchitecture(ctx context.Context, namespace string) (bool, error)
 	CleanForNewArchitecture(ctx context.Context) error
