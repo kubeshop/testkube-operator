@@ -3,6 +3,7 @@ package manager
 import (
 	"context"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -19,17 +20,18 @@ const (
 
 //go:generate mockgen -destination=./mock_client.go -package=manager "github.com/kubeshop/testkube-operator/pkg/cronjob/manager" Interface
 type Interface interface {
-	IsNamespaceForNewArchitecture(ctx context.Context, namespace string) (bool, error)
+	IsNamespaceForNewArchitecture(namespace string) bool
 	CleanForNewArchitecture(ctx context.Context) error
 	Reconcile(ctx context.Context, log logr.Logger) error
 }
 
 // Manager provide methods to manage cronjobs
 type Manager struct {
-	namespaceClient namespaceclient.Interface
-	configMapClient configmapclient.Interface
-	cronJobClient   cronjobclient.Interface
-	configMapName   string
+	namespaceClient   namespaceclient.Interface
+	configMapClient   configmapclient.Interface
+	cronJobClient     cronjobclient.Interface
+	configMapName     string
+	namespaceDetected sync.Map
 }
 
 // New is a method to create new cronjob manager
@@ -43,55 +45,73 @@ func New(namespaceClient namespaceclient.Interface, configMapClient configmapcli
 	}
 }
 
-func (m *Manager) IsNamespaceForNewArchitecture(ctx context.Context, namespace string) (bool, error) {
+func (m *Manager) IsNamespaceForNewArchitecture(namespace string) bool {
+	_, ok := m.namespaceDetected.Load(namespace)
+	return ok
+}
+
+func (m *Manager) checkNamespacesForNewArchitecture(ctx context.Context) (map[string]struct{}, error) {
+	namespaces := make(map[string]struct{})
 	if m.configMapName == "" {
-		return false, nil
+		return namespaces, nil
 	}
 
-	data, err := m.configMapClient.Get(ctx, m.configMapName, namespace)
+	list, err := m.namespaceClient.ListAll(ctx, "")
 	if err != nil {
-		return false, err
+		return nil, err
 	}
 
-	if data == nil {
-		return false, nil
-	}
-
-	var result bool
-	if flag, ok := data[enableCronJobsFLagName]; ok && flag != "" {
-		result, err = strconv.ParseBool(flag)
+	for _, namespace := range list.Items {
+		data, err := m.configMapClient.Get(ctx, m.configMapName, namespace.Name)
 		if err != nil {
-			return false, err
+			return nil, err
+		}
+
+		if data == nil {
+			return namespaces, nil
+		}
+
+		if flag, ok := data[enableCronJobsFLagName]; ok && flag != "" {
+			result, err := strconv.ParseBool(flag)
+			if err != nil {
+				return nil, err
+			}
+
+			if result {
+				namespaces[namespace.Name] = struct{}{}
+			}
 		}
 	}
 
-	return result, nil
+	return namespaces, nil
 }
 
 // CleanForNewArchitecture is a method to clean cronjobs for new architecture
 func (m *Manager) CleanForNewArchitecture(ctx context.Context) error {
-	list, err := m.namespaceClient.ListAll(ctx, "")
+	namespaces, err := m.checkNamespacesForNewArchitecture(ctx)
 	if err != nil {
 		return err
 	}
 
-	namespaces := make([]string, 0)
-	for _, namespace := range list.Items {
-		result, err := m.IsNamespaceForNewArchitecture(ctx, namespace.Name)
-		if err != nil {
-			return err
-		}
+	for namespace := range namespaces {
+		if _, ok := m.namespaceDetected.Load(namespace); !ok {
+			if err = m.cronJobClient.DeleteAll(ctx, cronjobclient.TestWorkflowResourceURI, namespace); err != nil {
+				return err
+			}
 
-		if result {
-			namespaces = append(namespaces, namespace.Name)
+			m.namespaceDetected.Store(namespace, struct{}{})
 		}
 	}
 
-	for _, namespace := range namespaces {
-		if err = m.cronJobClient.DeleteAll(ctx, cronjobclient.TestWorkflowResourceURI, namespace); err != nil {
-			return err
+	m.namespaceDetected.Range(func(key any, value any) bool {
+		if data, ok := key.(string); ok {
+			if _, ok := namespaces[data]; !ok {
+				m.namespaceDetected.Delete(data)
+			}
 		}
-	}
+
+		return true
+	})
 
 	return nil
 }

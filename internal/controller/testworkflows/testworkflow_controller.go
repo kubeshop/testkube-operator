@@ -63,8 +63,8 @@ type TestWorkflowReconciler struct {
 func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
-	if ok, err := r.CronJobManager.IsNamespaceForNewArchitecture(ctx, req.NamespacedName.Namespace); err != nil || !ok {
-		return ctrl.Result{}, err
+	if r.CronJobManager.IsNamespaceForNewArchitecture(req.NamespacedName.Namespace) {
+		return ctrl.Result{}, nil
 	}
 
 	// Delete CronJobs if it were created for deleted Test Workflow

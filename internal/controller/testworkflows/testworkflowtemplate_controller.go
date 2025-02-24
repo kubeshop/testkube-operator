@@ -58,8 +58,8 @@ type TestWorkflowTemplateReconciler struct {
 func (r *TestWorkflowTemplateReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
-	if ok, err := r.CronJobManager.IsNamespaceForNewArchitecture(ctx, req.NamespacedName.Namespace); err != nil || !ok {
-		return ctrl.Result{}, err
+	if r.CronJobManager.IsNamespaceForNewArchitecture(req.NamespacedName.Namespace) {
+		return ctrl.Result{}, nil
 	}
 
 	var testWorkflowList testworkflowsv1.TestWorkflowList
