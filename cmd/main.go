@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"crypto/tls"
 	"encoding/base64"
 	"flag"
@@ -52,7 +53,10 @@ import (
 	testtriggerscontrollers "github.com/kubeshop/testkube-operator/internal/controller/testtriggers"
 	testworkflowexecutioncontrollers "github.com/kubeshop/testkube-operator/internal/controller/testworkflowexecution"
 	testworkflowscontrollers "github.com/kubeshop/testkube-operator/internal/controller/testworkflows"
+	configmapclient "github.com/kubeshop/testkube-operator/pkg/configmap"
 	cronjobclient "github.com/kubeshop/testkube-operator/pkg/cronjob/client"
+	cronjobmanager "github.com/kubeshop/testkube-operator/pkg/cronjob/manager"
+	namespaceclient "github.com/kubeshop/testkube-operator/pkg/namespace"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -257,6 +261,10 @@ func main() {
 	}
 	cronJobClient := cronjobclient.New(mgr.GetClient(), httpConfig.Fullname, httpConfig.Port,
 		templateCronjob, httpConfig.Registry, httpConfig.UseArgocdSync)
+	namespaceClient := namespaceclient.New(mgr.GetClient())
+	configMapClient := configmapclient.New(mgr.GetClient())
+	cronJobManager := cronjobmanager.New(namespaceClient, configMapClient, cronJobClient, httpConfig.Config)
+
 	if err = (&scriptcontrollers.ScriptReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
@@ -355,13 +363,15 @@ func main() {
 		ServiceName:     httpConfig.Fullname,
 		ServicePort:     httpConfig.Port,
 		PurgeExecutions: httpConfig.PurgeExecutions,
+		CronJobManager:  cronJobManager,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestWorkflow")
 		os.Exit(1)
 	}
 	if err = (&testworkflowscontrollers.TestWorkflowTemplateReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		Client:         mgr.GetClient(),
+		Scheme:         mgr.GetScheme(),
+		CronJobManager: cronJobManager,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestWorkflowTemplate")
 		os.Exit(1)
@@ -446,6 +456,10 @@ func main() {
 		os.Exit(1)
 	}
 
+	if err := cronJobManager.CleanForNewArchitecture(context.Background()); err != nil {
+		setupLog.Error(err, "unable to clean cron jobs for new architecture")
+		os.Exit(1)
+	}
 	setupLog.Info("starting manager")
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
 		setupLog.Error(err, "problem running manager")
