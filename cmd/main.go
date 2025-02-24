@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"crypto/tls"
 	"encoding/base64"
 	"flag"
@@ -456,12 +455,16 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := cronJobManager.CleanForNewArchitecture(context.Background()); err != nil {
+	ctx := ctrl.SetupSignalHandler()
+	if err := cronJobManager.CleanForNewArchitecture(ctx); err != nil {
 		setupLog.Error(err, "unable to clean cron jobs for new architecture")
 		os.Exit(1)
 	}
+	go func() {
+		cronJobManager.Reconcile(ctx, setupLog)
+	}()
 	setupLog.Info("starting manager")
-	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
+	if err := mgr.Start(ctx); err != nil {
 		setupLog.Error(err, "problem running manager")
 		os.Exit(1)
 	}

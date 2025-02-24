@@ -3,6 +3,9 @@ package manager
 import (
 	"context"
 	"strconv"
+	"time"
+
+	"github.com/go-logr/logr"
 
 	configmapclient "github.com/kubeshop/testkube-operator/pkg/configmap"
 	cronjobclient "github.com/kubeshop/testkube-operator/pkg/cronjob/client"
@@ -11,12 +14,14 @@ import (
 
 const (
 	enableCronJobsFLagName = "enable-cron-jobs"
+	reconciliationInterval = 30 * time.Second
 )
 
 //go:generate mockgen -destination=./mock_client.go -package=manager "github.com/kubeshop/testkube-operator/pkg/cronjob/manager" Interface
 type Interface interface {
 	IsNamespaceForNewArchitecture(ctx context.Context, namespace string) (bool, error)
 	CleanForNewArchitecture(ctx context.Context) error
+	Reconcile(ctx context.Context, log logr.Logger) error
 }
 
 // Manager provide methods to manage cronjobs
@@ -89,4 +94,23 @@ func (m *Manager) CleanForNewArchitecture(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (m *Manager) Reconcile(ctx context.Context, log logr.Logger) error {
+	ticker := time.NewTicker(reconciliationInterval)
+
+	defer func() {
+		ticker.Stop()
+	}()
+
+	for {
+		select {
+		case <-ticker.C:
+			if err := m.CleanForNewArchitecture(ctx); err != nil {
+				log.Error(err, "unable to clean cron jobs for new architecture")
+			}
+		case <-ctx.Done():
+			return ctx.Err()
+		}
+	}
 }
