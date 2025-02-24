@@ -51,9 +51,8 @@ func (m *Manager) IsNamespaceForNewArchitecture(namespace string) bool {
 }
 
 func (m *Manager) checkNamespacesForNewArchitecture(ctx context.Context) (map[string]struct{}, error) {
-	namespaces := make(map[string]struct{})
 	if m.configMapName == "" {
-		return namespaces, nil
+		return nil, nil
 	}
 
 	list, err := m.namespaceClient.ListAll(ctx, "")
@@ -61,6 +60,7 @@ func (m *Manager) checkNamespacesForNewArchitecture(ctx context.Context) (map[st
 		return nil, err
 	}
 
+	namespaces := make(map[string]struct{})
 	for _, namespace := range list.Items {
 		data, err := m.configMapClient.Get(ctx, m.configMapName, namespace.Name)
 		if err != nil {
@@ -68,7 +68,7 @@ func (m *Manager) checkNamespacesForNewArchitecture(ctx context.Context) (map[st
 		}
 
 		if data == nil {
-			return namespaces, nil
+			return nil, nil
 		}
 
 		if flag, ok := data[enableCronJobsFLagName]; ok && flag != "" {
@@ -104,7 +104,7 @@ func (m *Manager) CleanForNewArchitecture(ctx context.Context) error {
 	}
 
 	m.namespaceDetected.Range(func(key any, value any) bool {
-		if data, ok := key.(string); ok {
+		if data, ok := key.(string); ok && namespaces != nil {
 			if _, ok := namespaces[data]; !ok {
 				m.namespaceDetected.Delete(data)
 			}
