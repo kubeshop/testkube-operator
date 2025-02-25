@@ -19,8 +19,7 @@ type IndependentServiceSpec struct {
 	Logs *string `json:"logs,omitempty" expr:"expression"`
 
 	// maximum time until reaching readiness
-	// +kubebuilder:validation:Pattern=^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
-	Timeout string `json:"timeout,omitempty"`
+	Timeout string `json:"timeout,omitempty" expr:"template"`
 
 	// instructions for transferring files
 	Transfer []StepParallelTransfer `json:"transfer,omitempty" expr:"include"`
