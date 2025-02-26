@@ -1759,7 +1759,6 @@ spec:
                             type: object
                           timeout:
                             description: maximum time this step may take
-                            pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                             type: string
                           transfer:
                             description: instructions for transferring files
@@ -2957,7 +2956,6 @@ spec:
                               type: string
                             timeout:
                               description: maximum time until reaching readiness
-                              pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                               type: string
                             transfer:
                               description: instructions for transferring files
@@ -3043,7 +3041,6 @@ spec:
                         type: object
                       timeout:
                         description: maximum time this step may take
-                        pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                         type: string
                       use:
                         description: multiple templates to include in this step
@@ -4994,7 +4991,6 @@ spec:
                         type: string
                       timeout:
                         description: maximum time until reaching readiness
-                        pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                         type: string
                       transfer:
                         description: instructions for transferring files
@@ -6769,7 +6765,6 @@ spec:
                             type: object
                           timeout:
                             description: maximum time this step may take
-                            pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                             type: string
                           transfer:
                             description: instructions for transferring files
@@ -7967,7 +7962,6 @@ spec:
                               type: string
                             timeout:
                               description: maximum time until reaching readiness
-                              pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                               type: string
                             transfer:
                               description: instructions for transferring files
@@ -8053,7 +8047,6 @@ spec:
                         type: object
                       timeout:
                         description: maximum time this step may take
-                        pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                         type: string
                       use:
                         description: multiple templates to include in this step
@@ -9797,7 +9790,6 @@ spec:
                             type: object
                           timeout:
                             description: maximum time this step may take
-                            pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                             type: string
                           transfer:
                             description: instructions for transferring files
@@ -10995,7 +10987,6 @@ spec:
                               type: string
                             timeout:
                               description: maximum time until reaching readiness
-                              pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                               type: string
                             transfer:
                               description: instructions for transferring files
@@ -11081,7 +11072,6 @@ spec:
                         type: object
                       timeout:
                         description: maximum time this step may take
-                        pattern: ^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
                         type: string
                       use:
                         description: multiple templates to include in this step
