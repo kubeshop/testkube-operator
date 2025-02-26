@@ -57,8 +57,7 @@ type StepControl struct {
 	Retry *RetryPolicy `json:"retry,omitempty" expr:"include"`
 
 	// maximum time this step may take
-	// +kubebuilder:validation:Pattern=^((0|[1-9][0-9]*)h)?((0|[1-9][0-9]*)m)?((0|[1-9][0-9]*)s)?((0|[1-9][0-9]*)ms)?$
-	Timeout string `json:"timeout,omitempty"`
+	Timeout string `json:"timeout,omitempty" expr:"template"`
 }
 
 type StepOperations struct {
