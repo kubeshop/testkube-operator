@@ -144,7 +144,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 
 	interface_ := testworkflowsv1.API_TestWorkflowRunningContextInterfaceType
 	actor := testworkflowsv1.CRON_TestWorkflowRunningContextActorType
-	request := testworkflowsv1.TestWorkflowExecutionRequest{
+	request := testWorkflowExecutionRequest{
 		RunningContext: &testworkflowsv1.TestWorkflowRunningContext{
 			Interface_: &testworkflowsv1.TestWorkflowRunningContextInterface{
 				Type_: &interface_,
@@ -167,7 +167,13 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				newCronJobConfig.Labels = make(map[string]string)
 			}
 
-			request.Config = newCronJobConfig.Config
+			if len(newCronJobConfig.Config) != 0 {
+				request.Config = make(map[string]string, len(newCronJobConfig.Config))
+				for key, value := range newCronJobConfig.Config {
+					request.Config[key] = value.String()
+				}
+			}
+
 			data, err := json.Marshal(request)
 			if err != nil {
 				return ctrl.Result{}, err
@@ -199,7 +205,13 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 				newCronJobConfig.Labels = make(map[string]string)
 			}
 
-			request.Config = newCronJobConfig.Config
+			if len(newCronJobConfig.Config) != 0 {
+				request.Config = make(map[string]string, len(newCronJobConfig.Config))
+				for key, value := range newCronJobConfig.Config {
+					request.Config[key] = value.String()
+				}
+			}
+
 			data, err := json.Marshal(request)
 			if err != nil {
 				return ctrl.Result{}, err
@@ -278,4 +290,11 @@ func (r *TestWorkflowReconciler) deleteTestWorkflow(testWorkflowName, namespace 
 	}
 
 	return fmt.Sprintf("status: %d", resp.StatusCode), err
+}
+
+type testWorkflowExecutionRequest struct {
+	// api config parameters
+	Config map[string]string `json:"config,omitempty"`
+	// running context for the test workflow execution (Pro edition only)
+	RunningContext *testworkflowsv1.TestWorkflowRunningContext `json:"runningContext,omitempty"`
 }
