@@ -293,7 +293,8 @@ func (r *TestWorkflowReconciler) deleteTestWorkflow(testWorkflowName, namespace 
 }
 
 type testWorkflowExecutionRequest struct {
-	Config map[string]string `json:"config,omitempty" expr:"template"`
+	// api config parameters
+	Config map[string]string `json:"config,omitempty"`
 	// running context for the test workflow execution (Pro edition only)
 	RunningContext *testworkflowsv1.TestWorkflowRunningContext `json:"runningContext,omitempty"`
 }
