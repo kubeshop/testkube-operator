@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"hash/fnv"
 	"maps"
+	"sort"
 	"strings"
 	"text/template"
 
@@ -305,8 +306,24 @@ func GetMetadataName(name, resource string) string {
 	return result
 }
 
+type configKeyValue struct {
+	Key   string
+	Value intstr.IntOrString
+}
+
+type configKeyValues []configKeyValue
+
 // GetHashedMetadataName returns cron job hashed metadata name
 func GetHashedMetadataName(name, schedule, uid string, config map[string]intstr.IntOrString) (string, error) {
+	var slice configKeyValues
+	for key, value := range config {
+		slice = append(slice, configKeyValue{Key: key, Value: value})
+	}
+
+	sort.Slice(slice, func(i, j int) bool {
+		return slice[i].Key < slice[j].Key
+	})
+
 	data, err := json.Marshal(config)
 	if err != nil {
 		return "", err
