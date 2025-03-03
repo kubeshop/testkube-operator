@@ -68,7 +68,7 @@ func (m *Manager) checkNamespacesForNewArchitecture(ctx context.Context) (map[st
 		}
 
 		if data == nil {
-			return nil, nil
+			continue
 		}
 
 		if flag, ok := data[enableCronJobsFLagName]; ok && flag != "" {
