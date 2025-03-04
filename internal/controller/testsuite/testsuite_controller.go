@@ -33,6 +33,7 @@ import (
 	templatesv1 "github.com/kubeshop/testkube-operator/api/template/v1"
 	testsuitev3 "github.com/kubeshop/testkube-operator/api/testsuite/v3"
 	cronjobclient "github.com/kubeshop/testkube-operator/pkg/cronjob/client"
+	cronjobmanager "github.com/kubeshop/testkube-operator/pkg/cronjob/manager"
 )
 
 // TestSuiteReconciler reconciles a TestSuite object
@@ -40,6 +41,7 @@ type TestSuiteReconciler struct {
 	client.Client
 	Scheme          *runtime.Scheme
 	CronJobClient   cronjobclient.Interface
+	CronJobManager  cronjobmanager.Interface
 	ServiceName     string
 	ServicePort     int
 	PurgeExecutions bool
@@ -60,6 +62,10 @@ type TestSuiteReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.11.0/pkg/reconcile
 func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
+
+	if r.CronJobManager.IsNamespaceForNewArchitecture(req.NamespacedName.Namespace) {
+		return ctrl.Result{}, nil
+	}
 
 	// Delete CronJob if it was created for deleted TestSuite
 	var testSuite testsuitev3.TestSuite

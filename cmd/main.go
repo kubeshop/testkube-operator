@@ -286,6 +286,7 @@ func main() {
 		ServiceName:     httpConfig.Fullname,
 		ServicePort:     httpConfig.Port,
 		PurgeExecutions: httpConfig.PurgeExecutions,
+		CronJobManager:  cronJobManager,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Test")
 		os.Exit(1)
@@ -297,6 +298,7 @@ func main() {
 		ServiceName:     httpConfig.Fullname,
 		ServicePort:     httpConfig.Port,
 		PurgeExecutions: httpConfig.PurgeExecutions,
+		CronJobManager:  cronJobManager,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestSuite")
 		os.Exit(1)
