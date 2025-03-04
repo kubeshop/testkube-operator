@@ -63,17 +63,16 @@ type TestSuiteReconciler struct {
 func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
-	if r.CronJobManager.IsNamespaceForNewArchitecture(req.NamespacedName.Namespace) {
-		return ctrl.Result{}, nil
-	}
-
+	isNewArchitecture := r.CronJobManager.IsNamespaceForNewArchitecture(req.NamespacedName.Namespace)
 	// Delete CronJob if it was created for deleted TestSuite
 	var testSuite testsuitev3.TestSuite
 	if err := r.Get(ctx, req.NamespacedName, &testSuite); err != nil {
 		if errors.IsNotFound(err) {
-			if err = r.CronJobClient.Delete(ctx,
-				cronjobclient.GetMetadataName(req.NamespacedName.Name, cronjobclient.TestSuiteResourceURI), req.NamespacedName.Namespace); err != nil {
-				return ctrl.Result{}, err
+			if !isNewArchitecture {
+				if err = r.CronJobClient.Delete(ctx,
+					cronjobclient.GetMetadataName(req.NamespacedName.Name, cronjobclient.TestSuiteResourceURI), req.NamespacedName.Namespace); err != nil {
+					return ctrl.Result{}, err
+				}
 			}
 
 			if _, err = r.deleteTestSuite(req.NamespacedName.Name, req.NamespacedName.Namespace); err != nil {
@@ -84,6 +83,10 @@ func (r *TestSuiteReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		}
 
 		return ctrl.Result{}, err
+	}
+
+	if isNewArchitecture {
+		return ctrl.Result{}, nil
 	}
 
 	// Delete CronJob if it was created for cleaned TestSuite schedule

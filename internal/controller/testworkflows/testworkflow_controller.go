@@ -63,17 +63,16 @@ type TestWorkflowReconciler struct {
 func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
-	if r.CronJobManager.IsNamespaceForNewArchitecture(req.NamespacedName.Namespace) {
-		return ctrl.Result{}, nil
-	}
-
+	isNewArchitecture := r.CronJobManager.IsNamespaceForNewArchitecture(req.NamespacedName.Namespace)
 	// Delete CronJobs if it were created for deleted Test Workflow
 	var testWorkflow testworkflowsv1.TestWorkflow
 	if err := r.Get(ctx, req.NamespacedName, &testWorkflow); err != nil {
 		if errors.IsNotFound(err) {
-			if err = r.CronJobClient.DeleteAll(ctx,
-				cronjobclient.GetSelector(req.NamespacedName.Name, cronjobclient.TestWorkflowResourceURI), req.NamespacedName.Namespace); err != nil {
-				return ctrl.Result{}, err
+			if !isNewArchitecture {
+				if err = r.CronJobClient.DeleteAll(ctx,
+					cronjobclient.GetSelector(req.NamespacedName.Name, cronjobclient.TestWorkflowResourceURI), req.NamespacedName.Namespace); err != nil {
+					return ctrl.Result{}, err
+				}
 			}
 
 			if _, err = r.deleteTestWorkflow(req.NamespacedName.Name, req.NamespacedName.Namespace); err != nil {
@@ -84,6 +83,10 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 		}
 
 		return ctrl.Result{}, err
+	}
+
+	if isNewArchitecture {
+		return ctrl.Result{}, nil
 	}
 
 	events := testWorkflow.Spec.Events
