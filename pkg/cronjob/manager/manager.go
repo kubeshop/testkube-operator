@@ -2,6 +2,7 @@ package manager
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 	"sync"
 	"time"
@@ -97,7 +98,7 @@ func (m *Manager) CleanForNewArchitecture(ctx context.Context) error {
 		if _, ok := m.namespaceDetected.Load(namespace); !ok {
 			resources := []string{cronjobclient.TestResourceURI, cronjobclient.TestSuiteResourceURI, cronjobclient.TestWorkflowResourceURI}
 			for _, resource := range resources {
-				if err = m.cronJobClient.DeleteAll(ctx, resource, namespace); err != nil {
+				if err = m.cronJobClient.DeleteAll(ctx, getSelector(resource), namespace); err != nil {
 					return err
 				}
 			}
@@ -136,4 +137,8 @@ func (m *Manager) Reconcile(ctx context.Context, log logr.Logger) error {
 			return ctx.Err()
 		}
 	}
+}
+
+func getSelector(resource string) string {
+	return fmt.Sprintf("testkube=%s", resource)
 }
