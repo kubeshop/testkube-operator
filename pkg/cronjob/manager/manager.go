@@ -95,8 +95,11 @@ func (m *Manager) CleanForNewArchitecture(ctx context.Context) error {
 
 	for namespace := range namespaces {
 		if _, ok := m.namespaceDetected.Load(namespace); !ok {
-			if err = m.cronJobClient.DeleteAll(ctx, cronjobclient.TestWorkflowResourceURI, namespace); err != nil {
-				return err
+			resources := []string{cronjobclient.TestResourceURI, cronjobclient.TestSuiteResourceURI, cronjobclient.TestWorkflowResourceURI}
+			for _, resource := range resources {
+				if err = m.cronJobClient.DeleteAll(ctx, resource, namespace); err != nil {
+					return err
+				}
 			}
 
 			m.namespaceDetected.Store(namespace, struct{}{})
