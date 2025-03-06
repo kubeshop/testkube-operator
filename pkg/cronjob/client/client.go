@@ -324,7 +324,7 @@ func GetHashedMetadataName(name, schedule, uid string, config map[string]intstr.
 		return slice[i].Key < slice[j].Key
 	})
 
-	data, err := json.Marshal(config)
+	data, err := json.Marshal(slice)
 	if err != nil {
 		return "", err
 	}
