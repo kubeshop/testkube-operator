@@ -12,23 +12,16 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	testsv3 "github.com/kubeshop/testkube-operator/api/tests/v3"
-)
-
-type EventType string
-
-const (
-	EventTypeCreate EventType = "create"
-	EventTypeUpdate EventType = "update"
-	EventTypeDelete EventType = "delete"
+	"github.com/kubeshop/testkube-operator/pkg/client/common"
 )
 
 type Update struct {
-	Type      EventType
+	Type      common.EventType
 	Timestamp time.Time
 	Resource  *testsv3.Test
 }
 
-type WatcherUpdate Watcher[Update]
+type WatcherUpdate common.Watcher[Update]
 
 //go:generate mockgen -source=./rest.go -destination=./mock_rest.go -package=tests "github.com/kubeshop/testkube-operator/pkg/client/tests/v3" RESTInterface
 type RESTInterface interface {
@@ -87,7 +80,7 @@ func (s TestsRESTClient) WatchUpdates(ctx context.Context, environmentId string,
 	if includeInitialData {
 		opts := &client.ListOptions{Namespace: s.namespace}
 		if err := s.k8sClient.List(ctx, list, opts); err != nil {
-			return NewError[Update](err)
+			return common.NewError[Update](err)
 		}
 	}
 
@@ -99,17 +92,17 @@ func (s TestsRESTClient) WatchUpdates(ctx context.Context, environmentId string,
 		VersionedParams(&opts, s.parameterCodec).
 		Watch(ctx)
 	if err != nil {
-		return NewError[Update](err)
+		return common.NewError[Update](err)
 	}
 
-	result := NewWatcher[Update]()
+	result := common.NewWatcher[Update]()
 	go func() {
 		// Send initial data
 		for _, k8sObject := range list.Items {
-			updateType := EventTypeCreate
-			updateTime := getUpdateTime(k8sObject)
+			updateType := common.EventTypeCreate
+			updateTime := common.GetUpdateTime(k8sObject.ObjectMeta)
 			if !updateTime.Equal(k8sObject.CreationTimestamp.Time) {
-				updateType = EventTypeUpdate
+				updateType = common.EventTypeUpdate
 			}
 
 			result.Send(Update{
@@ -137,23 +130,23 @@ func (s TestsRESTClient) WatchUpdates(ctx context.Context, environmentId string,
 				event.Type = watch.Deleted
 			}
 
-			updateTime := getUpdateTime(*k8SObject)
+			updateTime := common.GetUpdateTime(k8SObject.ObjectMeta)
 			switch event.Type {
 			case watch.Added:
 				result.Send(Update{
-					Type:      EventTypeCreate,
+					Type:      common.EventTypeCreate,
 					Timestamp: updateTime,
 					Resource:  k8SObject,
 				})
 			case watch.Modified:
 				result.Send(Update{
-					Type:      EventTypeUpdate,
+					Type:      common.EventTypeUpdate,
 					Timestamp: updateTime,
 					Resource:  k8SObject,
 				})
 			case watch.Deleted:
 				result.Send(Update{
-					Type:      EventTypeDelete,
+					Type:      common.EventTypeDelete,
 					Timestamp: updateTime,
 					Resource:  k8SObject,
 				})
@@ -164,19 +157,4 @@ func (s TestsRESTClient) WatchUpdates(ctx context.Context, environmentId string,
 	}()
 
 	return result
-}
-
-func getUpdateTime(t testsv3.Test) time.Time {
-	updateTime := t.CreationTimestamp.Time
-	if t.DeletionTimestamp != nil {
-		updateTime = t.DeletionTimestamp.Time
-	} else {
-		for _, field := range t.ManagedFields {
-			if field.Time.After(updateTime) {
-				updateTime = field.Time.Time
-			}
-		}
-	}
-
-	return updateTime
 }
