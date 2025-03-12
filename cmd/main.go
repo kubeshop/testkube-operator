@@ -458,9 +458,11 @@ func main() {
 	}
 
 	ctx := ctrl.SetupSignalHandler()
-	go func() {
-		cronJobManager.Reconcile(ctx, setupLog)
-	}()
+	if httpConfig.Config != "" {
+		go func() {
+			cronJobManager.Reconcile(ctx, setupLog)
+		}()
+	}
 	setupLog.Info("starting manager")
 	if err := mgr.Start(ctx); err != nil {
 		setupLog.Error(err, "problem running manager")
