@@ -20,7 +20,7 @@ func GetUpdateTime(t metav1.ObjectMeta) time.Time {
 		updateTime = t.DeletionTimestamp.Time
 	} else {
 		for _, field := range t.ManagedFields {
-			if field.Time.After(updateTime) {
+			if field.Time != nil && field.Time.After(updateTime) {
 				updateTime = field.Time.Time
 			}
 		}
