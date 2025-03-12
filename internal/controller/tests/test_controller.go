@@ -33,14 +33,16 @@ import (
 	commonv1 "github.com/kubeshop/testkube-operator/api/common/v1"
 	templatesv1 "github.com/kubeshop/testkube-operator/api/template/v1"
 	testsv3 "github.com/kubeshop/testkube-operator/api/tests/v3"
-	"github.com/kubeshop/testkube-operator/pkg/cronjob"
+	cronjobclient "github.com/kubeshop/testkube-operator/pkg/cronjob/client"
+	cronjobmanager "github.com/kubeshop/testkube-operator/pkg/cronjob/manager"
 )
 
 // TestReconciler reconciles a Test object
 type TestReconciler struct {
 	client.Client
 	Scheme          *runtime.Scheme
-	CronJobClient   *cronjob.Client
+	CronJobClient   cronjobclient.Interface
+	CronJobManager  cronjobmanager.Interface
 	ServiceName     string
 	ServicePort     int
 	PurgeExecutions bool
@@ -62,13 +64,16 @@ type TestReconciler struct {
 func (r *TestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
+	isNewArchitecture := r.CronJobManager.IsNamespaceForNewArchitecture(req.NamespacedName.Namespace)
 	// Delete CronJob if it was created for deleted Test
 	var test testsv3.Test
 	if err := r.Get(ctx, req.NamespacedName, &test); err != nil {
 		if errors.IsNotFound(err) {
-			if err = r.CronJobClient.Delete(ctx,
-				cronjob.GetMetadataName(req.NamespacedName.Name, cronjob.TestResourceURI), req.NamespacedName.Namespace); err != nil {
-				return ctrl.Result{}, err
+			if !isNewArchitecture {
+				if err = r.CronJobClient.Delete(ctx,
+					cronjobclient.GetMetadataName(req.NamespacedName.Name, cronjobclient.TestResourceURI), req.NamespacedName.Namespace); err != nil {
+					return ctrl.Result{}, err
+				}
 			}
 
 			if _, err = r.deleteTest(req.NamespacedName.Name, req.NamespacedName.Namespace); err != nil {
@@ -81,10 +86,14 @@ func (r *TestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		return ctrl.Result{}, err
 	}
 
+	if isNewArchitecture {
+		return ctrl.Result{}, nil
+	}
+
 	// Delete CronJob if it was created for cleaned Test schedule
 	if test.Spec.Schedule == "" {
 		if err := r.CronJobClient.Delete(ctx,
-			cronjob.GetMetadataName(req.NamespacedName.Name, cronjob.TestResourceURI), req.NamespacedName.Namespace); err != nil {
+			cronjobclient.GetMetadataName(req.NamespacedName.Name, cronjobclient.TestResourceURI), req.NamespacedName.Namespace); err != nil {
 			return ctrl.Result{}, err
 		}
 
@@ -122,12 +131,12 @@ func (r *TestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		}
 	}
 
-	options := cronjob.CronJobOptions{
+	options := cronjobclient.Options{
 		Schedule:                  test.Spec.Schedule,
 		Group:                     testsv3.Group,
 		Resource:                  testsv3.Resource,
 		Version:                   testsv3.Version,
-		ResourceURI:               cronjob.TestResourceURI,
+		ResourceURI:               cronjobclient.TestResourceURI,
 		Data:                      string(data),
 		Labels:                    test.Labels,
 		CronJobTemplate:           jobTemplate,
@@ -136,11 +145,11 @@ func (r *TestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 
 	// Create CronJob if it was not created before for provided Test schedule
 	cronJob, err := r.CronJobClient.Get(ctx,
-		cronjob.GetMetadataName(req.NamespacedName.Name, cronjob.TestResourceURI), req.NamespacedName.Namespace)
+		cronjobclient.GetMetadataName(req.NamespacedName.Name, cronjobclient.TestResourceURI), req.NamespacedName.Namespace)
 	if err != nil {
 		if errors.IsNotFound(err) {
 			if err = r.CronJobClient.Create(ctx, test.Name,
-				cronjob.GetMetadataName(test.Name, cronjob.TestResourceURI), req.NamespacedName.Namespace,
+				cronjobclient.GetMetadataName(test.Name, cronjobclient.TestResourceURI), req.NamespacedName.Namespace,
 				string(test.UID), options); err != nil {
 				return ctrl.Result{}, err
 			}
@@ -151,7 +160,7 @@ func (r *TestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 
 	// Update CronJob if it was created before provided Test schedule
 	if err = r.CronJobClient.Update(ctx, cronJob, test.Name,
-		cronjob.GetMetadataName(test.Name, cronjob.TestResourceURI), req.NamespacedName.Namespace,
+		cronjobclient.GetMetadataName(test.Name, cronjobclient.TestResourceURI), req.NamespacedName.Namespace,
 		string(test.UID), options); err != nil {
 		return ctrl.Result{}, err
 	}

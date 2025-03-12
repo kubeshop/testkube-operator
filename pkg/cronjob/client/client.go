@@ -1,4 +1,4 @@
-package cronjob
+package client
 
 import (
 	"bytes"
@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"hash/fnv"
 	"maps"
+	"sort"
 	"strings"
 	"text/template"
 
@@ -17,7 +18,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/apimachinery/pkg/util/yaml"
-	"sigs.k8s.io/controller-runtime/pkg/client"
+	k8sclient "sigs.k8s.io/controller-runtime/pkg/client"
 	kyaml "sigs.k8s.io/kustomize/kyaml/yaml"
 	"sigs.k8s.io/kustomize/kyaml/yaml/merge2"
 )
@@ -33,9 +34,19 @@ const (
 	TestWorkflowTemplateResourceURI = "test-workflow-templates"
 )
 
+//go:generate mockgen -destination=./mock_client.go -package=client "github.com/kubeshop/testkube-operator/pkg/cronjob/client" Interface
+type Interface interface {
+	Get(ctx context.Context, name, namespace string) (*batchv1.CronJob, error)
+	ListAll(ctx context.Context, selector, namespace string) (*batchv1.CronJobList, error)
+	Create(ctx context.Context, id, name, namespace, uid string, options Options) error
+	Update(ctx context.Context, cronJob *batchv1.CronJob, id, name, namespace, uid string, options Options) error
+	Delete(ctx context.Context, name, namespace string) error
+	DeleteAll(ctx context.Context, selector, namespace string) error
+}
+
 // Client data struct for managing running cron jobs
 type Client struct {
-	client.Client
+	k8sclient.Client
 	serviceName     string
 	servicePort     int
 	cronJobTemplate string
@@ -43,7 +54,7 @@ type Client struct {
 	argoCDSync      bool
 }
 
-type CronJobOptions struct {
+type Options struct {
 	Schedule                  string
 	Group                     string
 	Resource                  string
@@ -77,8 +88,8 @@ type templateParameters struct {
 	UID                       string
 }
 
-// NewClient is a method to create new cron job client
-func NewClient(cli client.Client, serviceName string, servicePort int, cronJobTemplate, registry string,
+// New is a method to create new cron job client
+func New(cli k8sclient.Client, serviceName string, servicePort int, cronJobTemplate, registry string,
 	argoCDSync bool) *Client {
 	return &Client{
 		Client:          cli,
@@ -108,7 +119,7 @@ func (c *Client) ListAll(ctx context.Context, selector, namespace string) (*batc
 		return list, err
 	}
 
-	options := &client.ListOptions{
+	options := &k8sclient.ListOptions{
 		Namespace:     namespace,
 		LabelSelector: labels.NewSelector().Add(reqs...),
 	}
@@ -120,7 +131,7 @@ func (c *Client) ListAll(ctx context.Context, selector, namespace string) (*batc
 }
 
 // Create is a method to create a cron job
-func (c *Client) Create(ctx context.Context, id, name, namespace, uid string, options CronJobOptions) error {
+func (c *Client) Create(ctx context.Context, id, name, namespace, uid string, options Options) error {
 	template := c.cronJobTemplate
 	if options.CronJobTemplate != "" {
 		template = options.CronJobTemplate
@@ -147,7 +158,7 @@ func (c *Client) Create(ctx context.Context, id, name, namespace, uid string, op
 		UID:                       uid,
 	}
 
-	cronJobSpec, err := NewCronJobSpec(parameters)
+	cronJobSpec, err := NewSpec(parameters)
 	if err != nil {
 		return err
 	}
@@ -160,7 +171,7 @@ func (c *Client) Create(ctx context.Context, id, name, namespace, uid string, op
 }
 
 // Update is a method to update an existing cron job
-func (c *Client) Update(ctx context.Context, cronJob *batchv1.CronJob, id, name, namespace, uid string, options CronJobOptions) error {
+func (c *Client) Update(ctx context.Context, cronJob *batchv1.CronJob, id, name, namespace, uid string, options Options) error {
 	template := c.cronJobTemplate
 	if options.CronJobTemplate != "" {
 		template = options.CronJobTemplate
@@ -187,7 +198,7 @@ func (c *Client) Update(ctx context.Context, cronJob *batchv1.CronJob, id, name,
 		UID:                       uid,
 	}
 
-	cronJobSpec, err := NewCronJobSpec(parameters)
+	cronJobSpec, err := NewSpec(parameters)
 	if err != nil {
 		return err
 	}
@@ -231,12 +242,12 @@ func (c *Client) DeleteAll(ctx context.Context, selector, namespace string) erro
 	u := &unstructured.Unstructured{}
 	u.SetKind("CronJob")
 	u.SetAPIVersion("batch/v1")
-	return c.Client.DeleteAllOf(ctx, u, client.InNamespace(namespace),
-		client.MatchingLabelsSelector{Selector: labels.NewSelector().Add(reqs...)})
+	return c.Client.DeleteAllOf(ctx, u, k8sclient.InNamespace(namespace),
+		k8sclient.MatchingLabelsSelector{Selector: labels.NewSelector().Add(reqs...)})
 }
 
-// NewCronJobSpec is a method to return cron job spec
-func NewCronJobSpec(parameters templateParameters) (*batchv1.CronJob, error) {
+// NewSpec is a method to return cron job spec
+func NewSpec(parameters templateParameters) (*batchv1.CronJob, error) {
 	tmpl, err := template.New("cronjob").Parse(parameters.CronJobTemplate)
 	if err != nil {
 		return nil, fmt.Errorf("creating cron job spec from options.CronJobTemplate error: %w", err)
@@ -295,9 +306,25 @@ func GetMetadataName(name, resource string) string {
 	return result
 }
 
+type configKeyValue struct {
+	Key   string
+	Value intstr.IntOrString
+}
+
+type configKeyValues []configKeyValue
+
 // GetHashedMetadataName returns cron job hashed metadata name
 func GetHashedMetadataName(name, schedule, uid string, config map[string]intstr.IntOrString) (string, error) {
-	data, err := json.Marshal(config)
+	var slice configKeyValues
+	for key, value := range config {
+		slice = append(slice, configKeyValue{Key: key, Value: value})
+	}
+
+	sort.Slice(slice, func(i, j int) bool {
+		return slice[i].Key < slice[j].Key
+	})
+
+	data, err := json.Marshal(slice)
 	if err != nil {
 		return "", err
 	}
