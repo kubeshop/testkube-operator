@@ -3710,6 +3710,26 @@ spec:
                         type: string
                       description: test workflow execution tags
                       type: object
+                    target:
+                      description: Targets helps decide on which runner the execution is scheduled.
+                      properties:
+                        match:
+                          additionalProperties:
+                            items:
+                              type: string
+                            type: array
+                          type: object
+                        not:
+                          additionalProperties:
+                            items:
+                              type: string
+                            type: array
+                          type: object
+                        replicate:
+                          items:
+                            type: string
+                          type: array
+                      type: object
                   type: object
                 job:
                   description: configuration for the scheduled job

@@ -229,4 +229,13 @@ type CronJobConfig struct {
 type TestWorkflowTagSchema struct {
 	// test workflow execution tags
 	Tags map[string]string `json:"tags,omitempty" expr:"template,template"`
+
+	// Targets helps decide on which runner the execution is scheduled.
+	Target *Target `json:"target,omitempty" expr:"include"`
+}
+
+type Target struct {
+	Match     map[string][]string `json:"match,omitempty"`
+	Not       map[string][]string `json:"not,omitempty"`
+	Replicate []string            `json:"replicate,omitempty"`
 }
