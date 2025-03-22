@@ -187,7 +187,7 @@ spec:
                     reports:
                       description: generated reports from the steps, like junit
                       items:
-                        description: TestWorkflowStepReport contains report of TestWorkflow
+                        description: TestWorkflowReport contains report of TestWorkflow
                         properties:
                           file:
                             description: file path to full report in artifact storage
@@ -199,7 +199,7 @@ spec:
                             description: step reference
                             type: string
                           summary:
-                            description: TestWorkflowStepReportSummary contains report summary of TestWorkflow
+                            description: TestWorkflowReportSummary contains report summary of TestWorkflow
                             properties:
                               duration:
                                 description: total duration of all test cases in milliseconds
@@ -230,6 +230,55 @@ spec:
                       type: array
                     resolvedWorkflow:
                       x-kubernetes-preserve-unknown-fields: true
+                    resourceAggregations:
+                      description: resource metrics aggregations (min, max, avg, stddev)
+                      properties:
+                        global:
+                          additionalProperties:
+                            additionalProperties:
+                              description: TestWorkflowExecutionResourceAggregations contains resource metrics aggregations
+                              properties:
+                                avg:
+                                  type: number
+                                max:
+                                  type: number
+                                min:
+                                  type: number
+                                stddev:
+                                  type: number
+                                total:
+                                  type: number
+                              type: object
+                            type: object
+                          type: object
+                        step:
+                          items:
+                            properties:
+                              aggregations:
+                                additionalProperties:
+                                  additionalProperties:
+                                    description: TestWorkflowExecutionResourceAggregations contains resource metrics aggregations
+                                    properties:
+                                      avg:
+                                        type: number
+                                      max:
+                                        type: number
+                                      min:
+                                        type: number
+                                      stddev:
+                                        type: number
+                                      total:
+                                        type: number
+                                    type: object
+                                  type: object
+                                description: resource metrics aggregations grouped by measurement and field
+                                type: object
+                              ref:
+                                description: step reference
+                                type: string
+                            type: object
+                          type: array
+                      type: object
                     result:
                       description: TestWorkflowResult contains result of TestWorkflow
                       properties:

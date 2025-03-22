@@ -157,9 +157,7 @@ func (s *DynamicList) UnmarshalJSON(value []byte) error {
 		}
 		s.Dynamic = false
 		s.Static = make([]interface{}, len(result))
-		for i := range result {
-			s.Static[i] = result[i]
-		}
+		copy(s.Static, result)
 		return nil
 	}
 	if value[0] == '"' {

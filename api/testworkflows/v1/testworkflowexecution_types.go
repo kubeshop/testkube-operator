@@ -73,6 +73,8 @@ type TestWorkflowExecutionDetails struct {
 	Output []TestWorkflowOutput `json:"output,omitempty"`
 	// generated reports from the steps, like junit
 	Reports []TestWorkflowReport `json:"reports,omitempty"`
+	// resource metrics aggregations (min, max, avg, stddev)
+	ResourceAggregations *TestWorkflowExecutionResourceAggregationsReport `json:"resourceAggregations,omitempty"`
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
 	Workflow *TestWorkflow `json:"workflow"`
@@ -249,7 +251,7 @@ type TestWorkflowOutput struct {
 	Value map[string]DynamicList `json:"value,omitempty"`
 }
 
-// TestWorkflowStepReport contains report of TestWorkflow
+// TestWorkflowReport contains report of TestWorkflow
 type TestWorkflowReport struct {
 	// step reference
 	Ref string `json:"ref,omitempty"`
@@ -260,7 +262,7 @@ type TestWorkflowReport struct {
 	Summary *TestWorkflowReportSummary `json:"summary,omitempty"`
 }
 
-// TestWorkflowStepReportSummary contains report summary of TestWorkflow
+// TestWorkflowReportSummary contains report summary of TestWorkflow
 type TestWorkflowReportSummary struct {
 	// total number of test cases
 	Tests int32 `json:"tests,omitempty"`
@@ -274,6 +276,30 @@ type TestWorkflowReportSummary struct {
 	Errored int32 `json:"errored,omitempty"`
 	// total duration of all test cases in milliseconds
 	Duration int64 `json:"duration,omitempty"`
+}
+
+type TestWorkflowExecutionResourceAggregationsByField map[string]*TestWorkflowExecutionResourceAggregations
+type TestWorkflowExecutionResourceAggregationsByMeasurement map[string]TestWorkflowExecutionResourceAggregationsByField
+
+type TestWorkflowExecutionResourceAggregationsReport struct {
+	Global TestWorkflowExecutionResourceAggregationsByMeasurement `json:"global,omitempty"`
+	Step   []*TestWorkflowExecutionStepResourceAggregations       `json:"step,omitempty"`
+}
+
+type TestWorkflowExecutionStepResourceAggregations struct {
+	// step reference
+	Ref string `json:"ref,omitempty"`
+	// resource metrics aggregations grouped by measurement and field
+	Aggregations TestWorkflowExecutionResourceAggregationsByMeasurement `json:"aggregations,omitempty"`
+}
+
+// TestWorkflowExecutionResourceAggregations contains resource metrics aggregations
+type TestWorkflowExecutionResourceAggregations struct {
+	Total  float64 `json:"total,omitempty"`
+	Min    float64 `json:"min,omitempty"`
+	Max    float64 `json:"max,omitempty"`
+	Avg    float64 `json:"avg,omitempty"`
+	StdDev float64 `json:"stddev,omitempty"`
 }
 
 // +kubebuilder:object:root=true
