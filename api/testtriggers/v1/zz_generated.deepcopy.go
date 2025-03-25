@@ -21,6 +21,7 @@ limitations under the License.
 package v1
 
 import (
+	commonv1 "github.com/kubeshop/testkube-operator/api/common/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
@@ -243,6 +244,11 @@ func (in *TestTriggerSpec) DeepCopyInto(out *TestTriggerSpec) {
 		in, out := &in.Delay, &out.Delay
 		*out = new(metav1.Duration)
 		**out = **in
+	}
+	if in.Target != nil {
+		in, out := &in.Target, &out.Target
+		*out = new(commonv1.Target)
+		(*in).DeepCopyInto(*out)
 	}
 }
 

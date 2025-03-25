@@ -18,6 +18,8 @@ package v1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	commonv1 "github.com/kubeshop/testkube-operator/api/common/v1"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -66,6 +68,8 @@ type TestTriggerSpec struct {
 	Delay *metav1.Duration `json:"delay,omitempty"`
 	// whether test trigger is disabled
 	Disabled bool `json:"disabled,omitempty"`
+	// Target helps decide on which runner the execution is scheduled.
+	Target *commonv1.Target `json:"target,omitempty" expr:"include"`
 }
 
 // TestTriggerResource defines resource for test triggers
