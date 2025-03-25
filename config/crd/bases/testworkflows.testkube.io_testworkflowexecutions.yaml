@@ -116,6 +116,26 @@ spec:
                         type: string
                       description: test workflow execution tags
                       type: object
+                    target:
+                      description: Targets helps decide on which runner the execution is scheduled.
+                      properties:
+                        match:
+                          additionalProperties:
+                            items:
+                              type: string
+                            type: array
+                          type: object
+                        not:
+                          additionalProperties:
+                            items:
+                              type: string
+                            type: array
+                          type: object
+                        replicate:
+                          items:
+                            type: string
+                          type: array
+                      type: object
                     testWorkflowExecutionName:
                       description: test workflow execution name started the test workflow execution
                       type: string
