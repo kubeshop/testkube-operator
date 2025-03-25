@@ -292,6 +292,27 @@ spec:
                     description: kubernetes resource namespace regex
                     type: string
                 type: object
+              target:
+                description: Target helps decide on which runner the execution is
+                  scheduled.
+                properties:
+                  match:
+                    additionalProperties:
+                      items:
+                        type: string
+                      type: array
+                    type: object
+                  not:
+                    additionalProperties:
+                      items:
+                        type: string
+                      type: array
+                    type: object
+                  replicate:
+                    items:
+                      type: string
+                    type: array
+                type: object
               testSelector:
                 description: TestSelector identifies on which Testkube Kubernetes
                   Objects an Action should be taken
