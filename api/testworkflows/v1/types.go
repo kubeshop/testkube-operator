@@ -18,7 +18,7 @@ type ContainerConfig struct {
 	ImagePullPolicy corev1.PullPolicy `json:"imagePullPolicy,omitempty" expr:"template"`
 
 	// environment variables to append to the container
-	Env []Env `json:"env,omitempty" expr:"force"`
+	Env []EnvVar `json:"env,omitempty" expr:"force"`
 
 	// external environment variables to append to the container
 	EnvFrom []corev1.EnvFromSource `json:"envFrom,omitempty" expr:"force"`
@@ -47,7 +47,7 @@ type Resources struct {
 	Requests map[corev1.ResourceName]intstr.IntOrString `json:"requests,omitempty" expr:"template,template"`
 }
 
-type Env struct {
+type EnvVar struct {
 	corev1.EnvVar `json:",inline" expr:"include"`
 	// whether to use env var in underlying services
 	Global *bool `json:"global,omitempty" expr:"template"`
