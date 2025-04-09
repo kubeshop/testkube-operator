@@ -3633,6 +3633,26 @@ spec:
                               type: string
                             description: labels to attach to the cron job
                             type: object
+                          target:
+                            description: Targets helps decide on which runner the execution is scheduled.
+                            properties:
+                              match:
+                                additionalProperties:
+                                  items:
+                                    type: string
+                                  type: array
+                                type: object
+                              not:
+                                additionalProperties:
+                                  items:
+                                    type: string
+                                  type: array
+                                type: object
+                              replicate:
+                                items:
+                                  type: string
+                                type: array
+                            type: object
                         required:
                           - cron
                         type: object

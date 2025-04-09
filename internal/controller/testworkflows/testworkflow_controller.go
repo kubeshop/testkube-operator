@@ -144,6 +144,7 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 					Labels:      event.Cronjob.Labels,
 					Annotations: event.Cronjob.Annotations,
 					Config:      event.Cronjob.Config,
+					Target:      event.Cronjob.Target,
 				}
 			} else {
 				newCronJobConfigs[name] = MergeCronJobJobConfig(cronJob, event.Cronjob)
