@@ -17,6 +17,8 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
+
+	commonv1 "github.com/kubeshop/testkube-operator/api/common/v1"
 )
 
 // TestWorkflowExecutionSpec defines the desired state of TestWorkflowExecution
@@ -41,6 +43,8 @@ type TestWorkflowExecutionRequest struct {
 	Tags map[string]string `json:"tags,omitempty" expr:"template"`
 	// running context for the test workflow execution (Pro edition only)
 	RunningContext *TestWorkflowRunningContext `json:"runningContext,omitempty"`
+	// Targets helps decide on which runner the execution is scheduled.
+	Target *commonv1.Target `json:"target,omitempty" expr:"include"`
 }
 
 // TestWorkflowExecutionStatus defines the observed state of TestWorkflowExecution
