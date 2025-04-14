@@ -23,6 +23,7 @@ import (
 	"maps"
 	"net/http"
 
+	commonv1 "github.com/kubeshop/testkube-operator/api/common/v1"
 	testworkflowsv1 "github.com/kubeshop/testkube-operator/api/testworkflows/v1"
 	cronjobclient "github.com/kubeshop/testkube-operator/pkg/cronjob/client"
 	cronjobmanager "github.com/kubeshop/testkube-operator/pkg/cronjob/manager"
@@ -154,16 +155,6 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 
 	interface_ := testworkflowsv1.API_TestWorkflowRunningContextInterfaceType
 	actor := testworkflowsv1.CRON_TestWorkflowRunningContextActorType
-	request := testWorkflowExecutionRequest{
-		RunningContext: &testworkflowsv1.TestWorkflowRunningContext{
-			Interface_: &testworkflowsv1.TestWorkflowRunningContextInterface{
-				Type_: &interface_,
-			},
-			Actor: &testworkflowsv1.TestWorkflowRunningContextActor{
-				Type_: &actor,
-			},
-		},
-	}
 
 	for name, oldCronJob := range oldCronJobs {
 		if newCronJobConfig, ok := newCronJobConfigs[name]; !ok {
@@ -176,12 +167,25 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			if newCronJobConfig.Labels == nil {
 				newCronJobConfig.Labels = make(map[string]string)
 			}
+			request := testWorkflowExecutionRequest{
+				RunningContext: &testworkflowsv1.TestWorkflowRunningContext{
+					Interface_: &testworkflowsv1.TestWorkflowRunningContextInterface{
+						Type_: &interface_,
+					},
+					Actor: &testworkflowsv1.TestWorkflowRunningContextActor{
+						Type_: &actor,
+					},
+				},
+			}
 
 			if len(newCronJobConfig.Config) != 0 {
 				request.Config = make(map[string]string, len(newCronJobConfig.Config))
 				for key, value := range newCronJobConfig.Config {
 					request.Config[key] = value.String()
 				}
+			}
+			if newCronJobConfig.Target != nil {
+				request.Target = newCronJobConfig.Target
 			}
 
 			data, err := json.Marshal(request)
@@ -214,12 +218,24 @@ func (r *TestWorkflowReconciler) Reconcile(ctx context.Context, req ctrl.Request
 			if newCronJobConfig.Labels == nil {
 				newCronJobConfig.Labels = make(map[string]string)
 			}
-
+			request := testWorkflowExecutionRequest{
+				RunningContext: &testworkflowsv1.TestWorkflowRunningContext{
+					Interface_: &testworkflowsv1.TestWorkflowRunningContextInterface{
+						Type_: &interface_,
+					},
+					Actor: &testworkflowsv1.TestWorkflowRunningContextActor{
+						Type_: &actor,
+					},
+				},
+			}
 			if len(newCronJobConfig.Config) != 0 {
 				request.Config = make(map[string]string, len(newCronJobConfig.Config))
 				for key, value := range newCronJobConfig.Config {
 					request.Config[key] = value.String()
 				}
+			}
+			if newCronJobConfig.Target != nil {
+				request.Target = newCronJobConfig.Target
 			}
 
 			data, err := json.Marshal(request)
@@ -307,4 +323,6 @@ type testWorkflowExecutionRequest struct {
 	Config map[string]string `json:"config,omitempty"`
 	// running context for the test workflow execution (Pro edition only)
 	RunningContext *testworkflowsv1.TestWorkflowRunningContext `json:"runningContext,omitempty"`
+	// target
+	Target *commonv1.Target `json:"target,omitempty"`
 }
