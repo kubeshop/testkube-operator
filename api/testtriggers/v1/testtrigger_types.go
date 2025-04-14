@@ -68,8 +68,6 @@ type TestTriggerSpec struct {
 	Delay *metav1.Duration `json:"delay,omitempty"`
 	// whether test trigger is disabled
 	Disabled bool `json:"disabled,omitempty"`
-	// Target helps decide on which runner the execution is scheduled.
-	Target *commonv1.Target `json:"target,omitempty" expr:"include"`
 }
 
 // TestTriggerResource defines resource for test triggers
@@ -236,6 +234,8 @@ type TestTriggerActionParameters struct {
 	Config map[string]string `json:"config,omitempty"`
 	// test workflow execution tags
 	Tags map[string]string `json:"tags,omitempty"`
+	// Target helps decide on which runner the execution is scheduled.
+	Target *commonv1.Target `json:"target,omitempty" expr:"include"`
 }
 
 //+kubebuilder:object:root=true

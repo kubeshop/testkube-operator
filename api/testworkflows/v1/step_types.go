@@ -5,6 +5,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 
+	commonv1 "github.com/kubeshop/testkube-operator/api/common/v1"
 	testsv3 "github.com/kubeshop/testkube-operator/api/tests/v3"
 )
 
@@ -216,6 +217,9 @@ type StepExecuteWorkflow struct {
 
 	// configuration to pass for the workflow
 	Config map[string]intstr.IntOrString `json:"config,omitempty" expr:"template"`
+
+	// Targets helps decide on which runner the execution is scheduled.
+	Target *commonv1.Target `json:"target,omitempty" expr:"include"`
 }
 
 type StepParallel struct {
