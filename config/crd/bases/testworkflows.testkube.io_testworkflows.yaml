@@ -1006,6 +1006,26 @@ spec:
                                     x-kubernetes-preserve-unknown-fields: true
                                   description: pack some data from the original file system to serve them down
                                   type: object
+                                target:
+                                  description: Targets helps decide on which runner the execution is scheduled.
+                                  properties:
+                                    match:
+                                      additionalProperties:
+                                        items:
+                                          type: string
+                                        type: array
+                                      type: object
+                                    not:
+                                      additionalProperties:
+                                        items:
+                                          type: string
+                                        type: array
+                                      type: object
+                                    replicate:
+                                      items:
+                                        type: string
+                                      type: array
+                                  type: object
                               type: object
                             type: array
                         type: object
@@ -1452,6 +1472,26 @@ spec:
                                         type: object
                                         x-kubernetes-preserve-unknown-fields: true
                                       description: pack some data from the original file system to serve them down
+                                      type: object
+                                    target:
+                                      description: Targets helps decide on which runner the execution is scheduled.
+                                      properties:
+                                        match:
+                                          additionalProperties:
+                                            items:
+                                              type: string
+                                            type: array
+                                          type: object
+                                        not:
+                                          additionalProperties:
+                                            items:
+                                              type: string
+                                            type: array
+                                          type: object
+                                        replicate:
+                                          items:
+                                            type: string
+                                          type: array
                                       type: object
                                   type: object
                                 type: array
@@ -3706,6 +3746,26 @@ spec:
                             additionalProperties:
                               type: string
                             description: labels to attach to the cron job
+                            type: object
+                          target:
+                            description: Targets helps decide on which runner the execution is scheduled.
+                            properties:
+                              match:
+                                additionalProperties:
+                                  items:
+                                    type: string
+                                  type: array
+                                type: object
+                              not:
+                                additionalProperties:
+                                  items:
+                                    type: string
+                                  type: array
+                                type: object
+                              replicate:
+                                items:
+                                  type: string
+                                type: array
                             type: object
                         required:
                           - cron
@@ -6044,6 +6104,26 @@ spec:
                                     x-kubernetes-preserve-unknown-fields: true
                                   description: pack some data from the original file system to serve them down
                                   type: object
+                                target:
+                                  description: Targets helps decide on which runner the execution is scheduled.
+                                  properties:
+                                    match:
+                                      additionalProperties:
+                                        items:
+                                          type: string
+                                        type: array
+                                      type: object
+                                    not:
+                                      additionalProperties:
+                                        items:
+                                          type: string
+                                        type: array
+                                      type: object
+                                    replicate:
+                                      items:
+                                        type: string
+                                      type: array
+                                  type: object
                               type: object
                             type: array
                         type: object
@@ -6490,6 +6570,26 @@ spec:
                                         type: object
                                         x-kubernetes-preserve-unknown-fields: true
                                       description: pack some data from the original file system to serve them down
+                                      type: object
+                                    target:
+                                      description: Targets helps decide on which runner the execution is scheduled.
+                                      properties:
+                                        match:
+                                          additionalProperties:
+                                            items:
+                                              type: string
+                                            type: array
+                                          type: object
+                                        not:
+                                          additionalProperties:
+                                            items:
+                                              type: string
+                                            type: array
+                                          type: object
+                                        replicate:
+                                          items:
+                                            type: string
+                                          type: array
                                       type: object
                                   type: object
                                 type: array
@@ -9077,6 +9177,26 @@ spec:
                                     x-kubernetes-preserve-unknown-fields: true
                                   description: pack some data from the original file system to serve them down
                                   type: object
+                                target:
+                                  description: Targets helps decide on which runner the execution is scheduled.
+                                  properties:
+                                    match:
+                                      additionalProperties:
+                                        items:
+                                          type: string
+                                        type: array
+                                      type: object
+                                    not:
+                                      additionalProperties:
+                                        items:
+                                          type: string
+                                        type: array
+                                      type: object
+                                    replicate:
+                                      items:
+                                        type: string
+                                      type: array
+                                  type: object
                               type: object
                             type: array
                         type: object
@@ -9523,6 +9643,26 @@ spec:
                                         type: object
                                         x-kubernetes-preserve-unknown-fields: true
                                       description: pack some data from the original file system to serve them down
+                                      type: object
+                                    target:
+                                      description: Targets helps decide on which runner the execution is scheduled.
+                                      properties:
+                                        match:
+                                          additionalProperties:
+                                            items:
+                                              type: string
+                                            type: array
+                                          type: object
+                                        not:
+                                          additionalProperties:
+                                            items:
+                                              type: string
+                                            type: array
+                                          type: object
+                                        replicate:
+                                          items:
+                                            type: string
+                                          type: array
                                       type: object
                                   type: object
                                 type: array

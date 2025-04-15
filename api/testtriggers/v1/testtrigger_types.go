@@ -18,6 +18,8 @@ package v1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	commonv1 "github.com/kubeshop/testkube-operator/api/common/v1"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -232,6 +234,8 @@ type TestTriggerActionParameters struct {
 	Config map[string]string `json:"config,omitempty"`
 	// test workflow execution tags
 	Tags map[string]string `json:"tags,omitempty"`
+	// Target helps decide on which runner the execution is scheduled.
+	Target *commonv1.Target `json:"target,omitempty" expr:"include"`
 }
 
 //+kubebuilder:object:root=true

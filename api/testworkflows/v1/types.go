@@ -5,6 +5,8 @@ import (
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
+
+	commonv1 "github.com/kubeshop/testkube-operator/api/common/v1"
 )
 
 type ContainerConfig struct {
@@ -228,6 +230,8 @@ type CronJobConfig struct {
 	Annotations map[string]string `json:"annotations,omitempty" expr:"template,template"`
 	// configuration to pass for the workflow
 	Config map[string]intstr.IntOrString `json:"config,omitempty" expr:"template,template"`
+	// Targets helps decide on which runner the execution is scheduled.
+	Target *commonv1.Target `json:"target,omitempty" expr:"include"`
 }
 
 type TestWorkflowTagSchema struct {
@@ -235,11 +239,5 @@ type TestWorkflowTagSchema struct {
 	Tags map[string]string `json:"tags,omitempty" expr:"template,template"`
 
 	// Targets helps decide on which runner the execution is scheduled.
-	Target *Target `json:"target,omitempty" expr:"include"`
-}
-
-type Target struct {
-	Match     map[string][]string `json:"match,omitempty"`
-	Not       map[string][]string `json:"not,omitempty"`
-	Replicate []string            `json:"replicate,omitempty"`
+	Target *commonv1.Target `json:"target,omitempty" expr:"include"`
 }
