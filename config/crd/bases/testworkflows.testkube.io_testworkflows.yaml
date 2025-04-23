@@ -59,6 +59,9 @@ spec:
                             required:
                               - name
                             type: object
+                          executionIdVariable:
+                            description: Test workflow internal variable for execution id
+                            type: string
                           paths:
                             description: paths to fetch from the container
                             items:
@@ -1054,6 +1057,9 @@ spec:
                                 required:
                                   - name
                                 type: object
+                              executionIdVariable:
+                                description: Test workflow internal variable for execution id
+                                type: string
                               paths:
                                 description: paths to fetch from the container
                                 items:
@@ -5166,6 +5172,9 @@ spec:
                             required:
                               - name
                             type: object
+                          executionIdVariable:
+                            description: Test workflow internal variable for execution id
+                            type: string
                           paths:
                             description: paths to fetch from the container
                             items:
@@ -6161,6 +6170,9 @@ spec:
                                 required:
                                   - name
                                 type: object
+                              executionIdVariable:
+                                description: Test workflow internal variable for execution id
+                                type: string
                               paths:
                                 description: paths to fetch from the container
                                 items:
@@ -8242,6 +8254,9 @@ spec:
                             required:
                               - name
                             type: object
+                          executionIdVariable:
+                            description: Test workflow internal variable for execution id
+                            type: string
                           paths:
                             description: paths to fetch from the container
                             items:
@@ -9237,6 +9252,9 @@ spec:
                                 required:
                                   - name
                                 type: object
+                              executionIdVariable:
+                                description: Test workflow internal variable for execution id
+                                type: string
                               paths:
                                 description: paths to fetch from the container
                                 items:

@@ -303,6 +303,8 @@ type StepParallelFetch struct {
 }
 
 type StepArtifacts struct {
+	// Test workflow internal variable for execution id
+	ExecutionIdVariable *string `json:"executionIdVariable,omitempty" expr:"template"`
 	// working directory to override, so it will be used as a base dir
 	WorkingDir *string `json:"workingDir,omitempty" expr:"template"`
 	// compression options for the artifacts
