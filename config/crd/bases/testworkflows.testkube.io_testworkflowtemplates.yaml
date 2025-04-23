@@ -2539,6 +2539,9 @@ spec:
                                       - ip
                                     type: object
                                   type: array
+                                hostPID:
+                                  description: Whether to allow a pod to have access to the host process ID namespace
+                                  type: boolean
                                 hostname:
                                   description: Specifies the hostname of the Pod
                                   type: string
@@ -3809,6 +3812,9 @@ spec:
                           - ip
                         type: object
                       type: array
+                    hostPID:
+                      description: Whether to allow a pod to have access to the host process ID namespace
+                      type: boolean
                     hostname:
                       description: Specifies the hostname of the Pod
                       type: string
@@ -4561,6 +4567,9 @@ spec:
                                 - ip
                               type: object
                             type: array
+                          hostPID:
+                            description: Whether to allow a pod to have access to the host process ID namespace
+                            type: boolean
                           hostname:
                             description: Specifies the hostname of the Pod
                             type: string
@@ -7543,6 +7552,9 @@ spec:
                                       - ip
                                     type: object
                                   type: array
+                                hostPID:
+                                  description: Whether to allow a pod to have access to the host process ID namespace
+                                  type: boolean
                                 hostname:
                                   description: Specifies the hostname of the Pod
                                   type: string
@@ -10542,6 +10554,9 @@ spec:
                                       - ip
                                     type: object
                                   type: array
+                                hostPID:
+                                  description: Whether to allow a pod to have access to the host process ID namespace
+                                  type: boolean
                                 hostname:
                                   description: Specifies the hostname of the Pod
                                   type: string

@@ -141,6 +141,9 @@ type PodConfig struct {
 
 	// ResourceClaims defines which ResourceClaims must be allocated and reserved before the Pod is allowed to start.
 	ResourceClaims []corev1.PodResourceClaim `json:"resourceClaims,omitempty" expr:"force"`
+
+	// Whether to allow a pod to have access to the host process ID namespace
+	HostPID *bool `json:"hostPID,omitempty" expr:"template"`
 }
 
 type NotificationsConfig struct {
