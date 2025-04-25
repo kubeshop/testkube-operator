@@ -59,9 +59,20 @@ spec:
                             required:
                               - name
                             type: object
-                          executionIdVariable:
-                            description: Test workflow internal variable for execution id
-                            type: string
+                          executedTestWorkflowPosition:
+                            description: name and position in the list of the executed test workflows
+                            properties:
+                              name:
+                                description: Name in the list of the executed test workflows
+                                type: string
+                              position:
+                                description: Position in the list of the executed test workflows
+                                format: int32
+                                type: integer
+                            required:
+                              - name
+                              - position
+                            type: object
                           paths:
                             description: paths to fetch from the container
                             items:
@@ -1057,9 +1068,20 @@ spec:
                                 required:
                                   - name
                                 type: object
-                              executionIdVariable:
-                                description: Test workflow internal variable for execution id
-                                type: string
+                              executedTestWorkflowPosition:
+                                description: name and position in the list of the executed test workflows
+                                properties:
+                                  name:
+                                    description: Name in the list of the executed test workflows
+                                    type: string
+                                  position:
+                                    description: Position in the list of the executed test workflows
+                                    format: int32
+                                    type: integer
+                                required:
+                                  - name
+                                  - position
+                                type: object
                               paths:
                                 description: paths to fetch from the container
                                 items:
@@ -5172,9 +5194,20 @@ spec:
                             required:
                               - name
                             type: object
-                          executionIdVariable:
-                            description: Test workflow internal variable for execution id
-                            type: string
+                          executedTestWorkflowPosition:
+                            description: name and position in the list of the executed test workflows
+                            properties:
+                              name:
+                                description: Name in the list of the executed test workflows
+                                type: string
+                              position:
+                                description: Position in the list of the executed test workflows
+                                format: int32
+                                type: integer
+                            required:
+                              - name
+                              - position
+                            type: object
                           paths:
                             description: paths to fetch from the container
                             items:
@@ -6170,9 +6203,20 @@ spec:
                                 required:
                                   - name
                                 type: object
-                              executionIdVariable:
-                                description: Test workflow internal variable for execution id
-                                type: string
+                              executedTestWorkflowPosition:
+                                description: name and position in the list of the executed test workflows
+                                properties:
+                                  name:
+                                    description: Name in the list of the executed test workflows
+                                    type: string
+                                  position:
+                                    description: Position in the list of the executed test workflows
+                                    format: int32
+                                    type: integer
+                                required:
+                                  - name
+                                  - position
+                                type: object
                               paths:
                                 description: paths to fetch from the container
                                 items:
@@ -8254,9 +8298,20 @@ spec:
                             required:
                               - name
                             type: object
-                          executionIdVariable:
-                            description: Test workflow internal variable for execution id
-                            type: string
+                          executedTestWorkflowPosition:
+                            description: name and position in the list of the executed test workflows
+                            properties:
+                              name:
+                                description: Name in the list of the executed test workflows
+                                type: string
+                              position:
+                                description: Position in the list of the executed test workflows
+                                format: int32
+                                type: integer
+                            required:
+                              - name
+                              - position
+                            type: object
                           paths:
                             description: paths to fetch from the container
                             items:
@@ -9252,9 +9307,20 @@ spec:
                                 required:
                                   - name
                                 type: object
-                              executionIdVariable:
-                                description: Test workflow internal variable for execution id
-                                type: string
+                              executedTestWorkflowPosition:
+                                description: name and position in the list of the executed test workflows
+                                properties:
+                                  name:
+                                    description: Name in the list of the executed test workflows
+                                    type: string
+                                  position:
+                                    description: Position in the list of the executed test workflows
+                                    format: int32
+                                    type: integer
+                                required:
+                                  - name
+                                  - position
+                                type: object
                               paths:
                                 description: paths to fetch from the container
                                 items:
