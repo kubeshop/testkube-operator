@@ -6,6 +6,7 @@
 *.dylib
 bin
 controllers/testbin/*
+depot-build-meta.json
 
 # GoReleaser
 dist/
