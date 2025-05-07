@@ -25,6 +25,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
 	"github.com/kelseyhightower/envconfig"
+
 	testtriggersv1 "github.com/kubeshop/testkube-operator/api/testtriggers/v1"
 	testworkflowsv1 "github.com/kubeshop/testkube-operator/api/testworkflows/v1"
 
@@ -333,19 +334,21 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&testexecutioncontrollers.TestExecutionReconciler{
-		Client:      mgr.GetClient(),
-		Scheme:      mgr.GetScheme(),
-		ServiceName: httpConfig.Fullname,
-		ServicePort: httpConfig.Port,
+		Client:           mgr.GetClient(),
+		Scheme:           mgr.GetScheme(),
+		ServiceName:      httpConfig.Fullname,
+		ServicePort:      httpConfig.Port,
+		NamespaceChecker: cronJobManager,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestExecution")
 		os.Exit(1)
 	}
 	if err = (&testsuiteexecutioncontrollers.TestSuiteExecutionReconciler{
-		Client:      mgr.GetClient(),
-		Scheme:      mgr.GetScheme(),
-		ServiceName: httpConfig.Fullname,
-		ServicePort: httpConfig.Port,
+		Client:           mgr.GetClient(),
+		Scheme:           mgr.GetScheme(),
+		ServiceName:      httpConfig.Fullname,
+		ServicePort:      httpConfig.Port,
+		NamespaceChecker: cronJobManager,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestSuiteExecution")
 		os.Exit(1)
@@ -378,10 +381,11 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&testworkflowexecutioncontrollers.TestWorkflowExecutionReconciler{
-		Client:      mgr.GetClient(),
-		Scheme:      mgr.GetScheme(),
-		ServiceName: httpConfig.Fullname,
-		ServicePort: httpConfig.Port,
+		Client:           mgr.GetClient(),
+		Scheme:           mgr.GetScheme(),
+		ServiceName:      httpConfig.Fullname,
+		ServicePort:      httpConfig.Port,
+		NamespaceChecker: cronJobManager,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "TestWorkflowExecution")
 		os.Exit(1)
