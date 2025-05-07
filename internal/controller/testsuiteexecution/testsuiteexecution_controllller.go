@@ -34,12 +34,17 @@ import (
 	testsuiteexecutionv1 "github.com/kubeshop/testkube-operator/api/testsuiteexecution/v1"
 )
 
+type NamespaceChecker interface {
+	IsNamespaceForNewArchitecture(namespace string) bool
+}
+
 // TestSuiteExecutionReconciler reconciles a TestSuiteExecution object
 type TestSuiteExecutionReconciler struct {
 	client.Client
-	Scheme      *runtime.Scheme
-	ServiceName string
-	ServicePort int
+	Scheme           *runtime.Scheme
+	ServiceName      string
+	ServicePort      int
+	NamespaceChecker NamespaceChecker
 }
 
 //+kubebuilder:rbac:groups=tests.testkube.io,resources=testsuiteexecutions,verbs=get;list;watch;create;update;patch;delete
@@ -57,6 +62,10 @@ type TestSuiteExecutionReconciler struct {
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.14.4/pkg/reconcile
 func (r *TestSuiteExecutionReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
+
+	if r.NamespaceChecker.IsNamespaceForNewArchitecture(req.NamespacedName.Namespace) {
+		return ctrl.Result{}, nil
+	}
 
 	var testSuiteExecution testsuiteexecutionv1.TestSuiteExecution
 	err := r.Get(ctx, req.NamespacedName, &testSuiteExecution)
