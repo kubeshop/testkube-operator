@@ -235,6 +235,8 @@ type CronJobConfig struct {
 	Config map[string]intstr.IntOrString `json:"config,omitempty" expr:"template,template"`
 	// Targets helps decide on which runner the execution is scheduled.
 	Target *commonv1.Target `json:"target,omitempty" expr:"include"`
+	// cron timezone
+	Timezone *string `json:"timezone,omitempty" expr:"template"`
 }
 
 type TestWorkflowTagSchema struct {
