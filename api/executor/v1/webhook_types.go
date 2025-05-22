@@ -53,6 +53,8 @@ type WebhookSpec struct {
 	Parameters []WebhookParameterSchema `json:"parameters,omitempty"`
 	// webhook template reference
 	WebhookTemplateRef *WebhookTemplateRef `json:"webhookTemplateRef,omitempty"`
+	// whether webhook is attaching junit summary
+	AttachJunitSummary bool `json:"attachJunitSummary,omitempty"`
 }
 
 // WebhookTemplateSpec defines the desired state of Webhook Template
@@ -80,6 +82,8 @@ type WebhookTemplateSpec struct {
 	Config map[string]WebhookConfigValue `json:"config,omitempty"`
 	// webhook parameters
 	Parameters []WebhookParameterSchema `json:"parameters,omitempty"`
+	// whether webhook is attaching junit summary
+	AttachJunitSummary bool `json:"attachJunitSummary,omitempty"`
 }
 
 // webhook parameter schema
