@@ -3118,6 +3118,15 @@ spec:
                         type: string
                     type: object
                   type: array
+                concurrencyPolicy:
+                  description: |-
+                    Specifies how to treat concurrent executions of a Workflow.
+                    Valid values are:
+
+                    - "Allow" (default): allows Workflows to execute concurrently;
+                    - "Forbid": forbids concurrent executions, rejecting next execution if previous execution hasn't finished yet;
+                    - "Replace": cancels currently running Workflow and replaces it with a new one
+                  type: string
                 config:
                   additionalProperties:
                     properties:
