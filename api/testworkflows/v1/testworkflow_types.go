@@ -70,8 +70,9 @@ type TestWorkflow struct {
 	Description string `json:"description,omitempty"`
 
 	// TestWorkflow specification
-	Spec   TestWorkflowSpec          `json:"spec" expr:"include"`
-	Status TestWorkflowStatusSummary `json:"status,omitempty"`
+	Spec   TestWorkflowSpec             `json:"spec" expr:"include"`
+	Status TestWorkflowStatusSummary    `json:"status,omitempty"`
+	Health *TestWorkflowExecutionHealth `json:"health,omitempty"`
 }
 
 //+kubebuilder:object:root=true
