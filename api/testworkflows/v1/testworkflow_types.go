@@ -52,9 +52,22 @@ type TemplateRef struct {
 	Config map[string]intstr.IntOrString `json:"config,omitempty" expr:"template"`
 }
 
-// test workflow status
+// TestWorkflowStatusSummary contains information about the TestWorkflow status.
+// It includes details about the latest execution and health of the TestWorkflow.
 type TestWorkflowStatusSummary struct {
+	// (Deprecated) LatestExecution maintained for backward compatibility, never actively used
 	LatestExecution *TestWorkflowExecutionSummary `json:"latestExecution,omitempty"`
+	Health          *TestWorkflowExecutionHealth  `json:"health,omitempty"`
+}
+
+// TestWorkflowExecutionHealth provides health information about a test workflow
+type TestWorkflowExecutionHealth struct {
+	// Recency-weighted fraction of executions that passed (value between 0.0 and 1.0).
+	PassRate float64 `json:"passRate"`
+	// Fraction of status changes among consecutive executions without recency weighting (value between 0.0 and 1.0).
+	FlipRate float64 `json:"flipRate"`
+	// Combined health score, computed as passRate * (1 - flipRate) (value between 0.0 and 1.0).
+	OverallHealth float64 `json:"overallHealth"`
 }
 
 //+kubebuilder:object:root=true
@@ -70,9 +83,8 @@ type TestWorkflow struct {
 	Description string `json:"description,omitempty"`
 
 	// TestWorkflow specification
-	Spec   TestWorkflowSpec             `json:"spec" expr:"include"`
-	Status TestWorkflowStatusSummary    `json:"status,omitempty"`
-	Health *TestWorkflowExecutionHealth `json:"health,omitempty"`
+	Spec   TestWorkflowSpec          `json:"spec" expr:"include"`
+	Status TestWorkflowStatusSummary `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true

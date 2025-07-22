@@ -246,13 +246,3 @@ type TestWorkflowTagSchema struct {
 	// Targets helps decide on which runner the execution is scheduled.
 	Target *commonv1.Target `json:"target,omitempty" expr:"include"`
 }
-
-// TestWorkflowExecutionHealth provides health information about a test workflow
-type TestWorkflowExecutionHealth struct {
-	// Recency-weighted fraction of executions that passed (value between 0.0 and 1.0).
-	PassRate float64 `json:"passRate"`
-	// Fraction of status changes among consecutive executions without recency weighting (value between 0.0 and 1.0).
-	FlipRate float64 `json:"flipRate"`
-	// Combined health score, computed as passRate * (1 - flipRate) (value between 0.0 and 1.0).
-	OverallHealth float64 `json:"overallHealth"`
-}
