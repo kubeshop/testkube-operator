@@ -240,15 +240,37 @@ type StepParallel struct {
 	// instructions for fetching files back
 	Fetch []StepParallelFetch `json:"fetch,omitempty" expr:"include"`
 
-	// +kubebuilder:pruning:PreserveUnknownFields
-	// +kubebuilder:validation:Schemaless
-	TestWorkflowSpec `json:",inline" expr:"include"`
-
 	StepControl    `json:",inline" expr:"include"`
 	StepOperations `json:",inline" expr:"include"`
 
 	// single template to run in this step
 	Template *TemplateRef `json:"template,omitempty" expr:"include"`
+
+	// templates to include at a top-level of workflow
+	Use []TemplateRef `json:"use,omitempty" expr:"include"`
+
+	TestWorkflowSpecBase `json:",inline" expr:"include"`
+
+	// list of accompanying services to start
+	Services map[string]ServiceSpec `json:"services,omitempty" expr:"template,include"`
+
+	// steps for setting up the workflow
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Setup []Step `json:"setup,omitempty" expr:"include"`
+
+	// steps to execute in the workflow
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Steps []Step `json:"steps,omitempty" expr:"include"`
+
+	// steps to run at the end of the workflow
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	After []Step `json:"after,omitempty" expr:"include"`
+
+	// list of accompanying permanent volume claims
+	Pvcs map[string]corev1.PersistentVolumeClaimSpec `json:"pvcs,omitempty" expr:"template,include"`
 }
 
 type IndependentStepParallel struct {
