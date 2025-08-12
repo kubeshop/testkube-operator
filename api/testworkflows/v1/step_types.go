@@ -273,8 +273,8 @@ type StepParallel struct {
 	Pvcs map[string]corev1.PersistentVolumeClaimSpec `json:"pvcs,omitempty" expr:"template,include"`
 }
 
-func (sp StepParallel) TestWorkflowSpec() TestWorkflowSpec {
-	return TestWorkflowSpec{
+func (sp StepParallel) NewTestWorkflowSpec() *TestWorkflowSpec {
+	return &TestWorkflowSpec{
 		Use:                  sp.Use,
 		TestWorkflowSpecBase: sp.TestWorkflowSpecBase,
 		Services:             sp.Services,
