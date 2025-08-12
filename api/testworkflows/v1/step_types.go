@@ -273,6 +273,18 @@ type StepParallel struct {
 	Pvcs map[string]corev1.PersistentVolumeClaimSpec `json:"pvcs,omitempty" expr:"template,include"`
 }
 
+func (sp StepParallel) TestWorkflowSpec() TestWorkflowSpec {
+	return TestWorkflowSpec{
+		Use:                  sp.Use,
+		TestWorkflowSpecBase: sp.TestWorkflowSpecBase,
+		Services:             sp.Services,
+		Setup:                sp.Setup,
+		Steps:                sp.Steps,
+		After:                sp.After,
+		Pvcs:                 sp.Pvcs,
+	}
+}
+
 type IndependentStepParallel struct {
 	// how many resources could be scheduled in parallel
 	Parallelism int32 `json:"parallelism,omitempty"`
