@@ -247,11 +247,17 @@ type StepParallel struct {
 	Template *TemplateRef `json:"template,omitempty" expr:"include"`
 
 	// templates to include at a top-level of workflow
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
 	Use []TemplateRef `json:"use,omitempty" expr:"include"`
 
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
 	TestWorkflowSpecBase `json:",inline" expr:"include"`
 
 	// list of accompanying services to start
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
 	Services map[string]ServiceSpec `json:"services,omitempty" expr:"template,include"`
 
 	// steps for setting up the workflow
@@ -270,6 +276,8 @@ type StepParallel struct {
 	After []Step `json:"after,omitempty" expr:"include"`
 
 	// list of accompanying permanent volume claims
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
 	Pvcs map[string]corev1.PersistentVolumeClaimSpec `json:"pvcs,omitempty" expr:"template,include"`
 }
 
