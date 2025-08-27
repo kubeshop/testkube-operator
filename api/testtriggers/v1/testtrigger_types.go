@@ -17,9 +17,11 @@ limitations under the License.
 package v1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	commonv1 "github.com/kubeshop/testkube-operator/api/common/v1"
+	testsv3 "github.com/kubeshop/testkube-operator/api/tests/v3"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -53,6 +55,8 @@ type TestTriggerSpec struct {
 	ConditionSpec *TestTriggerConditionSpec `json:"conditionSpec,omitempty"`
 	// What resource probes should be matched
 	ProbeSpec *TestTriggerProbeSpec `json:"probeSpec,omitempty"`
+	// What content should be watchd
+	Content *TestTrggerContentSpec `json:"contentSpec,omitempty"`
 	// Action represents what needs to be executed for selected Execution
 	Action           TestTriggerAction            `json:"action"`
 	ActionParameters *TestTriggerActionParameters `json:"actionParameters,omitempty"`
@@ -236,6 +240,36 @@ type TestTriggerActionParameters struct {
 	Tags map[string]string `json:"tags,omitempty"`
 	// Target helps decide on which runner the execution is scheduled.
 	Target *commonv1.Target `json:"target,omitempty" expr:"include"`
+}
+
+// TestTrggerContentSpec is used to track content changes
+type TestTrggerContentSpec struct {
+	// git repository details
+	Git *TestTrggerContentGitSpec `json:"git,omitempty"`
+}
+
+// TestTrggerContentGitSpec is used to define git data source
+type TestTrggerContentGitSpec struct {
+	// uri for the Git repository
+	Uri string `json:"uri,omitempty"`
+	// branch, commit or a tag name to fetch
+	Revision string `json:"revision,omitempty"`
+	// plain text username to fetch with
+	Username string `json:"username,omitempty"`
+	// external username to fetch with
+	UsernameFrom *corev1.EnvVarSource `json:"usernameFrom,omitempty"`
+	// plain text token to fetch with
+	Token string `json:"token,omitempty"`
+	// external token to fetch with
+	TokenFrom *corev1.EnvVarSource `json:"tokenFrom,omitempty"`
+	// plain text SSH private key to fetch with
+	SshKey string `json:"sshKey,omitempty"`
+	// external SSH private key to fetch with
+	SshKeyFrom *corev1.EnvVarSource `json:"sshKeyFrom,omitempty"`
+	// authorization type for the credentials
+	AuthType testsv3.GitAuthType `json:"authType,omitempty"`
+	// paths to fetch
+	Paths []string `json:"paths,omitempty"`
 }
 
 //+kubebuilder:object:root=true
