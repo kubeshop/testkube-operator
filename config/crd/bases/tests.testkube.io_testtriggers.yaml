@@ -146,7 +146,7 @@ spec:
                     type: integer
                 type: object
               contentSpec:
-                description: What content should be watchd
+                description: What content should be watched
                 properties:
                   git:
                     description: git repository details

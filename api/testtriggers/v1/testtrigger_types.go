@@ -55,7 +55,7 @@ type TestTriggerSpec struct {
 	ConditionSpec *TestTriggerConditionSpec `json:"conditionSpec,omitempty"`
 	// What resource probes should be matched
 	ProbeSpec *TestTriggerProbeSpec `json:"probeSpec,omitempty"`
-	// What content should be watchd
+	// What content should be watched
 	Content *TestTrggerContentSpec `json:"contentSpec,omitempty"`
 	// Action represents what needs to be executed for selected Execution
 	Action           TestTriggerAction            `json:"action"`
