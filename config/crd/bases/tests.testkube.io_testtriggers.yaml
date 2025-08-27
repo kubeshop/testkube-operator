@@ -695,7 +695,6 @@ spec:
             - event
             - execution
             - resource
-            - resourceSelector
             - testSelector
             type: object
           status:

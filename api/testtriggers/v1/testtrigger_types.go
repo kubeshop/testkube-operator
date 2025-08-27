@@ -48,7 +48,7 @@ type TestTriggerSpec struct {
 	// For which Resource do we monitor Event which triggers an Action on certain conditions
 	Resource TestTriggerResource `json:"resource"`
 	// ResourceSelector identifies which Kubernetes Objects should be watched
-	ResourceSelector TestTriggerSelector `json:"resourceSelector"`
+	ResourceSelector TestTriggerSelector `json:"resourceSelector,omitempty"`
 	// On which Event for a Resource should an Action be triggered
 	Event TestTriggerEvent `json:"event"`
 	// What resource conditions should be matched
