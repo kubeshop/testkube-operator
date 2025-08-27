@@ -20,6 +20,7 @@ const (
 	ResourceIngress                             = "ingress"
 	ResourceEvent                               = "event"
 	ResourceConfigMap                           = "configmap"
+	ResourceContent                             = "content"
 	DefaultNamespace                            = "testkube"
 	EventCreated                      EventType = "created"
 	EventModified                     EventType = "modified"
