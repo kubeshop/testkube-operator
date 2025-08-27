@@ -55,8 +55,8 @@ type TestTriggerSpec struct {
 	ConditionSpec *TestTriggerConditionSpec `json:"conditionSpec,omitempty"`
 	// What resource probes should be matched
 	ProbeSpec *TestTriggerProbeSpec `json:"probeSpec,omitempty"`
-	// What content should be watched
-	Content *TestTrggerContentSpec `json:"contentSpec,omitempty"`
+	// ContentSelector identifies which content should be watched
+	ContentSelector *TestTrggerContentSelector `json:"contentSelector,omitempty"`
 	// Action represents what needs to be executed for selected Execution
 	Action           TestTriggerAction            `json:"action"`
 	ActionParameters *TestTriggerActionParameters `json:"actionParameters,omitempty"`
@@ -75,7 +75,7 @@ type TestTriggerSpec struct {
 }
 
 // TestTriggerResource defines resource for test triggers
-// +kubebuilder:validation:Enum=pod;deployment;statefulset;daemonset;service;ingress;event;configmap
+// +kubebuilder:validation:Enum=pod;deployment;statefulset;daemonset;service;ingress;event;configmap;content
 type TestTriggerResource string
 
 // List of TestTriggerResources
@@ -88,6 +88,7 @@ const (
 	TestTriggerResourceIngress     TestTriggerResource = "ingress"
 	TestTriggerResourceEvent       TestTriggerResource = "event"
 	TestTriggerResourceConfigMap   TestTriggerResource = "configmap"
+	TestTriggerResourceContent     TestTriggerResource = "content"
 )
 
 // TestTriggerEvent defines event for test triggers
@@ -242,8 +243,8 @@ type TestTriggerActionParameters struct {
 	Target *commonv1.Target `json:"target,omitempty" expr:"include"`
 }
 
-// TestTrggerContentSpec is used to track content changes
-type TestTrggerContentSpec struct {
+// TestTrggerContentSelector is used to track content changes
+type TestTrggerContentSelector struct {
 	// git repository details
 	Git *TestTrggerContentGitSpec `json:"git,omitempty"`
 }
