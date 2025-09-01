@@ -251,9 +251,51 @@ type StepParallel struct {
 	// +kubebuilder:validation:Schemaless
 	Use []TemplateRef `json:"use,omitempty" expr:"include"`
 
+	// events triggering execution of the test workflow
 	// +kubebuilder:pruning:PreserveUnknownFields
 	// +kubebuilder:validation:Schemaless
-	TestWorkflowSpecBase `json:",inline" expr:"include"`
+	Events []Event `json:"events,omitempty" expr:"include"`
+
+	// system configuration to define the orchestration behavior
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	System *TestWorkflowSystem `json:"system,omitempty" expr:"include"`
+
+	// make the instance configurable with some input data for scheduling it
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Config map[string]ParameterSchema `json:"config,omitempty" expr:"include"`
+
+	// global content that should be fetched into all containers
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Content *Content `json:"content,omitempty" expr:"include"`
+
+	// defaults for the containers for all the TestWorkflow steps
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Container *ContainerConfig `json:"container,omitempty" expr:"include"`
+
+	// configuration for the scheduled job
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Job *JobConfig `json:"job,omitempty" expr:"include"`
+
+	// configuration for the scheduled pod
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Pod *PodConfig `json:"pod,omitempty" expr:"include"`
+
+	// configuration for notifications
+	// Deprecated: field is not used
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Notifications *NotificationsConfig `json:"notifications,omitempty" expr:"include"`
+
+	// values to be used for test workflow execution
+	// +kubebuilder:pruning:PreserveUnknownFields
+	// +kubebuilder:validation:Schemaless
+	Execution *TestWorkflowTagSchema `json:"execution,omitempty" expr:"include"`
 
 	// list of accompanying services to start
 	// +kubebuilder:pruning:PreserveUnknownFields
@@ -283,13 +325,23 @@ type StepParallel struct {
 
 func (sp StepParallel) NewTestWorkflowSpec() *TestWorkflowSpec {
 	return &TestWorkflowSpec{
-		Use:                  sp.Use,
-		TestWorkflowSpecBase: sp.TestWorkflowSpecBase,
-		Services:             sp.Services,
-		Setup:                sp.Setup,
-		Steps:                sp.Steps,
-		After:                sp.After,
-		Pvcs:                 sp.Pvcs,
+		Use: sp.Use,
+		TestWorkflowSpecBase: TestWorkflowSpecBase{
+			Events:        sp.Events,
+			System:        sp.System,
+			Config:        sp.Config,
+			Content:       sp.Content,
+			Container:     sp.Container,
+			Job:           sp.Job,
+			Pod:           sp.Pod,
+			Notifications: sp.Notifications,
+			Execution:     sp.Execution,
+		},
+		Services: sp.Services,
+		Setup:    sp.Setup,
+		Steps:    sp.Steps,
+		After:    sp.After,
+		Pvcs:     sp.Pvcs,
 	}
 }
 

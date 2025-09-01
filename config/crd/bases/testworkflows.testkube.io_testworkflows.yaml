@@ -1066,6 +1066,15 @@ spec:
                                 description: working directory to override, so it will be used as a base dir
                                 type: string
                             type: object
+                          config:
+                            description: make the instance configurable with some input data for scheduling it
+                            x-kubernetes-preserve-unknown-fields: true
+                          container:
+                            description: defaults for the containers for all the TestWorkflow steps
+                            x-kubernetes-preserve-unknown-fields: true
+                          content:
+                            description: global content that should be fetched into all containers
+                            x-kubernetes-preserve-unknown-fields: true
                           count:
                             anyOf:
                               - type: integer
@@ -1079,6 +1088,9 @@ spec:
                           description:
                             description: worker description to display
                             type: string
+                          events:
+                            description: events triggering execution of the test workflow
+                            x-kubernetes-preserve-unknown-fields: true
                           execute:
                             description: execute other Testkube resources
                             properties:
@@ -1499,6 +1511,9 @@ spec:
                                   type: object
                                 type: array
                             type: object
+                          execution:
+                            description: values to be used for test workflow execution
+                            x-kubernetes-preserve-unknown-fields: true
                           fetch:
                             description: instructions for fetching files back
                             items:
@@ -1507,6 +1522,9 @@ spec:
                               type: object
                               x-kubernetes-preserve-unknown-fields: true
                             type: array
+                          job:
+                            description: configuration for the scheduled job
+                            x-kubernetes-preserve-unknown-fields: true
                           logs:
                             description: should save logs for the parallel step (true if not specified)
                             type: string
@@ -1523,6 +1541,11 @@ spec:
                           negative:
                             description: is the step expected to fail
                             type: boolean
+                          notifications:
+                            description: |-
+                              configuration for notifications
+                              Deprecated: field is not used
+                            x-kubernetes-preserve-unknown-fields: true
                           optional:
                             description: is the step optional, so its failure won't affect the TestWorkflow result
                             type: boolean
@@ -1533,6 +1556,9 @@ spec:
                           paused:
                             description: pause the step initially
                             type: boolean
+                          pod:
+                            description: configuration for the scheduled pod
+                            x-kubernetes-preserve-unknown-fields: true
                           pvcs:
                             x-kubernetes-preserve-unknown-fields: true
                           retry:
@@ -1798,6 +1824,9 @@ spec:
                           steps:
                             description: steps to execute in the workflow
                             x-kubernetes-preserve-unknown-fields: true
+                          system:
+                            description: system configuration to define the orchestration behavior
+                            x-kubernetes-preserve-unknown-fields: true
                           template:
                             description: single template to run in this step
                             properties:
@@ -1830,7 +1859,6 @@ spec:
                             description: templates to include at a top-level of workflow
                             x-kubernetes-preserve-unknown-fields: true
                         type: object
-                        x-kubernetes-preserve-unknown-fields: true
                       paused:
                         description: pause the step initially
                         type: boolean
@@ -6193,6 +6221,15 @@ spec:
                                 description: working directory to override, so it will be used as a base dir
                                 type: string
                             type: object
+                          config:
+                            description: make the instance configurable with some input data for scheduling it
+                            x-kubernetes-preserve-unknown-fields: true
+                          container:
+                            description: defaults for the containers for all the TestWorkflow steps
+                            x-kubernetes-preserve-unknown-fields: true
+                          content:
+                            description: global content that should be fetched into all containers
+                            x-kubernetes-preserve-unknown-fields: true
                           count:
                             anyOf:
                               - type: integer
@@ -6206,6 +6243,9 @@ spec:
                           description:
                             description: worker description to display
                             type: string
+                          events:
+                            description: events triggering execution of the test workflow
+                            x-kubernetes-preserve-unknown-fields: true
                           execute:
                             description: execute other Testkube resources
                             properties:
@@ -6626,6 +6666,9 @@ spec:
                                   type: object
                                 type: array
                             type: object
+                          execution:
+                            description: values to be used for test workflow execution
+                            x-kubernetes-preserve-unknown-fields: true
                           fetch:
                             description: instructions for fetching files back
                             items:
@@ -6634,6 +6677,9 @@ spec:
                               type: object
                               x-kubernetes-preserve-unknown-fields: true
                             type: array
+                          job:
+                            description: configuration for the scheduled job
+                            x-kubernetes-preserve-unknown-fields: true
                           logs:
                             description: should save logs for the parallel step (true if not specified)
                             type: string
@@ -6650,6 +6696,11 @@ spec:
                           negative:
                             description: is the step expected to fail
                             type: boolean
+                          notifications:
+                            description: |-
+                              configuration for notifications
+                              Deprecated: field is not used
+                            x-kubernetes-preserve-unknown-fields: true
                           optional:
                             description: is the step optional, so its failure won't affect the TestWorkflow result
                             type: boolean
@@ -6660,6 +6711,9 @@ spec:
                           paused:
                             description: pause the step initially
                             type: boolean
+                          pod:
+                            description: configuration for the scheduled pod
+                            x-kubernetes-preserve-unknown-fields: true
                           pvcs:
                             x-kubernetes-preserve-unknown-fields: true
                           retry:
@@ -6925,6 +6979,9 @@ spec:
                           steps:
                             description: steps to execute in the workflow
                             x-kubernetes-preserve-unknown-fields: true
+                          system:
+                            description: system configuration to define the orchestration behavior
+                            x-kubernetes-preserve-unknown-fields: true
                           template:
                             description: single template to run in this step
                             properties:
@@ -6957,7 +7014,6 @@ spec:
                             description: templates to include at a top-level of workflow
                             x-kubernetes-preserve-unknown-fields: true
                         type: object
-                        x-kubernetes-preserve-unknown-fields: true
                       paused:
                         description: pause the step initially
                         type: boolean
@@ -9286,6 +9342,15 @@ spec:
                                 description: working directory to override, so it will be used as a base dir
                                 type: string
                             type: object
+                          config:
+                            description: make the instance configurable with some input data for scheduling it
+                            x-kubernetes-preserve-unknown-fields: true
+                          container:
+                            description: defaults for the containers for all the TestWorkflow steps
+                            x-kubernetes-preserve-unknown-fields: true
+                          content:
+                            description: global content that should be fetched into all containers
+                            x-kubernetes-preserve-unknown-fields: true
                           count:
                             anyOf:
                               - type: integer
@@ -9299,6 +9364,9 @@ spec:
                           description:
                             description: worker description to display
                             type: string
+                          events:
+                            description: events triggering execution of the test workflow
+                            x-kubernetes-preserve-unknown-fields: true
                           execute:
                             description: execute other Testkube resources
                             properties:
@@ -9719,6 +9787,9 @@ spec:
                                   type: object
                                 type: array
                             type: object
+                          execution:
+                            description: values to be used for test workflow execution
+                            x-kubernetes-preserve-unknown-fields: true
                           fetch:
                             description: instructions for fetching files back
                             items:
@@ -9727,6 +9798,9 @@ spec:
                               type: object
                               x-kubernetes-preserve-unknown-fields: true
                             type: array
+                          job:
+                            description: configuration for the scheduled job
+                            x-kubernetes-preserve-unknown-fields: true
                           logs:
                             description: should save logs for the parallel step (true if not specified)
                             type: string
@@ -9743,6 +9817,11 @@ spec:
                           negative:
                             description: is the step expected to fail
                             type: boolean
+                          notifications:
+                            description: |-
+                              configuration for notifications
+                              Deprecated: field is not used
+                            x-kubernetes-preserve-unknown-fields: true
                           optional:
                             description: is the step optional, so its failure won't affect the TestWorkflow result
                             type: boolean
@@ -9753,6 +9832,9 @@ spec:
                           paused:
                             description: pause the step initially
                             type: boolean
+                          pod:
+                            description: configuration for the scheduled pod
+                            x-kubernetes-preserve-unknown-fields: true
                           pvcs:
                             x-kubernetes-preserve-unknown-fields: true
                           retry:
@@ -10018,6 +10100,9 @@ spec:
                           steps:
                             description: steps to execute in the workflow
                             x-kubernetes-preserve-unknown-fields: true
+                          system:
+                            description: system configuration to define the orchestration behavior
+                            x-kubernetes-preserve-unknown-fields: true
                           template:
                             description: single template to run in this step
                             properties:
@@ -10050,7 +10135,6 @@ spec:
                             description: templates to include at a top-level of workflow
                             x-kubernetes-preserve-unknown-fields: true
                         type: object
-                        x-kubernetes-preserve-unknown-fields: true
                       paused:
                         description: pause the step initially
                         type: boolean

@@ -1134,7 +1134,55 @@ func (in *StepParallel) DeepCopyInto(out *StepParallel) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
-	in.TestWorkflowSpecBase.DeepCopyInto(&out.TestWorkflowSpecBase)
+	if in.Events != nil {
+		in, out := &in.Events, &out.Events
+		*out = make([]Event, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
+	}
+	if in.System != nil {
+		in, out := &in.System, &out.System
+		*out = new(TestWorkflowSystem)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.Config != nil {
+		in, out := &in.Config, &out.Config
+		*out = make(map[string]ParameterSchema, len(*in))
+		for key, val := range *in {
+			(*out)[key] = *val.DeepCopy()
+		}
+	}
+	if in.Content != nil {
+		in, out := &in.Content, &out.Content
+		*out = new(Content)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.Container != nil {
+		in, out := &in.Container, &out.Container
+		*out = new(ContainerConfig)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.Job != nil {
+		in, out := &in.Job, &out.Job
+		*out = new(JobConfig)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.Pod != nil {
+		in, out := &in.Pod, &out.Pod
+		*out = new(PodConfig)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.Notifications != nil {
+		in, out := &in.Notifications, &out.Notifications
+		*out = new(NotificationsConfig)
+		**out = **in
+	}
+	if in.Execution != nil {
+		in, out := &in.Execution, &out.Execution
+		*out = new(TestWorkflowTagSchema)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Services != nil {
 		in, out := &in.Services, &out.Services
 		*out = make(map[string]ServiceSpec, len(*in))
