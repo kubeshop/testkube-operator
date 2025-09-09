@@ -396,7 +396,16 @@ type StepParallelFetch struct {
 	To string `json:"to,omitempty" expr:"template"`
 }
 
+type TestWorkflowStepExecuteTestWorkflowPosition struct {
+	// Name in the list of the executed test workflows
+	Name string `json:"name"`
+	// Position in the list of the executed test workflows
+	Position int32 `json:"position"`
+}
+
 type StepArtifacts struct {
+	// name and position in the list of the executed test workflows
+	ExecutedTestWorkflowPosition *TestWorkflowStepExecuteTestWorkflowPosition `json:"executedTestWorkflowPosition,omitempty" expr:"include"`
 	// working directory to override, so it will be used as a base dir
 	WorkingDir *string `json:"workingDir,omitempty" expr:"template"`
 	// compression options for the artifacts
