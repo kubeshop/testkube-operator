@@ -119,7 +119,7 @@ func TestValidator_validateSelector(t *testing.T) {
 
 		fld := field.NewPath("spec").Child("testSelector")
 		selector := testtriggerv1.TestTriggerSelector{Name: "test"}
-		verrs := v.validateSelector(fld, selector)
+		verrs := v.validateSelector(fld, &selector)
 		assert.Empty(t, verrs)
 	})
 
@@ -138,7 +138,7 @@ func TestValidator_validateSelector(t *testing.T) {
 				},
 			},
 		}
-		verrs := v.validateSelector(fld, selector)
+		verrs := v.validateSelector(fld, &selector)
 		assert.Empty(t, verrs)
 	})
 
@@ -147,7 +147,7 @@ func TestValidator_validateSelector(t *testing.T) {
 
 		fld := field.NewPath("spec").Child("testSelector")
 		selector := testtriggerv1.TestTriggerSelector{LabelSelector: &metav1.LabelSelector{}}
-		verrs := v.validateSelector(fld, selector)
+		verrs := v.validateSelector(fld, &selector)
 		assert.Len(t, verrs, 1)
 		assert.ErrorContains(t, verrs[0], "neither name, name regex nor label selector is specified")
 	})
@@ -161,7 +161,7 @@ func TestValidator_validateSelector(t *testing.T) {
 				MatchLabels: map[string]string{"invalid=label": "value"},
 			},
 		}
-		verrs := v.validateSelector(fld, selector)
+		verrs := v.validateSelector(fld, &selector)
 		assert.Len(t, verrs, 1)
 		assert.ErrorContains(t, verrs[0], "Invalid value: \"invalid=label\"")
 	})
@@ -179,7 +179,7 @@ func TestValidator_validateSelector(t *testing.T) {
 				}},
 			},
 		}
-		verrs := v.validateSelector(fld, selector)
+		verrs := v.validateSelector(fld, &selector)
 		assert.Len(t, verrs, 1)
 		assert.ErrorContains(t, verrs[0], "\"invalid\" is not a valid label selector operator")
 	})

@@ -144,7 +144,7 @@ func (v *Validator) ValidateDelete(_ context.Context, _ runtime.Object) (admissi
 	return nil, nil
 }
 
-func (v *Validator) validateResourceSelector(resourceSelector testtriggerv1.TestTriggerSelector) field.ErrorList {
+func (v *Validator) validateResourceSelector(resourceSelector *testtriggerv1.TestTriggerSelector) field.ErrorList {
 	fld := field.NewPath("spec").Child("testSelector")
 	return v.validateSelector(fld, resourceSelector)
 }
@@ -153,16 +153,18 @@ func (v *Validator) validateTestSelector(testSelector testtriggerv1.TestTriggerS
 	var allErrs field.ErrorList
 
 	fld := field.NewPath("spec").Child("testSelector")
-	if err := v.validateSelector(fld, testSelector); err != nil {
+	if err := v.validateSelector(fld, &testSelector); err != nil {
 		allErrs = append(allErrs, err...)
 	}
 
 	return allErrs
 }
 
-func (v *Validator) validateSelector(fld *field.Path, selector testtriggerv1.TestTriggerSelector) field.ErrorList {
+func (v *Validator) validateSelector(fld *field.Path, selector *testtriggerv1.TestTriggerSelector) field.ErrorList {
 	var allErrs field.ErrorList
-
+	if selector == nil {
+		return allErrs
+	}
 	isLabelSelectorEmpty := true
 
 	if selector.LabelSelector != nil {
