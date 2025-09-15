@@ -24,6 +24,9 @@ type TestWorkflowSpecBase struct {
 	// configuration for the scheduled pod
 	Pod *PodConfig `json:"pod,omitempty" expr:"include"`
 
+	// configuration for concurrency policy
+	Concurrency *ConcurrencyPolicy `json:"concurrency,omitempty" expr:"include"`
+
 	// configuration for notifications
 	// Deprecated: field is not used
 	Notifications *NotificationsConfig `json:"notifications,omitempty" expr:"include"`
@@ -38,4 +41,20 @@ type TestWorkflowSystem struct {
 
 	// disable the behavior of merging multiple operations in a single container
 	IsolatedContainers *bool `json:"isolatedContainers,omitempty"`
+}
+
+// ConcurrencyPolicy defines a policy for running and queueing concurrent executions.
+type ConcurrencyPolicy struct {
+	// Group ongoing executions by this identifier instead of by workflow name.
+	// Use the group identifier if you want the control concurrency across workflows
+	Group string `json:"group,omitempty" expr:"include"`
+
+	// The maximum amount of concurrent executions for this workflow or group.
+	// The scheduler will check the amount of ongoing executions for this workflow or group and only
+	// schedule this workflow when the amount is below its given maximum. When using a group identifier, it is
+	// recommended to keep the maximum in sync through a WorkflowTemplate.
+	Max int `json:"max,omitempty" expr:"include"`
+
+	// Whether the oldest in progress execution should be cancelled to be replaced with the latest queued one.
+	CancelInProgress bool `json:"cancelInProgress,omitempty" expr:"include"`
 }
