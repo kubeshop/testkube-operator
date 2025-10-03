@@ -1,3 +1,8 @@
+> [!NOTE]  
+> This repository contains a service that no longer has functional code. It has completely been merged into the agent found in [kubeshop/testkube](https://github.com/kubeshop/testkube).
+
+
+
 ![Known Vulnerabilities](https://snyk.io/test/github/kubeshop/testkube-operator/badge.svg)
 
 # Testkube operator
